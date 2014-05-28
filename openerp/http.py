@@ -784,9 +784,6 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
                     to authenticate the user.
         """
 
-        import pdb
-        pd
-
         if uid is None:
             wsgienv = request.httprequest.environ
             env = dict(
@@ -1236,23 +1233,20 @@ class Root(object):
             with request:
                 db = request.session.db
                 if db:
-                    if not openerp.modules.registry.RegistryManager.check_registry_signaling(db):
+                    openerp.modules.registry.RegistryManager.check_registry_signaling(db)
+                    try:
+                        with openerp.tools.mute_logger('openerp.sql_db'):
+                            ir_http = request.registry['ir.http']
+                    except (AttributeError, psycopg2.OperationalError):
+                        # psycopg2 error or attribute error while constructing
+                        # the registry. That means the database probably does
+                        # not exists anymore or the code doesnt match the db.
+                        # Log the user out and fall back to nodb
                         request.session.logout()
                         result = _dispatch_nodb()
                     else:
-                        try:
-                            with openerp.tools.mute_logger('openerp.sql_db'):
-                                ir_http = request.registry['ir.http']
-                        except (AttributeError, psycopg2.OperationalError):
-                            # psycopg2 error or attribute error while constructing
-                            # the registry. That means the database probably does
-                            # not exists anymore or the code doesnt match the db.
-                            # Log the user out and fall back to nodb
-                            request.session.logout()
-                            result = _dispatch_nodb()
-                        else:
-                            result = ir_http._dispatch()
-                            openerp.modules.registry.RegistryManager.signal_caches_change(db)
+                        result = ir_http._dispatch()
+                        openerp.modules.registry.RegistryManager.signal_caches_change(db)
                 else:
                     result = _dispatch_nodb()
 
