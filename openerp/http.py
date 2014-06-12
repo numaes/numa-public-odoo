@@ -1252,11 +1252,11 @@ class Root(object):
             with request:
                 db = request.session.db
                 if db:
-                    openerp.modules.registry.RegistryManager.check_registry_signaling(db)
                     try:
+                        openerp.modules.registry.RegistryManager.check_registry_signaling(db)
                         with openerp.tools.mute_logger('openerp.sql_db'):
                             ir_http = request.registry['ir.http']
-                    except (AttributeError, psycopg2.OperationalError):
+                    except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError):
                         # psycopg2 error or attribute error while constructing
                         # the registry. That means the database probably does
                         # not exists anymore or the code doesnt match the db.
