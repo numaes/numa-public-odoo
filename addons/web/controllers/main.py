@@ -1113,7 +1113,7 @@ class TreeView(View):
 
 class Binary(http.Controller):
 
-    @http.route('/web/binary/image', type='http', auth="user")
+    @http.route('/web/binary/image', type='http', auth="public")
     def image(self, model, id, field, **kw):
         last_update = '__last_update'
         Model = request.session.model(model)
@@ -1168,7 +1168,7 @@ class Binary(http.Controller):
         addons_path = http.addons_manifest['web']['addons_path']
         return open(os.path.join(addons_path, 'web', 'static', 'src', 'img', image), 'rb').read()
 
-    @http.route('/web/binary/saveas', type='http', auth="user")
+    @http.route('/web/binary/saveas', type='http', auth="public")
     @serialize_exception
     def saveas(self, model, field, id=None, filename_field=None, **kw):
         """ Download link for files stored as binary fields.
@@ -1202,7 +1202,7 @@ class Binary(http.Controller):
                 [('Content-Type', 'application/octet-stream'),
                  ('Content-Disposition', content_disposition(filename))])
 
-    @http.route('/web/binary/saveas_ajax', type='http', auth="user")
+    @http.route('/web/binary/saveas_ajax', type='http', auth="public")
     @serialize_exception
     def saveas_ajax(self, data, token):
         jdata = simplejson.loads(data)
