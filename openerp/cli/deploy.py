@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import argparse
 import os
-import requests
+from openerp.http import request
 import sys
 import tempfile
 import zipfile
