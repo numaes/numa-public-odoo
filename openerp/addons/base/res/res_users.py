@@ -31,6 +31,7 @@ import openerp.exceptions
 from openerp.osv import fields,osv, expression
 from openerp.osv.orm import browse_record
 from openerp.tools.translate import _
+from openerp.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -492,7 +493,7 @@ class res_users(osv.osv):
     def preference_save(self, cr, uid, ids, context=None):
         return {
             'type': 'ir.actions.client',
-            'tag': 'reload',
+            'tag': 'reload_context',
         }
 
     def preference_change_password(self, cr, uid, ids, context=None):
