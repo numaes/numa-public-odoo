@@ -223,9 +223,9 @@ class Cursor(object):
             if self._default_log_exceptions if log_exceptions is None else log_exceptions:
                 _logger.error("Programming error: %s, in query %s", pe, query)
             raise
-        except Exception:
+        except Exception, e:
             if self._default_log_exceptions if log_exceptions is None else log_exceptions:
-                _logger.exception("bad query: %s", self._obj.query or query)
+                _logger.exception("bad query: %s, Exception: %s", self._obj.query or query, str(e))
             raise
 
         if self.sql_log:
