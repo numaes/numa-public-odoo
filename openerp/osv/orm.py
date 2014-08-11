@@ -1401,6 +1401,16 @@ class BaseModel(object):
                 # Failed to write, log to messages, rollback savepoint (to
                 # avoid broken transaction) and keep going
                 cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
+            except Exception, e:
+                message = (_('Unknown error during import:') +
+                           u' %s: %s' % (type(e), unicode(e)))
+                moreinfo = _('Resolve other errors first')
+                messages.append(dict(info, type='error',
+                                     message=message,
+                                     moreinfo=moreinfo))
+                # Failed for some reason, perhaps due to invalid data supplied,
+                # rollback savepoint and keep going
+                cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
         if any(message['type'] == 'error' for message in messages):
             cr.execute('ROLLBACK TO SAVEPOINT model_load')
             ids = False
@@ -4076,13 +4086,14 @@ class BaseModel(object):
 
         self.check_access_rights(cr, user, 'create')
 
+        vals = self._add_missing_default_values(cr, user, vals, context)
+
         if self._log_access:
             for f in LOG_ACCESS_COLUMNS:
                 if vals.pop(f, None) is not None:
                     _logger.warning(
                         'Field `%s` is not allowed when creating the model `%s`.',
                         f, self._name)
-        vals = self._add_missing_default_values(cr, user, vals, context)
 
         tocreate = {}
         for v in self._inherits:
@@ -4643,18 +4654,19 @@ class BaseModel(object):
         order_by = self._generate_order_by(order, query)
         from_clause, where_clause, where_clause_params = query.get_sql()
 
-        limit_str = limit and ' limit %d' % limit or ''
-        offset_str = offset and ' offset %d' % offset or ''
         where_str = where_clause and (" WHERE %s" % where_clause) or ''
-        query_str = 'SELECT "%s".id FROM ' % self._table + from_clause + where_str + order_by + limit_str + offset_str
 
         if count:
-            # /!\ the main query must be executed as a subquery, otherwise
-            # offset and limit apply to the result of count()!
-            cr.execute('SELECT count(*) FROM (%s) AS count' % query_str, where_clause_params)
+            # Ignore order, limit and offset when just counting, they don't make sense and could
+            # hurt performance
+            query_str = 'SELECT count(1) FROM ' + from_clause + where_str
+            cr.execute(query_str, where_clause_params)
             res = cr.fetchone()
             return res[0]
 
+        limit_str = limit and ' limit %d' % limit or ''
+        offset_str = offset and ' offset %d' % offset or ''
+        query_str = 'SELECT "%s".id FROM ' % self._table + from_clause + where_str + order_by + limit_str + offset_str
         cr.execute(query_str, where_clause_params)
         res = cr.fetchall()
 

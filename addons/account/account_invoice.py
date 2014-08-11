@@ -174,6 +174,8 @@ class account_invoice(osv.osv):
             lines = []
             if invoice.move_id:
                 for m in invoice.move_id.line_id:
+                    if m.account_id != invoice.account_id:
+                        continue
                     temp_lines = []
                     if m.reconcile_id:
                         temp_lines = map(lambda x: x.id, m.reconcile_id.line_id)
@@ -426,7 +428,7 @@ class account_invoice(osv.osv):
             compose_form_id = ir_model_data.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')[1]
         except ValueError:
             compose_form_id = False
-        ctx = dict(context)
+        ctx = dict()
         ctx.update({
             'default_model': 'account.invoice',
             'default_res_id': ids[0],
