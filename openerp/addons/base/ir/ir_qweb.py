@@ -1005,7 +1005,6 @@ class AssetNotFound(AssetError):
     pass
 
 class AssetsBundle(object):
-    cache = openerp.tools.lru.LRU(32)
     rx_css_import = re.compile("(@import[^;{]+;?)", re.M)
     rx_preprocess_imports = re.compile("""(@import\s?['"]([^'"]+)['"](;?))""")
     rx_css_split = re.compile("\/\*\! ([a-f0-9-]+) \*\/")
@@ -1073,8 +1072,7 @@ class AssetsBundle(object):
         response = []
         if debug:
             if css and self.stylesheets:
-                compiled = self.preprocess_css()
-                self.recompose_css(compiled)
+                self.preprocess_css()
                 if self.css_errors:
                     msg = '\n'.join(self.css_errors)
                     self.stylesheets.append(StylesheetAsset(self, inline=self.css_message(msg)))
@@ -1113,22 +1111,16 @@ class AssetsBundle(object):
         return hashlib.sha1(check).hexdigest()
 
     def js(self):
-        key = 'js_%s' % self.xmlid
-        if key in self.cache and self.cache[key][0] != self.version:
-            # Invalidate cache on version mismach
-            self.cache.pop(key)
-        if key not in self.cache:
-            content =';\n'.join(asset.minify() for asset in self.javascripts)
-            self.cache[key] = (self.version, content)
-        return self.cache[key][1]
+        content = self.get_cache('js')
+        if content is None:
+            content = ';\n'.join(asset.minify() for asset in self.javascripts)
+            self.set_cache('js', content)
+        return content
 
     def css(self):
         """Generate css content from given bundle"""
-        key = 'css_%s' % self.xmlid
-        if key in self.cache and self.cache[key][0] != self.version:
-            # Invalidate cache on version mismach
-            self.cache.pop(key)
-        if key not in self.cache:
+        content = self.get_cache('css')
+        if content is None:
             content = self.preprocess_css()
 
             if self.css_errors:
@@ -1147,9 +1139,32 @@ class AssetsBundle(object):
             content = u'\n'.join(matches)
             if self.css_errors:
                 return content
-            self.cache[key] = (self.version, content)
+            self.set_cache('css', content)
 
-        return self.cache[key][1]
+        return content
+
+    def get_cache(self, type):
+        content = None
+        domain = [('url', '=', '/web/%s/%s/%s' % (type, self.xmlid, self.version))]
+        bundle = self.registry['ir.attachment'].search_read(self.cr, self.uid, domain, ['datas'], context=self.context)
+        if bundle:
+            content = bundle[0]['datas'].decode('base64')
+        return content
+
+    def set_cache(self, type, content):
+        ira = self.registry['ir.attachment']
+        url_prefix = '/web/%s/%s/' % (type, self.xmlid)
+        # Invalidate previous caches
+        oids = ira.search(self.cr, self.uid, [('url', '=like', url_prefix + '%')], context=self.context)
+        if oids:
+            ira.unlink(self.cr, openerp.SUPERUSER_ID, oids, context=self.context)
+        url = url_prefix + self.version
+        ira.create(self.cr, openerp.SUPERUSER_ID, dict(
+                    datas=content.encode('utf8').encode('base64'),
+                    type='binary',
+                    name=url,
+                    url=url,
+                ), context=self.context)
 
     def css_message(self, message):
         # '\A' == css content carriage return
@@ -1170,24 +1185,22 @@ class AssetsBundle(object):
             Checks if the bundle contains any sass/less content, then compiles it to css.
             Returns the bundle's flat css.
         """
-        sass = [asset for asset in self.stylesheets if isinstance(asset, SassStylesheetAsset)]
-        if sass:
-            cmd = sass[0].get_command()
-            source = '\n'.join([asset.get_source() for asset in sass])
-            compiled = self.compile_css(cmd, source)
-            self.recompose_css(compiled)
+        for atype in (SassStylesheetAsset, LessStylesheetAsset):
+            assets = [asset for asset in self.stylesheets if isinstance(asset, atype)]
+            if assets:
+                cmd = assets[0].get_command()
+                source = '\n'.join([asset.get_source() for asset in assets])
+                compiled = self.compile_css(cmd, source)
 
-        less = [asset for asset in self.stylesheets if isinstance(asset, LessStylesheetAsset)]
-        if less:
-            cmd = less[0].get_command()
-            source = ''
-            for asset in self.stylesheets:
-                if isinstance(asset, LessStylesheetAsset):
-                    source += asset.get_source()
-                else:
-                    source += asset.content
-            compiled = self.compile_css(cmd, source)
-            return compiled
+                fragments = self.rx_css_split.split(compiled)
+                at_rules = fragments.pop(0)
+                if at_rules:
+                    # Sass and less moves @at-rules to the top in order to stay css 2.1 compatible
+                    self.stylesheets.insert(0, StylesheetAsset(self, inline=at_rules))
+                while fragments:
+                    asset_id = fragments.pop(0)
+                    asset = next(asset for asset in self.stylesheets if asset.id == asset_id)
+                    asset._content = fragments.pop(0)
 
         return '\n'.join(asset.minify() for asset in self.stylesheets)
 
@@ -1221,14 +1234,6 @@ class AssetsBundle(object):
             return ''
         compiled = result[0].strip().decode('utf8')
         return compiled
-
-    def recompose_css(self, compiled):
-        """Flattenize StylesheetAsset's content from compiled source"""
-        fragments = self.rx_css_split.split(compiled)[1:]
-        while fragments:
-            asset_id = fragments.pop(0)
-            asset = next(asset for asset in self.stylesheets if asset.id == asset_id)
-            asset._content = fragments.pop(0)
 
     def get_preprocessor_error(self, stderr, source=None):
         """Improve and remove sensitive information from sass/less compilator error messages"""
@@ -1302,7 +1307,7 @@ class WebAsset(object):
 
     @property
     def content(self):
-        if not self._content:
+        if self._content is None:
             self._content = self.inline or self._fetch_content()
         return self._content
 
@@ -1418,14 +1423,15 @@ class PreprocessedCSS(StylesheetAsset):
         if self.url:
             ira = self.registry['ir.attachment']
             url = self.html_url % self.url
-            domain = [('type', '=', 'binary'), ('url', '=', self.url)]
+            domain = [('type', '=', 'binary'), ('url', '=', url)]
             ira_id = ira.search(self.cr, self.uid, domain, context=self.context)
+            datas = self.content.encode('utf8').encode('base64')
             if ira_id:
                 # TODO: update only if needed
-                ira.write(self.cr, openerp.SUPERUSER_ID, [ira_id], {'datas': self.content}, context=self.context)
+                ira.write(self.cr, openerp.SUPERUSER_ID, ira_id, {'datas': datas}, context=self.context)
             else:
                 ira.create(self.cr, openerp.SUPERUSER_ID, dict(
-                    datas=self.content.encode('utf8').encode('base64'),
+                    datas=datas,
                     mimetype='text/css',
                     type='binary',
                     name=url,
