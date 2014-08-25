@@ -681,7 +681,8 @@ class Proxy(http.Controller):
         from werkzeug.test import Client
         from werkzeug.wrappers import BaseResponse
 
-        return Client(request.httprequest.app, BaseResponse).get(path).data
+        base_url = request.httprequest.base_url
+        return Client(request.httprequest.app, BaseResponse).get(path, base_url=base_url).data
 
 class Database(http.Controller):
 
@@ -1524,16 +1525,18 @@ class ExportFormat(object):
         raise NotImplementedError()
 
     def base(self, data, token):
+        params = simplejson.loads(data)
         model, fields, ids, domain, import_compat = \
             operator.itemgetter('model', 'fields', 'ids', 'domain',
                                 'import_compat')(
-                simplejson.loads(data))
+                params)
 
         Model = request.session.model(model)
-        ids = ids or Model.search(domain, 0, False, False, request.context)
+        context = dict(request.context or {}, **params.get('context', {}))
+        ids = ids or Model.search(domain, 0, False, False, context)
 
         field_names = map(operator.itemgetter('name'), fields)
-        import_data = Model.export_data(ids, field_names, self.raw_data, context=request.context).get('datas',[])
+        import_data = Model.export_data(ids, field_names, self.raw_data, context=context).get('datas',[])
 
         if import_compat:
             columns_headers = field_names
