@@ -1269,6 +1269,13 @@ class stock_picking(osv.osv):
             move_obj.action_confirm(cr, uid, moves, context=context)
         return moves
 
+    def rereserve_pick(self, cr, uid, ids, context=None):
+        """
+        This can be used to provide a button that rereserves taking into account the existing pack operations
+        """
+        for pick in self.browse(cr, uid, ids, context=context):
+            self.rereserve_quants(cr, uid, pick, move_ids = [x.id for x in pick.move_lines], context=context)
+
     def rereserve_quants(self, cr, uid, picking, move_ids=[], context=None):
         """ Unreserve quants then try to reassign quants."""
         stock_move_obj = self.pool.get('stock.move')
@@ -2139,6 +2146,8 @@ class stock_move(osv.osv):
                         quants = quant_obj.quants_get_prefered_domain(cr, uid, ops.location_id, move.product_id, qty, domain=domain, prefered_domain_list=[], restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
                         quant_obj.quants_reserve(cr, uid, quants, move, record, context=context)
         for move in todo_moves:
+            if move.linked_move_operation_ids:
+                continue
             move.refresh()
             #then if the move isn't totally assigned, try to find quants without any specific domain
             if move.state != 'assigned':
@@ -2395,7 +2404,6 @@ class stock_move(osv.osv):
         defaults = {
             'product_uom_qty': uom_qty,
             'product_uos_qty': uos_qty,
-            'state': move.state,
             'procure_method': 'make_to_stock',
             'restrict_lot_id': restrict_lot_id,
             'restrict_partner_id': restrict_partner_id,
@@ -3221,11 +3229,14 @@ class stock_warehouse(osv.osv):
         location_obj = self.pool.get('stock.location')
 
         #create view location for warehouse
-        wh_loc_id = location_obj.create(cr, uid, {
+        loc_vals = {
                 'name': _(vals.get('code')),
                 'usage': 'view',
-                'location_id': data_obj.get_object_reference(cr, uid, 'stock', 'stock_location_locations')[1]
-            }, context=context)
+                'location_id': data_obj.get_object_reference(cr, uid, 'stock', 'stock_location_locations')[1],
+        }
+        if vals.get('company_id'):
+            loc_vals['company_id'] = vals.get('company_id')
+        wh_loc_id = location_obj.create(cr, uid, loc_vals, context=context)
         vals['view_location_id'] = wh_loc_id
         #create all location
         def_values = self.default_get(cr, uid, {'reception_steps', 'delivery_steps'})
@@ -3241,12 +3252,15 @@ class stock_warehouse(osv.osv):
             {'name': _('Packing Zone'), 'active': delivery_steps == 'pick_pack_ship', 'field': 'wh_pack_stock_loc_id'},
         ]
         for values in sub_locations:
-            location_id = location_obj.create(cr, uid, {
+            loc_vals = {
                 'name': values['name'],
                 'usage': 'internal',
                 'location_id': wh_loc_id,
                 'active': values['active'],
-            }, context=context_with_inactive)
+            }
+            if vals.get('company_id'):
+                loc_vals['company_id'] = vals.get('company_id')
+            location_id = location_obj.create(cr, uid, loc_vals, context=context_with_inactive)
             vals[values['field']] = location_id
 
         #create WH
@@ -3991,13 +4005,16 @@ class stock_warehouse_orderpoint(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', required=True, ondelete='cascade', domain=[('type', '=', 'product')]),
         'product_uom': fields.related('product_id', 'uom_id', type='many2one', relation='product.uom', string='Product Unit of Measure', readonly=True, required=True),
         'product_min_qty': fields.float('Minimum Quantity', required=True,
+            digits_compute=dp.get_precision('Product Unit of Measure'),
             help="When the virtual stock goes below the Min Quantity specified for this field, Odoo generates "\
             "a procurement to bring the forecasted quantity to the Max Quantity."),
         'product_max_qty': fields.float('Maximum Quantity', required=True,
+            digits_compute=dp.get_precision('Product Unit of Measure'),
             help="When the virtual stock goes below the Min Quantity, Odoo generates "\
             "a procurement to bring the forecasted quantity to the Quantity specified as Max Quantity."),
-        'qty_multiple': fields.integer('Qty Multiple', required=True,
-            help="The procurement quantity will be rounded up to this multiple."),
+        'qty_multiple': fields.float('Qty Multiple', required=True,
+            digits_compute=dp.get_precision('Product Unit of Measure'),
+            help="The procurement quantity will be rounded up to this multiple.  If it is 0, the exact quantity will be used.  "),
         'procurement_ids': fields.one2many('procurement.order', 'orderpoint_id', 'Created Procurements'),
         'group_id': fields.many2one('procurement.group', 'Procurement Group', help="Moves created through this orderpoint will be put in this procurement group. If none is given, the moves generated by procurement rules will be grouped into one big picking.", copy=False),
         'company_id': fields.many2one('res.company', 'Company', required=True),
@@ -4011,7 +4028,7 @@ class stock_warehouse_orderpoint(osv.osv):
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.warehouse.orderpoint', context=context)
     }
     _sql_constraints = [
-        ('qty_multiple_check', 'CHECK( qty_multiple > 0 )', 'Qty Multiple must be greater than zero.'),
+        ('qty_multiple_check', 'CHECK( qty_multiple >= 0 )', 'Qty Multiple must be greater than or equal to zero.'),
     ]
     _constraints = [
         (_check_product_uom, 'You have to select a product unit of measure in the same category than the default unit of measure of the product', ['product_id', 'product_uom']),

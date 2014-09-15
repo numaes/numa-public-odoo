@@ -2937,8 +2937,11 @@ class BaseModel(object):
         for parent_model, parent_field in reversed(cls._inherits.items()):
             for attr, field in cls.pool[parent_model]._fields.iteritems():
                 if attr not in cls._fields:
-                    new_field = field.copy(related=(parent_field, attr), _origin=field)
-                    cls._add_field(attr, new_field)
+                    cls._add_field(attr, field.copy(
+                        related=(parent_field, attr),
+                        related_sudo=False,
+                        _origin=field,
+                    ))
 
         cls._inherits_reload_src()
 
@@ -3149,9 +3152,12 @@ class BaseModel(object):
         if self.env.in_draft:
             # we may be doing an onchange, do not prefetch other fields
             pass
-        elif field in self.env.todo:
+        elif self.env.field_todo(field):
             # field must be recomputed, do not prefetch records to recompute
-            records -= self.env.todo[field]
+            records -= self.env.field_todo(field)
+        elif not self._context.get('prefetch_fields', True):
+            # do not prefetch other fields
+            pass
         elif self._columns[field.name]._prefetch:
             # here we can optimize: prefetch all classic and many2one fields
             fnames = set(fname
@@ -5308,14 +5314,17 @@ class BaseModel(object):
             yield self._browse(self.env, (id,))
 
     def __contains__(self, item):
-        """ Test whether `item` is a subset of `self` or a field name. """
-        if isinstance(item, BaseModel):
-            if self._name == item._name:
-                return set(item._ids) <= set(self._ids)
-            raise except_orm("ValueError", "Mixing apples and oranges: %s in %s" % (item, self))
-        if isinstance(item, basestring):
+        """ Test whether `item` (record or field name) is an element of `self`.
+            In the first case, the test is fully equivalent to::
+
+                any(item == record for record in self)
+        """
+        if isinstance(item, BaseModel) and self._name == item._name:
+            return len(item) == 1 and item.id in self._ids
+        elif isinstance(item, basestring):
             return item in self._fields
-        return item in self.ids
+        else:
+            raise except_orm("ValueError", "Mixing apples and oranges: %s in %s" % (item, self))
 
     def __add__(self, other):
         """ Return the concatenation of two recordsets. """
@@ -5498,42 +5507,34 @@ class BaseModel(object):
         """ If `field` must be recomputed on some record in `self`, return the
             corresponding records that must be recomputed.
         """
-        for env in [self.env] + list(iter(self.env.all)):
-            if env.todo.get(field) and env.todo[field] & self:
-                return env.todo[field]
+        return self.env.check_todo(field, self)
 
     def _recompute_todo(self, field):
         """ Mark `field` to be recomputed. """
-        todo = self.env.todo
-        todo[field] = (todo.get(field) or self.browse()) | self
+        self.env.add_todo(field, self)
 
     def _recompute_done(self, field):
-        """ Mark `field` as being recomputed. """
-        todo = self.env.todo
-        if field in todo:
-            recs = todo.pop(field) - self
-            if recs:
-                todo[field] = recs
+        """ Mark `field` as recomputed. """
+        self.env.remove_todo(field, self)
 
     @api.model
     def recompute(self):
         """ Recompute stored function fields. The fields and records to
             recompute have been determined by method :meth:`modified`.
         """
-        for env in list(iter(self.env.all)):
-            while env.todo:
-                field, recs = next(env.todo.iteritems())
-                # evaluate the fields to recompute, and save them to database
-                for rec, rec1 in zip(recs, recs.with_context(recompute=False)):
-                    try:
-                        values = rec._convert_to_write({
-                            f.name: rec[f.name] for f in field.computed_fields
-                        })
-                        rec1._write(values)
-                    except MissingError:
-                        pass
-                # mark the computed fields as done
-                map(recs._recompute_done, field.computed_fields)
+        while self.env.has_todo():
+            field, recs = self.env.get_todo()
+            # evaluate the fields to recompute, and save them to database
+            for rec, rec1 in zip(recs, recs.with_context(recompute=False)):
+                try:
+                    values = rec._convert_to_write({
+                        f.name: rec[f.name] for f in field.computed_fields
+                    })
+                    rec1._write(values)
+                except MissingError:
+                    pass
+            # mark the computed fields as done
+            map(recs._recompute_done, field.computed_fields)
 
     #
     # Generic onchange method
@@ -5692,13 +5693,28 @@ class BaseModel(object):
 
                 # determine which fields have been modified
                 for name, oldval in values.iteritems():
+                    field = self._fields[name]
                     newval = record[name]
-                    if newval != oldval or getattr(newval, '_dirty', False):
-                        field = self._fields[name]
-                        result['value'][name] = field.convert_to_write(
-                            newval, record._origin, subfields.get(name),
-                        )
-                        todo.add(name)
+                    if field.type in ('one2many', 'many2many'):
+                        if newval != oldval or newval._dirty:
+                            # put new value in result
+                            result['value'][name] = field.convert_to_write(
+                                newval, record._origin, subfields.get(name),
+                            )
+                            todo.add(name)
+                        else:
+                            # keep result: newval may have been dirty before
+                            pass
+                    else:
+                        if newval != oldval:
+                            # put new value in result
+                            result['value'][name] = field.convert_to_write(
+                                newval, record._origin, subfields.get(name),
+                            )
+                            todo.add(name)
+                        else:
+                            # clean up result to not return another value
+                            result['value'].pop(name, None)
 
         # At the moment, the client does not support updates on a *2many field
         # while this one is modified by the user.
