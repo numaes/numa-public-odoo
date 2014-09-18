@@ -237,6 +237,11 @@ class MetaModel(api.Meta):
         if not self._custom:
             self.module_to_models.setdefault(self._module, []).append(self)
 
+        # transform columns into new-style fields (enables field inheritance)
+        for name, column in self._columns.iteritems():
+            if not hasattr(self, name):
+                setattr(self, name, column.to_field())
+
 
 class NewId(object):
     """ Pseudo-ids for new records. """
@@ -1679,8 +1684,9 @@ class BaseModel(object):
 
     @api.depends(lambda self: (self._rec_name,) if self._rec_name else ())
     def _compute_display_name(self):
-        for i, got_name in enumerate(self.name_get()):
-            self[i].display_name = got_name[1]
+        names = dict(self.name_get())
+        for record in self:
+            record.display_name = names.get(record.id, False)
 
     @api.multi
     def name_get(self):
@@ -3688,6 +3694,7 @@ class BaseModel(object):
 
         readonly = None
         self.check_field_access_rights(cr, user, 'write', vals.keys())
+        deleted_related = defaultdict(list)
         for field in vals.keys():
             fobj = None
             if field in self._columns:
@@ -3696,6 +3703,10 @@ class BaseModel(object):
                 fobj = self._inherit_fields[field][2]
             if not fobj:
                 continue
+            if fobj._type in ['one2many', 'many2many'] and vals[field]:
+                for wtuple in vals[field]:
+                    if isinstance(wtuple, (tuple, list)) and wtuple[0] == 2:
+                        deleted_related[fobj._obj].append(wtuple[1])
             groups = fobj.write
 
             if groups:
@@ -3899,7 +3910,8 @@ class BaseModel(object):
             for id in ids_to_update:
                 if id not in done[key]:
                     done[key][id] = True
-                    todo.append(id)
+                    if id not in deleted_related[model_name]:
+                        todo.append(id)
             self.pool[model_name]._store_set_values(cr, user, todo, fields_to_recompute, context)
 
         # recompute new-style fields
