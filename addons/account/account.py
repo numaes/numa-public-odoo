@@ -675,7 +675,7 @@ class account_account(osv.osv):
                 if old_type == 'closed' and new_type !='closed':
                     raise osv.except_osv(_('Warning!'), _("You cannot change the type of account from 'Closed' to any other type as it contains journal items!"))
                 # Forbid to change an account type for restricted_groups as it contains journal items (or if one of its children does)
-                if (new_type in restricted_groups):
+                if (old_type != new_type) and (new_type in restricted_groups):
                     raise osv.except_osv(_('Warning!'), _("You cannot change the type of account to '%s' type as it contains journal items!") % (new_type,))
 
         return True
@@ -683,11 +683,12 @@ class account_account(osv.osv):
     # For legal reason (forbiden to modify journal entries which belongs to a closed fy or period), Forbid to modify
     # the code of an account if journal entries have been already posted on this account. This cannot be simply 
     # 'configurable' since it can lead to a lack of confidence in Odoo and this is what we want to change.
-    def _check_allow_code_change(self, cr, uid, ids, context=None):
+    def _check_allow_code_change(self, cr, uid, ids, new_code, context=None):
         line_obj = self.pool.get('account.move.line')
         for account in self.browse(cr, uid, ids, context=context):
+            old_code = account.code
             account_ids = self.search(cr, uid, [('id', 'child_of', [account.id])], context=context)
-            if line_obj.search(cr, uid, [('account_id', 'in', account_ids)], context=context):
+            if (old_code != new_code) and line_obj.search(cr, uid, [('account_id', 'in', account_ids)], context=context):
                 raise osv.except_osv(_('Warning !'), _("You cannot change the code of account which contains journal items!"))
         return True
 
@@ -712,7 +713,7 @@ class account_account(osv.osv):
         if 'type' in vals.keys():
             self._check_allow_type_change(cr, uid, ids, vals['type'], context=context)
         if 'code' in vals.keys():
-            self._check_allow_code_change(cr, uid, ids, context=context)
+            self._check_allow_code_change(cr, uid, ids, vals['code'], context=context)
         return super(account_account, self).write(cr, uid, ids, vals, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
