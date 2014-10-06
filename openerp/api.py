@@ -698,6 +698,9 @@ class Environment(object):
         args = (cr, uid, context)
 
         # if env already exists, return it
+        if 'environments' not in cls._local:
+            cls._local.environments = Environments()
+            
         env, envs = None, cls._local.environments
         for env in envs:
             if env.args == args:
