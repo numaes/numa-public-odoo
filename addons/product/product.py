@@ -26,7 +26,7 @@ from _common import ceiling
 
 from openerp import SUPERUSER_ID
 from openerp import tools
-from openerp.osv import osv, fields
+from openerp.osv import osv, fields, expression
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 import psycopg2
@@ -996,6 +996,10 @@ class product_product(osv.osv):
             return (d['id'], name)
 
         partner_id = context.get('partner_id', False)
+        if partner_id:
+            partner_ids = [partner_id, self.pool['res.partner'].browse(cr, user, partner_id, context=context).commercial_partner_id.id]
+        else:
+            partner_ids = []
 
         # all user don't have access to seller and partner
         # check access and use superuser
@@ -1007,8 +1011,8 @@ class product_product(osv.osv):
             variant = ", ".join([v.name for v in product.attribute_value_ids])
             name = variant and "%s (%s)" % (product.name, variant) or product.name
             sellers = []
-            if partner_id:
-                sellers = filter(lambda x: x.name.id == partner_id, product.seller_ids)
+            if partner_ids:
+                partner_ids and filter(lambda x: x.name.id in partner_ids, product.seller_ids)
             if sellers:
                 for s in sellers:
                     seller_variant = s.product_name and "%s (%s)" % (s.product_name, variant) or False
@@ -1031,10 +1035,13 @@ class product_product(osv.osv):
         if not args:
             args = []
         if name:
-            ids = self.search(cr, user, [('default_code','=',name)]+ args, limit=limit, context=context)
-            if not ids:
-                ids = self.search(cr, user, [('ean13','=',name)]+ args, limit=limit, context=context)
-            if not ids:
+            positive_operators = ['=', 'ilike', '=ilike', 'like', '=like']
+            ids = []
+            if operator in positive_operators:
+                ids = self.search(cr, user, [('default_code','=',name)]+ args, limit=limit, context=context)
+                if not ids:
+                    ids = self.search(cr, user, [('ean13','=',name)]+ args, limit=limit, context=context)
+            if not ids and operator not in expression.NEGATIVE_TERM_OPERATORS:
                 # Do not merge the 2 next lines into one single search, SQL search performance would be abysmal
                 # on a database with thousands of matching products, due to the huge merge+unique needed for the
                 # OR operator (and given the fact that the 'name' lookup results come from the ir.translation table
@@ -1045,7 +1052,9 @@ class product_product(osv.osv):
                     limit2 = (limit - len(ids)) if limit else False
                     ids.update(self.search(cr, user, args + [('name', operator, name)], limit=limit2, context=context))
                 ids = list(ids)
-            if not ids:
+            elif not ids and operator in expression.NEGATIVE_TERM_OPERATORS:
+                ids = self.search(cr, user, args + ['&', ('default_code', operator, name), ('name', operator, name)], limit=limit, context=context)
+            if not ids and operator in positive_operators:
                 ptrn = re.compile('(\[(.*?)\])')
                 res = ptrn.search(name)
                 if res:
