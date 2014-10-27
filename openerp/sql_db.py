@@ -223,8 +223,8 @@ class Cursor(object):
             _logger.warning(query)
             _logger.warning("SQL queries cannot contain %d or %f anymore. Use only %s")
         if params and not isinstance(params, (tuple, list, dict)):
-            _logger.error("SQL query parameters should be a tuple, list or dict; got %r", params)
-            raise ValueError("SQL query parameters should be a tuple, list or dict; got %r" % (params,))
+            _logger.error(u"SQL query parameters should be a tuple, list or dict; got %r", params)
+            raise ValueError(u"SQL query parameters should be a tuple, list or dict; got %r" % (params,))
 
         if self.sql_log:
             now = mdt.now()
@@ -234,11 +234,11 @@ class Cursor(object):
             res = self._obj.execute(query, params)
         except psycopg2.ProgrammingError, pe:
             if self._default_log_exceptions if log_exceptions is None else log_exceptions:
-                _logger.error(u"Programming error: %s, in query %s", pe, query)
+                _logger.error(u"Programming error: %s, in query %s", unicode(pe), unicode(query))
             raise
         except Exception:
             if self._default_log_exceptions if log_exceptions is None else log_exceptions:
-                _logger.exception(u"bad query: %s", self._obj.query or query)
+                _logger.exception(u"bad query: %s", unicode(self._obj.query or query))
             raise
 
         # simple query count is always computed
@@ -249,7 +249,7 @@ class Cursor(object):
             delay = mdt.now() - now
             delay = delay.seconds * 1E6 + delay.microseconds
 
-            _logger.debug("query: %s", self._obj.query)
+            _logger.debug(u"query: %s", self._obj.query)
             res_from = re_from.match(query.lower())
             if res_from:
                 self.sql_from_log.setdefault(res_from.group(1), [0, 0])
