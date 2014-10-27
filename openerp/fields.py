@@ -21,7 +21,6 @@
 
 """ High-level objects for fields. """
 
-from copy import copy
 from datetime import date, datetime
 from functools import partial
 from operator import attrgetter
@@ -29,8 +28,6 @@ from types import NoneType
 import logging
 import pytz
 import xmlrpclib
-
-from types import NoneType
 
 from openerp.tools import float_round, ustr, html_sanitize
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
@@ -394,8 +391,8 @@ class Field(object):
             if `self` has already been set up.
         """
         if not self.setup_done:
-            self.setup_done = True
             self._setup(env)
+            self.setup_done = True
 
     def _setup(self, env):
         """ Do the actual setup of `self`. """
@@ -427,16 +424,15 @@ class Field(object):
             self.related = tuple(self.related.split('.'))
 
         # determine the chain of fields, and make sure they are all set up
-        fields = []
         recs = env[self.model_name]
+        fields = []
         for name in self.related:
-            fields.append(recs._fields[name])
-            recs = recs[name]
-
-        for field in fields:
+            field = recs._fields[name]
             field.setup(env)
+            recs = recs[name]
+            fields.append(field)
 
-        self.related_field = field = fields[-1]
+        self.related_field = field
 
         # check type consistency
         if self.type != field.type:
@@ -454,6 +450,10 @@ class Field(object):
         for attr, prop in self.related_attrs:
             if not getattr(self, attr):
                 setattr(self, attr, getattr(field, prop))
+
+        # special case for required: check if all fields are required
+        if not self.store and not self.required:
+            self.required = all(field.required for field in fields)
 
     def _compute_related(self, records):
         """ Compute the related field `self` on `records`. """
@@ -632,8 +632,7 @@ class Field(object):
         """ return a low-level field object corresponding to `self` """
         assert self.store
 
-        # some columns are registry-dependent, like float fields (digits);
-        # duplicate them to avoid sharing between registries
+        # determine column parameters
         _logger.debug("Create fields._column for Field %s", self)
         args = {}
         for attr, prop in self.column_attrs:
@@ -647,10 +646,9 @@ class Field(object):
             args['relation'] = self.comodel_name
             return fields.property(**args)
 
-        if isinstance(self.column, fields.function):
-            # it is too tricky to recreate a function field, so for that case,
-            # we make a stupid (and possibly incorrect) copy of the column
-            return copy(self.column)
+        if self.column:
+            # let the column provide a valid column for the given parameters
+            return self.column.new(**args)
 
         return getattr(fields, self.type)(**args)
 
@@ -797,11 +795,9 @@ class Field(object):
 
     def _compute_value(self, records):
         """ Invoke the compute method on `records`. """
-        # mark the computed fields failed in cache, so that access before
-        # computation raises an exception
-        exc = Warning("Field %s is accessed before being computed." % self)
+        # initialize the fields to their corresponding null value in cache
         for field in self.computed_fields:
-            records._cache[field] = FailedValue(exc)
+            records._cache[field] = field.null(records.env)
             records.env.computed[field].update(records._ids)
         self.compute(records)
         for field in self.computed_fields:
@@ -1264,7 +1260,7 @@ class Selection(Field):
             name = "%s,%s" % (self.model_name, self.name)
             translate = partial(
                 env['ir.translation']._get_source, name, 'selection', env.lang)
-            return [(value, translate(label)) for value, label in selection]
+            return [(value, translate(label) if label else label) for value, label in selection]
         else:
             return selection
 
@@ -1306,14 +1302,14 @@ class Selection(Field):
 
 class Reference(Selection):
     type = 'reference'
-    size = 128
+    size = None
 
     def __init__(self, selection=None, string=None, **kwargs):
         super(Reference, self).__init__(selection=selection, string=string, **kwargs)
 
     def _setup(self, env):
         super(Reference, self)._setup(env)
-        assert isinstance(self.size, int), \
+        assert isinstance(self.size, (NoneType, int)), \
             "Reference field %s with non-integer size %r" % (self, self.size)
 
     _related_size = property(attrgetter('size'))
@@ -1728,10 +1724,6 @@ class Id(Field):
         super(Id, self).__init__(type='integer', string=string, **kwargs)
 
     def to_column(self):
-        """ to_column() -> fields._column
-
-        Whatever
-        """
         return fields.integer('ID')
 
     def __get__(self, record, owner):

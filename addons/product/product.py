@@ -134,10 +134,10 @@ class product_uom(osv.osv):
         'name': fields.char('Unit of Measure', required=True, translate=True),
         'category_id': fields.many2one('product.uom.categ', 'Product Category', required=True, ondelete='cascade',
             help="Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."),
-        'factor': fields.float('Ratio', required=True,digits=(12, 12),
+        'factor': fields.float('Ratio', required=True, digits=0, # force NUMERIC with unlimited precision
             help='How much bigger or smaller this unit is compared to the reference Unit of Measure for this category:\n'\
                     '1 * (reference unit) = ratio * (this unit)'),
-        'factor_inv': fields.function(_factor_inv, digits=(12,12),
+        'factor_inv': fields.function(_factor_inv, digits=0, # force NUMERIC with unlimited precision
             fnct_inv=_factor_inv_write,
             string='Bigger Ratio',
             help='How many times this Unit of Measure is bigger than the reference Unit of Measure in this category:\n'\
@@ -558,7 +558,7 @@ class product_template(osv.osv):
 
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
         'color': fields.integer('Color Index'),
-        'is_product_variant': fields.function( _is_product_variant, type='boolean', string='Only one product variant'),
+        'is_product_variant': fields.function( _is_product_variant, type='boolean', string='Is product variant'),
 
         'attribute_line_ids': fields.one2many('product.attribute.line', 'product_tmpl_id', 'Product Attributes'),
         'product_variant_ids': fields.one2many('product.product', 'product_tmpl_id', 'Products', required=True),
@@ -925,6 +925,7 @@ class product_product(osv.osv):
             'product.product': (lambda self, cr, uid, ids, c=None: ids, [], 10),
         }, select=True),
         'attribute_value_ids': fields.many2many('product.attribute.value', id1='prod_id', id2='att_id', string='Attributes', readonly=True, ondelete='restrict'),
+        'is_product_variant': fields.function( _is_product_variant_impl, type='boolean', string='Is product variant'),
 
         # image: all image fields are base64 encoded and PIL-supported
         'image_variant': fields.binary("Variant Image",

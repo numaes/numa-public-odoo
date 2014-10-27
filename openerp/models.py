@@ -178,7 +178,12 @@ def get_pg_type(f, type_override=None):
     if field_type in FIELDS_TO_PGTYPES:
         pg_type =  (FIELDS_TO_PGTYPES[field_type], FIELDS_TO_PGTYPES[field_type])
     elif issubclass(field_type, fields.float):
-        if f.digits:
+        # Explicit support for "falsy" digits (0, False) to indicate a
+        # NUMERIC field with no fixed precision. The values will be saved
+        # in the database with all significant digits.
+        # FLOAT8 type is still the default when there is no precision because
+        # it is faster for most operations (sums, etc.)
+        if f.digits is not None:
             pg_type = ('numeric', 'NUMERIC')
         else:
             pg_type = ('float8', 'DOUBLE PRECISION')
@@ -2972,13 +2977,11 @@ class BaseModel(object):
     def _setup_fields(self, partial=False):
         """ Setup the fields (dependency triggers, etc). """
         for field in self._fields.itervalues():
-            if partial and field.manual and \
-                    field.relational and \
-                    (field.comodel_name not in self.pool or \
-                     (field.type == 'one2many' and field.inverse_name not in self.pool[field.comodel_name]._fields)):
-                # do not set up manual fields that refer to unknown models
-                continue
-            field.setup(self.env)
+            try:
+                field.setup(self.env)
+            except Exception:
+                if not partial:
+                    raise
 
         # group fields by compute to determine field.computed_fields
         fields_by_compute = defaultdict(list)
