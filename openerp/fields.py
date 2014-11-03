@@ -25,6 +25,7 @@ from datetime import date, datetime
 from functools import partial
 from operator import attrgetter
 from types import NoneType
+from copy import copy
 import logging
 import pytz
 import xmlrpclib
@@ -284,11 +285,18 @@ class Field(object):
     def __init__(self, string=None, **kwargs):
         kwargs['string'] = string
         self._attrs = {key: val for key, val in kwargs.iteritems() if val is not None}
+        for key in ['required', 'readonly']:
+            if key not in self._attrs:
+                self._attrs[key] = False
         self._free_attrs = []
 
     def new(self, **kwargs):
         """ Return a field of the same type as `self`, with its own parameters. """
         return type(self)(**kwargs)
+
+    def copy_field(self):
+        """ copy_field(item) -> test"""
+        return copy(self)
 
     def set_class_name(self, cls, name):
         """ Assign the model class and field name of `self`. """
@@ -297,7 +305,7 @@ class Field(object):
 
         # determine all inherited field attributes
         attrs = {}
-        for field in resolve_all_mro(cls, name, reverse=True):
+        for field in resolve_all_mro(cls, name):
             if isinstance(field, type(self)):
                 attrs.update(field._attrs)
             else:
@@ -623,12 +631,12 @@ class Field(object):
         assert self.store or self.column
 
         # determine column parameters
-        _logger.debug("Create fields._column for Field %s", self)
         args = {}
         for attr, prop in self.column_attrs:
             args[attr] = getattr(self, prop)
         for attr in self._free_attrs:
             args[attr] = getattr(self, attr)
+        _logger.debug("Create fields._column for Field %s", self)
 
         if self.company_dependent:
             # company-dependent fields are mapped to former property fields

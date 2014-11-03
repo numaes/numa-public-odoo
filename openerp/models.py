@@ -469,12 +469,13 @@ class BaseModel(object):
         # add field as an attribute and in cls._fields (for reflection)
         if not isinstance(getattr(cls, name, field), Field):
             _logger.warning("In model %r, field %r overriding existing value", cls._name, name)
+
         setattr(cls, name, field)
         cls._fields[name] = field
 
         # basic setup of field
         field.set_class_name(cls, name)
-
+    
         if field.store or field.column:
             cls._columns[name] = field.to_column()
         else:
@@ -812,11 +813,17 @@ class BaseModel(object):
         # retrieve new-style fields (from above registry class) and duplicate
         # them (to avoid clashes with inheritance between different models)
         cls._fields = {}
-        above = cls.__bases__[0]
-        for attr, field in getmembers(above, Field.__instancecheck__):
-            if not field.inherited:
-                cls._add_field(attr, field.new())
+        own_fields = getmembers(cls, Field.__instancecheck__)
 
+        for above in cls.__bases__:
+            for attr, field in getmembers(above, Field.__instancecheck__):
+                if not field.inherited:
+                    cls._add_field(attr, field.copy_field())
+                    
+        for attr, field in own_fields:
+            if not field.inherited:
+                cls._add_field(attr, field.copy_field())
+    
         # introduce magic fields
         cls._add_magic_fields()
 
@@ -2586,7 +2593,7 @@ class BaseModel(object):
                                         self._table, k, f_pg_type, f._type, newname)
 
                             # if the field is required and hasn't got a NOT NULL constraint
-                            if f.required and f_pg_notnull == 0:
+                            if f.required and not f_pg_notnull:
                                 if has_rows:
                                     self._set_default_value_on_column(cr, k, context=context)
                                 # add the NOT NULL constraint
@@ -2601,7 +2608,7 @@ class BaseModel(object):
                                         "ALTER TABLE %s ALTER COLUMN %s SET NOT NULL"
                                     _schema.warning(msg, self._table, k, self._table, k)
                                 cr.commit()
-                            elif not f.required and f_pg_notnull == 1:
+                            elif not f.required and f_pg_notnull:
                                 cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" DROP NOT NULL' % (self._table, k))
                                 cr.commit()
                                 _schema.debug("Table '%s': column '%s': dropped NOT NULL constraint",
