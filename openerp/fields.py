@@ -285,9 +285,6 @@ class Field(object):
     def __init__(self, string=None, **kwargs):
         kwargs['string'] = string
         self._attrs = {key: val for key, val in kwargs.iteritems() if val is not None}
-        for key in ['required', 'readonly']:
-            if key not in self._attrs:
-                self._attrs[key] = False
         self._free_attrs = []
 
     def new(self, **kwargs):

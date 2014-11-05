@@ -166,14 +166,14 @@ class _column(object):
         base_items = [
             ('column', self),                   # field interfaces self
             ('copy', self.copy),
+            ('readonly', self.readonly),
+            ('required', self.required),
         ]
         truthy_items = filter(itemgetter(1), [
             ('index', self.select),
             ('manual', self.manual),
             ('string', self.string),
             ('help', self.help),
-            ('readonly', self.readonly),
-            ('required', self.required),
             ('states', self.states),
             ('groups', self.groups),
             ('change_default', self.change_default),
