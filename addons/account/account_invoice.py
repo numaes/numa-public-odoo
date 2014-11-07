@@ -899,7 +899,7 @@ class account_invoice(models.Model):
                 'ref': inv.reference or inv.name,
                 'line_id': line,
                 'journal_id': journal.id,
-                'date': inv.date_invoice,
+                'date': inv.date_invoice or fields.Date.context_today(self),
                 'narration': inv.comment,
                 'company_id': inv.company_id.id,
             }

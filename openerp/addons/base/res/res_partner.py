@@ -752,11 +752,12 @@ class res_partner(osv.Model, format_address):
                     break
                 current_partner = current_partner.parent_id
 
-        # default to type 'default' or the partner itself
-        default = result.get('default', partner.id)
-        for adr_type in adr_pref:
-            result[adr_type] = result.get(adr_type) or default 
-        return result
+            # default to type 'default' or the partner itself
+            default = result.get('default', partner.id)
+            for adr_type in adr_pref:
+                result[adr_type] = result.get(adr_type) or default 
+            return result
+        return {}
 
     def view_header_get(self, cr, uid, view_id, view_type, context):
         res = super(res_partner, self).view_header_get(cr, uid, view_id, view_type, context)
