@@ -1023,7 +1023,7 @@ class ir_model_data(osv.osv):
 
         if action_id and res_id:
             model_obj.write(cr, uid, [res_id], values, context=context)
-            self.write(cr, uid, [action_id], {
+            self.write(cr, SUPERUSER_ID, [action_id], {
                 'date_update': time.strftime('%Y-%m-%d %H:%M:%S'),
                 },context=context)
         elif res_id:
