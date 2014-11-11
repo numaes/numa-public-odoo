@@ -1033,14 +1033,14 @@ class ir_model_data(osv.osv):
                     for table in model_obj._inherits:
                         inherit_id = model_obj.browse(cr, uid,
                                 res_id,context=context)[model_obj._inherits[table]]
-                        self.create(cr, uid, {
+                        self.create(cr, SUPERUSER_ID, {
                             'name': xml_id + '_' + table.replace('.', '_'),
                             'model': table,
                             'module': module,
                             'res_id': inherit_id.id,
                             'noupdate': noupdate,
                             },context=context)
-                self.create(cr, uid, {
+                self.create(cr, SUPERUSER_ID, {
                     'name': xml_id,
                     'model': model,
                     'module':module,
@@ -1055,14 +1055,14 @@ class ir_model_data(osv.osv):
                         for table in model_obj._inherits:
                             inherit_id = model_obj.browse(cr, uid,
                                     res_id,context=context)[model_obj._inherits[table]]
-                            self.create(cr, uid, {
+                            self.create(cr, SUPERUSER_ID, {
                                 'name': xml_id + '_' + table.replace('.', '_'),
                                 'model': table,
                                 'module': module,
                                 'res_id': inherit_id.id,
                                 'noupdate': noupdate,
                                 },context=context)
-                    self.create(cr, uid, {
+                    self.create(cr, SUPERUSER_ID, {
                         'name': xml_id,
                         'model': model,
                         'module': module,
