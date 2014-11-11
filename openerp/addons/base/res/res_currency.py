@@ -43,14 +43,14 @@ class res_currency(osv.osv):
             context = {}
         res = {}
 
-        date = context.get('date') or fields.date.context_today(self, cr, uid, context=context)
-
+        now = (context.get('date') and context.get('date')+' 23:59:59') or fields.datetime.now()
+        
         for id in ids:
             cr.execute("SELECT rate FROM res_currency_rate "
                        "WHERE currency_id = %s "
                          "AND name <= %s "
                        "ORDER BY name desc LIMIT 1",
-                       (id, date+' 23:59:59'))
+                       (id, now))
             if cr.rowcount:
                 res[id] = cr.fetchone()[0]
             elif not raise_on_no_rate:
