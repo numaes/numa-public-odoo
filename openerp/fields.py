@@ -476,7 +476,7 @@ class Field(object):
         for attr in field._free_attrs:
             if attr not in self._free_attrs:
                 self._free_attrs.append(attr)
-                setattr(self, attr, getattr(field, attr))
+            setattr(self, attr, getattr(field, attr))
 
         # special case for required: check if all fields are required
         if not self.store and not self.required:
@@ -655,7 +655,10 @@ class Field(object):
         for attr, prop in self.column_attrs:
             args[attr] = getattr(self, prop)
         for attr in self._free_attrs:
-            args[attr] = getattr(self, attr)
+            if not hasattr(self, attr):
+                args[attr] = None
+            else:
+                args[attr] = getattr(self, attr)
         _logger.debug("Create fields._column for Field %s", self)
 
         if self.company_dependent:
