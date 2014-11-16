@@ -5732,7 +5732,7 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
  * Options on attribute ; "blockui" {Boolean} block the UI or not
  * during the file is uploading
  */
-instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractField.extend({
+instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
     template: "FieldBinaryFileUploader",
     init: function(field_manager, node) {
         this._super(field_manager, node);
@@ -5747,8 +5747,7 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
         this.fileupload_id = _.uniqueId('oe_fileupload_temp');
         $(window).on(this.fileupload_id, _.bind(this.on_file_loaded, this));
     },
-    start: function() {
-        this._super(this);
+    initialize_content: function() {
         this.$el.on('change', 'input.oe_form_binary_file', this.on_file_change );
     },
     // WARNING: duplicated in 4 other M2M widgets
@@ -6234,7 +6233,12 @@ instance.web.form.StatInfo = instance.web.form.AbstractField.extend({
             value: this.get("value") || 0,
         };
         if (! this.node.attrs.nolabel) {
-            options.text = this.string
+            if(this.options.label_field && this.view.datarecord[this.options.label_field]) {
+                options.text = this.view.datarecord[this.options.label_field];
+            }
+            else {
+                options.text = this.string;
+            }
         }
         this.$el.html(QWeb.render("StatInfo", options));
     },
