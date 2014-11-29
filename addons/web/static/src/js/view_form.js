@@ -3258,7 +3258,6 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
     render_value: function () {
         var self = this;
         this.$el.toggleClass("oe_readonly", this.get('effective_readonly'));
-        this.$("input:checked").prop("checked", false);
         if (this.get_value()) {
             this.$("input").filter(function () {return this.value == self.get_value();}).prop("checked", true);
             this.$(".oe_radio_readonly").text(this.get('value') ? this.get('value')[1] : "");
@@ -4372,7 +4371,6 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         if (!this.fields_view || !this.editable()){
             return true;
         }
-        this.o2m._dirty_flag = true;
         var r;
         return _.every(this.records.records, function(record){
             r = record;
@@ -4868,6 +4866,7 @@ instance.web.form.Many2ManyListView = instance.web.ListView.extend(/** @lends in
             this.model,
             {
                 title: _t("Add: ") + this.m2m_field.string,
+                alternative_form_view: this.m2m_field.field.views ? this.m2m_field.field.views["form"] : undefined,
                 no_create: this.m2m_field.options.no_create,
             },
             new instance.web.CompoundDomain(this.m2m_field.build_domain(), ["!", ["id", "in", this.m2m_field.dataset.ids]]),
@@ -4893,6 +4892,7 @@ instance.web.form.Many2ManyListView = instance.web.ListView.extend(/** @lends in
         var pop = new instance.web.form.FormOpenPopup(this);
         pop.show_element(this.dataset.model, id, this.m2m_field.build_context(), {
             title: _t("Open: ") + this.m2m_field.string,
+            alternative_form_view: this.m2m_field.field.views ? this.m2m_field.field.views["form"] : undefined,
             readonly: this.getParent().get("effective_readonly")
         });
         pop.on('write_completed', self, self.reload_content);
