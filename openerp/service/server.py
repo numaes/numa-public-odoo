@@ -19,6 +19,7 @@ import socket
 import subprocess
 import sys
 import threading
+import traceback
 import time
 import unittest2
 
@@ -243,6 +244,17 @@ class ThreadedServer(CommonServer):
             # restart on kill -HUP
             openerp.phoenix = True
             self.quit_signals_received += 1
+        elif sig == signal.SIGUSR1:
+            id2name = dict([(th.ident, th.name) for th in threading.enumerate()])
+            code = []
+            for threadId, stack in sys._current_frames().items():
+                code.append("\n# Thread: %s(%d)" % (id2name.get(threadId,""), threadId))
+                for filename, lineno, name, line in traceback.extract_stack(stack):
+                    code.append('File: "%s", line %d, in %s' % (filename, lineno, name))
+                    if line:
+                        code.append("  %s" % (line.strip()))
+            for line in code:
+                _logger.info(line)
 
     def cron_thread(self, number):
         while True:
@@ -294,6 +306,7 @@ class ThreadedServer(CommonServer):
             signal.signal(signal.SIGTERM, self.signal_handler)
             signal.signal(signal.SIGCHLD, self.signal_handler)
             signal.signal(signal.SIGHUP, self.signal_handler)
+            signal.signal(signal.SIGUSR1, self.signal_handler)
             signal.signal(signal.SIGQUIT, dumpstacks)
         elif os.name == 'nt':
             import win32api
@@ -450,7 +463,18 @@ class PreforkServer(CommonServer):
                 raise
 
     def signal_handler(self, sig, frame):
-        if len(self.queue) < 5 or sig == signal.SIGCHLD:
+        if sig == signal.SIGUSR1:
+            id2name = dict([(th.ident, th.name) for th in threading.enumerate()])
+            code = []
+            for threadId, stack in sys._current_frames().items():
+                code.append("\n# Thread: %s(%d)" % (id2name.get(threadId,""), threadId))
+                for filename, lineno, name, line in traceback.extract_stack(stack):
+                    code.append('File: "%s", line %d, in %s' % (filename, lineno, name))
+                    if line:
+                        code.append("  %s" % (line.strip()))
+            for line in code:
+                _logger.info(line)
+        elif len(self.queue) < 5 or sig == signal.SIGCHLD:
             self.queue.append(sig)
             self.pipe_ping(self.pipe)
         else:
