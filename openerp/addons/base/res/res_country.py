@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
+from openerp import api
 
 def location_name_search(self, cr, user, name='', args=None, operator='ilike',
                          context=None, limit=100):
@@ -70,7 +71,30 @@ addresses belonging to this country.\n\nYou can use the python-style string pate
     }
     _order='name'
 
-    name_search = location_name_search
+    @api.v7
+    def location_name_search(self, cr, user, name='', args=None, operator='ilike',
+                             context=None, limit=100):
+        if not args:
+            args = []
+    
+        ids = []
+        if len(name) == 2:
+            ids = self.search(cr, user, [('code', 'ilike', name)] + args,
+                              limit=limit, context=context)
+    
+        search_domain = [('name', operator, name)]
+        if ids: search_domain.append(('id', 'not in', ids))
+        ids.extend(self.search(cr, user, search_domain + args,
+                               limit=limit, context=context))
+    
+        locations = self.name_get(cr, user, ids, context)
+        return sorted(locations, key=lambda (id, name): ids.index(id))
+
+    @api.v8
+    def location_name_search(self, name='', args=None, operator='ilike', limit=100):
+        return self._model.location_name_search(
+            self._cr, self._uid, self, name=name, args=args, operator=operator,
+            context=self._context, limit=limit)
 
     def create(self, cursor, user, vals, context=None):
         if vals.get('code'):
@@ -106,7 +130,30 @@ class CountryState(osv.osv):
     }
     _order = 'code'
 
-    name_search = location_name_search
+    @api.v7
+    def location_name_search(self, cr, user, name='', args=None, operator='ilike',
+                             context=None, limit=100):
+        if not args:
+            args = []
+    
+        ids = []
+        if len(name) == 2:
+            ids = self.search(cr, user, [('code', 'ilike', name)] + args,
+                              limit=limit, context=context)
+    
+        search_domain = [('name', operator, name)]
+        if ids: search_domain.append(('id', 'not in', ids))
+        ids.extend(self.search(cr, user, search_domain + args,
+                               limit=limit, context=context))
+    
+        locations = self.name_get(cr, user, ids, context)
+        return sorted(locations, key=lambda (id, name): ids.index(id))
+
+    @api.v8
+    def location_name_search(self, name='', args=None, operator='ilike', limit=100):
+        return self._model.location_name_search(
+            self._cr, self._uid, self, name=name, args=args, operator=operator,
+            context=self._context, limit=limit)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
