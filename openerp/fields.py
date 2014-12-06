@@ -479,6 +479,10 @@ class Field(object):
                 self._free_attrs.append(attr)
             setattr(self, attr, getattr(field, attr))
 
+        # special case for states: copy it only for inherited fields
+        if not self.states and self.inherited:
+            self.states = field.states
+
         # special case for required: check if all fields are required
         if not self.store and not self.required:
             self.required = all(field.required for field in fields)
@@ -1376,8 +1380,10 @@ class _Relational(Field):
 
     def _setup(self, env):
         super(_Relational, self)._setup(env)
-        assert self.comodel_name in env.registry, \
-            "Field %s with unknown comodel_name %r" % (self, self.comodel_name)
+        if self.comodel_name not in env.registry:
+            _logger.warning("Field %s with unknown comodel_name %r"
+                            % (self, self.comodel_name))
+            self.comodel_name = '_unknown'
 
     @property
     def _related_domain(self):
