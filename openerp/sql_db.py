@@ -234,7 +234,7 @@ class Cursor(object):
             res = self._obj.execute(query, params)
         except psycopg2.ProgrammingError, pe:
             if self._default_log_exceptions if log_exceptions is None else log_exceptions:
-                _logger.error(u"Programming error: %s, in query %s", unicode(pe), unicode(query))
+                _logger.error(u"Programming error: %s, in query %s", unicode(str(pe), errors='ignore'), unicode(query))
             raise
         except Exception:
             if self._default_log_exceptions if log_exceptions is None else log_exceptions:
