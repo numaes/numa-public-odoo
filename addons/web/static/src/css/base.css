@@ -1860,8 +1860,8 @@
   padding: 16px 0;
 }
 .openerp .oe_form_sheet_width {
-  min-width: 650px;
-  max-width: 860px;
+  min-width: 50%;
+  max-width: 90%;
   margin: 0 auto;
 }
 .openerp .oe_form_sheet {
@@ -1957,7 +1957,7 @@
   border-right: none;
 }
 .openerp .oe_form .oe_subtotal_footer .oe_subtotal_footer_separator {
-  width: 108px;
+  min-width: 108px;
   border-top: 1px solid #cacaca;
   margin-top: 4px;
   padding-top: 4px;
