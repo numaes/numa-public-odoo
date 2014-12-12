@@ -436,12 +436,15 @@ class res_users(osv.osv):
                 # as a SQL error, if anyone cares.
                 try:
                     # NO KEY introduced in PostgreSQL 9.3 http://www.postgresql.org/docs/9.3/static/release-9-3.html#AEN115299
-                    update_clause = 'NO KEY UPDATE' if cr._cnx.server_version >= 90300 else 'UPDATE'
+                    # update_clause = 'NO KEY UPDATE' if cr._cnx.server_version >= 90300 else 'UPDATE'
+
+                    # NUMA: force 'UPDATE' clause in order not to break running transactions
+                    update_clause = 'UPDATE'
                     cr.execute("SELECT id FROM res_users WHERE id=%%s FOR %s NOWAIT" % update_clause, (user_id,), log_exceptions=False)
                     cr.execute("UPDATE res_users SET login_date = now() AT TIME ZONE 'UTC' WHERE id=%s", (user_id,))
                     self.invalidate_cache(cr, user_id, ['login_date'], [user_id])
                 except Exception:
-                    _logger.debug("Failed to update last_login for db:%s login:%s", db, login, exc_info=True)
+                    _logger.info("Failed to update last_login for db:%s login:%s", db, login)
         except openerp.exceptions.AccessDenied:
             _logger.info("Login failed for db:%s login:%s", db, login)
             user_id = False
