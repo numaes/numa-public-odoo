@@ -1562,6 +1562,7 @@ class Reports(http.Controller):
     @serialize_exception
     def index(self, action, token):
         action = simplejson.loads(action)
+
         report_srv = request.session.proxy("report")
         context = dict(request.context)
         context.update(action["context"])
@@ -1604,14 +1605,12 @@ class Reports(http.Controller):
             else:
                 file_name = action['report_name']
         file_name = '%s.%s' % (file_name, report_struct['format'])
-        headers=[
-             ('Content-Disposition', content_disposition(file_name)),
-             ('Content-Type', report_mimetype),
-             ('Content-Length', len(report))]
-        if action.get('pdf_viewer'):
-            del headers[0]
+
         return request.make_response(report,
-             headers=headers,
+             headers=[
+                 ('Content-Disposition', content_disposition(file_name)),
+                 ('Content-Type', report_mimetype),
+                 ('Content-Length', len(report))],
              cookies={'fileToken': token})
 
 class Apps(http.Controller):
@@ -1638,7 +1637,3 @@ class Apps(http.Controller):
         sakey = Session().save_session_action(action)
         debug = '?debug' if req.debug else ''
         return werkzeug.utils.redirect('/web{0}#sa={1}'.format(debug, sakey))
-
-
-
-# vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:
