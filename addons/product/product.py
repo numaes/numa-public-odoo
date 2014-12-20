@@ -645,37 +645,27 @@ class product_template(osv.osv):
             return None
 
         ctx.update(active_test=False, create_product_variant=True)
-
+        
         tmpl_ids = self.browse(cr, uid, ids, context=ctx)
         for tmpl_id in tmpl_ids:
 
             # list of values combination
-            variant_alone = []
-            all_variants = [[]]
+            all_variants = [set()]
             for variant_id in tmpl_id.attribute_line_ids:
-                if len(variant_id.value_ids) == 1:
-                    variant_alone.append(variant_id.value_ids[0])
                 temp_variants = []
                 for variant in all_variants:
                     for value_id in variant_id.value_ids:
-                        temp_variants.append(variant + [int(value_id)])
-                all_variants = temp_variants
-
-            # adding an attribute with only one value should not recreate product
-            # write this attribute on every product to make sure we don't lose them
-            for variant_id in variant_alone:
-                product_ids = []
-                for product_id in tmpl_id.product_variant_ids:
-                    if variant_id.id not in map(int, product_id.attribute_value_ids):
-                        product_ids.append(product_id.id)
-                product_obj.write(cr, uid, product_ids, {'attribute_value_ids': [(4, variant_id.id)]}, context=ctx)
+                        new_variant = set(variant)
+                        new_variant.add(int(value_id))
+                        temp_variants.append(new_variant)
+                all_variants += temp_variants
 
             # check product
             variant_ids_to_active = []
             variants_active_ids = []
             variants_inactive = []
             for product_id in tmpl_id.product_variant_ids:
-                variants = map(int,product_id.attribute_value_ids)
+                variants = set(map(int,product_id.attribute_value_ids))
                 if variants in all_variants:
                     variants_active_ids.append(product_id.id)
                     all_variants.pop(all_variants.index(variants))
@@ -683,6 +673,7 @@ class product_template(osv.osv):
                         variant_ids_to_active.append(product_id.id)
                 else:
                     variants_inactive.append(product_id)
+                    
             if variant_ids_to_active:
                 product_obj.write(cr, uid, variant_ids_to_active, {'active': True}, context=ctx)
 
@@ -690,7 +681,7 @@ class product_template(osv.osv):
             for variant_ids in all_variants:
                 values = {
                     'product_tmpl_id': tmpl_id.id,
-                    'attribute_value_ids': [(6, 0, variant_ids)]
+                    'attribute_value_ids': [(6, 0, list(variant_ids))]
                 }
                 id = product_obj.create(cr, uid, values, context=ctx)
                 variants_active_ids.append(id)
