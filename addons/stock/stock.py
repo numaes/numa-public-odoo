@@ -3388,6 +3388,10 @@ class stock_warehouse(osv.osv):
         route_obj = self.pool.get('stock.location.route')
         pull_obj = self.pool.get('procurement.rule')
         push_obj = self.pool.get('stock.location.path')
+
+        if warehouse.name == name and warehouse.code == code:
+            return
+            
         #rename location
         location_id = warehouse.lot_stock_id.location_id.id
         location_obj.write(cr, uid, location_id, {'name': code}, context=context)
