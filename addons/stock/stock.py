@@ -3389,6 +3389,8 @@ class stock_warehouse(osv.osv):
         pull_obj = self.pool.get('procurement.rule')
         push_obj = self.pool.get('stock.location.path')
 
+        code = code[0:5]
+        
         if warehouse.name == name and warehouse.code == code:
             return
             
