@@ -84,6 +84,9 @@ class res_partner(osv.osv):
         Check the VAT number depending of the country.
         http://sima-pc.com/nif.php
         '''
+        # No vat is valid
+        if not vat_number:
+            return True
         if not ustr(country_code).encode('utf-8').isalpha():
             return False
         check_func_name = 'check_vat_' + country_code
