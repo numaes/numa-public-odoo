@@ -402,9 +402,26 @@
             <field name="name">product.attribute.tree</field>
             <field name="model">product.attribute</field>
             <field name="arch" type="xml">
-                <tree string="Variant Values" editable="top">
+                <tree string="Variant Values">
                     <field name="name"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="attribute_form_view" model="ir.ui.view">
+            <field name="name">product.attribute.form</field>
+            <field name="model">product.attribute</field>
+            <field name="arch" type="xml">
+                <form string="Variant Value">
+                    <group>
+                        <field name="name"/>
+                        <field name="value_ids">
+                            <tree string="Values" editable="bottom" >
+                                <field name="name" />
+                            </tree>
+                        </field>
+                    </group>
+                </form>
             </field>
         </record>
 
@@ -412,7 +429,7 @@
             <field name="name">Attributes</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.attribute</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">tree,form</field>
             <field name="view_type">form</field>
         </record>
 
