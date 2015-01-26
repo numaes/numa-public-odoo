@@ -29,7 +29,7 @@ class event_track(models.Model):
 
     name = fields.Char('Title', required=True, translate=True)
 
-    user_id = fields.Many2one('res.users', 'Responsible', default=lambda self: self.env.user)
+    user_id = fields.Many2one('res.users', 'Responsible', track_visibility='onchange', default=lambda self: self.env.user)
     speaker_ids = fields.Many2many('res.partner', string='Speakers')
     tag_ids = fields.Many2many('event.track.tag', string='Tags')
     state = fields.Selection([
@@ -55,11 +55,24 @@ class event_track(models.Model):
         else:
             self.image = False
 
+    @api.model
+    def create(self, vals):
+        res = super(event_track, self).create(vals)
+        res.message_subscribe(res.speaker_ids.ids)
+        return res
+
+    @api.multi
+    def write(self, vals):
+        res = super(event_track, self).write(vals)
+        if vals.get('speaker_ids'):
+            self.message_subscribe([speaker['id'] for speaker in self.resolve_2many_commands('speaker_ids', vals['speaker_ids'], ['id'])])
+        return res
+
     @api.multi
     @api.depends('name')
     def _website_url(self, field_name, arg):
         res = super(event_track, self)._website_url(field_name, arg)
-        res.update({(track.id, '/event/%strack/%s' % (slug(track.event_id), slug(track))) for track in self})
+        res.update({(track.id, '/event/%s/track/%s' % (slug(track.event_id), slug(track))) for track in self})
         return res
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
@@ -115,8 +128,7 @@ class event_event(models.Model):
     @api.one
     @api.depends('track_ids.tag_ids')
     def _get_tracks_tag_ids(self):
-        track_tags = set(tag for track in self.track_ids for tag in track.tag_ids)
-        self.tracks_tag_ids = track_tags and list(track_tags) or False
+        self.tracks_tag_ids = self.track_ids.mapped('tag_ids').ids
 
     track_ids = fields.One2many('event.track', 'event_id', 'Tracks', copy=True)
     sponsor_ids = fields.One2many('event.sponsor', 'event_id', 'Sponsorships', copy=True)
