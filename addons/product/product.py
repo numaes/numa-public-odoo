@@ -416,9 +416,9 @@ class product_attribute_line(osv.osv):
     }
 
     @api.onchange('attribute_id')
+    @api.one
     def onchange_attribute_id(self):
-        for al in self:
-            al.value_ids = [(6,0,[])]
+        self.value_ids = [(6,0,[])]
 
 #----------------------------------------------------------
 # Products

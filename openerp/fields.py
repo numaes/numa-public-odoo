@@ -1477,7 +1477,11 @@ class Many2one(_Relational):
         elif isinstance(value, tuple):
             return record.env[self.comodel_name].browse(value[0])
         elif isinstance(value, dict):
-            return record.env[self.comodel_name].new(value)
+            r = record.env[self.comodel_name].new(value)
+            # If it is a modified existing database record, make a fake memory record
+            if 'id' in value and value['id']:
+                r._ids = (value['id'],)
+            return r
         else:
             return self.null(record.env)
 
