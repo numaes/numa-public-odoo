@@ -850,7 +850,16 @@ class Field(object):
         """ Determine the value of `self` for `record`. """
         env = record.env
 
-        if self.column and not (self.depends and env.in_draft):
+        if self.compute:
+            # this is either a non-stored computed field, or a stored computed
+            # field in draft mode
+            if self.recursive:
+                self.compute_value(record)
+            else:
+                recs = record._in_cache_without(self)
+                self.compute_value(recs)
+
+        elif self.column and not (self.depends and env.in_draft):
             # this is a stored field or an old-style function field
             if self.depends:
                 # this is a stored computed field, check for recomputation
@@ -873,15 +882,6 @@ class Field(object):
 
             # read the field from database
             record._prefetch_field(self)
-
-        elif self.compute:
-            # this is either a non-stored computed field, or a stored computed
-            # field in draft mode
-            if self.recursive:
-                self.compute_value(record)
-            else:
-                recs = record._in_cache_without(self)
-                self.compute_value(recs)
 
         else:
             # this is a non-stored non-computed field
