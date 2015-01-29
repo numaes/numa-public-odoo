@@ -703,6 +703,7 @@ class sale_order(osv.osv):
             if not order.procurement_group_id:
                 group_id = self.pool.get("procurement.group").create(cr, uid, vals, context=context)
                 order.write({'procurement_group_id': group_id})
+                order.refresh()
 
             for line in order.order_line:
                 #Try to fix exception procurement (possible when after a shipping exception the user choose to recreate)
