@@ -850,7 +850,16 @@ class Field(object):
         """ Determine the value of `self` for `record`. """
         env = record.env
 
-        if self.column and not (self.depends and env.in_draft):
+        if self.compute:
+            # this is either a non-stored computed field, or a stored computed
+            # field in draft mode
+            if self.recursive:
+                self.compute_value(record)
+            else:
+                recs = record._in_cache_without(self)
+                self.compute_value(recs)
+
+        elif self.column and not (self.depends and env.in_draft):
             # this is a stored field or an old-style function field
             if self.depends:
                 # this is a stored computed field, check for recomputation
@@ -873,15 +882,6 @@ class Field(object):
 
             # read the field from database
             record._prefetch_field(self)
-
-        elif self.compute:
-            # this is either a non-stored computed field, or a stored computed
-            # field in draft mode
-            if self.recursive:
-                self.compute_value(record)
-            else:
-                recs = record._in_cache_without(self)
-                self.compute_value(recs)
 
         else:
             # this is a non-stored non-computed field
@@ -1477,7 +1477,11 @@ class Many2one(_Relational):
         elif isinstance(value, tuple):
             return record.env[self.comodel_name].browse(value[0])
         elif isinstance(value, dict):
-            return record.env[self.comodel_name].new(value)
+            r = record.env[self.comodel_name].new(value)
+            # If it is a modified existing database record, make a fake memory record
+            if 'id' in value and value['id']:
+                r._ids = (value['id'],)
+            return r
         else:
             return self.null(record.env)
 

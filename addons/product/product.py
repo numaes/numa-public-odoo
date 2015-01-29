@@ -24,6 +24,7 @@ import re
 import time
 from _common import ceiling
 
+from openerp import api
 from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.osv import osv, fields, expression
@@ -333,7 +334,7 @@ class product_attribute(osv.osv):
         'name': fields.char('Name', translate=True, required=True),
         'value_ids': fields.one2many('product.attribute.value', 'attribute_id', 'Values', copy=True),
     }
-
+    
 class product_attribute_value(osv.osv):
     _name = "product.attribute.value"
     _order = 'sequence'
@@ -414,6 +415,10 @@ class product_attribute_line(osv.osv):
         'value_ids': fields.many2many('product.attribute.value', id1='line_id', id2='val_id', string='Product Attribute Value'),
     }
 
+    @api.onchange('attribute_id')
+    @api.one
+    def onchange_attribute_id(self):
+        self.value_ids = [(6,0,[])]
 
 #----------------------------------------------------------
 # Products
