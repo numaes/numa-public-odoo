@@ -746,9 +746,9 @@ instance.web.client_actions.add("reload_context", "instance.web.ReloadContext");
  * If can't go back in history stack, will go back to home.
  */
 instance.web.HistoryBack = function(parent) {
-    if (!parent.history_back()) {
+    parent.history_back().fail(function() {
         instance.web.Home(parent);
-    }
+    });
 };
 instance.web.client_actions.add("history_back", "instance.web.HistoryBack");
 
@@ -1250,7 +1250,7 @@ instance.web.Client = instance.web.Widget.extend({
         this.crashmanager =  new instance.web.CrashManager();
         instance.session.on('error', this.crashmanager, this.crashmanager.rpc_error);
         self.notification = new instance.web.Notification(this);
-        self.notification.appendTo(self.$el);
+        self.notification.appendTo(self.$el.find('.openerp'));
         self.loading = new instance.web.Loading(self);
         self.loading.appendTo(self.$('.openerp_webclient_container'));
         self.action_manager = new instance.web.ActionManager(self);
@@ -1384,7 +1384,7 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     update_logo: function() {
         var company = this.session.company_id;
-        var img = this.session.url('/web/binary/company_logo' + (company ? '?company=' + company : ''));
+        var img = this.session.url('/web/binary/company_logo' + '?db=' + this.session.db + (company ? '&company=' + company : ''));
         this.$('.oe_logo img').attr('src', '').attr('src', img);
         this.$('.oe_logo_edit').toggleClass('oe_logo_edit_admin', this.session.uid === 1);
     },

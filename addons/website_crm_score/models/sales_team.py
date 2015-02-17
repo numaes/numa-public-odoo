@@ -20,8 +20,7 @@ try:
         return bool(address.validate_address(mail))
 
 except ImportError:
-    _logger.warning('Flanker library not found, Flanker features (check email on lead) disabled. \
-                     If you plan to use it, please install the Flanker library from http://pypi.python.org/pypi/flanker')
+    _logger.warning('flanker not found, email validation disabled.')
 
     def checkmail(mail):
         return True
@@ -118,7 +117,6 @@ class crm_team(osv.osv):
     unassigned_leads = fields.Integer(compute='_unassigned_leads')
     capacity = fields.Integer(compute='_capacity')
     team_user_ids = fields.One2many('team.user', 'team_id', string='Salesman')
-    user_ids = fields.Many2many('res.users', 'team_user', 'team_id', 'user_id', readonly=True)  # Use for display in Kanban
     min_for_assign = fields.Integer("Minimum score", help="Minimum score to be automatically assign (>=)", default=0, required=True)
 
     @api.model

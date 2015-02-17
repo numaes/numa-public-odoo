@@ -108,6 +108,7 @@ def _hasclass(context, *cls):
     return node_classes.issuperset(cls)
 
 def get_view_arch_from_file(filename, xmlid):
+
     doc = etree.parse(filename)
     node = None
     for n in doc.xpath('//*[@id="%s"] | //*[@id="%s"]' % (xmlid, xmlid.split('.')[1])):
@@ -175,7 +176,7 @@ class view(osv.osv):
                         # (it will be missing e.g. when importing data-only modules using base_import_module)
                         path_info = get_resource_from_path(imd['xml_file'])
                         if path_info:
-                            data['arch_fs'] = '/'.join(path_info)[0:2]
+                            data['arch_fs'] = '/'.join(path_info[0:2])
                 self.write(cr, uid, ids, data, context=context)
 
         return True
@@ -197,7 +198,7 @@ class view(osv.osv):
             ('search','Search'),
             ('qweb', 'QWeb')], string='View Type'),
         'arch': fields.function(_arch_get, fnct_inv=_arch_set, string='View Architecture', type="text", nodrop=True),
-        'arch_db': fields.text('Arch Blob'),
+        'arch_db': fields.text('Arch Blob', oldname='arch'),
         'arch_fs': fields.char('Arch Filename'),
         'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='restrict', select=True),
         'inherit_children_ids': fields.one2many('ir.ui.view','inherit_id', 'Inherit Views'),
@@ -1068,6 +1069,7 @@ class view(osv.osv):
         if values is None:
             values = dict()
         qcontext = dict(
+            env=api.Environment(cr, uid, context),
             keep_query=keep_query,
             request=request, # might be unbound if we're not in an httprequest context
             debug=request.debug if request else False,

@@ -410,7 +410,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         this.$('.oe_searchview_unfold_drawer')
             .toggleClass('fa-caret-down', !this.visible_filters)
             .toggleClass('fa-caret-up', this.visible_filters);
-        return this.alive($.when(this._super(), load_view.then(this.view_loaded.bind(this))));
+        return this.alive($.when(this._super(), this.alive(load_view).then(this.view_loaded.bind(this))));
     },
     view_loaded: function (r) {
         var self = this;
@@ -1233,12 +1233,13 @@ instance.web.search.SelectionField = instance.web.search.Field.extend(/** @lends
         var results = _(this.attrs.selection).chain()
             .filter(function (sel) {
                 var value = sel[0], label = sel[1];
-                if (!value) { return false; }
+                if (value === undefined || !label) { return false; }
                 return label.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
             })
             .map(function (sel) {
                 return {
                     label: _.escape(sel[1]),
+                    indent: true,
                     facet: facet_from(self, sel)
                 };
             }).value();
@@ -1456,7 +1457,7 @@ instance.web.search.FilterMenu = instance.web.Widget.extend({
     },
     toggle_custom_filter_menu: function (is_open) {
         this.$add_filter
-            .toggleClass('closed-menu', !is_open)
+            .toggleClass('closed-menu', !(_.isUndefined(is_open)) ? !is_open : undefined)
             .toggleClass('open-menu', is_open);
         this.$add_filter_menu.toggle(is_open);
         if (this.$add_filter.hasClass('closed-menu') && (!this.propositions.length)) {
@@ -1556,7 +1557,7 @@ instance.web.search.GroupByMenu = instance.web.Widget.extend({
     },
     toggle_add_menu: function (is_open) {
         this.$add_group
-            .toggleClass('closed-menu', !is_open)
+            .toggleClass('closed-menu', !(_.isUndefined(is_open)) ? !is_open : undefined)
             .toggleClass('open-menu', is_open);
         this.$add_group_menu.toggle(is_open);
         if (this.$add_group.hasClass('open-menu')) {
@@ -1628,7 +1629,7 @@ instance.web.search.FavoriteMenu = instance.web.Widget.extend({
     },
     toggle_save_menu: function (is_open) {
         this.$save_search
-            .toggleClass('closed-menu', !is_open)
+            .toggleClass('closed-menu', !(_.isUndefined(is_open)) ? !is_open : undefined)
             .toggleClass('open-menu', is_open);
         this.$save_name.toggle(is_open);
         if (this.$save_search.hasClass('open-menu')) {

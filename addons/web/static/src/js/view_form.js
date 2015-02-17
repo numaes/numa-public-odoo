@@ -309,9 +309,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         if (this.sidebar) {
             this.sidebar.$el.hide();
         }
-        if (this.$buttons) {
-            this.$buttons.hide();
-        }
         if (this.$pager) {
             this.$pager.hide();
         }
@@ -451,8 +448,10 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             return "";
         };
 
+        self._onchange_fields = [];
         self._onchange_specs = {};
         _.each(this.fields, function(field, name) {
+            self._onchange_fields.push(name);
             self._onchange_specs[name] = find(name, field.node);
             _.each(field.field.views, function(view) {
                 _.each(view.fields, function(_, subname) {
@@ -489,7 +488,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             var change_spec = widget ? onchange_specs[widget.name] : null;
             if (!widget || (!_.isEmpty(change_spec) && change_spec !== "0")) {
                 var ids = [],
-                    trigger_field_name = widget ? widget.name : false,
+                    trigger_field_name = widget ? widget.name : self._onchange_fields,
                     values = self._get_onchange_values(),
                     context = new instance.web.CompoundContext(self.dataset.get_context());
 
@@ -844,9 +843,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                     // on 'create' : save all non readonly fields
                     // on 'edit' : save non readonly modified fields
                     if (!f.get("readonly")) {
-                        values[f.name] = f.get_value();
+                        values[f.name] = f.get_value(true);
                     } else {
-                        readonly_values[f.name] = f.get_value();
+                        readonly_values[f.name] = f.get_value(true);
                     }
                 }
             }
@@ -1160,7 +1159,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     build_eval_context: function() {
         var a_dataset = this.dataset;
-        return new instance.web.CompoundContext(this._build_view_fields_values(), a_dataset.get_context());
+        return new instance.web.CompoundContext(a_dataset.get_context(), this._build_view_fields_values());
     },
 });
 
@@ -3271,14 +3270,13 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
         });
     },
     set_value: function (value_) {
-        if (value_) {
-            if (this.field.type == "selection") {
-                value_ = _.find(this.field.selection, function (sel) { return sel[0] == value_;});
-            }
-            else if (!this.selection.length) {
-                this.selection = [value_];
-            }
+        if (this.field.type == "selection") {
+            value_ = _.find(this.field.selection, function (sel) { return sel[0] == value_;});
         }
+        else if (!this.selection.length) {
+            this.selection = [value_];
+        }
+
         this._super(value_);
     },
     get_value: function () {
@@ -3288,10 +3286,8 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
     render_value: function () {
         var self = this;
         this.$el.toggleClass("oe_readonly", this.get('effective_readonly'));
-        if (this.get_value()) {
-            this.$("input").filter(function () {return this.value == self.get_value();}).prop("checked", true);
-            this.$(".oe_radio_readonly").text(this.get('value') ? this.get('value')[1] : "");
-        }
+        this.$("input").filter(function () {return this.value == self.get_value();}).prop("checked", true);
+        this.$(".oe_radio_readonly").text(this.get('value') ? this.get('value')[1] : "");
     }
 });
 
@@ -5677,14 +5673,17 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
         } else {
             instance.web.blockUI();
             var c = instance.webclient.crashmanager;
+            var filename_fieldname = this.node.attrs.filename;
+            var filename_field = this.view.fields && this.view.fields[filename_fieldname];
             this.session.get_file({
                 url: '/web/binary/saveas_ajax',
                 data: {data: JSON.stringify({
                     model: this.view.dataset.model,
                     id: (this.view.datarecord.id || ''),
                     field: this.name,
-                    filename_field: (this.node.attrs.filename || ''),
+                    filename_field: (filename_fieldname || ''),
                     data: instance.web.form.is_bin_size(value) ? null : value,
+                    filename: filename_field ? filename_field.get('value') : null,
                     context: this.view.dataset.get_context()
                 })},
                 complete: instance.web.unblockUI,
