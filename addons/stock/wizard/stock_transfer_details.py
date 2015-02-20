@@ -50,6 +50,7 @@ class stock_transfer_details(models.TransientModel):
         packs = []
         if not picking.pack_operation_ids:
             picking.do_prepare_partial()
+            picking.refresh()
         for op in picking.pack_operation_ids:
             item = {
                 'packop_id': op.id,
@@ -75,6 +76,7 @@ class stock_transfer_details(models.TransientModel):
     @api.one
     def do_detailed_transfer(self):
         processed_ids = []
+        
         # Create new and update existing pack operations
         for lstits in [self.item_ids, self.packop_ids]:
             for prod in lstits:

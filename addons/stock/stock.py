@@ -1120,7 +1120,7 @@ class stock_picking(osv.osv):
         #used to avoid recomputing the remaining quantities at each new pack operation created
         ctx = context.copy()
         ctx['no_recompute'] = True
-
+        
         #get list of existing operations and delete them
         existing_package_ids = pack_operation_obj.search(cr, uid, [('picking_id', 'in', picking_ids)], context=context)
         if existing_package_ids:
@@ -1370,6 +1370,7 @@ class stock_picking(osv.osv):
         if not context:
             context = {}
         stock_move_obj = self.pool.get('stock.move')
+        
         for picking in self.browse(cr, uid, picking_ids, context=context):
             if not picking.pack_operation_ids:
                 self.action_done(cr, uid, [picking.id], context=context)
@@ -1405,6 +1406,7 @@ class stock_picking(osv.osv):
                     self.do_recompute_remaining_quantities(cr, uid, [picking.id], context=context)
                 if todo_move_ids and not context.get('do_only_split'):
                     self.pool.get('stock.move').action_done(cr, uid, todo_move_ids, context=context)
+                    picking.refresh()
                 elif context.get('do_only_split'):
                     context = dict(context, split=todo_move_ids)
             self._create_backorder(cr, uid, picking, context=context)
