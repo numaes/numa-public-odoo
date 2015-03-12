@@ -2,7 +2,8 @@
     'use strict';
 
     var _t = openerp._t;
-
+    var website = openerp.website;
+    website.ready().done(function() {
     openerp.Tour.register({
         id:   'blog',
         name: _t("Create a blog post"),
@@ -33,7 +34,7 @@
                 content:   _t("Click <em>Continue</em> to create the blog post."),
             },
             {
-                waitFor:   'body:has(button[data-action=save]:visible):has(.js_blog)',
+                waitFor:   '#o_scroll .oe_snippet',
                 title:     _t("Blog Post Created"),
                 content:   _t("This is your new blog post. Let's edit it."),
                 popover:   { next: _t("Continue") },
@@ -88,6 +89,7 @@
                 popover:   { next: _t("Close Tutorial") },
             },
         ]
+    });
     });
 
 }());

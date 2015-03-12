@@ -30,7 +30,6 @@ instance.web.form.FieldTextHtml = widget.extend({
         window.openerp[this.callback+"_content"] = function (EditorBar) {
             self.on_content_loaded();
         };
-        window.openerp[this.callback+"_updown"] = null;
         window.openerp[this.callback+"_downup"] = function (value) {
             self.dirty = true;
             self.internal_set_value(value);
@@ -46,15 +45,11 @@ instance.web.form.FieldTextHtml = widget.extend({
 
         // init resize
         this.resize = function resize() {
+            if (self.get('effective_readonly')) {
+               $("body").removeClass("o_form_FieldTextHtml_fullscreen");
+            }
             if ($("body").hasClass("o_form_FieldTextHtml_fullscreen")) {
                 self.$iframe.css('height', $("body").hasClass('o_form_FieldTextHtml_fullscreen') ? (document.body.clientHeight - self.$iframe.offset().top) + 'px' : '');
-            } else if (self.get('effective_readonly')) {
-                var height = 110;
-                try {
-                    height += self.$body.height();
-                    height +=  parseInt(self.$content.parent().css("margin-top"));
-                } catch (e) {}
-                self.$iframe.css("height", height+"px");
             } else {
                 self.$iframe.css("height", (self.$body.find("#oe_snippets").length ? 500 : 300) + "px");
             }
@@ -93,15 +88,17 @@ instance.web.form.FieldTextHtml = widget.extend({
         return src;
     },
     initialize_content: function() {
-        this.$iframe = this.$el.find('iframe');
-        this.document = null;
-        this.$body = $();
-        this.$content = $();
-        this.dirty = false;
-        this.editor = false;
-        window.openerp[this.callback+"_set_value"] = function () {};
+        if (!this.get("effective_readonly")) {
+            this.$iframe = this.$el.find('iframe');
+            this.document = null;
+            this.$body = $();
+            this.$content = $();
+            this.dirty = false;
+            this.editor = false;
+            window.openerp[this.callback+"_set_value"] = null;
 
-        this.$iframe.attr("src", this.get_url());
+            this.$iframe.attr("src", this.get_url());
+        }
     },
     on_content_loaded: function () {
         var self = this;
@@ -123,6 +120,10 @@ instance.web.form.FieldTextHtml = widget.extend({
             }
         });
 
+        if (this.get('value') && window.openerp[this.callback+"_set_value"] && !(this.$content.prop('innerHTML')||"").length) {
+            this.render_value();
+        }
+
         setTimeout(function () {
             var $fullscreen = $('<span class="btn btn-primary" style="margin: 5px;padding: 1px; position: fixed; top: 0; right: 0; z-index: 2000;"><span class="o_fullscreen fa fa-arrows-alt" style="color: white;margin: 3px 5px;"></span></span>');
             var $nav = $("#website-top-navbar", self.document).append($fullscreen);
@@ -134,12 +135,17 @@ instance.web.form.FieldTextHtml = widget.extend({
         }, 500);
     },
     render_value: function() {
-        if (!this.$content) {
-            return;
-        }
-        if(window.openerp[this.callback+"_set_value"]) {
-            window.openerp[this.callback+"_set_value"](this.get('value') || '', this.view.get_fields_values());
-            this.resize();
+        var value = (this.get('value') || "").replace(/^<p[^>]*>\s*<\/p>$/, '');
+        if (!this.get("effective_readonly")) {
+            if (!this.$content) {
+                return;
+            }
+            if(window.openerp[this.callback+"_set_value"]) {
+                window.openerp[this.callback+"_set_value"](value || '', this.view.get_fields_values(), this.name);
+                this.resize();
+            }
+        } else {
+            this.$el.html(value);
         }
     },
     is_false: function() {
@@ -153,10 +159,12 @@ instance.web.form.FieldTextHtml = widget.extend({
         return this.get('value');
     },
     destroy: function () {
+        $("body").removeClass("o_form_FieldTextHtml_fullscreen");
         $(window).off('resize', self.resize);
-        delete window.openerp[this.callback];
+        $(window).off('keydown', self.escape);
         delete window.openerp[this.callback+"_content"];
-        delete window.openerp[this.callback+"_updown"];
+        delete window.openerp[this.callback+"_downup"];
+        delete window.openerp[this.callback+"_set_value"];
     }
 });
 

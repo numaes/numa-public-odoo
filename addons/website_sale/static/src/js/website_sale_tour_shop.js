@@ -2,7 +2,8 @@
     'use strict';
 
     var _t = openerp._t;
-
+    var website = openerp.website;
+    website.ready().done(function() {
     openerp.Tour.register({
         id: 'shop',
         name: _t("Create a product"),
@@ -41,7 +42,7 @@
                 content:   _t("Click on <em>Continue</em> to create the product."),
             },
             {
-                waitFor:   'body:has(button[data-action=save]:visible):has(.js_sale)',
+                waitFor:   '#o_scroll .oe_snippet',
                 title:     _t("New product created"),
                 content:   _t("This page contains all the information related to the new product."),
                 popover:   { next: _t("Continue") },
@@ -72,13 +73,14 @@
             },
             {
                 element:   '.modal .btn.save',
+                placement: 'right',
                 waitFor:   '.existing-attachment-cell.media_selected',
                 title:       _t("Save"),
                 content:     _t("Click on <em>Save</em> to add the image to the product description"),
             },
             {
                 waitNot:   '.modal-content:visible',
-                snippet:   '#snippet_structure .oe_snippet:eq(7)',
+                snippet:   '#snippet_structure .oe_snippet:eq(9)',
                 placement: 'bottom',
                 title:     _t("Drag & Drop a block"),
                 content:   _t("Drag the 'Big Picture' block and drop it in your page."),
@@ -105,6 +107,7 @@
                 popover:   { next: _t("Close Tutorial") },
             },
         ]
+    });
     });
 
 }());

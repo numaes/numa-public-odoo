@@ -2427,6 +2427,7 @@ instance.web.form.KanbanSelection = instance.web.form.FieldChar.extend({
                 }
                 if (stage_data && stage_data[0][self.options.states_legend[res[0]]]) {
                     value['state_name'] = stage_data[0][self.options.states_legend[res[0]]];
+                    value['tooltip'] = stage_data[0][self.options.states_legend[res[0]]];
                 }
                 if (res[0] == 'normal') { value['state_class'] = 'oe_kanban_status'; }
                 else if (res[0] == 'done') { value['state_class'] = 'oe_kanban_status oe_kanban_status_green'; }
@@ -2438,7 +2439,6 @@ instance.web.form.KanbanSelection = instance.web.form.FieldChar.extend({
     },
     render_value: function() {
         var self = this;
-        this.record_id = this.view.datarecord.id;
         var dd_fetched = this.prepare_dropdown_selection();;
         return $.when(dd_fetched).then(function (states) {
             self.states = states;
@@ -2459,7 +2459,7 @@ instance.web.form.KanbanSelection = instance.web.form.FieldChar.extend({
                 write_values[self.name] = value;
                 return this.view.dataset._model.call(
                     'write', [
-                        [self.record_id],
+                        [this.view.datarecord.id],
                         write_values,
                         self.view.dataset.get_context()
                     ]).done(self.reload_record.bind(self));
@@ -2497,10 +2497,11 @@ instance.web.form.Priority = instance.web.form.FieldChar.extend({
     },
     render_value: function() {
         var self = this;
-        this.record_id = this.view.datarecord.id;
         this.priorities = this.prepare_priority();
         this.$el.html(QWeb.render("Priority", {'widget': this}));
-        this.$el.find('li').on('click', this.set_priority.bind(this));
+        if (!this.get('readonly')){
+            this.$el.find('li').on('click', this.set_priority.bind(this));
+        }
     },
     /* setting the value: in view mode, perform an asynchronous call and reload
     the form view; in edit mode, use set_value to save the new value that will
@@ -2515,7 +2516,7 @@ instance.web.form.Priority = instance.web.form.FieldChar.extend({
                 write_values[self.name] = value;
                 return this.view.dataset._model.call(
                     'write', [
-                        [self.record_id],
+                        [this.view.datarecord.id],
                         write_values,
                         self.view.dataset.get_context()
                     ]).done(self.reload_record.bind(self));
@@ -2849,6 +2850,7 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
             this.$textarea = this.$el.find('textarea');
             this.auto_sized = false;
             this.default_height = this.$textarea.css('height');
+            if (this.default_height === '0px') this.default_height = '90px';
             if (this.get("effective_readonly")) {
                 this.$textarea.attr('disabled', 'disabled');
             }
@@ -3334,6 +3336,8 @@ instance.web.form.CompletionFieldMixin = {
     init: function() {
         this.limit = 7;
         this.orderer = new instance.web.DropMisordered();
+        this.can_create = this.node.attrs.can_create || true;
+        this.can_write = this.node.attrs.can_write || true;
     },
     /**
      * Call this method to search using a string.
@@ -3380,7 +3384,7 @@ instance.web.form.CompletionFieldMixin = {
             var raw_result = _(data.result).map(function(x) {return x[1];});
             if (search_val.length > 0 && !_.include(raw_result, search_val) &&
                 ! (self.options && (self.options.no_create || self.options.no_quick_create))) {
-                values.push({
+                self.can_create && values.push({
                     label: _.str.sprintf(_t('Create "<strong>%s</strong>"'),
                         $('<span />').text(search_val).html()),
                     action: function() {
@@ -3390,7 +3394,7 @@ instance.web.form.CompletionFieldMixin = {
                 });
             }
             // create...
-            if (!(self.options && (self.options.no_create || self.options.no_create_edit))){
+            if (!(self.options && (self.options.no_create || self.options.no_create_edit)) && self.can_create){
                 values.push({
                     label: _t("Create and Edit..."),
                     action: function() {
@@ -3400,11 +3404,11 @@ instance.web.form.CompletionFieldMixin = {
                 });
             }
             else if (values.length == 0)
-            	values.push({
-            		label: _t("No results to show..."),
-            		action: function() {},
-            		classname: 'oe_m2o_dropdown_option'
-            	});
+                values.push({
+                    label: _t("No results to show..."),
+                    action: function() {},
+                    classname: 'oe_m2o_dropdown_option'
+                });
 
             return values;
         });
@@ -3598,7 +3602,8 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                     self.build_context(),
                     {
                         title: _t("Open: ") + self.string,
-                        view_id: view_id
+                        view_id: view_id,
+                        readonly: !self.can_write
                     }
                 );
                 pop.on('write_completed', self, function(){
@@ -3675,7 +3680,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 self.uned_def.reject();
                 self.ed_def = $.Deferred();
                 self.ed_def.done(function() {
-                    self.show_error_displayer();
+                    self.can_create && self.show_error_displayer();
                     ignore_blur = false;
                     self.trigger('focused');
                 });
@@ -4391,8 +4396,8 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
 
         this.records
             .bind('add', this.proxy("changed_records"))
-            .bind('edit', this.proxy("changed_records"))
             .bind('remove', this.proxy("changed_records"));
+        this.on('save:after', this, this.proxy("changed_records"));
     },
     start: function () {
         var ret = this._super();
@@ -4409,7 +4414,6 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         if (!this.fields_view || !this.editable()){
             return true;
         }
-        var r;
         if (_.isEmpty(this.records.records)){
             return true;
         }
@@ -4420,9 +4424,8 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
             current_values[field.name] = field.get('value');
         });
         var valid = _.every(this.records.records, function(record){
-            r = record;
             _.each(self.editor.form.fields, function(field){
-                field.set_value(r.attributes[field.name]);
+                field.set_value(record.attributes[field.name]);
             });
             return _.every(self.editor.form.fields, function(field){
                 field.process_modifiers();

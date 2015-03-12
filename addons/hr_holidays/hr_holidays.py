@@ -352,19 +352,32 @@ class hr_holidays(osv.osv):
             result['value']['number_of_days_temp'] = 0
         return result
 
+    def add_follower(self, cr, uid, ids, employee_id, context=None):
+        employee = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context)
+        if employee and employee.user_id:
+            self.message_subscribe_users(cr, uid, ids, user_ids=[employee.user_id.id], context=context)
+
     def create(self, cr, uid, values, context=None):
         """ Override to avoid automatic logging of creation """
         if context is None:
             context = {}
+        employee_id = values.get('employee_id', False)
         context = dict(context, mail_create_nolog=True)
         if values.get('state') and values['state'] not in ['draft', 'confirm', 'cancel'] and not self.pool['res.users'].has_group(cr, uid, 'base.group_hr_user'):
             raise AccessError(_('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % values.get('state'))
-        return super(hr_holidays, self).create(cr, uid, values, context=context)
+        hr_holiday_id = super(hr_holidays, self).create(cr, uid, values, context=context)
+        self.add_follower(cr, uid, [hr_holiday_id], employee_id, context=context)
+        return hr_holiday_id
 
     def write(self, cr, uid, ids, vals, context=None):
+        if context is None:
+            context = {}
+        employee_id = vals.get('employee_id', False)
         if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel'] and not self.pool['res.users'].has_group(cr, uid, 'base.group_hr_user'):
             raise AccessError(_('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % vals.get('state'))
-        return super(hr_holidays, self).write(cr, uid, ids, vals, context=context)
+        hr_holiday_id = super(hr_holidays, self).write(cr, uid, ids, vals, context=context)
+        self.add_follower(cr, uid, ids, employee_id, context=context)
+        return hr_holiday_id
 
     def holidays_reset(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {
@@ -511,35 +524,29 @@ class resource_calendar_leaves(osv.osv):
 class hr_employee(osv.Model):
     _inherit = "hr.employee"
 
-    def create(self, cr, uid, vals, context=None):
-        # don't pass the value of remaining leave if it's 0 at the creation time, otherwise it will trigger the inverse
-        # function _set_remaining_days and the system may not be configured for. Note that we don't have this problem on
-        # the write because the clients only send the fields that have been modified.
-        if 'remaining_leaves' in vals and not vals['remaining_leaves']:
-            del(vals['remaining_leaves'])
-        return super(hr_employee, self).create(cr, uid, vals, context=context)
-
     def _set_remaining_days(self, cr, uid, empl_id, name, value, arg, context=None):
-        employee = self.browse(cr, uid, empl_id, context=context)
-        diff = value - employee.remaining_leaves
-        type_obj = self.pool.get('hr.holidays.status')
-        holiday_obj = self.pool.get('hr.holidays')
-        # Find for holidays status
-        status_ids = type_obj.search(cr, uid, [('limit', '=', False)], context=context)
-        if len(status_ids) != 1 :
-            raise UserError(_("The feature behind the field 'Remaining Legal Leaves' can only be used when there is only one leave type with the option 'Allow to Override Limit' unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot decide on which leave type the update has to be done. \nYou may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in 'Human Resources \ Leaves' to manage the leave days of the employees if the configuration does not allow to use this field.") % (len(status_ids)))
-        status_id = status_ids and status_ids[0] or False
-        if not status_id:
-            return False
-        if diff > 0:
-            leave_id = holiday_obj.create(cr, uid, {'name': _('Allocation for %s') % employee.name, 'employee_id': employee.id, 'holiday_status_id': status_id, 'type': 'add', 'holiday_type': 'employee', 'number_of_days_temp': diff}, context=context)
-        elif diff < 0:
-            raise UserError(_('You cannot reduce validated allocation requests'))
-        else:
-            return False
-        for sig in ('confirm', 'validate', 'second_validate'):
-            holiday_obj.signal_workflow(cr, uid, [leave_id], sig)
-        return True
+        if value:
+            employee = self.browse(cr, uid, empl_id, context=context)
+            diff = value - employee.remaining_leaves
+            type_obj = self.pool.get('hr.holidays.status')
+            holiday_obj = self.pool.get('hr.holidays')
+            # Find for holidays status
+            status_ids = type_obj.search(cr, uid, [('limit', '=', False)], context=context)
+            if len(status_ids) != 1 :
+                raise osv.except_osv(_('Warning!'),_("The feature behind the field 'Remaining Legal Leaves' can only be used when there is only one leave type with the option 'Allow to Override Limit' unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot decide on which leave type the update has to be done. \nYou may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in 'Human Resources \ Leaves' to manage the leave days of the employees if the configuration does not allow to use this field.") % (len(status_ids)))
+            status_id = status_ids and status_ids[0] or False
+            if not status_id:
+                return False
+            if diff > 0:
+                leave_id = holiday_obj.create(cr, uid, {'name': _('Allocation for %s') % employee.name, 'employee_id': employee.id, 'holiday_status_id': status_id, 'type': 'add', 'holiday_type': 'employee', 'number_of_days_temp': diff}, context=context)
+            elif diff < 0:
+                raise osv.except_osv(_('Warning!'), _('You cannot reduce validated allocation requests'))
+            else:
+                return False
+            for sig in ('confirm', 'validate', 'second_validate'):
+                holiday_obj.signal_workflow(cr, uid, [leave_id], sig)
+            return True
+        return False
 
     def _get_remaining_days(self, cr, uid, ids, name, args, context=None):
         cr.execute("""SELECT

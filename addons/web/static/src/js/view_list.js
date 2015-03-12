@@ -299,21 +299,24 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             this.$pager
                 .on('click', 'a[data-pager-action]', function () {
                     var $this = $(this);
-                    var max_page = Math.floor(self.dataset.size() / self.limit());
+                    var max_page_index = Math.ceil(self.dataset.size() / self.limit()) - 1;
                     switch ($this.data('pager-action')) {
                         case 'first':
-                            self.page = 0; break;
+                            self.page = 0;
+                            break;
                         case 'last':
-                            self.page = max_page - 1;
+                            self.page = max_page_index;
                             break;
                         case 'next':
-                            self.page += 1; break;
+                            self.page += 1;
+                            break;
                         case 'previous':
-                            self.page -= 1; break;
+                            self.page -= 1;
+                            break;
                     }
                     if (self.page < 0) {
-                        self.page = max_page;
-                    } else if (self.page > max_page) {
+                        self.page = max_page_index;
+                    } else if (self.page > max_page_index) {
                         self.page = 0;
                     }
                     self.reload_content();
@@ -404,7 +407,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         var total = dataset.size();
         var limit = this.limit() || total;
-        this.$pager.find('.oe-pager-button').toggle(total > limit);
+        this.$pager.find('.oe-pager-buttons').toggle(total > limit);
         this.$pager.find('.oe_pager_value').toggle(total !== 0);
         var spager = '-';
         if (total) {
@@ -1301,7 +1304,11 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
         var $prev = $('<button type="button" data-pager-action="previous">&lt;</button>')
             .click(function (e) {
                 e.stopPropagation();
-                self.page -= 1;
+                if (self.page > 0) {
+                    self.page -= 1;
+                } else {
+                    self.page = self.max_page_index;
+                }
 
                 self.$row.closest('tbody').next()
                     .replaceWith(self.render());
@@ -1309,7 +1316,11 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
         var $next = $('<button type="button" data-pager-action="next">&gt;</button>')
             .click(function (e) {
                 e.stopPropagation();
-                self.page += 1;
+                if (self.page < self.max_page_index) {
+                    self.page += 1;
+                } else {
+                    self.page = 0;
+                }
 
                 self.$row.closest('tbody').next()
                     .replaceWith(self.render());
@@ -1505,19 +1516,19 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                         self.$row.find('td.oe_list_group_pagination').find('button').remove();
                         self.$row.find('td.oe_list_group_pagination').find('span').remove();
                     } else {
-                        var pages = Math.ceil(dataset.size() / limit);
+                        self.max_page_index = Math.ceil(dataset.size() / limit) - 1;
                         self.$row
                             .find('.oe_list_pager_state')
                                 .text(_.str.sprintf(_t("%(page)d/%(page_count)d"), {
                                     page: page + 1,
-                                    page_count: pages
+                                    page_count: self.max_page_index + 1
                                 }))
                             .end()
                             .find('button[data-pager-action=previous]')
                                 .toggleClass('disabled', page === 0)
                             .end()
                             .find('button[data-pager-action=next]')
-                                .toggleClass('disabled', page === pages - 1);
+                                .toggleClass('disabled', page === self.max_page_index);
                     }
                 }
 
@@ -1608,7 +1619,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                 .pluck('name').value(),
             function (groups) {
                 // page count is irrelevant on grouped page, replace by limit
-                self.view.$pager.find('.oe_pager_group').hide();
+                self.view.$pager.find('.oe-pager-buttons').hide();
                 self.view.$pager.find('.oe_list_pager_state').text(self.view._limit ? self.view._limit : '∞');
                 $el[0].appendChild(
                     self.render_groups(groups));
