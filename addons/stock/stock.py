@@ -3356,7 +3356,9 @@ class stock_warehouse(osv.osv):
         #create WH
         new_id = super(stock_warehouse, self).create(cr, uid, vals=vals, context=context)
         warehouse = self.browse(cr, uid, new_id, context=context)
+        
         self.create_sequences_and_picking_types(cr, uid, warehouse, context=context)
+        warehouse.refresh()
 
         #create routes and push/pull rules
         new_objects_dict = self.create_routes(cr, uid, new_id, warehouse, context=context)
