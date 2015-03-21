@@ -265,6 +265,7 @@ class procurement_order(osv.osv):
             rule_id = self._find_suitable_rule(cr, uid, procurement, context=context)
             if rule_id:
                 self.write(cr, uid, [procurement.id], {'rule_id': rule_id}, context=context)
+                procurement.refresh()
                 return True
         return False
 
