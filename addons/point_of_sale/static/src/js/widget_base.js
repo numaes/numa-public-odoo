@@ -29,6 +29,7 @@ function openerp_pos_basewidget(instance, module){ //module is instance.point_of
 
             if (typeof amount === 'number') {
                 amount = round_di(amount,decimals).toFixed(decimals);
+                amount = amount.replace(/\d(?=(\d{3})+\.)/g, '$&,');
             }
 
             if (currency.position === 'after') {
