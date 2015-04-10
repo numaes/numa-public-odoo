@@ -129,22 +129,29 @@ class mail_thread(osv.AbstractModel):
             if alias_ids and len(alias_ids) == 1:
                 alias = alias_obj.browse(cr, uid, alias_ids[0], context=context)
 
-        if alias:
-            alias_email = alias.name_get()[0][1]
-            return _("""<p class='oe_view_nocontent_create'>
-                            Click here to add new %(document)s or send an email to: <a href='mailto:%(email)s'>%(email)s</a>
-                        </p>
-                        %(static_help)s"""
-                    ) % {
-                        'document': document_name,
-                        'email': alias_email,
-                        'static_help': help or ''
-                    }
+        add_arrow = not help or help.find("oe_view_nocontent_create") == -1
 
-        if document_name != 'document' and help and help.find("oe_view_nocontent_create") == -1:
-            return _("<p class='oe_view_nocontent_create'>Click here to add new %(document)s</p>%(static_help)s") % {
-                        'document': document_name,
-                        'static_help': help or '',
+        if alias:
+            email_link = "<a href='mailto:%(email)s'>%(email)s</a>" % {'email': alias.name_get()[0][1]}
+            if add_arrow:
+                return _("""<p class='oe_view_nocontent_create'>
+                                Click here to add new %(document)s or send an email to: %(email)s.
+                            </p>
+                            %(static_help)s"""
+                        ) % {
+                            'document': document_name, 'email': email_link, 'static_help': help or ''
+                        }
+
+            return _("""%(static_help)s
+                        <p>
+                            You could also add a new %(document)s by sending an email to: %(email)s.
+                        </p>""") % {
+                            'document': document_name, 'email': email_link, 'static_help': help or ''
+                        }
+
+        if add_arrow:
+             return _("<p class='oe_view_nocontent_create'>Click here to add new %(document)s</p>%(static_help)s") % {
+                         'document': document_name, 'static_help': help or ''
                     }
 
         return help
@@ -386,7 +393,7 @@ class mail_thread(osv.AbstractModel):
         # auto_subscribe: take values and defaults into account
         create_values = dict(values)
         for key, val in context.iteritems():
-            if key.startswith('default_'):
+            if key.startswith('default_') and key[8:] not in create_values:
                 create_values[key[8:]] = val
         self.message_auto_subscribe(cr, uid, [thread_id], create_values.keys(), context=context, values=create_values)
 
@@ -582,6 +589,7 @@ class mail_thread(osv.AbstractModel):
         ir_attachment_obj.unlink(cr, uid, attach_ids, context=context)
         return True
 
+    @api.cr_uid_ids_context
     def check_mail_message_access(self, cr, uid, mids, operation, model_obj=None, context=None):
         """ mail.message check permission rules for related document. This method is
             meant to be inherited in order to implement addons-specific behavior.
@@ -1442,18 +1450,34 @@ class mail_thread(osv.AbstractModel):
                     if follower.email == email_address:
                         partner_id = follower.id
             # second try: check in partners that are also users
+            # Escape special SQL characters in email_address to avoid invalid matches
+            email_address = (email_address.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_'))
+            email_brackets = "<%s>" % email_address
             if not partner_id:
-                ids = partner_obj.search(cr, SUPERUSER_ID, [
-                                                ('email', 'ilike', email_address),
-                                                ('user_ids', '!=', False)
-                                            ], limit=1, context=context)
+                # exact, case-insensitive match
+                ids = partner_obj.search(cr, SUPERUSER_ID,
+                                         [('email', '=ilike', email_address),
+                                          ('user_ids', '!=', False)],
+                                         limit=1, context=context)
+                if not ids:
+                    # if no match with addr-spec, attempt substring match within name-addr pair
+                    ids = partner_obj.search(cr, SUPERUSER_ID,
+                                             [('email', 'ilike', email_brackets),
+                                              ('user_ids', '!=', False)],
+                                             limit=1, context=context)
                 if ids:
                     partner_id = ids[0]
             # third try: check in partners
             if not partner_id:
-                ids = partner_obj.search(cr, SUPERUSER_ID, [
-                                                ('email', 'ilike', email_address)
-                                            ], limit=1, context=context)
+                # exact, case-insensitive match
+                ids = partner_obj.search(cr, SUPERUSER_ID,
+                                         [('email', '=ilike', email_address)],
+                                         limit=1, context=context)
+                if not ids:
+                    # if no match with addr-spec, attempt substring match within name-addr pair
+                    ids = partner_obj.search(cr, SUPERUSER_ID,
+                                             [('email', 'ilike', email_brackets)],
+                                             limit=1, context=context)
                 if ids:
                     partner_id = ids[0]
             partner_ids.append(partner_id)
@@ -1473,13 +1497,15 @@ class mail_thread(osv.AbstractModel):
             partner_id = partner_ids[idx]
             partner_info = {'full_name': email_address, 'partner_id': partner_id}
             result.append(partner_info)
-
             # link mail with this from mail to the new partner id
             if link_mail and partner_info['partner_id']:
+                # Escape special SQL characters in email_address to avoid invalid matches
+                email_address = (email_address.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_'))
+                email_brackets = "<%s>" % email_address
                 message_ids = mail_message_obj.search(cr, SUPERUSER_ID, [
                                     '|',
-                                    ('email_from', '=', email_address),
-                                    ('email_from', 'ilike', '<%s>' % email_address),
+                                    ('email_from', '=ilike', email_address),
+                                    ('email_from', 'ilike', email_brackets),
                                     ('author_id', '=', False)
                                 ], context=context)
                 if message_ids:
@@ -1803,7 +1829,17 @@ class mail_thread(osv.AbstractModel):
                         ('model', '=', self._name),
                         ('res_id', '=', record_id)], limit=1, context=context)
                 if msg_ids:
-                    self.pool.get('mail.notification')._notify(cr, uid, msg_ids[0], partners_to_notify=partner_ids, context=context)
+                    notification_obj = self.pool.get('mail.notification')
+                    notification_obj._notify(cr, uid, msg_ids[0], partners_to_notify=partner_ids, context=context)
+                    message = message_obj.browse(cr, uid, msg_ids[0], context=context)
+                    if message.parent_id:
+                        partner_ids_to_parent_notify = set(partner_ids).difference(partner.id for partner in message.parent_id.notified_partner_ids)
+                        for partner_id in partner_ids_to_parent_notify:
+                            notification_obj.create(cr, uid, {
+                                'message_id': message.parent_id.id,
+                                'partner_id': partner_id,
+                                'is_read': True,
+                            }, context=context)
 
     def message_auto_subscribe(self, cr, uid, ids, updated_fields, context=None, values=None):
         """ Handle auto subscription. Two methods for auto subscription exist:
@@ -1884,6 +1920,7 @@ class mail_thread(osv.AbstractModel):
             self.message_subscribe(cr, uid, ids, [pid], subtypes, context=context)
 
         self._message_auto_subscribe_notify(cr, uid, ids, user_pids, context=context)
+
 
         return True
 

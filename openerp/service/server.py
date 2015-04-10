@@ -7,7 +7,6 @@ import logging
 import os
 import os.path
 import platform
-import psutil
 import random
 import select
 import signal
@@ -25,6 +24,7 @@ if os.name == 'posix':
     # Unix only for workers
     import fcntl
     import resource
+    import psutil
 else:
     # Windows shim
     signal.SIGHUP = -1
@@ -39,7 +39,7 @@ import openerp
 from openerp.modules.registry import RegistryManager
 from openerp.release import nt_service_name
 import openerp.tools.config as config
-from openerp.tools.misc import stripped_sys_argv, dumpstacks
+from openerp.tools import stripped_sys_argv, dumpstacks, log_ormcache_stats
 
 _logger = logging.getLogger(__name__)
 
@@ -309,6 +309,7 @@ class ThreadedServer(CommonServer):
             signal.signal(signal.SIGHUP, self.signal_handler)
             signal.signal(signal.SIGUSR1, self.signal_handler)
             signal.signal(signal.SIGQUIT, dumpstacks)
+            signal.signal(signal.SIGUSR1, log_ormcache_stats)
         elif os.name == 'nt':
             import win32api
             win32api.SetConsoleCtrlHandler(lambda sig: self.signal_handler(sig, None), 1)
@@ -402,6 +403,7 @@ class GeventServer(CommonServer):
 
         if os.name == 'posix':
             signal.signal(signal.SIGQUIT, dumpstacks)
+            signal.signal(signal.SIGUSR1, log_ormcache_stats)
 
         gevent.spawn(self.watch_parent)
         self.httpd = WSGIServer((self.interface, self.port), self.app)
@@ -534,6 +536,9 @@ class PreforkServer(CommonServer):
             elif sig == signal.SIGQUIT:
                 # dump stacks on kill -3
                 self.dumpstacks()
+            elif sig == signal.SIGUSR1:
+                # log ormcache stats on kill -SIGUSR1
+                log_ormcache_stats()
             elif sig == signal.SIGTTIN:
                 # increase number of workers
                 self.population += 1
@@ -610,6 +615,7 @@ class PreforkServer(CommonServer):
         signal.signal(signal.SIGTTIN, self.signal_handler)
         signal.signal(signal.SIGTTOU, self.signal_handler)
         signal.signal(signal.SIGQUIT, dumpstacks)
+        signal.signal(signal.SIGUSR1, log_ormcache_stats)
 
         # listen to socket
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

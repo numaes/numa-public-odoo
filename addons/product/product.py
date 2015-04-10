@@ -133,7 +133,7 @@ class product_uom(osv.osv):
     _order = "name"
     _columns = {
         'name': fields.char('Unit of Measure', required=True, translate=True),
-        'category_id': fields.many2one('product.uom.categ', 'Product Category', required=True, ondelete='cascade',
+        'category_id': fields.many2one('product.uom.categ', 'Unit of Measure Category', required=True, ondelete='cascade',
             help="Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."),
         'factor': fields.float('Ratio', required=True, digits=0, # force NUMERIC with unlimited precision
             help='How much bigger or smaller this unit is compared to the reference Unit of Measure for this category:\n'\
@@ -494,7 +494,7 @@ class product_template(osv.osv):
 
     def _get_product_variant_count(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        for product in self.browse(cr, uid, ids):
+        for product in self.browse(cr, uid, ids, context=context):
             res[product.id] = len(product.product_variant_ids)
         return res
 
@@ -516,7 +516,8 @@ class product_template(osv.osv):
         'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Product Price'), help="Base price to compute the customer price. Sometimes called the catalog price."),
         'lst_price' : fields.related('list_price', type="float", string='Public Price', digits_compute=dp.get_precision('Product Price')),
         'standard_price': fields.property(type = 'float', digits_compute=dp.get_precision('Product Price'), 
-                                          help="Cost price of the product template used for standard stock valuation in accounting and used as a base price on purchase orders.", 
+                                          help="Cost price of the product template used for standard stock valuation in accounting and used as a base price on purchase orders. "
+                                               "Expressed in the default unit of measure of the product.",
                                           groups="base.group_user", string="Cost Price"),
         'volume': fields.float('Volume', help="The volume in m3."),
         'weight': fields.float('Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The gross weight in Kg."),
@@ -791,9 +792,25 @@ class product_template(osv.osv):
             pass
         return super(product_template, self).name_get(cr, user, ids, context)
 
+    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
+        # Only use the product.product heuristics if there is a search term and the domain
+        # does not specify a match on `product.template` IDs.
+        if not name or any(term[0] == 'id' for term in (args or [])):
+            return super(product_template, self).name_search(
+                cr, user, name=name, args=args, operator=operator, context=context, limit=limit)
 
+        product_product = self.pool['product.product']
+        results = product_product.name_search(
+            cr, user, name, args, operator=operator, context=context, limit=limit)
+        product_ids = [p[0] for p in results]
+        template_ids = [p.product_tmpl_id.id
+                            for p in product_product.browse(
+                                cr, user, product_ids, context=context)]
 
-
+        # re-apply product.template order + name_get
+        return super(product_template, self).name_search(
+            cr, user, '', args=[('id', 'in', template_ids)],
+            operator='ilike', context=context, limit=limit)
 
 class product_product(osv.osv):
     _name = "product.product"
@@ -1036,7 +1053,9 @@ class product_product(osv.osv):
                 sellers = filter(lambda x: x.name.id in partner_ids, product.seller_ids)
             if sellers:
                 for s in sellers:
-                    seller_variant = s.product_name and "%s (%s)" % (s.product_name, variant) or False
+                    seller_variant = s.product_name and (
+                        variant and "%s (%s)" % (s.product_name, variant) or s.product_name
+                        ) or False
                     mydict = {
                               'id': product.id,
                               'name': seller_variant or name,
@@ -1067,12 +1086,11 @@ class product_product(osv.osv):
                 # on a database with thousands of matching products, due to the huge merge+unique needed for the
                 # OR operator (and given the fact that the 'name' lookup results come from the ir.translation table
                 # Performing a quick memory merge of ids in Python will give much better performance
-                ids = set(self.search(cr, user, args + [('default_code', operator, name)], limit=limit, context=context))
+                ids = self.search(cr, user, args + [('default_code', operator, name)], limit=limit, context=context)
                 if not limit or len(ids) < limit:
                     # we may underrun the limit because of dupes in the results, that's fine
                     limit2 = (limit - len(ids)) if limit else False
-                    ids.update(self.search(cr, user, args + [('name', operator, name), ('id', 'not in', list(ids))], limit=limit2, context=context))
-                ids = list(ids)
+                    ids += self.search(cr, user, args + [('name', operator, name), ('id', 'not in', ids)], limit=limit2, context=context)
             elif not ids and operator in expression.NEGATIVE_TERM_OPERATORS:
                 ids = self.search(cr, user, args + ['&', ('default_code', operator, name), ('name', operator, name)], limit=limit, context=context)
             if not ids and operator in positive_operators:
@@ -1095,6 +1113,9 @@ class product_product(osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         if context is None:
             context={}
+
+        if default is None:
+            default = {}
 
         product = self.browse(cr, uid, id, context)
         if context.get('variant'):
