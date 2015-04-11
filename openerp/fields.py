@@ -526,16 +526,9 @@ class Field(object):
             if not getattr(self, attr):
                 setattr(self, attr, getattr(field, prop))
 
-<<<<<<< HEAD
-        for attr in field._free_attrs:
-            if attr not in self._free_attrs:
-                self._free_attrs.append(attr)
-            setattr(self, attr, getattr(field, attr))
-=======
         for attr, value in field._attrs.iteritems():
             if attr not in self._attrs:
                 setattr(self, attr, value)
->>>>>>> 8ac8281a7f5591c0b57c78e1ff85bac52ea67d1f
 
         # special case for states: copy it only for inherited fields
         if not self.states and self.inherited:
@@ -708,24 +701,12 @@ class Field(object):
             return None
 
         # determine column parameters
-<<<<<<< HEAD
-        args = {}
-        for attr, prop in self.column_attrs:
-            args[attr] = getattr(self, prop)
-        for attr in self._free_attrs:
-            if not hasattr(self, attr):
-                args[attr] = None
-            else:
-                args[attr] = getattr(self, attr)
-        _logger.debug("Create fields._column for Field %s", self)
-=======
         #_logger.debug("Create fields._column for Field %s", self)
         args = {}
         for attr, prop in self.column_attrs:
             args[attr] = getattr(self, prop)
         for attr, value in self._attrs.iteritems():
             args[attr] = value
->>>>>>> 8ac8281a7f5591c0b57c78e1ff85bac52ea67d1f
 
         if self.company_dependent:
             # company-dependent fields are mapped to former property fields
