@@ -1145,7 +1145,7 @@ class sale_order_line(osv.osv):
             price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
                     product, qty or 1.0, partner_id, {
                         'uom': uom or result.get('product_uom'),
-                        'date': date_order,
+                        'date': date_order[0:10],
                         })[pricelist]
             if price is False:
                 warn_msg = _("Cannot find a pricelist line matching this product and quantity.\n"
