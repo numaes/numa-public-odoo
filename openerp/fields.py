@@ -1059,8 +1059,7 @@ class Float(Field):
     @property
     def digits(self):
         if callable(self._digits):
-            with registry().cursor() as cr:
-                return self._digits(cr)
+            return self._digits(fields.get_cursor())
         else:
             return self._digits
 
