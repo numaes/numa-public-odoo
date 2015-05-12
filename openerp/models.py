@@ -2962,7 +2962,7 @@ class BaseModel(object):
         cls._fields = {}
         cls._defaults = {}
         for attr, field in getmembers(cls, Field.__instancecheck__):
-            cls._add_field(attr, field.copy_field())
+            cls._add_field(attr, field.new())
 
         # add magic and custom fields
         cls._add_magic_fields()

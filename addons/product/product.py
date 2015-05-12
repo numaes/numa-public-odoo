@@ -939,12 +939,12 @@ class product_product(osv.osv):
         return result
 
     def _set_image_variant(self, cr, uid, id, name, value, args, context=None):
-        template_obj = self.pool['product.template']
         image = tools.image_resize_image_big(value)
+        res = self.write(cr, uid, [id], {'image_variant': image}, context=context)
         product = self.browse(cr, uid, id, context=context)
-        res = self.write(cr, uid, [id], {'image_variant': product.product_tmpl_id.image and image or False}, context=context)
         if not product.product_tmpl_id.image:
-            template_obj.write(cr, uid, [product.product_tmpl_id.id], {'image':image}, context=context)
+            product.write({'image_variant': None})
+            product.product_tmpl_id.write({'image': image})
         return res
 
     def _get_price_extra(self, cr, uid, ids, name, args, context=None):
