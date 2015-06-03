@@ -676,6 +676,8 @@ class Environment(object):
 
     @classproperty
     def envs(cls):
+        if not hasattr(cls._local, 'environments'):
+            cls._local.environments = Environments()
         return cls._local.environments
 
     @classmethod
