@@ -190,20 +190,16 @@ class ir_sequence(openerp.osv.osv.osv):
         rows = self.read(cr, uid, ids, ['implementation', 'number_increment', 'number_next'], context)
         super(ir_sequence, self).write(cr, uid, ids, values, context)
 
-        if 'number_next' in values or 'number_increment' in values:
-            for row in rows:
-                # 4 cases: we test the previous impl. against the new one.
-                i = values.get('number_increment', row['number_increment'])
-                n = values.get('number_next', row['number_next'])
-                if row['implementation'] == 'standard':
-                    if new_implementation in ('standard', None):
-                        # Implementation has NOT changed.
-                        # Only change sequence if really requested.
-                        if row['number_next'] != n:
-                            self._alter_sequence(cr, row['id'], i, n)
-                        else:
-                            # Just in case only increment changed
-                            self._alter_sequence(cr, row['id'], i)
+        for row in rows:
+            # 4 cases: we test the previous impl. against the new one.
+            i = values.get('number_increment', row['number_increment'])
+            n = values.get('number_next', row['number_next'])
+            if row['implementation'] == 'standard':
+                if new_implementation in ('standard', None):
+                    # Implementation has NOT changed.
+                    # Only change sequence if really requested.
+                    if values.get('number_next'):
+                        self._alter_sequence(cr, row['id'], i, n)
                     else:
                         self._drop_sequence(cr, row['id'])
                 else:
