@@ -31,11 +31,7 @@ function openerp_pos_basewidget(instance, module){ //module is instance.point_of
             if (typeof amount === 'number') {
                 var am = amount
                 amount = round_di(amount,decimals).toFixed(decimals);
-                var negative = amount[0] === '-';
-                amount = (negative ? amount.slice(1) : amount);
-                amount = amount.replace(/\d(?=(\d{3})+(\.|$))/g, '$&.');
-                // amount = (negative ? '-' : '') + instance.web.intersperse(amount, [3,6,9,12], '.');
-                // amount = insert_sep(amount)
+                amount = openerp.instances[this.session.name].web.format_value(parseFloat(amount), { type : 'float' });
             }
 
             if (currency.position === 'after') {
