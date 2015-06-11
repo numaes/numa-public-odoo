@@ -1337,7 +1337,7 @@ class project_task_history_cumulative(osv.osv):
 
         cr.execute(""" CREATE VIEW project_task_history_cumulative AS (
             SELECT
-                history.date::varchar||'-'||history.history_id::varchar AS id,
+                history.history_id AS id,
                 history.date AS end_date,
                 *
             FROM (

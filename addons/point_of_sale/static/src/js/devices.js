@@ -724,7 +724,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                     return;
                 }
 
-                if(timeStamp + 50 < new Date().getTime()){
+                if(timeStamp + 80 < new Date().getTime()){
                     code = "";
                     onlynumbers = true;
                 }
