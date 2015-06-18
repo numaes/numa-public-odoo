@@ -365,7 +365,7 @@ class Field(object):
 
         # determine all inherited field attributes
         attrs = {}
-        for field in resolve_all_mro(cls, name):
+        for field in resolve_all_mro(cls, name, reverse=True):
             if isinstance(field, type(self)):
                 attrs.update(field._attrs)
             else:
