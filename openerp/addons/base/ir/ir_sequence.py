@@ -201,12 +201,15 @@ class ir_sequence(openerp.osv.osv.osv):
                     if values.get('number_next'):
                         self._alter_sequence(cr, row['id'], i, n)
                     else:
-                        self._drop_sequence(cr, row['id'])
+                        # Just in case only increment changed
+                        self._alter_sequence(cr, row['id'], i)
                 else:
-                    if new_implementation in ('no_gap', None):
-                        pass
-                    else:
-                        self._create_sequence(cr, row['id'], i, n)
+                    self._drop_sequence(cr, row['id'])
+            else:
+                if new_implementation in ('no_gap', None):
+                    pass
+                else:
+                    self._create_sequence(cr, row['id'], i, n)
 
         return True
 
