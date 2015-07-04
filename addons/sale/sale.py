@@ -1070,6 +1070,8 @@ class sale_order_line(osv.osv):
         product_uom_obj = self.pool.get('product.uom')
         partner_obj = self.pool.get('res.partner')
         product_obj = self.pool.get('product.product')
+        fpos_obj = self.pool['account.fiscal.position']
+        
         context = {'lang': lang, 'partner_id': partner_id}
         partner = partner_obj.browse(cr, uid, partner_id)
         lang = partner.lang
@@ -1079,12 +1081,18 @@ class sale_order_line(osv.osv):
             return {'value': {'th_weight': 0,
                 'product_uos_qty': qty}, 'domain': {'product_uom': [],
                    'product_uos': []}}
+
         if not date_order:
             date_order = time.strftime(DEFAULT_SERVER_DATE_FORMAT)
 
         result = {}
         warning_msgs = ''
         product_obj = product_obj.browse(cr, uid, product, context=context_partner)
+
+        if not flag:
+            result['name'] = self.pool.get('product.product').name_get(cr, uid, [product_obj.id], context=context_partner)[0][1]
+            if product_obj.description_sale:
+                result['name'] += '\n'+product_obj.description_sale
 
         uom2 = False
         if uom:
@@ -1103,14 +1111,22 @@ class sale_order_line(osv.osv):
         if not fiscal_position:
             fpos = partner.property_account_position or False
         else:
-            fpos = self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position)
-        if update_tax: #The quantity only have changed
-            result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, product_obj.taxes_id)
+            fpos = fpos_obj.browse(cr, uid, fiscal_position)
 
-        if not flag:
-            result['name'] = self.pool.get('product.product').name_get(cr, uid, [product_obj.id], context=context_partner)[0][1]
-            if product_obj.description_sale:
-                result['name'] += '\n'+product_obj.description_sale
+        account = product_obj.property_account_income or product_obj.categ_id.property_account_income_categ
+        if fpos:
+            account = fpos.map_account(account)
+
+        taxes = product_obj.taxes_id
+        if account:
+            taxes = taxes or account.tax_ids
+
+        if product_obj.description_sale:
+            result['name'] += '\n' + product_obj.description_sale
+
+        if update_tax: #The quantity only have changed
+            result['tax_id'] = fpos_obj.map_tax(cr, uid, fpos, taxes)
+
         domain = {}
         if (not uom) and (not uos):
             result['product_uom'] = product_obj.uom_id.id
