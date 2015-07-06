@@ -373,14 +373,18 @@ class account_invoice(models.Model):
         res['arch'] = etree.tostring(doc)
         return res
 
-    @api.multi
-    def invoice_print(self):
+    def invoice_print(self, cr, uid, ids, context=None):
         """ Print the invoice and mark it as sent, so that we can see more
             easily the next step of the workflow
         """
-        assert len(self) == 1, 'This option should only be used for a single id at a time.'
-        self.sent = True
-        return self.env['report'].get_action(self, 'account.report_invoice')
+        assert len(ids) == 1, 'This option should only be used for a single id at a time.'
+        
+        invoice = self.browse(cr, uid, ids[0], context=context)
+        invoice.write({'sent': True})
+        
+        report_obj = self.pool['report']
+        
+        return report_obj.get_action(cr, uid, ids, 'account.report_invoice', context=context)
 
     @api.multi
     def action_invoice_sent(self):
