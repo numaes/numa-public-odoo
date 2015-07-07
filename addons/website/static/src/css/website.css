@@ -213,6 +213,10 @@ li > p {
   margin: 0;
 }
 
+font[style*='background'], font[class*='bg-'] {
+  padding: 0 2px
+}
+
 .o_ul_toggle_self, .o_ul_toggle_next {
   display: none;
 }
@@ -342,8 +346,10 @@ body > nav.navbar {
   z-index: 10000;
 }
 
-nav.navbar + #wrapwrap {
-  padding-top: 34px;
+@media (min-width: 767px) {
+  nav.navbar + #wrapwrap {
+    padding-top: 34px;
+  }
 }
 
 /* ----- BOOTSTRAP FIX ----- */
@@ -994,5 +1000,22 @@ div.carousel .item.text_only .container > .carousel-image {
 #oe_main_menu_navbar .navbar-nav.navbar-right:last-child {
   margin-right: 0 !important;
 }
+.container nav#oe_main_menu_navbar {
+  position: inherit;
+}
 
+.oe_search_clear {
+  position: absolute;
+  display:none;
+  cursor: pointer;
+  z-index: 2;
+  right: 42px;
+  color: #939393;
+  padding: 10px 0;
+  top: 1px;
+  }
+
+.oe_search_box {
+    padding-right: 23px;
+}
 /*# sourceMappingURL=website.css.map */
