@@ -1402,7 +1402,7 @@ instance.web.search.Field = instance.web.search.Input.extend( /** @lends instanc
 
         if (domains.length === 1) { return domains[0]; }
         for (var i = domains.length; --i;) {
-            domains.unshift(['|']);
+            domains.unshift(['&']);
         }
 
         return _.extend(new instance.web.CompoundDomain(), {
