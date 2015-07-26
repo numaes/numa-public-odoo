@@ -118,7 +118,7 @@ class DBFormatter(logging.Formatter):
         record.pid = os.getpid()
         record.dbname = getattr(threading.currentThread(), 'dbname', '?')
         return logging.Formatter.format(self, record)
-
+            
 class ColoredFormatter(DBFormatter):
     def format(self, record):
         fg_color, bg_color = LEVEL_COLOR_MAPPING.get(record.levelno, (GREEN, DEFAULT))
@@ -138,7 +138,7 @@ def init_logger():
     resetlocale()
 
     # create a format for log messages and dates
-    format = '%(asctime)s %(pid)s %(levelname)s %(dbname)s %(name)s: %(message)s'
+    format = u'%(asctime)s %(pid)s %(levelname)s %(dbname)s %(name)s: %(message)s'
 
     if tools.config['syslog']:
         # SysLog Handler
@@ -148,8 +148,8 @@ def init_logger():
             handler = logging.handlers.SysLogHandler('/var/run/log')
         else:
             handler = logging.handlers.SysLogHandler('/dev/log')
-        format = '%s %s' % (release.description, release.version) \
-                + ':%(dbname)s:%(levelname)s:%(name)s:%(message)s'
+        format = u'%s %s' % (release.description, release.version) \
+                + u':%(dbname)s:%(levelname)s:%(name)s:%(message)s'
 
     elif tools.config['logfile']:
         # LogFile Handler

@@ -793,6 +793,10 @@ class account_invoice(models.Model):
     @api.multi
     def action_move_create(self):
         """ Creates invoice related analytics and financial move lines """
+        
+        # Recompute in order to prevent inconsistences among amounts
+        self._compute_amount()        
+        
         account_invoice_tax = self.env['account.invoice.tax']
         account_move = self.env['account.move']
 
