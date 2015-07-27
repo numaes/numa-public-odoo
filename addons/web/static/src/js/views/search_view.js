@@ -6,7 +6,7 @@ var core = require('web.core');
 var FavoriteMenu = require('web.FavoriteMenu');
 var FilterMenu = require('web.FilterMenu');
 var GroupByMenu = require('web.GroupByMenu');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 var pyeval = require('web.pyeval');
 var search_inputs = require('web.search_inputs');
 var utils = require('web.utils');
@@ -393,7 +393,7 @@ var SearchView = Widget.extend(/** @lends instance.web.SearchView# */{
     },    
     start: function() {
         if (this.headless) {
-            this.$el.hide();
+            this.do_hide();
         }
         this.toggle_visibility(false);
         this.$facets_container = this.$('div.oe_searchview_facets');

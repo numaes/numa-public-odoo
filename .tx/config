@@ -17,11 +17,6 @@ file_filter = addons/account_accountant/i18n/<lang>.po
 source_file = addons/account_accountant/i18n/account_accountant.pot
 source_lang = en
 
-[odoo-9.account_analytic_analysis]
-file_filter = addons/account_analytic_analysis/i18n/<lang>.po
-source_file = addons/account_analytic_analysis/i18n/account_analytic_analysis.pot
-source_lang = en
-
 [odoo-9.account_analytic_default]
 file_filter = addons/account_analytic_default/i18n/<lang>.po
 source_file = addons/account_analytic_default/i18n/account_analytic_default.pot
@@ -220,11 +215,6 @@ source_lang = en
 [odoo-9.crm_claim]
 file_filter = addons/crm_claim/i18n/<lang>.po
 source_file = addons/crm_claim/i18n/crm_claim.pot
-source_lang = en
-
-[odoo-9.crm_helpdesk]
-file_filter = addons/crm_helpdesk/i18n/<lang>.po
-source_file = addons/crm_helpdesk/i18n/crm_helpdesk.pot
 source_lang = en
 
 [odoo-9.crm_mass_mailing]
@@ -837,6 +827,11 @@ file_filter = addons/sale_analytic_plans/i18n/<lang>.po
 source_file = addons/sale_analytic_plans/i18n/sale_analytic_plans.pot
 source_lang = en
 
+[odoo-9.sale_contract]
+file_filter = addons/sale_contract/i18n/<lang>.po
+source_file = addons/sale_contract/i18n/account_analytic_analysis.pot
+source_lang = en
+
 [odoo-9.sale_crm]
 file_filter = addons/sale_crm/i18n/<lang>.po
 source_file = addons/sale_crm/i18n/sale_crm.pot
@@ -880,11 +875,6 @@ source_lang = en
 [odoo-9.sale_stock]
 file_filter = addons/sale_stock/i18n/<lang>.po
 source_file = addons/sale_stock/i18n/sale_stock.pot
-source_lang = en
-
-[odoo-9.share]
-file_filter = addons/share/i18n/<lang>.po
-source_file = addons/share/i18n/share.pot
 source_lang = en
 
 [odoo-9.stock]

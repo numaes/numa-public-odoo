@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Warehouse Management',
+    'name': 'inventory Management',
     'version': '1.1',
     'author': 'OpenERP SA',
     'summary': 'Inventory, Logistic, Storage',
@@ -11,7 +11,7 @@ Manage multi-warehouses, multi- and structured stock locations
 ==============================================================
 
 The warehouse and inventory management is based on a hierarchical location structure, from warehouses to storage bins.
-The double entry inventory system allows you to manage customers, suppliers as well as manufacturing inventories.
+The double entry inventory system allows you to manage customers, vendors as well as manufacturing inventories.
 
 OpenERP has the capacity to manage lots and serial numbers ensuring compliance with the traceability requirements imposed by the majority of industries.
 
@@ -23,7 +23,7 @@ Key Features
 * Rapid detection of mistakes through double entry system
 * Traceability (Serial Numbers, Packages, ...)
 
-Dashboard / Reports for Warehouse Management will include:
+Dashboard / Reports for Inventory Management will include:
 ----------------------------------------------------------
 * Incoming Products (Graph)
 * Outgoing Products (Graph)
@@ -34,7 +34,7 @@ Dashboard / Reports for Warehouse Management will include:
     """,
     'website': 'https://www.odoo.com/page/warehouse',
     'depends': ['product', 'procurement', 'board', 'barcodes'],
-    'category': 'Warehouse Management',
+    'category': 'Inventory Management',
     'sequence': 16,
     'demo': [
         'stock_demo_pre.yml',
@@ -71,6 +71,7 @@ Dashboard / Reports for Warehouse Management will include:
         'views/report_lot_barcode.xml',
         'views/report_location_barcode.xml',
         'views/report_stockpicking_operations.xml',
+        'views/report_deliveryslip.xml',
         'views/report_stockinventory.xml',
         'report/report_stock_forecast.xml',
         'stock_dashboard.xml',

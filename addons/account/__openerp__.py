@@ -9,7 +9,7 @@
     'description': """
 Invoicing & Payments
 ====================
-The specific and easy-to-use Invoicing system in Odoo allows you to keep track of your accounting, even when you are not an accountant. It provides an easy way to follow up on your suppliers and customers.
+The specific and easy-to-use Invoicing system in Odoo allows you to keep track of your accounting, even when you are not an accountant. It provides an easy way to follow up on your vendors and customers.
 
 You could use this simplified accounting in case you work with an (external) account to keep your books, and you still want to keep track of payments. This module also offers you an easy method of registering payments, without having to encode complete abstracts of account.
     """,
@@ -26,10 +26,10 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/account_payment_view.xml',
         'wizard/account_reconcile_view.xml',
         'wizard/account_unreconcile_view.xml',
+        'wizard/account_move_reversal_view.xml',
         'views/account_view.xml',
         'views/account_report.xml',
         'wizard/account_invoice_refund_view.xml',
-        'wizard/account_move_reversal_view.xml',
         'wizard/account_validate_move_view.xml',
         'wizard/account_invoice_state_view.xml',
         'wizard/account_log_followup_note_view.xml',

@@ -39,7 +39,7 @@ class project_task_type(osv.osv):
             'Kanban Ongoing Explanation', translate=True,
             help='Override the default value displayed for the normal state for kanban selection, when the task or issue is in that stage.'),
         'fold': fields.boolean('Folded in Kanban View',
-                               help='This stage is folded in the kanban view when'
+                               help='This stage is folded in the kanban view when '
                                'there are no records in that stage to display.'),
     }
 
@@ -165,7 +165,7 @@ class project(osv.osv):
                                     domain=[('stage_id.fold', '=', False)]),
         'color': fields.integer('Color Index'),
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
-                                    help="Internal email associated with this project. Incoming emails are automatically synchronized"
+                                    help="Internal email associated with this project. Incoming emails are automatically synchronized "
                                          "with Tasks (or optionally Issues if the Issue Tracker module is installed)."),
         'alias_model': fields.selection(_alias_models, "Alias Model", select=True, required=True,
                                         help="The kind of document created when an email is received on this project's email alias"),
@@ -582,8 +582,9 @@ class task(osv.osv):
         'write_date': fields.datetime('Last Modification Date', readonly=True, select=True), #not displayed in the view but it might be useful with base_action_rule module (and it needs to be defined first for that)
         'date_start': fields.datetime('Starting Date', select=True, copy=False),
         'date_end': fields.datetime('Ending Date', select=True, copy=False),
+        'date_assign': fields.datetime('Assigning Date', select=True, copy=False, readonly=True),
         'date_deadline': fields.date('Deadline', select=True, copy=False),
-        'date_last_stage_update': fields.datetime('Last Stage Update', select=True, copy=False),
+        'date_last_stage_update': fields.datetime('Last Stage Update', select=True, copy=False, readonly=True),
         'project_id': fields.many2one('project.project', 'Project', ondelete='set null', select=True, track_visibility='onchange', change_default=True),
         'parent_ids': fields.many2many('project.task', 'project_task_parent_rel', 'task_id', 'parent_id', 'Parent Tasks'),
         'child_ids': fields.many2many('project.task', 'project_task_parent_rel', 'parent_id', 'task_id', 'Delegated Tasks'),
@@ -591,7 +592,6 @@ class task(osv.osv):
         'planned_hours': fields.float('Initially Planned Hours', help='Estimated time to do the task, usually set by the project manager when the task is in draft state.'),
         'remaining_hours': fields.float('Remaining Hours', digits=(16,2), help="Total remaining time, can be re-estimated periodically by the assignee of the task."),
         'user_id': fields.many2one('res.users', 'Assigned to', select=True, track_visibility='onchange'),
-        'delegated_user_id': fields.related('child_ids', 'user_id', type='many2one', relation='res.users', string='Delegated To'),
         'partner_id': fields.many2one('res.partner', 'Customer'),
         'manager_id': fields.related('project_id', 'analytic_account_id', 'user_id', type='many2one', relation='res.users', string='Project Manager'),
         'company_id': fields.many2one('res.company', 'Company'),
@@ -757,63 +757,6 @@ class task(osv.osv):
                         raise UserError(_("Child task still open.\nPlease cancel or complete child task first."))
         return True
 
-    def _delegate_task_attachments(self, cr, uid, task_id, delegated_task_id, context=None):
-        attachment = self.pool.get('ir.attachment')
-        attachment_ids = attachment.search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', task_id)], context=context)
-        new_attachment_ids = []
-        for attachment_id in attachment_ids:
-            new_attachment_ids.append(attachment.copy(cr, uid, attachment_id, default={'res_id': delegated_task_id}, context=context))
-        return new_attachment_ids
-
-    def _prepare_delegate_values(self, cr, uid, ids, delegate_data, context=None):
-        delegate_values = {}
-        for task in self.browse(cr, uid, ids, context=context):
-            delegate_values[task.id] = {
-                'name': delegate_data['name'],
-                'project_id': delegate_data['project_id'] and delegate_data['project_id'][0] or False,
-                'stage_id': delegate_data.get('stage_id') and delegate_data.get('stage_id')[0] or False,
-                'user_id': delegate_data['user_id'] and delegate_data['user_id'][0] or False,
-                'planned_hours': delegate_data['planned_hours'] or 0.0,
-                'parent_ids': [(6, 0, [task.id])],
-                'description': delegate_data['new_task_description'] or '',
-                'child_ids': [],
-                'remaining_hours': delegate_data['planned_hours_me'],
-                # The values below will be written on the old task.
-                'task_planned_hours': delegate_data['planned_hours_me'],
-                'task_name': delegate_data['prefix'] or ''
-            }
-        return delegate_values
-
-    def do_delegate(self, cr, uid, ids, delegate_data=None, context=None):
-        """
-        Delegate Task to another users.
-        """
-        if delegate_data is None:
-            delegate_data = {}
-        assert delegate_data['user_id'], _("Delegated User should be specified")
-        delegated_tasks = {}
-        vals = self._prepare_delegate_values(cr, uid, ids, delegate_data, context)
-        for task in self.browse(cr, uid, ids, context=context):
-
-            delegated_task_id = self.copy(cr, uid, task.id, {
-                'name': vals[task.id]['name'],
-                'project_id': vals[task.id]['project_id'],
-                'stage_id': vals[task.id]['stage_id'],
-                'user_id': vals[task.id]['user_id'],
-                'planned_hours': vals[task.id]['planned_hours'],
-                'parent_ids': vals[task.id]['parent_ids'],
-                'description': vals[task.id]['description'],
-                'child_ids': vals[task.id]['child_ids'],
-            }, context=context)
-            self._delegate_task_attachments(cr, uid, task.id, delegated_task_id, context=context)
-
-            task.write({
-                'remaining_hours': vals[task.id]['remaining_hours'],
-                'planned_hours': vals[task.id]['task_planned_hours'],
-                'name': vals[task.id]['task_name']
-            }, context=context)
-            delegated_tasks[task.id] = delegated_task_id
-        return delegated_tasks
 
     def _store_history(self, cr, uid, ids, context=None):
         for task in self.browse(cr, uid, ids, context=context):
@@ -838,9 +781,9 @@ class task(osv.osv):
         # for default stage
         if vals.get('project_id') and not context.get('default_project_id'):
             context['default_project_id'] = vals.get('project_id')
-        # user_id change: update date_start
-        if vals.get('user_id') and not vals.get('date_start'):
-            vals['date_start'] = fields.datetime.now()
+        # user_id change: update date_assign
+        if vals.get('user_id'):
+            vals['date_assign'] = fields.datetime.now()
 
         # context: no_log, because subtype already handle this
         create_context = dict(context, mail_create_nolog=True)
@@ -855,9 +798,9 @@ class task(osv.osv):
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.datetime.now()
-        # user_id change: update date_start
-        if vals.get('user_id') and 'date_start' not in vals:
-            vals['date_start'] = fields.datetime.now()
+        # user_id change: update date_assign
+        if vals.get('user_id'):
+            vals['date_assign'] = fields.datetime.now()
 
         # Overridden to reset the kanban_state to normal whenever
         # the stage (stage_id) of the task changes.

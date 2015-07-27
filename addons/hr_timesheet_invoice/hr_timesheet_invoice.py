@@ -33,7 +33,8 @@ class account_analytic_account(osv.osv):
     }
 
     _defaults = {
-         'pricelist_id': lambda self, cr, uid, c: self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'product.list0')
+         'pricelist_id': lambda self, cr, uid, c: self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'product.list0'),
+         'to_invoice': lambda self, cr, uid, c: self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'hr_timesheet_invoice.timesheet_invoice_factor1')
     }
 
     def on_change_partner_id(self, cr, uid, ids, partner_id, name, context=None):
@@ -158,7 +159,7 @@ class account_analytic_line(osv.osv):
             unit_price = total_price*-1.0 / total_qty
 
         factor = self.pool['hr_timesheet_invoice.factor'].browse(cr, uid, factor_id, context=uom_context)
-        factor_name = factor.customer_name
+        factor_name = factor.customer_name or ''
         curr_invoice_line = {
             'price_unit': unit_price,
             'quantity': total_qty,
@@ -288,7 +289,7 @@ class account_analytic_line(osv.osv):
             invoice_obj.compute_taxes(cr, uid, [last_invoice], context)
         return invoices
 
-    def on_change_account_id(self, cr, uid, ids, account_id, user_id=False, is_timesheet=False, context=None):
+    def on_change_account_id(self, cr, uid, ids, account_id, user_id=False, unit_amount=0, is_timesheet=False, context=None):
         res = {'value': {}}
         if is_timesheet and account_id:
             acc = self.pool.get('account.analytic.account').browse(cr, uid, account_id, context=context)

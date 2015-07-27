@@ -236,7 +236,7 @@ class res_partner(osv.Model, format_address):
         'barcode': fields.char('Barcode', oldname='ean13'),
         'active': fields.boolean('Active'),
         'customer': fields.boolean('Is a Customer', help="Check this box if this contact is a customer."),
-        'supplier': fields.boolean('Is a Supplier', help="Check this box if this contact is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
+        'supplier': fields.boolean('Is a Vendor', help="Check this box if this contact is a vendor. If it's not checked, purchase people will not see it when encoding a purchase order."),
         'employee': fields.boolean('Employee', help="Check this box if this contact is an Employee."),
         'function': fields.char('Job Position'),
         'type': fields.selection([('default', 'Default'), ('invoice', 'Invoice'),
@@ -708,6 +708,8 @@ class res_partner(osv.Model, format_address):
             adr_pref.add('default')
         result = {}
         visited = set()
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         for partner in self.browse(cr, uid, filter(None, ids), context=context):
             current_partner = partner
             while current_partner:
@@ -730,7 +732,7 @@ class res_partner(osv.Model, format_address):
                 current_partner = current_partner.parent_id
 
         # default to type 'default' or the partner itself
-        default = result.get('default', partner.id)
+        default = result.get('default', ids and ids[0] or False)
         for adr_type in adr_pref:
             result[adr_type] = result.get(adr_type) or default 
         return result

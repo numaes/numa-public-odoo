@@ -7,7 +7,7 @@ var data = require('web.data');
 var DataExport = require('web.DataExport');
 var formats = require('web.formats');
 var common = require('web.list_common');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 var pyeval = require('web.pyeval');
 var session = require('web.session');
 var Sidebar = require('web.Sidebar');
@@ -34,6 +34,7 @@ var row_decoration = [
 
 var ListView = View.extend( /** @lends instance.web.ListView# */ {
     _template: 'ListView',
+    accesskey: 'L',
     display_name: _lt('List'),
     defaults: {
         // records can be selected one by one
@@ -1898,7 +1899,7 @@ var ColumnBinary = Column.extend({
      * @private
      */
     _format: function (row_data, options) {
-        var text = _t("Download");
+        var text = _t("Download"), filename=_t('Binary file');
         var value = row_data[this.id].value;
         if (!value) {
             return options.value_if_empty || '';
@@ -1916,11 +1917,13 @@ var ColumnBinary = Column.extend({
         if (this.filename && row_data[this.filename]) {
             text = _.str.sprintf(_t("Download \"%s\""), formats.format_value(
                     row_data[this.filename].value, {type: 'char'}));
+            filename = row_data[this.filename].value;
         }
-        return _.template('<a href="<%-href%>"><%-text%></a> (<%-size%>)')({
+        return _.template('<a download="<%-download%>" href="<%-href%>"><%-text%></a> (<%-size%>)')({
             text: text,
             href: download_url,
             size: utils.binary_to_binsize(value),
+            download: filename,
         });
     }
 });

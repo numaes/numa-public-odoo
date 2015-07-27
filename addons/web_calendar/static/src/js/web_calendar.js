@@ -7,7 +7,7 @@ odoo.define('web_calendar.CalendarView', function (require) {
 var core = require('web.core');
 var data = require('web.data');
 var form_common = require('web.form_common');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 var time = require('web.time');
 var View = require('web.View');
 var widgets = require('web_calendar.widgets');
@@ -577,7 +577,7 @@ var CalendarView = View.extend({
                         attendee_showed += 1;
                         if (attendee_showed<= MAX_ATTENDEES) {
                             if (self.avatar_model !== null) {
-                                   the_title_avatar += '<img title="' + self.all_attendees[the_attendee_people] + '" class="o_attendee_head"  \
+                                       the_title_avatar += '<img title="' + _.escape(self.all_attendees[the_attendee_people]) + '" class="o_attendee_head"  \
                                                         src="/web/binary/image?model=' + self.avatar_model + '&field=image_small&id=' + the_attendee_people + '"></img>';
                             }
                             else {
@@ -585,12 +585,12 @@ var CalendarView = View.extend({
                                         var tempColor = (self.all_filters[the_attendee_people] !== undefined) 
                                                     ? self.all_filters[the_attendee_people].color
                                                     : (self.all_filters[-1] ? self.all_filters[-1].color : 1);
-                                    the_title_avatar += '<i class="fa fa-user o_attendee_head o_underline_color_'+tempColor+'" title="' + self.all_attendees[the_attendee_people] + '" ></i>';
+                                        the_title_avatar += '<i class="fa fa-user o_attendee_head o_underline_color_'+tempColor+'" title="' + _.escape(self.all_attendees[the_attendee_people]) + '" ></i>';
                                 }//else don't add myself
                             }
                         }
                         else {
-                            attendee_other += self.all_attendees[the_attendee_people] +", ";
+                                attendee_other += _.escape(self.all_attendees[the_attendee_people]) +", ";
                         }
                     }
                 );

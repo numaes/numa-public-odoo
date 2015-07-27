@@ -164,6 +164,18 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, {
         }, target);
     },
     /**
+     * Attach the current widget to a dom element
+     *
+     * @param target A jQuery object or a Widget instance.
+     */
+    attachTo: function(target) {
+        var self = this;
+        this.setElement(target.$el || target);
+        return this.willStart().then(function() {
+            return self.start();
+        });
+    },
+    /**
      * Renders the current widget and replaces the given jQuery object.
      *
      * @param target A jQuery object or a Widget instance.
@@ -335,10 +347,17 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, {
         return this.$el.find(selector);
     },
     do_show: function () {
-        this.$el.show();
+        this.$el.removeClass('o_hidden');
     },
     do_hide: function () {
-        this.$el.hide();
+        this.$el.addClass('o_hidden');
+    },
+    do_toggle: function () {
+        if (this.$el.hasClass('o_hidden')) {
+            this.do_show();
+        } else {
+            this.do_hide();
+        }
     },
     /**
      * Proxies a method of the object, in order to keep the right ``this`` on
@@ -378,14 +397,11 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, {
         }
         return false;
     },
-    do_notify: function() {
-        if (this.getParent()) {
-            return this.getParent().do_notify.apply(this,arguments);
-        }
-        return false;
+    do_notify: function(title, message, sticky) {
+        this.trigger_up('notification', {title: title, message: message, sticky: sticky});
     },
-    do_warn: function(title, message) {
-        core.bus.trigger('display_notification_warning', title, message);
+    do_warn: function(title, message, sticky) {
+        this.trigger_up('warning', {title: title, message: message, sticky: sticky});
     },
     rpc: function(url, data, options) {
         return this.alive(session.rpc(url, data, options));

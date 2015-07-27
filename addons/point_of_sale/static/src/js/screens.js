@@ -31,7 +31,7 @@ var PosBaseWidget = require('point_of_sale.BaseWidget');
 var gui = require('point_of_sale.gui');
 var models = require('point_of_sale.models');
 var core = require('web.core');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 var utils = require('web.utils');
 var formats = require('web.formats');
 
@@ -1508,7 +1508,9 @@ var PaymentScreenWidget = ScreenWidget.extend({
             if (event.type === "keypress") {
                 if (event.keyCode === 13) { // Enter
                     self.validate_order();
-                } else if (event.keyCode === 46) { // Period
+                } else if ( event.keyCode === 190 || // Dot
+                            event.keyCode === 110 ||  // Decimal point (numpad)
+                            event.keyCode === 188 ) { // Comma
                     key = '.';
                 } else if (event.keyCode >= 48 && event.keyCode <= 57) { // Numbers
                     key = '' + (event.keyCode - 48);

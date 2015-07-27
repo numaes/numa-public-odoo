@@ -8,7 +8,7 @@ var Dialog = require('web.Dialog');
 var common = require('web.form_common');
 var FormView = require('web.FormView');
 var ListView = require('web.ListView');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 var session = require('web.session');
 var utils = require('web.utils');
 var ViewManager = require('web.ViewManager');
@@ -296,13 +296,6 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
             minLength: 0,
             delay: 200,
         });
-        var appendTo = this.$input.parents('.oe-view-manager-content:visible, .modal-dialog:visible').last();
-        if (appendTo.length === 0) {
-            appendTo = '.oe_application > *:visible:last';
-        }
-        this.$input.autocomplete({
-            appendTo: appendTo
-        });
         // set position for list of suggestions box
         this.$input.autocomplete( "option", "position", { my : "left top", at: "left bottom" } );
         this.$input.autocomplete("widget").openerpClass();
@@ -448,12 +441,14 @@ var AbstractManyField = common.AbstractField.extend({
         this.dataset.child_name = this.name;
         this.set('value', []);
         this.starting_ids = [];
+        this.mutex = new utils.Mutex();
         this.has_not_committed_changes = false;
         this.view.on("load_record", this, this._on_load_record);
         this.dataset.on('dataset_changed', this, function() {
             self.has_not_committed_changes = true;
+            // don't trigger changes if all commands are not resolved
             // the editable lists change the dataset without call AbstractManyField methods
-            if (!self.internal_dataset_changed) {
+            if (self.mutex.def.state() === "resolved" && !self.internal_dataset_changed) {
                 self.trigger("change:commands");
             }
         });
@@ -477,7 +472,7 @@ var AbstractManyField = common.AbstractField.extend({
             throw new Error("set_value of '"+this.name+"' must receive an list of ids without virtual ids.", ids);
         }
         if (_.find(ids, function(id) { return typeof(id) !== "number"; } )) {
-            this.dataset.alter_ids(this.starting_ids.slice());
+            this.dataset.reset_ids([]);
             return this.send_commands(ids);
         }
         this.dataset.reset_ids(ids);
@@ -575,15 +570,13 @@ var AbstractManyField = common.AbstractField.extend({
     send_commands: function (command_list, options) {
         var self = this;
         var def = $.Deferred();
-        var mutex = new utils.Mutex();
         var dataset = this.dataset;
         var res = true;
         options = options || {};
-        var tmp = this.internal_dataset_changed;
-        this.internal_dataset_changed = true;
 
         _.each(command_list, function(command) {
-            mutex.exec(function() {
+            self.mutex.exec(function() {
+                var id = command[1];
                 switch (command[0]) {
                     case COMMANDS.CREATE:
                         var data = _.clone(command[2]);
@@ -593,14 +586,19 @@ var AbstractManyField = common.AbstractField.extend({
                             res = id;
                         });
                     case COMMANDS.UPDATE:
-                        return dataset.write(command[1], command[2], options);
+                        return dataset.write(id, command[2], options).then(function () {
+                            if (dataset.ids.indexOf(id) === -1) {
+                                dataset.ids.push(id);
+                                res = id;
+                            }
+                        });
                     case COMMANDS.FORGET:
-                        return dataset.remove_ids([command[1]]);
+                        return dataset.unlink([id]);
                     case COMMANDS.DELETE:
-                        return dataset.unlink(command[1]);
+                        return dataset.unlink([id]);
                     case COMMANDS.LINK_TO:
-                        if (dataset.ids.indexOf(command[1]) === -1) {
-                            return dataset.add_ids([command[1]], options);
+                        if (dataset.ids.indexOf(id) === -1) {
+                            return dataset.add_ids([id], options);
                         }
                         return;
                     case COMMANDS.DELETE_ALL:
@@ -609,15 +607,15 @@ var AbstractManyField = common.AbstractField.extend({
                         dataset.ids = [];
                         return dataset.alter_ids(command[2], options);
                     default:
-                        throw new Error("send_commands to '"+self.name+"' receive a non command value.", command_list);
+                        throw new Error("send_commands to '"+self.name+"' receive a non command value." +
+                            "\n" + JSON.stringify(command_list));
                 }
             });
         });
 
-        mutex.exec(function () {
-            def.resolve(res);
-            self.internal_dataset_changed = tmp;
+        this.mutex.def.then(function () {
             self.trigger("change:commands");
+            def.resolve(res);
         });
         return def;
     },
@@ -666,7 +664,7 @@ var AbstractManyField = common.AbstractField.extend({
             if (is_one2many) {
                 command_list.push(COMMANDS.delete(id));
             } else if (is_one2many && !self.dataset.delete_all) {
-                command_list.push(COMMANDS.unlink(id));
+                command_list.push(COMMANDS.forget(id));
             }
         });
 
@@ -674,7 +672,7 @@ var AbstractManyField = common.AbstractField.extend({
     },
 
     is_valid: function () {
-        return !this.has_not_committed_changes && this._super();
+        return this.mutex.def.state() === "resolved" && !this.has_not_committed_changes && this._super();
     },
 
     is_false: function() {
@@ -871,6 +869,10 @@ var FieldX2Many = AbstractManyField.extend({
 var X2ManyDataSet = data.BufferedDataSet.extend({
     get_context: function() {
         this.context = this.x2m.build_context();
+        var self = this;
+        _.each(arguments, function(context) {
+            self.context.add(context);
+        });
         return this.context;
     },
     create: function(data, options) {
@@ -1102,9 +1104,8 @@ var One2ManyListView = X2ManyListView.extend({
     },
     do_button_action: function (name, id, callback) {
         if (!_.isNumber(id)) {
-            core.bus.trigger('display_notification_warning', 
-                _t("Action Button"),
-                _t("The o2m record must be saved before an action can be used"));
+            this.do_warn(_t("Action Button"),
+                         _t("The o2m record must be saved before an action can be used"));
             return;
         }
         var parent_form = this.x2m.view;
@@ -1631,84 +1632,5 @@ return {
     FieldMany2ManyTags: FieldMany2ManyTags,
     AbstractManyField: AbstractManyField,
 };
-
-});
-
-odoo.define('web_kanban.Many2ManyKanbanView', function (require) {
-   "use strict";
-    // This code has a dependency on the addon web_kanban.  This is a weird dependency issue.  To fix it,
-    // we should either move this code into web_kanban, or move web_kanban into the web client.
-
-    var common = require('web.form_common');
-    var core = require('web.core');
-    var data = require('web.data');
-    var KanbanView = require('web_kanban.KanbanView');
-
-    var _t = core._t;
-
-    var One2ManyKanbanView = KanbanView.extend({
-        add_record: function() {
-            var self = this;
-            new common.FormViewDialog(this, {
-                res_model: self.x2m.field.relation,
-                domain: self.x2m.build_domain(),
-                context: self.x2m.build_context(),
-                title: _t("Create: ") + self.x2m.string,
-                initial_view: "form",
-                alternative_form_view: self.x2m.field.views ? self.x2m.field.views.form : undefined,
-                create_function: function(data, options) {
-                    return self.x2m.data_create(data, options);
-                },
-                read_function: function(ids, fields, options) {
-                    return self.x2m.data_read(ids, fields, options);
-                },
-                on_selected: function() {
-                    self.x2m.reload_current_view();
-                }
-            }).open();
-        },
-    });
-
-    var Many2ManyKanbanView = KanbanView.extend({
-        add_record: function() {
-            var self = this;
-            new common.SelectCreateDialog(this, {
-                res_model: this.x2m.field.relation,
-                domain: new data.CompoundDomain(this.x2m.build_domain(), ["!", ["id", "in", this.dataset.ids]]),
-                context: this.x2m.build_context(),
-                title: _t("Add: ") + this.x2m.string,
-                on_selected: function(element_ids) {
-                    return self.x2m.data_link_multi(element_ids).then(function() {
-                        self.x2m.reload_current_view();
-                    });
-                }
-            }).open();
-        },
-        open_record: function(event) {
-            var self = this;
-            new common.FormViewDialog(this, {
-                res_model: this.x2m.field.relation,
-                res_id: event.data.id,
-                context: this.x2m.build_context(),
-                title: _t("Open: ") + this.x2m.string,
-                write_function: function(id, data) {
-                    return self.x2m.data_update(id, data, {}).done(function() {
-                        self.x2m.reload_current_view();
-                    });
-                },
-                alternative_form_view: this.x2m.field.views ? this.x2m.field.views.form : undefined,
-                parent_view: this.x2m.view,
-                child_name: this.x2m.name,
-                read_function: function(ids, fields, options) {
-                    return self.x2m.data_read(ids, fields, options);
-                },
-                form_view_options: {'not_interactible_on_create': true},
-                readonly: !this.is_action_enabled('edit') || this.x2m.get("effective_readonly")
-            }).open();
-        },
-    });
-
-    core.view_registry.add('one2many_kanban', One2ManyKanbanView);
-    core.view_registry.add('many2many_kanban', Many2ManyKanbanView);
 
 });

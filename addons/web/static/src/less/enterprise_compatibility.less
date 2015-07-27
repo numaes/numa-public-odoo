@@ -292,3 +292,48 @@
         }
     }
 }
+
+// Search options dropdowns
+.o-search-options-dropdown-custom-li() {
+    margin: 3px 25px;
+    width: auto;
+    max-width: 250px;
+
+}
+// Open and closed carets in dropdowns
+.o_closed_menu {
+    position: relative;
+    a:before {
+        .o-caret-right;
+        .o-position-absolute(@top: 50%, @left: 12px);
+        margin-top: (-@caret-width-base);
+    }
+}
+.o_open_menu {
+    position: relative;
+    a:before {
+        .o-caret-down;
+        .o-position-absolute(@top: 50%, @left: 9px);
+        margin-top: (-@caret-width-base);
+    }
+}
+
+// Favorites Menu -> Add to my dashboard
+.o_favorites_menu {
+    .o_add_to_dashboard_input {
+        .form-control();
+    }
+    .o_add_to_dashboard_button {
+        .btn();
+        .btn-default();
+    }
+}
+
+// Because the `web_planner` module has to work with Odoo community and enterprise without
+// code duplication, fine-tune the display of it in the community webclient here
+#PlannerDialog {
+    top: 35px;
+    -webkit-box-shadow: 0 3px 9px #666666;
+    box-shadow: 0 3px 9px #666666;
+}
+

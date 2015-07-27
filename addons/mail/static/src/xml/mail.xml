@@ -26,9 +26,6 @@
 <div t-name="TimelineWall" t-attf-class="o_timeline #{widget.options.view_inbox ? 'o_timeline_inbox' : 'o_timeline_chatter'}">
     <div class="o_timeline_buttons"/>
     <div class="o_timeline-placeholder"></div>
-    <t t-if="widget.options.view_inbox">
-        <aside class="o_timeline_inbox_aside"></aside>
-    </t>
 </div>
 
 <t t-name="ComposeMessage">
@@ -197,7 +194,7 @@
         <t t-if="attachment.file_type_icon !== 'webimage'">
             <div t-attf-class="oe_attachment #{attachment.upload ? 'oe_uploading' : ''}">
                 <a t-att-href='attachment.url' target="_blank">
-                    <img t-att-src="'/mail/static/src/img/mimetypes/' + attachment.file_type_icon + '.png'"></img>
+                    <img t-att-src="'/mail/static/src/img/mimetypes/' + (attachment.file_type_icon or 'unknown') + '.png'"></img>
                     <div class='oe_name'><t t-raw='attachment.name' /></div>
                 </a>
                 <div class='oe_delete oe_e'>
@@ -244,10 +241,6 @@
 
 <t t-name="NoMessage">
     <div class="oe_view_nocontent">No message.</div>
-</t>
-
-<t t-name="TimelineSidebar">
-    <div class="o_timeline_sidebar"></div>
 </t>
 
 <!--

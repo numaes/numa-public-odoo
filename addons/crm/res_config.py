@@ -14,16 +14,10 @@ class crm_configuration(osv.TransientModel):
             implied_group='crm.group_fund_raising',
             help="""Allows you to trace and manage your activities for fund raising."""),
         'module_crm_claim': fields.boolean("Manage Customer Claims",
-            help='Allows you to track your customers/suppliers claims and grievances.\n'
+            help='Allows you to track your customers/vendors claims and grievances.\n'
                  '-This installs the module crm_claim.'),
-        'module_crm_helpdesk': fields.boolean("Manage Helpdesk and Support",
-            help='Allows you to communicate with Customer, process Customer query, and provide better help and support.\n'
-                 '-This installs the module crm_helpdesk.'),
         'alias_prefix': fields.char('Default Alias Name for Leads'),
-        'alias_domain' : fields.char('Alias Domain'),
-        'group_scheduled_calls': fields.boolean("Schedule calls to manage call center",
-            implied_group='crm.group_scheduled_calls',
-            help="""This adds the menu 'Scheduled Calls' under 'Sales / Phone Calls'""")
+        'alias_domain' : fields.char('Alias Domain')
     }
 
     _defaults = {

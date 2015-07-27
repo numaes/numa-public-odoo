@@ -23,9 +23,9 @@ TYPE2JOURNAL = {
 # mapping invoice type to refund type
 TYPE2REFUND = {
     'out_invoice': 'out_refund',        # Customer Invoice
-    'in_invoice': 'in_refund',          # Supplier Bill
+    'in_invoice': 'in_refund',          # Vendor Bill
     'out_refund': 'out_invoice',        # Customer Refund
-    'in_refund': 'in_invoice',          # Supplier Refund
+    'in_refund': 'in_invoice',          # Vendor Refund
 }
 
 MAGIC_COLUMNS = ('id', 'create_uid', 'create_date', 'write_uid', 'write_date')
@@ -112,10 +112,10 @@ class AccountInvoice(models.Model):
             domain = [('journal_id.type', 'in', ('bank', 'cash')), ('account_id', '=', self.account_id.id), ('partner_id', '=', self.partner_id.id), ('reconciled', '=', False), ('amount_residual', '!=', 0.0)]
             if self.type in ('out_invoice', 'in_refund'):
                 domain.extend([('credit', '>', 0), ('debit', '=', 0)])
-                type_payment = _('Outstanding credit from %s')
+                type_payment = _('Outstanding credits')
             else:
                 domain.extend([('credit', '=', 0), ('debit', '>', 0)])
-                type_payment = _('Outstanding debit from %s')
+                type_payment = _('Outstanding debits')
             info = {'title': '', 'outstanding': True, 'content': [], 'invoice_id': self.id}
             lines = self.env['account.move.line'].search(domain)
             if len(lines) != 0:
@@ -133,7 +133,7 @@ class AccountInvoice(models.Model):
                         'position': self.currency_id.position,
                         'digits': [69, self.currency_id.decimal_places],
                     })
-                info['title'] = type_payment % line.partner_id.name
+                info['title'] = type_payment
                 self.outstanding_credits_debits_widget = json.dumps(info)
                 self.has_outstanding = True
 
@@ -185,9 +185,9 @@ class AccountInvoice(models.Model):
         readonly=True, states={'draft': [('readonly', False)]})
     type = fields.Selection([
             ('out_invoice','Customer Invoice'),
-            ('in_invoice','Supplier Bill'),
+            ('in_invoice','Vendor Bill'),
             ('out_refund','Customer Refund'),
-            ('in_refund','Supplier Refund'),
+            ('in_refund','Vendor Refund'),
         ], readonly=True, index=True, change_default=True,
         default=lambda self: self._context.get('type', 'out_invoice'),
         track_visibility='always')
@@ -196,7 +196,7 @@ class AccountInvoice(models.Model):
     move_name = fields.Char(string='Journal Entry', readonly=True,
         default=False, copy=False,
         help="Technical field holding the number given to the invoice, automatically set when the invoice is validated then stored to set the same number again if the invoice is cancelled, set to draft and re-validated.")
-    reference = fields.Char(string='Supplier Reference',
+    reference = fields.Char(string='Vendor Reference',
         help="The partner reference of this invoice.", readonly=True, states={'draft': [('readonly', False)]})
     reference_type = fields.Selection('_get_reference_type', string='Payment Reference',
         required=True, readonly=True, states={'draft': [('readonly', False)]},
@@ -275,13 +275,11 @@ class AccountInvoice(models.Model):
     company_id = fields.Many2one('res.company', string='Company', change_default=True,
         required=True, readonly=True, states={'draft': [('readonly', False)]},
         default=lambda self: self.env['res.company']._company_default_get('account.invoice'))
-    check_total = fields.Monetary(string='Verification Total',
-        readonly=True, states={'draft': [('readonly', False)]}, default=0.0)
 
     reconciled = fields.Boolean(string='Paid/Reconciled', store=True, readonly=True, compute='_compute_residual',
         help="It indicates that the invoice has been paid and the journal entry of the invoice has been reconciled with one or several journal entries of payment.")
     partner_bank_id = fields.Many2one('res.partner.bank', string='Bank Account',
-        help='Bank Account Number to which the invoice will be paid. A Company bank account if this is a Customer Invoice or Supplier Refund, otherwise a Partner bank account number.',
+        help='Bank Account Number to which the invoice will be paid. A Company bank account if this is a Customer Invoice or Vendor Refund, otherwise a Partner bank account number.',
         readonly=True, states={'draft': [('readonly', False)]})
 
     residual = fields.Monetary(string='Amount Due',
@@ -674,11 +672,6 @@ class AccountInvoice(models.Model):
             iml = inv.invoice_line_move_line_get()
             iml += inv.tax_line_move_line_get()
 
-            # I disabled the check_total feature
-            if self.env['res.users'].has_group('account.group_supplier_inv_check_total'):
-                if inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding / 2.0):
-                    raise UserError(_('Please verify the price of the invoice!\nThe encoded total does not match the computed total.'))
-
             diff_currency = inv.currency_id != company_currency
             # create one move line for the total and possibly adjust the other lines amount
             total, total_currency, iml = inv.with_context(ctx).compute_invoice_totals(company_currency, iml)
@@ -738,7 +731,9 @@ class AccountInvoice(models.Model):
             ctx['company_id'] = inv.company_id.id
             ctx['dont_create_taxes'] = True
             ctx['invoice_id'] = inv.move_name and inv or False
-            move = account_move.with_context(ctx).create(move_vals)
+            ctx_nolang = ctx.copy()
+            ctx_nolang.pop('lang', None)
+            move = account_move.with_context(ctx_nolang).create(move_vals)
             # make the invoice point to that move
             vals = {
                 'move_id': move.id,
@@ -802,9 +797,9 @@ class AccountInvoice(models.Model):
     def name_get(self):
         TYPES = {
             'out_invoice': _('Invoice'),
-            'in_invoice': _('Supplier Bill'),
+            'in_invoice': _('Vendor Bill'),
             'out_refund': _('Refund'),
-            'in_refund': _('Supplier Refund'),
+            'in_refund': _('Vendor Refund'),
         }
         result = []
         for inv in self:
@@ -994,25 +989,6 @@ class AccountInvoiceLine(models.Model):
         self.price_subtotal_signed = price_subtotal_signed * sign
 
     @api.model
-    def _default_price_unit(self):
-        if not self._context.get('check_total'):
-            return 0
-        currency = self.invoice_id and self.invoice_id.currency_id or None
-        total = self._context['check_total']
-        for l in self._context.get('invoice_line_ids', []):
-            if isinstance(l, (list, tuple)) and len(l) >= 3 and l[2]:
-                vals = l[2]
-                price = vals.get('price_unit', 0) * (1 - vals.get('discount', 0) / 100.0)
-                total = total - (price * vals.get('quantity'))
-                taxes = vals.get('invoice_line_tax_ids')
-                if taxes and len(taxes[0]) >= 3 and taxes[0][2]:
-                    taxes = self.env['account.tax'].browse(taxes[0][2])
-                    tax_res = taxes.compute_all(price, currency, vals.get('quantity'), vals.get('product_id'), self._context.get('partner_id'))
-                    for tax in tax_res['taxes']:
-                        total = total - tax['amount']
-        return total
-
-    @api.model
     def _default_account(self):
         if self._context.get('journal_id'):
             journal = self.env['account.journal'].browse(self._context.get('journal_id'))
@@ -1035,8 +1011,7 @@ class AccountInvoiceLine(models.Model):
         required=True, domain=[('deprecated', '=', False)],
         default=_default_account,
         help="The income or expense account related to the selected product.")
-    price_unit = fields.Monetary(string='Unit Price', required=True,
-        default=_default_price_unit)
+    price_unit = fields.Monetary(string='Unit Price', required=True)
     price_subtotal = fields.Monetary(string='Amount',
         store=True, readonly=True, compute='_compute_price')
     price_subtotal_signed = fields.Monetary(string='Amount Signed', currency_field='company_currency_id',
@@ -1198,7 +1173,7 @@ class AccountPaymentTerm(models.Model):
 
     name = fields.Char(string='Payment Term', translate=True, required=True)
     active = fields.Boolean(default=True, help="If the active field is set to False, it will allow you to hide the payment term without removing it.")
-    note = fields.Text(string='Description', translate=True)
+    note = fields.Text(string='Description on the Invoice', translate=True)
     line_ids = fields.One2many('account.payment.term.line', 'payment_id', string='Terms', copy=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
 
@@ -1248,9 +1223,9 @@ class AccountPaymentTermLine(models.Model):
             ('balance', 'Balance'),
             ('percent', 'Percent'),
             ('fixed', 'Fixed Amount')
-        ], string='Computation', required=True, default='balance',
+        ], string='Type', required=True, default='balance',
         help="Select here the kind of valuation related to this payment term line.")
-    value_amount = fields.Float(string='Amount To Pay', digits=dp.get_precision('Payment Term'), help="For percent enter a ratio between 0-100.")
+    value_amount = fields.Float(string='Value', digits=dp.get_precision('Payment Term'), help="For percent enter a ratio between 0-100.")
     days = fields.Integer(string='Number of Days', required=True, default=30, help="Number of days to add before computing the day of the month.")
     days2 = fields.Integer(string='Day of the Month', required=True, default='0',
         help="Day of the month \n\n Set : \n1)-1 for the last day of the current month. \n2) 0 for net days\n3) A positive number for the specific day of the next month.\n\nExample : if Date=15/01, Number of Days=22, Day of Month=-1, then the due date is 28/02.")

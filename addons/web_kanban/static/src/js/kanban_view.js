@@ -3,7 +3,7 @@ odoo.define('web_kanban.KanbanView', function (require) {
 
 var core = require('web.core');
 var data = require('web.data');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 var Dialog = require('web.Dialog');
 var form_common = require('web.form_common');
 var Pager = require('web.Pager');
@@ -24,10 +24,11 @@ var ColumnQuickCreate = quick_create.ColumnQuickCreate;
 var fields_registry = kanban_widgets.registry;
 
 var KanbanView = View.extend({
-    display_name: _lt("Kanban"),
-    view_type: "kanban",
+    accesskey: "K",
     className: "o_kanban_view",
+    display_name: _lt("Kanban"),
     mobile_friendly: true,
+    view_type: "kanban",
 
     custom_events: {
         'kanban_record_open': 'open_record',
@@ -213,7 +214,12 @@ var KanbanView = View.extend({
             } else {
                 _.each(groups, function (group) {
                     var value = group.attributes.value;
+                    var field = self.fields_view.fields[self.group_by_field];
+                    if (field && field.type === "selection") {
+                        value= _.find(field.selection, function (s) { return s[0] === group.attributes.value; });
+                    } 
                     group.title = (value instanceof Array ? value[1] : value) || _t("Undefined");
+                    group.values = {};
                 });
                 return $.when(groups);
             }
@@ -297,10 +303,18 @@ var KanbanView = View.extend({
         this.pager = new Pager(this, this.dataset.size(), 1, this.limit, options);
         this.pager.appendTo($node);
         this.pager.on('pager_changed', this, function (state) {
+            var limit_changed = (self.limit !== state.limit);
+
             self.limit = state.limit;
             self.load_records(state.current_min - 1)
                 .then(function (data) {
                     self.data = data;
+
+                    // Reset the scroll position to the top on page changed only
+                    if (!limit_changed) {
+                        self.scrollTop = 0;
+                        core.bus.trigger('scrollTop_updated');
+                    }
                 })
                 .done(this.proxy('render'));
         });

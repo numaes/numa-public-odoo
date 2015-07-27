@@ -23,7 +23,7 @@ class AccountFiscalPosition(models.Model):
     account_ids = fields.One2many('account.fiscal.position.account', 'position_id', string='Account Mapping', copy=True)
     tax_ids = fields.One2many('account.fiscal.position.tax', 'position_id', string='Tax Mapping', copy=True)
     note = fields.Text('Notes')
-    auto_apply = fields.Boolean(string='Automatic', help="Apply automatically this fiscal position.")
+    auto_apply = fields.Boolean(string='Detect Automatically', help="Apply automatically this fiscal position.")
     vat_required = fields.Boolean(string='VAT required', help="Apply only if partner has a VAT number.")
     country_id = fields.Many2one('res.country', string='Countries',
         help="Apply only if delivery or invoicing country match.")
@@ -143,8 +143,8 @@ class AccountFiscalPositionTax(models.Model):
 
     position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position',
         required=True, ondelete='cascade')
-    tax_src_id = fields.Many2one('account.tax', string='Tax Source', required=True)
-    tax_dest_id = fields.Many2one('account.tax', string='Replacement Tax')
+    tax_src_id = fields.Many2one('account.tax', string='Tax on Product', required=True)
+    tax_dest_id = fields.Many2one('account.tax', string='Tax to Apply')
 
     _sql_constraints = [
         ('tax_src_dest_uniq',
@@ -160,9 +160,9 @@ class AccountFiscalPositionAccount(models.Model):
 
     position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position',
         required=True, ondelete='cascade')
-    account_src_id = fields.Many2one('account.account', string='Account Source',
+    account_src_id = fields.Many2one('account.account', string='Account on Product',
         domain=[('deprecated', '=', False)], required=True)
-    account_dest_id = fields.Many2one('account.account', string='Account Destination',
+    account_dest_id = fields.Many2one('account.account', string='Account to Use Instead',
         domain=[('deprecated', '=', False)], required=True)
 
     _sql_constraints = [
@@ -179,7 +179,7 @@ class ResPartner(models.Model):
 
     @api.multi
     def _credit_debit_get(self):
-        where_clause, where_params = self.env['account.move.line']._query_get()
+        tables, where_clause, where_params = self.env['account.move.line']._query_get()
         where_params = [tuple(self.ids)] + where_params
         self._cr.execute("""SELECT l.partner_id, act.type, SUM(l.debit-l.credit)
                       FROM account_move_line l
@@ -358,7 +358,7 @@ class ResPartner(models.Model):
     credit = fields.Monetary(compute='_credit_debit_get', search=_credit_search,
         string='Total Receivable', help="Total amount this customer owes you.")
     debit = fields.Monetary(compute='_credit_debit_get', search=_debit_search, string='Total Payable',
-        help="Total amount you have to pay to this supplier.")
+        help="Total amount you have to pay to this vendor.")
     debit_limit = fields.Monetary('Payable Limit')
     total_invoiced = fields.Monetary(compute='_invoice_total', string="Total Invoiced",
         groups='account.group_account_invoice')
@@ -385,8 +385,8 @@ class ResPartner(models.Model):
         string ='Customer Payment Term',
         help="This payment term will be used instead of the default one for sale orders and customer invoices", oldname="property_payment_term")
     property_supplier_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
-         string ='Supplier Payment Term',
-         help="This payment term will be used instead of the default one for purchase orders and supplier bills", oldname="property_supplier_payment_term")
+         string ='Vendor Payment Term',
+         help="This payment term will be used instead of the default one for purchase orders and vendor bills", oldname="property_supplier_payment_term")
     ref_company_ids = fields.One2many('res.company', 'partner_id',
         string='Companies that refers to partner', oldname="ref_companies")
     has_unreconciled_entries = fields.Boolean(compute='_compute_has_unreconciled_entries',

@@ -71,7 +71,7 @@ class ir_attachment(osv.osv):
 
     The 'data' function field (_data_get,data_set) is implemented using
     _file_read, _file_write and _file_delete which can be overridden to
-    implement other storage engines, shuch methods should check for other
+    implement other storage engines, such methods should check for other
     location pseudo uri (example: hdfs://hadoppserver)
 
     The default implementation is the file:dirname location that stores files
@@ -188,9 +188,6 @@ class ir_attachment(osv.osv):
                 result[attach.id] = self._file_read(cr, uid, attach.store_fname, bin_size)
             else:
                 result[attach.id] = attach.db_datas
-                if bin_size:
-                    result[attach.id] = int(result[attach.id])
-
         return result
 
     def _data_set(self, cr, uid, id, name, value, arg, context=None):

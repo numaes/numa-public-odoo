@@ -73,6 +73,10 @@
   vertical-align: middle;
 }
 
+.o_hidden {
+  display: none !important;
+}
+
 .openerp {
   padding: 0;
   margin: 0;
@@ -547,6 +551,7 @@
   border-radius: 3px;
   background: #f0f0fa;
   color: #4C4C4C;
+  display: inline-block;
   word-break: break-word;
 }
 .openerp .oe_tag_dark {
@@ -586,6 +591,7 @@
 }
 .openerp .oe_tags .text-wrap {
   width: 100% !important;
+  position: static;
 }
 .openerp .oe_tags .text-wrap textarea {
   width: 100% !important;
@@ -776,6 +782,10 @@
 .openerp .oe_secondary_menu_section {
   font-weight: bold;
   margin-left: 8px;
+  color: #7C7BAD;
+}
+.openerp .oe_secondary_menu_section > .oe_menu_leaf {
+  font-weight: bold;
   color: #7C7BAD;
 }
 .openerp .oe_secondary_submenu {
@@ -1282,20 +1292,6 @@
 .openerp .oe-search-options .filters-menu .divider {
   display: list-item;
 }
-.openerp .oe-search-options .closed-menu a:before {
-  font-family: FontAwesome;
-  position: absolute;
-  left: 12px;
-  top: 3px;
-  content: "";
-}
-.openerp .oe-search-options .open-menu a:before {
-  font-family: FontAwesome;
-  position: absolute;
-  left: 9px;
-  top: 3px;
-  content: "";
-}
 .openerp .oe-search-options .oe-select-group {
   margin: 3px 25px;
 }
@@ -1506,16 +1502,16 @@
 .openerp .oe_pivot .dropdown-menu .pivot-dropdown-submenu:hover > .dropdown-menu {
   display: block;
 }
-.openerp .o-dashboard .oe_pivot th {
+.openerp .o_dashboard .oe_pivot th {
   border-top: 1px solid #bfbfb6;
 }
-.openerp .o-dashboard .oe_pivot th, .openerp .o-dashboard .oe_pivot .oe-closed, .openerp .o-dashboard .oe_pivot .oe-opened {
+.openerp .o_dashboard .oe_pivot th, .openerp .o_dashboard .oe_pivot .oe-closed, .openerp .o_dashboard .oe_pivot .oe-opened {
   border-left: 1px solid #bfbfb6;
 }
-.openerp .o-dashboard .oe_graph svg {
+.openerp .o_dashboard .oe_graph svg {
   min-height: 250px;
 }
-.openerp .o-dashboard .oe_graph .nv-pieLabels {
+.openerp .o_dashboard .oe_graph .nv-pieLabels {
   display: none;
 }
 .openerp .oe_graph {

@@ -182,6 +182,9 @@ $sheet-padding: 16px
         vertical-align: middle
 // }}}
 
+.o_hidden
+    display: none!important
+
 .openerp
     // Global style {{{
     padding: 0
@@ -499,6 +502,7 @@ $sheet-padding: 16px
         @include radius(3px)
         background: $tag-bg-light
         color: #4C4C4C
+        display: inline-block
         word-break: break-word
     .oe_tag_dark
         background: $tag-bg-dark
@@ -530,6 +534,7 @@ $sheet-padding: 16px
             min-width: 250px
         .text-wrap
             width: 100% !important
+            position: static
             textarea
                 width: 100% !important
         .text-core
@@ -693,6 +698,9 @@ $sheet-padding: 16px
         font-weight: bold
         margin-left: 8px
         color: $link-color
+        > .oe_menu_leaf
+            font-weight: bold
+            color: $link-color
     .oe_secondary_submenu
         margin-bottom: 10px !important
         line-height: 1.1em
@@ -1095,21 +1103,6 @@ $sheet-padding: 16px
         .filters-menu
             .divider
                 display: list-item
-        .closed-menu
-            a:before
-                font-family: FontAwesome
-                position: absolute
-                left: 12px
-                top: 3px
-                content: "\f0da"
-        .open-menu
-            a:before
-                font-family: FontAwesome
-                position: absolute
-                left: 9px
-                top: 3px
-                content: "\f0d7"
-
         .oe-select-group
             margin: 3px 25px
         .oe-add-group
@@ -1283,7 +1276,7 @@ $sheet-padding: 16px
             .pivot-dropdown-submenu:hover
                 > .dropdown-menu
                     display: block
-    .o-dashboard
+    .o_dashboard
         .oe_pivot
             th
                 border-top: 1px solid #bfbfb6

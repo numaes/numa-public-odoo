@@ -13,7 +13,7 @@ def _partner_format_address(address1=False, address2=False):
 
 
 def _partner_split_name(partner_name):
-    return [' '.join(partner_name.split()[-1:]), ' '.join(partner_name.split()[:-1])]
+    return [' '.join(partner_name.split()[:-1]), ' '.join(partner_name.split()[-1:])]
 
 
 class ValidationError(ValueError):
@@ -101,7 +101,7 @@ class PaymentAcquirer(osv.Model):
         'company_id': lambda self, cr, uid, obj, ctx=None: self.pool['res.users'].browse(cr, uid, uid).company_id.id,
         'environment': 'test',
         'validation': 'automatic',
-        'website_published': True,
+        'website_published': False,
         'auto_confirm': 'at_pay_confirm',
         'pending_msg': '<i>Pending,</i> Your online payment has been successfully processed. But your order is not validated yet.',
         'done_msg': '<i>Done,</i> Your online payment has been successfully processed. Thank you for your order.',

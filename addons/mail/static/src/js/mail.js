@@ -129,12 +129,6 @@ var TimelineView = View.extend ({
         this.has_been_loaded = $.Deferred();
     },
 
-    start: function () {
-        var wall_sidebar = new Sidebar(this);
-        wall_sidebar.appendTo(this.$('.o_timeline_inbox_aside'));
-        return this._super.apply(this, arguments);
-    },
-
     view_loading: function (fields_view_get) {
         return this.load_timeline(fields_view_get);
     },
@@ -1371,7 +1365,9 @@ var ComposeMessage = Attachment.extend ({
                 target: 'new',
                 context: context,
             };
-            self.do_action(action);
+            self.do_action(action, {
+                'on_close': function(){ self.is_log && self.parent_thread.message_fetch() }
+            });
             self.on_cancel();
         });
     },
@@ -1497,18 +1493,6 @@ var ComposeMessage = Attachment.extend ({
 
 /**
  * ------------------------------------------------------------
- * Aside Widget
- * ------------------------------------------------------------
- *
- * This widget handles the display of a sidebar in the inbox. Its main
- * use is to display group and employees suggestion (if hr is installed).
- */
-var Sidebar = Widget.extend({
-    template: 'TimelineSidebar',
-});
-
-/**
- * ------------------------------------------------------------
  * UserMenu
  * ------------------------------------------------------------
  *
@@ -1553,7 +1537,15 @@ return {
     TimelineView: TimelineView,
     MailThread: MailThread,
     TimelineRecordThread: TimelineRecordThread,
-    Sidebar: Sidebar,
 };
+
+});
+
+odoo.define('mail.compatibility', function (require) {
+var mail = require('mail.mail');
+
+window.openerp = window.openerp || {};
+openerp.mail = {};
+openerp.mail.Wall = mail.Wall;
 
 });
