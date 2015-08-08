@@ -109,11 +109,15 @@
                 <div class="oe_title">
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
-                    <label for="categ_ids" class="oe_edit_only"/>
-                    <field name="categ_ids" widget="many2many_tags"/>
-                    <label for="partner_name" class="oe_edit_only"/>
-                    <h2>
-                        <field name="partner_name" class="oe_inline"/>
+                    <h2 class="o_row">
+                        <div>
+                            <label for="partner_name" class="oe_edit_only"/>
+                            <field name="partner_name"/>
+                        </div>
+                        <div>
+                            <label for="categ_ids" class="oe_edit_only"/>
+                            <field name="categ_ids" widget="many2many_tags"/>
+                        </div>
                     </h2>
                 </div>
                 <group>
@@ -213,6 +217,7 @@
                 <field name="stage_id" domain="[]"/>
                 <separator/>
                 <field name="categ_ids"/>
+                <field name="attachment_ids" filter_domain="[('attachment_ids.index_content', 'ilike', self)]" string="Attachments"/>
                 <separator/>
                 <group expand="0" string="Group By">
                     <filter string="Responsible" domain="[]"  context="{'group_by':'user_id'}"/>
@@ -283,6 +288,7 @@
                                 </ul>
                             </div>
                             <div class="oe_kanban_content" tooltip="kanban-tooltip">
+                                    <field name="categ_ids"/>
                                     <t t-if="record.partner_name.raw_value"><b><field name="partner_name"/></b><br/></t>
                                     <i><field name="name"/></i><br/>
                                     <field name="job_id"/><br/>
@@ -291,7 +297,6 @@
                                     <span t-attf-class="#{red || ''}"><field name="date_action"/></span>
                                         <t t-if="record.date_action.raw_value"> : </t>
                                         <field name="title_action"/>
-                                        <field name="categ_ids" class="oe_margin_top_4"/>
                                 <div class="oe_kanban_bottom_right">
                                     <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
                                     <div class="pull-left" groups="base.group_user">
@@ -334,7 +339,7 @@
     <record model="ir.actions.act_window" id="action_hr_job_sources">
         <field name="name">Jobs Sources</field>
         <field name="res_model">hr.recruitment.source</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree</field>
         <field name="domain">[('job_id', '=', active_id)]</field>
         <field name="context">{'default_job_id': active_id}</field>
         <field name="help" type="html">
@@ -510,12 +515,28 @@
     <menuitem id="menu_hr_recruitment_configuration" name="Configuration" parent="menu_hr_recruitment_root"
         sequence="100" groups="base.group_configuration"/>
 
- <!-- ALL JOBS REQUESTS -->
+    <!-- ALL JOBS REQUESTS -->
     <menuitem parent="menu_hr_recruitment_root" id="hr.menu_hr_job_position" action="action_hr_job" sequence="1"/>
     <menuitem
         name="Applications"
         parent="menu_hr_recruitment_root"
         id="menu_crm_case_categ0_act_job" action="crm_case_categ0_act_job" sequence="2"/>
+
+    <!-- Resume and Letters -->
+    <record model="ir.actions.act_window" id="hr_applicant_resumes">
+        <field name="name">Resumes and Letters</field>
+        <field name="res_model">ir.attachment</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_id" ref="mail.view_document_file_kanban"/>
+        <field name="domain">[('res_model','=','hr.applicant')]</field>
+        <field name="help" type="html">
+            <p>
+                Search through resumes and motivation letters.
+            </p>
+        </field>
+    </record>
+    <menuitem name="Resumes and Letters" parent="hr_recruitment.menu_hr_recruitment_root" id="menu_crm_case_categ0_act_job02" action="hr_applicant_resumes" sequence="3"/>
 
     <!-- Stage Tree View -->
     <record model="ir.ui.view" id="hr_recruitment_stage_tree">
@@ -621,27 +642,11 @@
         <field name="name">hr.recruitment.source.tree</field>
         <field name="model">hr.recruitment.source</field>
         <field name="arch" type="xml">
-            <tree string="Sources of Applicants">
+            <tree string="Sources of Applicants" editable="top">
                 <field name="source_id"/>
                 <field name="email"/>
-                <field name="url"/>
                 <button name="create_alias" string="Create alias" type="object" icon="gtk-redo" />
             </tree>
-        </field>
-    </record>
-    <record model="ir.ui.view" id="hr_recruitment_source_form">
-        <field name="name">hr.recruitment.source.form</field>
-        <field name="model">hr.recruitment.source</field>
-        <field name="arch" type="xml">
-            <form string="Sources of Applicants">
-                <group>
-                    <field name="source_id"/>
-                    <field name="email"/>
-                    <field name="url"/>
-                    <field name="alias_id" invisible="1"/>
-                    <field name="job_id" invisible="1"/>
-                </group>
-            </form>
         </field>
     </record>
     <record id="hr_recruitment_source_action" model="ir.actions.act_window">

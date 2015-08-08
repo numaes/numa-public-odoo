@@ -22,6 +22,13 @@ var Action = core.Class.extend({
         this.title = action.display_name || action.name;
     },
     /**
+     * Not implemented for client actions
+     * @return {Deferred} a rejected Deferred
+     */
+    appendTo: function() {
+        return $.Deferred().reject();
+    },
+    /**
      * This method should restore this previously loaded action
      * Calls on_reverse_breadcrumb callback if defined
      * @return {Deferred} resolved when widget is enabled
@@ -97,17 +104,31 @@ var WidgetAction = Action.extend({
         }
     },
     /**
+     * Wraps the action's widget in a container and appends it to el
+     * @param {DocumentFragment} [el] where to append the widget
+     * @return {Deferred} resolved when the widget is appended
+     */
+    appendTo: function(el) {
+        this.client_action_container = document.createElement('div');
+        this.client_action_container.className = 'oe_client_action';
+        el.appendChild(this.client_action_container);
+        return this.widget.appendTo(this.client_action_container);
+    },
+    /**
      * Restores WidgetAction by calling do_show on its widget
      */
     restore: function() {
-        this.widget.do_show();
-        return this._super();
+        var self = this;
+        return $.when(this._super()).then(function() {
+            return self.widget.do_show();
+        });
     },
     /**
      * Destroys the widget
      */
-    destroy: function() { 
+    destroy: function() {
         this.widget.destroy();
+        this.client_action_container.remove();
     },
 });
 /**
@@ -115,15 +136,22 @@ var WidgetAction = Action.extend({
  */
 var ViewManagerAction = WidgetAction.extend({
     /**
+     * Appends the action's widget to el
+     * @param {DocumentFragment} [el] where to append the widget
+     * @return {Deferred} resolved when the widget is appended
+     */
+    appendTo: function(el) {
+        return this.widget.appendTo(el);
+    },
+    /**
      * Restores a ViewManagerAction
      * Switches to the requested view by calling select_view on the ViewManager
      * @param {int} [view_index] the index of the view to select
      */
     restore: function(view_index) {
-        var self = this;
-        var _super = this._super;
+        var _super = this._super.bind(this);
         return this.widget.select_view(view_index).then(function() {
-            _super.call(self);
+            return _super();
         });
     },
     /**
@@ -132,6 +160,12 @@ var ViewManagerAction = WidgetAction.extend({
      */
     set_is_in_DOM: function(is_in_DOM) {
         this.widget.is_in_DOM = is_in_DOM;
+    },
+    /**
+     * Destroys the widget
+     */
+    destroy: function() { 
+        this.widget.destroy();
     },
     /**
      * @return {Array} array of Objects that will be interpreted to display the breadcrumbs
@@ -231,19 +265,20 @@ var ActionManager = Widget.extend({
         if (widget.need_control_panel) {
             // Set the ControlPanel bus on the widget to allow it to communicate its status
             widget.set_cp_bus(this.main_control_panel.get_bus());
-        } else {
-            // Hide the main ControlPanel for widgets that do not use it
-            this.main_control_panel.do_hide();
         }
 
         // render the inner_widget in a fragment, and append it to the
         // document only when it's ready
         var new_widget_fragment = document.createDocumentFragment();
-        return $.when(this.inner_widget.appendTo(new_widget_fragment)).done(function() {
+        return $.when(this.inner_action.appendTo(new_widget_fragment)).done(function() {
             // Detach the fragment of the previous action and store it within the action
             if (old_action) {
                 old_action.set_fragment(old_widget.$el.detach());
                 old_action.set_is_in_DOM(false);
+            }
+            if (!widget.need_control_panel) {
+                // Hide the main ControlPanel for widgets that do not use it
+                self.main_control_panel.do_hide();
             }
 
             framework.append(self.$el, new_widget_fragment, true);

@@ -27,6 +27,7 @@ var KanbanView = View.extend({
     accesskey: "K",
     className: "o_kanban_view",
     display_name: _lt("Kanban"),
+    icon: 'fa-th-large',
     mobile_friendly: true,
     view_type: "kanban",
 
@@ -313,7 +314,7 @@ var KanbanView = View.extend({
                     // Reset the scroll position to the top on page changed only
                     if (!limit_changed) {
                         self.scrollTop = 0;
-                        core.bus.trigger('scrollTop_updated');
+                        self.trigger_up('scrollTo', {offset: 0});
                     }
                 })
                 .done(this.proxy('render'));
@@ -664,6 +665,7 @@ var KanbanView = View.extend({
             var column = new KanbanColumn(self, group_data, options, record_options);
             column.insertBefore(self.$('.o_column_quick_create'));
             self.widgets.push(column);
+            self.trigger_up('scrollTo', {selector: '.o_column_quick_create'});
         });
     },
 

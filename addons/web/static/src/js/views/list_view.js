@@ -35,6 +35,7 @@ var row_decoration = [
 var ListView = View.extend( /** @lends instance.web.ListView# */ {
     _template: 'ListView',
     accesskey: 'L',
+    icon: 'fa-list-ul',
     display_name: _lt('List'),
     defaults: {
         // records can be selected one by one
@@ -175,7 +176,7 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
      * @returns {$.Deferred} loading promise
      */
     start: function() {
-        this.$el.addClass('oe_list');
+        this.$el.addClass('oe_list o_list_view');
         return this._super();
     },
     /**
@@ -278,7 +279,7 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
         if (!this.$buttons) {
             this.$buttons = $(QWeb.render("ListView.buttons", {'widget': this}));
 
-            this.$buttons.find('.oe_list_add').click(this.proxy('do_add_record'));
+            this.$buttons.find('.o_list_button_add').click(this.proxy('do_add_record'));
 
             $node = $node || this.options.$buttons;
             if ($node) {

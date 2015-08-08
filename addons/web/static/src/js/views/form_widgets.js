@@ -11,6 +11,7 @@ var common = require('web.form_common');
 var formats = require('web.formats');
 var framework = require('web.framework');
 var Model = require('web.DataModel');
+var Priority = require('web.Priority');
 var pyeval = require('web.pyeval');
 var session = require('web.session');
 var utils = require('web.utils');
@@ -22,8 +23,6 @@ var WidgetButton = common.FormWidget.extend({
     template: 'WidgetButton',
     init: function(field_manager, node) {
         node.attrs.type = node.attrs['data-button-type'];
-        this.is_stat_button = /\boe_stat_button\b/.test(node.attrs['class']);
-        this.icon_class = node.attrs.icon && "stat_button_icon fa " + node.attrs.icon + " fa-fw";
         this._super(field_manager, node);
         this.force_disabled = false;
         this.string = (this.node.attrs.string || '').replace(/_/g, '');
@@ -31,8 +30,12 @@ var WidgetButton = common.FormWidget.extend({
             // TODO fme: provide enter key binding to widgets
             this.view.default_focus_button = this;
         }
-        if (this.node.attrs.icon && (! /\//.test(this.node.attrs.icon))) {
-            this.node.attrs.icon = '/web/static/src/img/icons/' + this.node.attrs.icon + '.png';
+        if (this.node.attrs.icon) {
+            // if the icon isn't a font-awesome one, find it in the icons folder
+            this.fa_icon = this.node.attrs.icon.indexOf('fa-') === 0;
+            if (!this.fa_icon && (! /\//.test(this.node.attrs.icon))) {
+                this.node.attrs.icon = '/web/static/src/img/icons/' + this.node.attrs.icon + '.png';
+            }
         }
     },
     start: function() {
@@ -59,21 +62,8 @@ var WidgetButton = common.FormWidget.extend({
         var exec_action = function() {
             if (self.node.attrs.confirm) {
                 var def = $.Deferred();
-                var dialog = new Dialog(this, {
-                    title: _t('Confirm'),
-                    buttons: [
-                        {text: _t("Cancel"), close: true},
-                        {text: _t("Ok"), click: function() {
-                                var self2 = this;
-                                self.on_confirmed().always(function() {
-                                    self2.parents('.modal').modal('hide');
-                                });
-                            }
-                        }
-                    ],
-                    $content: $('<div/>').text(self.node.attrs.confirm)
-                }).open();
-                dialog.on("closed", null, function() {def.resolve();});
+                Dialog.confirm(self, self.node.attrs.confirm, { confirm_callback: self.on_confirmed })
+                      .on("closed", null, function() { def.resolve(); });
                 return def.promise();
             } else {
                 return self.on_confirmed();
@@ -261,60 +251,54 @@ var KanbanSelection = FieldChar.extend({
     },
 });
 
-var Priority = FieldChar.extend({
-    init: function (field_manager, node) {
-        this._super(field_manager, node);
+var FieldPriority = common.AbstractField.extend({
+    events: {
+        'mouseup': function(e) {
+            e.stopPropagation();
+        },
     },
-    prepare_priority: function() {
-        var self = this;
-        var selection = this.field.selection || [];
-        var init_value = selection && selection[0][0] || 0;
-        var data = _.map(selection.slice(1), function(element, index) {
-            var value = {
-                'value': element[0],
-                'name': element[1],
-                'click_value': element[0],
-            };
-            if (index === 0 && self.get('value') === element[0]) {
-                value['click_value'] = init_value;
-            }
-            return value;
+    start: function() {
+        this.priority = new Priority(this, {
+            readonly: this.get('readonly'),
+            value: this.get('value'),
+            values: this.field.selection || [],
         });
-        return data;
+
+        this.priority.on('update', this, function(update) {
+            /* setting the value: in view mode, perform an asynchronous call and reload
+            the form view; in edit mode, use set_value to save the new value that will
+            be written when saving the record. */
+            var view = this.view;
+            if(view.get('actual_mode') === 'view') {
+                var write_values = {};
+                write_values[this.name] = update.value;
+                view.dataset._model.call('write', [
+                    [view.datarecord.id],
+                    write_values,
+                    view.dataset.get_context()
+                ]).done(function() {
+                    view.reload();
+                });
+            } else {
+                this.set_value(update.value);
+            }
+        });
+
+        this.on('change:readonly', this, function() {
+            this.priority.readonly = this.get('readonly');
+            var $div = $('<div/>').insertAfter(this.$el);
+            this.priority.replace($div);
+            this.setElement(this.priority.$el);
+        });
+
+        var self = this;
+        return $.when(this._super(), this.priority.appendTo('<div>').then(function() {
+            self.priority.$el.addClass(self.$el.attr('class'));
+            self.replaceElement(self.priority.$el);
+        }));
     },
     render_value: function() {
-        this.priorities = this.prepare_priority();
-        this.$el.html(QWeb.render("FormPriority", {'widget': this}));
-        if (!this.get('readonly')){
-            this.$el.find('li').on('click', this.set_priority.bind(this));
-        }
-    },
-    /* setting the value: in view mode, perform an asynchronous call and reload
-    the form view; in edit mode, use set_value to save the new value that will
-    be written when saving the record. */
-    set_priority: function (ev) {
-        var self = this;
-        var li = $(ev.target).closest('li');
-        if (li.length) {
-            var value = String(li.data('value'));
-            if (this.view.get('actual_mode') == 'view') {
-                var write_values = {};
-                write_values[self.name] = value;
-                return this.view.dataset._model.call(
-                    'write', [
-                        [this.view.datarecord.id],
-                        write_values,
-                        self.view.dataset.get_context()
-                    ]).done(self.reload_record.bind(self));
-            }
-            else {
-                return this.set_value(value);
-            }
-        }
-
-    },
-    reload_record: function() {
-        this.view.reload();
+        this.priority.set_value(this.get('value'));
     },
 });
 
@@ -669,7 +653,10 @@ var FieldProgressBar = common.AbstractField.extend(common.ReinitializeFieldMixin
                 self.set('value', update.changed_value);
             });
         });
-    }
+    },
+    render_value: function() {
+        this.progressbar.set_value(this.get('value'));
+    },
 });
 
 /**
@@ -1082,7 +1069,7 @@ var FieldReference = common.AbstractField.extend(common.ReinitializeFieldMixin, 
         }
         this.m2o.field.relation = this.get('value')[0];
         this.m2o.set_value(this.get('value')[1]);
-        this.m2o.$el.toggle(!!this.get('value')[0]);
+        this.m2o.do_toggle(!!this.get('value')[0]);
         this.reference_ready = true;
     },
 });
@@ -1621,7 +1608,7 @@ core.form_widget_registry
     .add('binary', FieldBinaryFile)
     .add('statusbar', FieldStatus)
     .add('monetary', FieldMonetary)
-    .add('priority', Priority)
+    .add('priority', FieldPriority)
     .add('kanban_state_selection', KanbanSelection)
     .add('statinfo', StatInfo)
     .add('timezone_mismatch', TimezoneMismatch)

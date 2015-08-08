@@ -92,7 +92,6 @@ exports.PosModel = Backbone.Model.extend({
         });
     },
     after_load_server_data: function(){
-         this.barcode_reader.connect();
          this.load_orders();
          this.set_start_order();
          if(this.config.use_proxy){
@@ -169,6 +168,7 @@ exports.PosModel = Backbone.Model.extend({
         model:  'product.uom',
         fields: [],
         domain: null,
+        context: function(self){ return { active_test: false }; },
         loaded: function(self,units){
             self.units = units;
             var units_by_id = {};

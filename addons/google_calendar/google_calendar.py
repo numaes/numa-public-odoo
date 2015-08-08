@@ -212,8 +212,10 @@ class google_calendar(osv.AbstractModel):
             vstype = 'date'
         attendee_list = []
         for attendee in event.attendee_ids:
+            email = tools.email_split(attendee.email)
+            email = email[0] if email else 'NoEmail@mail.com'
             attendee_list.append({
-                'email': attendee.email or 'NoEmail@mail.com',
+                'email': email,
                 'displayName': attendee.partner_id.name,
                 'responseStatus': attendee.state or 'needsAction',
             })
@@ -287,9 +289,8 @@ class google_calendar(osv.AbstractModel):
 
         try:
             st, content, ask_time = self.pool['google.service']._do_request(cr, uid, url, params, headers, type='GET', context=context)
-        except Exception, e:
-
-            if (e.code == 401):  # Token invalid / Acces unauthorized
+        except urllib2.HTTPError, e:
+            if e.code == 401:  # Token invalid / Acces unauthorized
                 error_msg = "Your token is invalid or has been revoked !"
 
                 registry = openerp.modules.registry.RegistryManager.get(request.session.db)

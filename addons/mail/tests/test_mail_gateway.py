@@ -575,3 +575,22 @@ class TestMailgateway(TestMail):
                          'message_post: private discussion: incorrect recipients when replying')
         self.assertEqual(msg.notified_partner_ids, self.user_employee.partner_id | self.env.user.partner_id,
                          'message_post: private discussion: incorrect notified recipients when replying')
+
+        # Do bert forward it to an alias
+        msg = self.env['mail.message'].browse(msg1.id)
+        # forward it to a new thread AND an existing thread
+        for i, to in enumerate(['groups', 'public']):
+            fw_msg_id = '<THIS.IS.A.FW.MESSAGE.%d@bert.fr>' % (i,)
+            fw_message = MAIL_TEMPLATE.format(to='%s@example.com' % (to,),
+                                              cc='',
+                                              subject='FW: Re: 1',
+                                              email_from='b.t@example.com',
+                                              extra='References: %s' % msg.message_id,
+                                              msg_id=fw_msg_id)
+            self.env['mail.thread'].message_process(None, fw_message)
+
+            msg_fw = self.env['mail.message'].search([('message_id', '=', fw_msg_id)])
+            self.assertEqual(len(msg_fw), 1)
+
+            self.assertEqual(msg_fw.model, 'mail.channel')
+            self.assertFalse(msg_fw.parent_id)

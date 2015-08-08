@@ -35,6 +35,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
     view_type: "form",
     multi_record: false,
     accesskey: "F",
+    icon: 'fa-edit',
     /**
      * @constructs instance.web.FormView
      * @extends instance.web.View
@@ -142,7 +143,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
 
         // Add bounce effect on button 'Edit' when click on readonly page view.
         this.$el.find(".oe_form_group_row,.oe_form_field,label,h1,.oe_title,.oe_notebook_page, .oe_list_content").on('click', function (e) {
-            if(self.get("actual_mode") == "view" && self.$buttons) {
+            if(self.get("actual_mode") == "view" && self.$buttons && !$(e.target).is('[data-toggle]')) {
                 var $button = self.$buttons.find(".oe_form_button_edit");
                 $button.openerpBounce();
                 e.stopPropagation();
@@ -152,7 +153,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
         //bounce effect on red button when click on statusbar.
         this.$el.find(".oe_form_field_status:not(.oe_form_status_clickable)").on('click', function (e) {
             if((self.get("actual_mode") == "view")) {
-                var $button = self.$el.find(".oe_highlight:not(.oe_form_invisible)").css({'float':'left','clear':'none'});
+                var $button = self.$el.find(".oe_highlight:not(.o_form_invisible)").css({'float':'left','clear':'none'});
                 $button.openerpBounce();
                 e.stopPropagation();
             }
@@ -262,17 +263,16 @@ var FormView = View.extend(common.FieldManagerMixin, {
     toggle_buttons: function() {
         var view_mode = this.get("actual_mode") === "view";
         if (this.$buttons) {
-            this.$buttons.find('.oe_form_buttons_view').toggle(view_mode);
-            this.$buttons.find('.oe_form_buttons_edit').toggle(!view_mode);
+            this.$buttons.find('.o_form_buttons_view').toggle(view_mode);
+            this.$buttons.find('.o_form_buttons_edit').toggle(!view_mode);
         }
     },
     /**
      * Show or hide the sidebar according to the actual_mode
      */
     toggle_sidebar: function() {
-        var view_mode = this.get("actual_mode") === "view";
         if (this.sidebar) {
-            this.sidebar.$el.toggle(view_mode);
+            this.sidebar.do_toggle(this.get("actual_mode") === "view");
         }
     },
     widgetFocused: function() {
@@ -1358,6 +1358,9 @@ var FormRenderingEngine = FormRenderingEngineInterface.extend({
             args[0] = $tag;
             return fn.apply(self, args);
         } else {
+            if( tagname === 'header') {
+                $tag.addClass('o_statusbar_buttons');
+            }
             // generic tag handling, just process children
             $tag.children().each(function() {
                 self.process($(this));
@@ -1606,7 +1609,7 @@ var FormRenderingEngine = FormRenderingEngineInterface.extend({
             self.handle_common_properties($content, page.ref, common.NotebookInvisibilityChanger);
         });
         if (!pageid_to_display) {
-            pageid_to_display = $new_notebook.find('div[role="tabpanel"]:not(.oe_form_invisible):first').attr('id');
+            pageid_to_display = $new_notebook.find('div[role="tabpanel"]:not(.o_form_invisible):first').attr('id');
         }
 
         // Display page. Note: we can't use bootstrap's show function because it is looking for

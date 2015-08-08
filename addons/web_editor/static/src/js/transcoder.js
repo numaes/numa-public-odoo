@@ -12,7 +12,19 @@ var getMatchedCSSRules = function (a) {
     if (!rulesCache.length) {
         var sheets = document.styleSheets;
         for(var i = sheets.length-1; i >= 0 ; i--) {
-            var rules = sheets[i].rules || sheets[i].cssRules;
+            var rules;
+            if (sheets[i].rules) {
+                rules = sheets[i].rules;
+            } else {
+                //try...catch because Firefox not able to enumerate document.styleSheets[].cssRules[] for cross-domain stylesheets.
+                try {
+                    rules = sheets[i].cssRules;
+                } catch(e) {
+                    console.warn("Can't read the css rules of: " + sheets[i].href, e);
+                    continue;
+                }
+                rules = sheets[i].cssRules;
+            }
             if (rules) {
                 for(var r = rules.length-1; r >= 0; r--) {
                     var selectorText = rules[r].selectorText;
@@ -46,7 +58,7 @@ var getMatchedCSSRules = function (a) {
             if (style.parentRule) {
                 var style_obj = {};
                 for (var k=0, len=style.length; k<len; k++) {
-                    style_obj[style[k]] = style[style[k]];
+                    style_obj[style[k]] = style[style[k].replace(/-(.)/g, function (a, b) { return b.toUpperCase(); })];
                 }
                 rulesCache[r].style = style = style_obj;
             }
@@ -137,6 +149,7 @@ var style_to_class = function ($editable) {
     $editable.find("[class]").each(function () {
         classes = classes.concat(this.className.split(/\s+/));
     });
+    classes = _.compact(classes);
 
     var maybe_selector = _.filter(rulesCache, function (a) { return !!_.find(classes, function (b) { return a.selector.indexOf("."+b) !== -1; } ); });
     var selector = _.map(maybe_selector, function (a) { return a.selector;}).join(",");

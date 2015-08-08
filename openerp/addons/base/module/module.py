@@ -465,7 +465,7 @@ class module(osv.osv):
         ir_model_data = self.pool.get('ir.model.data')
         modules_to_remove = [m.name for m in self.browse(cr, uid, ids, context)]
         ir_model_data._module_data_uninstall(cr, uid, modules_to_remove, context)
-        self.write(cr, uid, ids, {'state': 'uninstalled'})
+        self.write(cr, uid, ids, {'state': 'uninstalled', 'latest_version': False})
         return True
 
     def downstream_dependencies(self, cr, uid, ids, known_dep_ids=None,
@@ -676,13 +676,6 @@ class module(osv.osv):
 
             self._update_dependencies(cr, uid, mod, terp.get('depends', []))
             self._update_category(cr, uid, mod, terp.get('category', 'Uncategorized'))
-
-        # Trigger load_addons if new module have been discovered it exists on
-        # wsgi handlers, so they can react accordingly
-        if tuple(res) != (0, 0):
-            for handler in openerp.service.wsgi_server.module_handlers:
-                if hasattr(handler, 'load_addons'):
-                    handler.load_addons()
 
         return res
 

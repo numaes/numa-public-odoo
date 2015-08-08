@@ -1356,19 +1356,6 @@ class pos_order_line(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
 
-class ean_wizard(osv.osv_memory):
-    _name = 'pos.ean_wizard'
-    _columns = {
-        'ean13_pattern': fields.char('Reference', size=13, required=True, translate=True),
-    }
-    def sanitize_ean13(self, cr, uid, ids, context):
-        for r in self.browse(cr,uid,ids):
-            ean13 = openerp.addons.product.product.sanitize_ean13(r.ean13_pattern)
-            m = context.get('active_model')
-            m_id =  context.get('active_id')
-            self.pool[m].write(cr,uid,[m_id],{'barcode':ean13})
-        return { 'type' : 'ir.actions.act_window_close' }
-
 class pos_category(osv.osv):
     _name = "pos.category"
     _description = "Public Category"
@@ -1437,8 +1424,6 @@ class product_template(osv.osv):
     _inherit = 'product.template'
 
     _columns = {
-        'income_pdt': fields.boolean('Point of Sale Cash In', help="Check if, this is a product you can use to put cash into a statement for the point of sale backend."),
-        'expense_pdt': fields.boolean('Point of Sale Cash Out', help="Check if, this is a product you can use to take cash from a statement for the point of sale backend, example: money lost, transfer to bank, etc."),
         'available_in_pos': fields.boolean('Available in the Point of Sale', help='Check if you want this product to appear in the Point of Sale'), 
         'to_weight' : fields.boolean('To Weigh With Scale', help="Check if the product should be weighted using the hardware scale integration"),
         'pos_categ_id': fields.many2one('pos.category','Point of Sale Category', help="Those categories are used to group similar products for point of sale."),

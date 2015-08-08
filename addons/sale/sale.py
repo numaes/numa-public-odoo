@@ -3,6 +3,7 @@
 
 from datetime import datetime, timedelta
 import time
+from openerp import SUPERUSER_ID
 from openerp.addons.analytic.models import analytic
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -196,6 +197,8 @@ class sale_order(osv.osv):
         for s in sale_orders:
             if s['state'] in ['draft', 'cancel']:
                 unlink_ids.append(s['id'])
+            elif s['state'] == 'sent':
+                raise UserError(_('In order to delete already sent quotation(s), you must cancel it before!'))
             else:
                 raise UserError(_('In order to delete a confirmed sales order, you must cancel it before!'))
 
@@ -1055,7 +1058,14 @@ class sale_order_line(osv.osv):
         else:
             fpos = self.pool['account.fiscal.position'].browse(cr, uid, fiscal_position_id)
         if update_tax:  # The quantity only have changed
-            result['tax_id'] = self.pool['account.fiscal.position'].map_tax(cr, uid, fpos, product_obj.taxes_id)
+            # The superuser is used by website_sale in order to create a sale order. We need to make
+            # sure we only select the taxes related to the company of the partner. This should only
+            # apply if the partner is linked to a company.
+            if uid == SUPERUSER_ID and partner.company_id:
+                taxes = product_obj.taxes_id.filtered(lambda r: r.company_id == partner.company_id)
+            else:
+                taxes = product_obj.taxes_id
+            result['tax_id'] = self.pool['account.fiscal.position'].map_tax(cr, uid, fpos, taxes)
 
         if not flag:
             result['name'] = Product.name_get(cr, uid, [product_obj.id], context=ctx_product)[0][1]
@@ -1212,7 +1222,7 @@ class product_product(osv.Model):
     def _sales_count(self, cr, uid, ids, field_name, arg, context=None):
         r = dict.fromkeys(ids, 0)
         domain = [
-            ('state', 'in', ['waiting_date', 'progress', 'manual', 'shipping_except', 'invoice_except', 'done']),
+            ('state', 'in', ['confirmed', 'done']),
             ('product_id', 'in', ids),
         ]
         for group in self.pool['sale.report'].read_group(cr, uid, domain, ['product_id', 'product_uom_qty'], ['product_id'], context=context):

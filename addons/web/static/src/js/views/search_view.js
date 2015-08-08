@@ -510,7 +510,7 @@ var SearchView = Widget.extend(/** @lends instance.web.SearchView# */{
         };
     },
     toggle_visibility: function (is_visible) {
-        this.$el.toggle(!this.headless && is_visible);
+        this.do_toggle(!this.headless && is_visible);
         if (this.$buttons) {
             this.$buttons.toggle(!this.headless && is_visible && this.visible_filters);
         }
@@ -694,9 +694,16 @@ var SearchView = Widget.extend(/** @lends instance.web.SearchView# */{
                 current_group = [];
             }
             if (filter.item.tag === 'field') {
-                var attrs = filter.item.attrs,
-                    field = self.fields_view_get.fields[attrs.name],
-                    Obj = core.search_widgets_registry.get_any([attrs.widget, field.type]);
+                var attrs = filter.item.attrs;
+                var field = self.fields_view_get.fields[attrs.name];
+
+                // M2O combined with selection widget is pointless and broken in search views,
+                // but has been used in the past for unsupported hacks -> ignore it
+                if (field.type === "many2one" && attrs.widget === "selection") {
+                    attrs.widget = undefined;
+                }
+
+                var Obj = core.search_widgets_registry.get_any([attrs.widget, field.type]);
                 if (Obj) {
                     self.search_fields.push(new (Obj) (filter.item, field, self));
                 }

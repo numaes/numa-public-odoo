@@ -113,7 +113,7 @@
     </t>
 
     <t t-name="form_create_field">
-        <table t-att-class='"create_field create_"+id'><tr>
+        <table t-att-class='"create_field o_group o_inner_group o_group_col_6 create_"+id'><tr>
             <th><t t-esc="label"/></th>
             <td class="create_account_container" t-att-class='"create_"+id+"_container"'></td>
         </tr></table>
@@ -125,7 +125,7 @@
 
     <t t-name="reconciliation_move_line">
         <tr t-att-class="'mv_line'+(line.already_paid ? ' already_reconciled' : '')" t-att-data-lineid="line.id" t-att-data-selected="selected">
-            <td class="cell_action"><span class="fa fa-add-remove"></span></td>
+            <td class="cell_action"><i class="fa fa-add-remove"></i></td>
             <td class="cell_account_code" t-if="line.account_code"><t t-esc="line.account_code"/></td>
             <td class="cell_due_date"><t t-esc="line.q_due_date"/></td>
             <td class="cell_label"><t t-esc="line.q_label"/></td>

@@ -5,11 +5,11 @@ from datetime import datetime, timedelta
 import logging
 from operator import itemgetter
 
-import crm
 import openerp
 from openerp import SUPERUSER_ID
 from openerp import tools, api
 from openerp.addons.base.res.res_partner import format_address
+from openerp.addons.crm import crm_stage
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools import email_re, email_split
@@ -179,8 +179,11 @@ class crm_lead(format_address, osv.osv):
         'opt_out': fields.boolean('Opt-Out', oldname='optout',
             help="If opt-out is checked, this contact has refused to receive emails for mass mailing and marketing campaign. "
                     "Filter 'Available for Mass Mailing' allows users to filter the leads when performing mass mailing."),
-        'type': fields.selection([ ('lead','Lead'), ('opportunity','Opportunity'), ],'Type', select=True, help="Type is used to separate Leads and Opportunities"),
-        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
+        'type': fields.selection(
+            [('lead', 'Lead'), ('opportunity', 'Opportunity')],
+            string='Type', select=True, required=True,
+            help="Type is used to separate Leads and Opportunities"),
+        'priority': fields.selection(crm_stage.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'date_closed': fields.datetime('Closed', readonly=True, copy=False),
         'stage_id': fields.many2one('crm.stage', 'Stage', track_visibility='onchange', select=True,
                         domain="['&', ('team_ids', '=', team_id), '|', ('type', '=', type), ('type', '=', 'both')]"),
@@ -245,7 +248,8 @@ class crm_lead(format_address, osv.osv):
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
         'team_id': lambda s, cr, uid, c: s.pool['crm.team']._get_default_team_id(cr, uid, context=c),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
-        'priority': lambda *a: crm.AVAILABLE_PRIORITIES[0][0],
+        'priority': lambda *a: crm_stage.AVAILABLE_PRIORITIES[0][0],
+        'probability': 10,
         'color': 0,
         'date_last_stage_update': fields.datetime.now,
     }
@@ -257,13 +261,10 @@ class crm_lead(format_address, osv.osv):
     def onchange_stage_id(self, cr, uid, ids, stage_id, context=None):
         if not stage_id:
             return {'value': {}}
-        stage = self.pool.get('crm.stage').browse(cr, uid, stage_id, context=context)
+        stage = self.pool['crm.stage'].browse(cr, uid, stage_id, context=context)
         if not stage.on_change:
             return {'value': {}}
-        vals = {'probability': stage.probability}
-        if stage.on_change and (stage.probability >= 100 or (stage.probability == 0 and stage.sequence > 1)):
-            vals['date_closed'] = fields.datetime.now()
-        return {'value': vals}
+        return {'value': {'probability': stage.probability}}
 
     def on_change_partner_id(self, cr, uid, ids, partner_id, context=None):
         values = {}
@@ -292,7 +293,7 @@ class crm_lead(format_address, osv.osv):
         """ When changing the user, also set a team_id or restrict team id
             to the ones user_id is member of. """
         team_id = self.pool['crm.team']._get_default_team_id(cr, uid, user_id=user_id, context=context)
-        if user_id and not team_id and self.pool['res.users'].has_group(cr, uid, 'base.group_multi_salesteams'):
+        if user_id and not team_id:
             team_ids = self.pool.get('crm.team').search(cr, uid, ['|', ('user_id', '=', user_id), ('member_ids', '=', user_id)], context=context)
             if team_ids:
                 team_id = team_ids[0]
@@ -342,28 +343,20 @@ class crm_lead(format_address, osv.osv):
             return stage_ids[0]
         return False
 
-    def case_mark_lost(self, cr, uid, ids, context=None):
-        """ Mark the case as lost: state=cancel and probability=0
-        """
-        stages_leads = {}
-        for lead in self.browse(cr, uid, ids, context=context):
-            stage_id = self.stage_find(cr, uid, [lead], lead.team_id.id or False, [('probability', '=', 0.0), ('on_change', '=', True), ('sequence', '>', 1)], context=context)
-            if stage_id:
-                if stages_leads.get(stage_id):
-                    stages_leads[stage_id].append(lead.id)
-                else:
-                    stages_leads[stage_id] = [lead.id]
-            else:
-                raise UserError(_('To relieve your sales pipe and group all Lost opportunities, configure one of your sales stage as follow:\n'
-                                    'probability = 0 %, select "Change Probability Automatically".\n'
-                                    'Create a specific stage or edit an existing one by editing columns of your opportunity pipe.'))
-        for stage_id, lead_ids in stages_leads.items():
-            self.write(cr, uid, lead_ids, {'stage_id': stage_id}, context=context)
-        return True
+    def action_set_lost(self, cr, uid, ids, context=None):
+        """ Lost semantic: probability = 0, active = False """
+        return self.write(cr, uid, ids, {'probability': 0, 'active': False}, context=context)
+    # Backward compatibility
+    case_mark_lost = action_set_lost
 
-    def case_mark_won(self, cr, uid, ids, context=None):
-        """ Mark the case as won: state=done and probability=100
-        """
+    def action_set_active(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'active': True}, context=context)
+
+    def action_set_unactive(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'active': False}, context=context)
+
+    def action_set_won(self, cr, uid, ids, context=None):
+        """ Won semantic: probability = 100 (active untouched) """
         stages_leads = {}
         for lead in self.browse(cr, uid, ids, context=context):
             stage_id = self.stage_find(cr, uid, [lead], lead.team_id.id or False, [('probability', '=', 100.0), ('on_change', '=', True)], context=context)
@@ -372,13 +365,11 @@ class crm_lead(format_address, osv.osv):
                     stages_leads[stage_id].append(lead.id)
                 else:
                     stages_leads[stage_id] = [lead.id]
-            else:
-                raise UserError(_('To relieve your sales pipe and group all Won opportunities, configure one of your sales stage as follow:\n'
-                                    'probability = 100 % and select "Change Probability Automatically".\n'
-                                    'Create a specific stage or edit an existing one by editing columns of your opportunity pipe.'))
         for stage_id, lead_ids in stages_leads.items():
             self.write(cr, uid, lead_ids, {'stage_id': stage_id}, context=context)
-        return True
+        return self.write(cr, uid, ids, {'probability': 100}, context=context)
+    # Backward compatibility
+    case_mark_won = action_set_won
 
     def log_next_activity_1(self, cr, uid, ids, context=None):
         return self.log_next_activity_done(cr, uid, ids, next_activity_name='activity_1_id', context=context)
@@ -612,7 +603,6 @@ class crm_lead(format_address, osv.osv):
         """
         Search for opportunities that have   the same partner and that arent done or cancelled
         """
-        final_stage_domain = ['|', '|', ('stage_id.on_change', '=', False), ('stage_id.probability', 'not in', [0, 100]), ('stage_id.sequence', '<=', 1)]
         partner_match_domain = []
         for email in set(email_split(email) + [email]):
             partner_match_domain.append(('email_from', '=ilike', email))
@@ -623,7 +613,7 @@ class crm_lead(format_address, osv.osv):
             return []
         domain = partner_match_domain
         if not include_lost:
-            domain += final_stage_domain
+            domain += ['&', ('active', '=', True), ('probability', '<', 100)]
         return self.search(cr, uid, domain, context=context)
 
     def merge_dependences(self, cr, uid, highest, opportunities, context=None):
@@ -720,8 +710,7 @@ class crm_lead(format_address, osv.osv):
             partner = self.pool.get('res.partner')
             customer = partner.browse(cr, uid, partner_id, context=context)
         for lead in self.browse(cr, uid, ids, context=context):
-            # TDE: was if lead.state in ('done', 'cancel'):
-            if (lead.probability == 100 or lead.probability == 0) and lead.stage_id.on_change and lead.stage_id.sequence > 1:
+            if not lead.active or lead.probability == 100:
                 continue
             vals = self._convert_opportunity_data(cr, uid, lead, customer, team_id, context=context)
             self.write(cr, uid, [lead.id], vals, context=context)
@@ -890,7 +879,7 @@ class crm_lead(format_address, osv.osv):
             context['default_type'] = vals.get('type')
         if vals.get('team_id') and not context.get('default_team_id'):
             context['default_team_id'] = vals.get('team_id')
-        if vals.get('user_id'):
+        if vals.get('user_id') and 'date_open' not in vals:
             vals['date_open'] = fields.datetime.now()
 
         # context: no_log, because subtype already handle this
@@ -901,12 +890,14 @@ class crm_lead(format_address, osv.osv):
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.datetime.now()
-        if vals.get('user_id'):
+        if vals.get('user_id') and 'date_open' not in vals:
             vals['date_open'] = fields.datetime.now()
         # stage change with new stage: update probability and date_closed
-        if vals.get('stage_id') and not vals.get('probability'):
+        if vals.get('stage_id') and 'probability' not in vals:
             onchange_stage_values = self.onchange_stage_id(cr, uid, ids, vals.get('stage_id'), context=context)['value']
             vals.update(onchange_stage_values)
+        if vals.get('probability') >= 100 or not vals.get('active', True):
+            vals['date_closed'] = fields.datetime.now()
         return super(crm_lead, self).write(cr, uid, ids, vals, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -941,7 +932,7 @@ class crm_lead(format_address, osv.osv):
         record = self.browse(cr, uid, ids[0], context=context)
         if 'stage_id' in init_values and record.probability == 100 and record.stage_id and record.stage_id.on_change:
             return 'crm.mt_lead_won'
-        elif 'stage_id' in init_values and record.probability == 0 and record.stage_id and record.stage_id.on_change and record.stage_id.sequence > 1:
+        elif 'active' in init_values and record.probability == 0 and not record.active:
             return 'crm.mt_lead_lost'
         elif 'stage_id' in init_values and record.probability == 0 and record.stage_id and record.stage_id.sequence <= 1:
             return 'crm.mt_lead_create'
@@ -993,7 +984,7 @@ class crm_lead(format_address, osv.osv):
         }
         if msg.get('author_id'):
             defaults.update(self.on_change_partner_id(cr, uid, None, msg.get('author_id'), context=context)['value'])
-        if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
+        if msg.get('priority') in dict(crm_stage.AVAILABLE_PRIORITIES):
             defaults['priority'] = msg.get('priority')
         defaults.update(custom_values)
         return super(crm_lead, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
@@ -1007,7 +998,7 @@ class crm_lead(format_address, osv.osv):
             ids = [ids]
         if update_vals is None: update_vals = {}
 
-        if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
+        if msg.get('priority') in dict(crm_stage.AVAILABLE_PRIORITIES):
             update_vals['priority'] = msg.get('priority')
         maps = {
             'cost':'planned_cost',
@@ -1052,15 +1043,16 @@ class crm_lead(format_address, osv.osv):
                     break
         return res
 
-
 class crm_lead_tag(osv.Model):
     _name = "crm.lead.tag"
     _description = "Category of lead"
     _columns = {
-        'name': fields.char('Name', required=True, translate=True),
+        'name': fields.char('Name', required=True),
         'team_id': fields.many2one('crm.team', 'Sales Team'),
     }
-
+    _sql_constraints = [
+            ('name_uniq', 'unique (name)', "Tag name already exists !"),
+    ]
 
 class crm_lost_reason(osv.Model):
     _name = "crm.lost.reason"

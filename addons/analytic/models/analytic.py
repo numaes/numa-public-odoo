@@ -170,7 +170,7 @@ class account_analytic_account(osv.osv):
                                   "The type 'Analytic account' stands for usual accounts that you only want to use in accounting.\n"\
                                   "If you select Contract or Project, it offers you the possibility to manage the validity and the invoicing options for this account.\n"\
                                   "The special type 'Template of Contract' allows you to define a template with default data that you can reuse easily."),
-        'template_id': fields.many2one('account.analytic.account', 'Template of Contract'),
+        'template_id': fields.many2one('account.analytic.account', 'Template of Contract', ondelete='restrict'),
         'description': fields.text('Description'),
         'parent_id': fields.many2one('account.analytic.account', 'Parent Analytic Account', select=2),
         'child_ids': fields.one2many('account.analytic.account', 'parent_id', 'Child Accounts', copy=True),
@@ -303,20 +303,22 @@ class account_analytic_account(osv.osv):
             args=[]
         if context is None:
             context={}
+        account_ids = []
         if name:
             account_ids = self.search(cr, uid, [('code', '=', name)] + args, limit=limit, context=context)
             if not account_ids:
                 dom = []
-                for name2 in name.split('/'):
-                    name = name2.strip()
-                    account_ids = self.search(cr, uid, dom + [('name', operator, name)], limit=limit, context=context)
-                    if not account_ids: break
-                    dom = [('parent_id','in',account_ids)]
-                if account_ids and args:
-                    # final filtering according to domain (args)
-                    account_ids = self.search(cr, uid, [('id', 'in', account_ids)] + args, limit=limit, context=context)
-        else:
-            account_ids = self.search(cr, uid, args, limit=limit, context=context)
+                if '/' in name:
+                    for name2 in name.split('/'):
+                        # intermediate search without limit and args - could be expensive for large tables if `name` is not selective
+                        account_ids = self.search(cr, uid, dom + [('name', operator, name2.strip())], limit=None, context=context)
+                        if not account_ids: break
+                        dom = [('parent_id','in',account_ids)]
+                    if account_ids and args:
+                        # final filtering according to domain (args)4
+                        account_ids = self.search(cr, uid, [('id', 'in', account_ids)] + args, limit=limit, context=context)
+        if not account_ids:
+            return super(account_analytic_account, self).name_search(cr, uid, name, args, operator=operator, context=context, limit=limit)
         return self.name_get(cr, uid, account_ids, context=context)
 
     def _track_subtype(self, cr, uid, ids, init_values, context=None):

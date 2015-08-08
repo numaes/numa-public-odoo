@@ -394,7 +394,7 @@ $sheet-padding: 16px
             text-align: left
             padding: 0
             line-height: 120%
-        .stat_button_icon
+        .o_button_icon
             color: #7C7BAD
             font-size: 24px
             padding: 0px 3px
@@ -808,6 +808,10 @@ $sheet-padding: 16px
         flex-direction: column        
         .oe_application
             width: 100%
+
+        .oe_client_action
+            height: 100%
+            position: relative
     // }}}
     // ViewManager common {{{
     .oe-view-manager
@@ -901,22 +905,6 @@ $sheet-padding: 16px
         .oe-cp-switch-buttons
             button
                 width: 34px
-            .oe-cp-switch-kanban:before
-                content: "\f009"
-            .oe-cp-switch-list:before
-                content: ""
-            .oe-cp-switch-form:before
-                content: "\f044"
-            .oe-cp-switch-graph:before
-                content: "\f080"
-            .oe-cp-switch-calendar:before
-                content: "\f073"
-            .oe-cp-switch-gantt:before
-                content: "\f0ae"
-            .oe-cp-switch-pivot:before
-                content: "\f0ce"
-            .oe-cp-switch-tree:before
-                content: "\f036"
         .oe-cp-buttons
             display: inline-block
         .oe-cp-sidebar
@@ -944,7 +932,7 @@ $sheet-padding: 16px
                         width: 100%
         .oe_form_buttons
             padding: 0
-        .oe_form_buttons_view
+        .o_form_buttons_view
             > button
                 float: left
                 &:last-child
@@ -959,7 +947,6 @@ $sheet-padding: 16px
     .oe_searchview
         cursor: text
         position: relative
-        display: none
         height: auto
         padding-top: 1px
         padding-bottom: 1px
@@ -1319,7 +1306,7 @@ $sheet-padding: 16px
         button.oe_highlight:hover
             @include vertical-gradient(#f6f6f6, #e3e3e3)
             @include box-shadow((0 1px 2px rgba(0, 0, 0, .1), 0 1px 1px rgba(255, 255, 255, .8) inset))
-    .oe_form_invisible
+    .o_form_invisible
         display: none !important
     .oe_form_editable
         .oe_read_only
@@ -1921,7 +1908,7 @@ $sheet-padding: 16px
                         li
                             height: auto
                             line-height: 16px
-        .oe_list_buttons.oe_editing .oe_list_save
+        .oe_list_buttons.oe_editing .o_list_button_save
             // keep "save row" button hidden in o2m
             visibility: hidden
     .oe_form_editable
@@ -1989,19 +1976,15 @@ $sheet-padding: 16px
     // }}}
     // ListView {{{
     .oe_list_buttons
-        .oe_alternative
-            visibility: hidden
-        .oe_list_save, .oe_list_discard
+        .o_list_button_save, .o_list_button_discard
             display: none
         &.oe_editing
-            .oe_list_add
+            .o_list_button_add
                 display: none
-            .oe_list_save
+            .o_list_button_save
                 display: inline-block
-            .oe_list_discard
+            .o_list_button_discard
                 display: inline
-            .oe_alternative
-                visibility: visible
 
     .oe_list
         &.oe_cannot_edit

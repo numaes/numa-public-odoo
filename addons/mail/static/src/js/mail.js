@@ -68,7 +68,7 @@ var TimelineRecordThread = form_common.AbstractField.extend ({
     },
 
     _check_visibility: function () {
-        this.$el.toggle(this.view.get("actual_mode") !== "create");
+        this.do_toggle(this.view.get("actual_mode") !== "create");
     },
 
     render_value: function () {
@@ -110,6 +110,7 @@ var TimelineView = View.extend ({
         this.model = dataset.model;
         this.domain = dataset.domain || [];
         this.context = dataset.context || {};
+        this.parent_view = parent.parent ? parent.parent : this;
 
         var opt = _.clone(this.context.options);
         this.options = options || {};
@@ -322,6 +323,7 @@ var MailThread = Attachment.extend ({
         this.domain = dataset.domain || [];
         this.context = _.clone(dataset.context) || {};
         this.options = _.clone(options);
+        this.parent_view = parent.parent_view;
 
         this.is_ready = $.Deferred();
         this.root = parent instanceof TimelineView ? parent : false;
@@ -855,12 +857,16 @@ var MailThread = Attachment.extend ({
 
         this.followers_loaded = $.Deferred();
 
-        if ((! this.nb_followers || !this.follower_ids) && (this.model && this.res_id)) {
+        if ((! this.nb_followers || !this.follower_ids) && (this.model && this.res_id) && this.options.view_inbox) {
             this.nb_followers = 0;
             this.follower_ids = [];
 
-            this.ds_res = new data.DataSetSearch(this, this.model, this.context, [['id', '=', this.res_id]]);
-            this.ds_res.read_slice(['id', 'message_follower_ids']).then(function (data) {
+            var ctx = this.context;
+            ctx['active_test'] = true;
+            this.ds_res = new data.DataSet(this, this.model, ctx);
+            this.ds_res.read_ids([this.res_id], ['id', 'message_follower_ids'], {
+                'context': ctx,
+            }).then(function (data) {
                 self.follower_ids = data[0].message_follower_ids;
                 self.nb_followers = data[0].message_follower_ids.length;
                 self.followers_loaded.resolve();

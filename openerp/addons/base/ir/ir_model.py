@@ -349,6 +349,10 @@ class ir_model_fields(osv.osv):
             if vals.get('relation',False) and not self.pool['ir.model'].search(cr, user, [('model','=',vals['relation'])]):
                 raise UserError(_("Model %s does not exist!") % vals['relation'])
 
+            if vals.get('ttype', False) == 'one2many':
+                if not self.search(cr, user, [('model_id','=',vals['relation']), ('name','=',vals['relation_field']), ('ttype','=','many2one')]):
+                    raise UserError(_("Many2one %s on model %s does not exist!") % (vals['relation_field'], vals['relation']))
+
             self.pool.clear_manual_fields()
 
             if vals['model'] in self.pool:
@@ -1250,7 +1254,6 @@ class wizard_model_menu(osv.osv_memory):
             self.pool.get('ir.ui.menu').create(cr, uid, {
                 'name': menu.name,
                 'parent_id': menu.menu_id.id,
-                'action': 'ir.actions.act_window,%d' % (action_id,),
-                'icon': 'STOCK_INDENT'
+                'action': 'ir.actions.act_window,%d' % (action_id,)
             }, context)
         return {'type':'ir.actions.act_window_close'}

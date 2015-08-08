@@ -46,6 +46,8 @@ Dashboard for CRM will include:
     'data': [
         'data/crm_action_data.xml',
         'crm_data.xml',
+        'data/crm_stage_data.xml',
+        'data/sales_config_settings_data.xml',
         'crm_lead_data.xml',
         'crm_tip_data.xml',
 
@@ -56,13 +58,13 @@ Dashboard for CRM will include:
         'wizard/crm_merge_opportunities_view.xml',
 
         'crm_view.xml',
+        'crm_stage_views.xml',
         'crm_lead_view.xml',
         'crm_lead_menu.xml',
         'views/crm_action_views.xml',
 
         'calendar_event_menu.xml',
 
-        'report/crm_lead_report_view.xml',
         'report/crm_activity_report_view.xml',
         'report/crm_opportunity_report_view.xml',
 
