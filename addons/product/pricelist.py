@@ -189,11 +189,11 @@ class product_pricelist(osv.osv):
             subres = self._price_rule_get_multi(cr, uid, pricelist, products_by_qty_by_partner, context=context)
             for product_id,price in subres.items():
                 results.setdefault(product_id, {})
-                results[product_id][pricelist.id] = price
+                results[product_id][pricelist.id] = price[0]
         return results
 
     def _price_get_multi(self, cr, uid, pricelist, products_by_qty_by_partner, context=None):
-        return dict((key, price) for key, price in self._price_rule_get_multi(cr, uid, pricelist, products_by_qty_by_partner, context=context).items())
+        return dict((key, price[0]) for key, price in self._price_rule_get_multi(cr, uid, pricelist, products_by_qty_by_partner, context=context).items())
 
     def _price_rule_get_multi(self, cr, uid, pricelist, products_by_qty_by_partner, context=None):
         context = context or {}
