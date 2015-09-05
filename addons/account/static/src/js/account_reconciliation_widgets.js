@@ -59,7 +59,7 @@ then cloning it for each new child.
 
 */
 var abstractReconciliation = Widget.extend(ControlPanelMixin, {
-    className: 'oe_reconciliation o_reconciliation',
+    className: 'o_reconciliation',
 
     events: {
         "click *[rel='do_action']": "doActionClickHandler",
@@ -372,7 +372,7 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
 });
 
 var abstractReconciliationLine = Widget.extend({
-    className: 'oe_reconciliation_line o_reconciliation_line',
+    className: 'o_reconciliation_line',
 
     events: {
         "click .mv_line": "moveLineClickHandler",
@@ -485,7 +485,7 @@ var abstractReconciliationLine = Widget.extend({
         for (var key in create_form_fields)
             if (create_form_fields.hasOwnProperty(key))
                 create_form_fields_arr.push(create_form_fields[key]);
-        create_form_fields_arr.sort(function(a, b){ return b.index - a.index });
+        create_form_fields_arr.sort(function(a, b){ return a.index - b.index });
 
         // field_manager
         var dataset = new data.DataSet(this, "account.account", self.context);
@@ -538,7 +538,7 @@ var abstractReconciliationLine = Widget.extend({
         // Returns a function that serves as a xhr response handler
         var hideGroupResponseClosureFactory = function(field_widget, $container, obj_key){
             return function(has_group){
-                if (has_group) $container.show();
+                if (has_group) $container[0].style.removeProperty('display');
                 else {
                     field_widget.destroy();
                     $container.remove();
@@ -565,8 +565,8 @@ var abstractReconciliationLine = Widget.extend({
 
             // append to DOM
             var $field_container = $(QWeb.render("form_create_field", {id: field_data.id, label: field_data.label}));
-            field.appendTo($field_container.find("td"));
-            self.$(".create_form").prepend($field_container);
+            field.appendTo($field_container.find(".o_td_field"));
+            self.$(".create_group_" + (i%2 === 0 ? "left" : "right")).append($field_container);
 
             // Change field value on keypress instead of blur
             if (field_data.field_properties.type !== "many2one") {
@@ -576,6 +576,7 @@ var abstractReconciliationLine = Widget.extend({
             }
 
             // Hide the field if group not OK
+            // TODO: avoid this RPC that could break fields order if the only field with a group wasn't the last one.
             if (field_data.group !== undefined) {
                 var target = $field_container;
                 target.hide();
@@ -1094,7 +1095,7 @@ var abstractReconciliationLine = Widget.extend({
 });
 
 var bankStatementReconciliation = abstractReconciliation.extend({
-    className: abstractReconciliation.prototype.className + ' oe_bank_statement_reconciliation o_bank_statement_reconciliation',
+    className: abstractReconciliation.prototype.className + ' o_bank_statement_reconciliation',
 
     events: _.defaults({
         "click .statement_name span": "statementNameClickHandler",
@@ -1582,7 +1583,7 @@ var bankStatementReconciliation = abstractReconciliation.extend({
 });
 
 var bankStatementReconciliationLine = abstractReconciliationLine.extend({
-    className: abstractReconciliationLine.prototype.className + ' oe_bank_statement_reconciliation_line o_bank_statement_reconciliation_line',
+    className: abstractReconciliationLine.prototype.className + ' o_bank_statement_reconciliation_line',
 
     events: _.defaults({
         "click .change_partner": "changePartnerClickHandler",
@@ -1831,9 +1832,11 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
 
     changePartnerClickHandler: function() {
         var self = this;
+        var partner_name = self.st_line.partner_name;
         $.when(self.changePartner(false)).then(function(){
             self.$(".change_partner_container").show();
             self.$(".partner_name").hide();
+            self.$(".change_partner_container").find("input").attr("placeholder", partner_name);
             self.change_partner_field.$dropdown.trigger("click");
         });
     },
@@ -1867,7 +1870,7 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
                 if (self.st_line.has_no_partner) {
                     createOpenBalance(_t("Choose counterpart"));
                 } else {
-                    displayValidState(false, _t("Register Payment"));
+                    displayValidState(false, _t("Validate"));
                     createOpenBalance(_t("Open balance"));
                 }
             }
@@ -2086,7 +2089,7 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
 });
 
 var manualReconciliation = abstractReconciliation.extend({
-    className: abstractReconciliation.prototype.className + ' oe_manual_reconciliation o_manual_reconciliation',
+    className: abstractReconciliation.prototype.className + ' o_manual_reconciliation',
 
     events: _.defaults({
         "change input[name='modeselektor']": "modeSelektorHandler",
@@ -2341,7 +2344,7 @@ var manualReconciliation = abstractReconciliation.extend({
 });
 
 var manualReconciliationLine = abstractReconciliationLine.extend({
-    className: abstractReconciliationLine.prototype.className + ' oe_manual_reconciliation_line o_manual_reconciliation_line',
+    className: abstractReconciliationLine.prototype.className + ' o_manual_reconciliation_line',
 
     events: _.defaults({
         "click .accounting_view thead": "headerClickHandler",

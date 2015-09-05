@@ -461,7 +461,7 @@ var FormWidget = Widget.extend(InvisibilityChangerMixin, {
         widget = widget || this;
         trigger = trigger || this.$el;
         options = _.extend({
-                delay: { show: 500, hide: 0 },
+                delay: { show: 1000, hide: 0 },
                 title: function() {
                     var template = widget.template + '.tooltip';
                     if (!QWeb.has_template(template)) {
@@ -756,11 +756,7 @@ var AbstractField = FormWidget.extend(FieldInterface, {
         if (this.field.translate) {
             this.$el.find('.oe_field_translate').toggle(this.field_manager.get('actual_mode') !== "create");
         }
-        if (!this.disable_utility_classes) {
-            if (this.field_manager.get('display_invalid_fields')) {
-                this.$el.toggleClass('oe_form_invalid', !this.is_valid());
-            }
-        }
+        this.$el.toggleClass('oe_form_invalid', !this.disable_utility_classes && !!this.field_manager.get('display_invalid_fields') && !this.is_valid());
     },
     focus: function() {
         return false;

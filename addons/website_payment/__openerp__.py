@@ -6,7 +6,6 @@
     'summary': 'Payment: Website Integration',
     'version': '1.0',
     'description': """Bridge module for acquirers and website.""",
-    'author': 'OpenERP SA',
     'depends': [
         'website',
         'payment',
@@ -15,6 +14,7 @@
     'data': [
         'views/website_payment_view.xml',
         'views/website_payment_templates.xml',
+        'views/res_config_view.xml',
     ],
     'auto_install': False,
 }

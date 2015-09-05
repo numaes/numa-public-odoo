@@ -16,9 +16,7 @@
                     The whole process may take a few hours, some discussions with your colleagues and
                 several cups of coffee to go through. But don't worry, you can return to this tool at any time.</i></p>
                 <p class="last"><i>We wish you a fun time!</i></p>
-                <img src="/web_planner/static/src/img/fabien_pinckaers.jpg" class="pull-left mb32"/>
-                <div class="pull-left" style="margin-left: 10px">
-                    <img class="signature mb8" src="/web_planner/static/src/img/fabien_signature.png"/>
+                <div class="mt32">
                     <address>
                         For the Odoo Team,<br/>
                         Fabien Pinckaers, Founder
@@ -175,12 +173,11 @@
                                 </div>
                                 <div class="panel-body">
                                     <p>
-                                        You can change the look of your theme in a few clicks:
+                                        Use the <i>Customize</i> menu to change the look of your theme:
                                         <li>Background image</li>
                                         <li>Special effects and animations</li>
                                         <li>Colors palette</li>
                                         <li>Fonts</li>
-                                        <span id="theme_customize"><a class="hide_planner" href="#">Customize your theme</a></span>
                                     </p>
                                 </div>
                             </div>
@@ -188,7 +185,7 @@
                     </div>
                     <div>
                         <div class="alert alert-info info_icon" role="alert">
-                            <span class="fa fa-lightbulb-o fa-2x"></span><p>You can also use the <span id="html_editor"><u><a href="#advanced-view-editor" class="hide_planner" data-action='ace'>integrated HTML Editor</a></u></span> to modify the code directly.</p>
+                            <span class="fa fa-lightbulb-o fa-2x"></span><p>You can also use the <i>integrated HTML Editor(from the Customize menu)</i> to modify the code directly.</p>
                         </div>
                         <div class="row">
                             <div class="col-md-7 col-xs-12">
@@ -880,7 +877,7 @@
                             <div class="col-sm-11 col-md-10">
                                 <p> 2. <strong>Setup Gengo</strong><br/>
                                 <li>Install the <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'website_gengo')">Gengo module</a> in Odoo</li>
-                                <li>Follow <a t-att-href="prepare_backend_url('base.action_res_company_form', 'form')">these instructions</a> to configure your Gengo API key</li>
+                                <li>Configure your Gengo API key in <a t-att-href="prepare_backend_url('base.action_res_company_form', 'form')">your Company details form</a></li>
                                 </p>
                             </div>
                         </div>
@@ -992,6 +989,7 @@
 
             <t t-call="web_planner.page">
                 <t t-set="page_title" t-value="'End'"/>
+                <t t-set="hide_title" t-value="True"/>
                 <t t-set="hide_from_menu" t-value="True"/>
                 <t t-set="hide_mark_as_done" t-value="True"/>
                 <h1 class="text-center o_planner_trophy" data-icon="&#xe006;"/>

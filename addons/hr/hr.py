@@ -3,6 +3,7 @@
 
 import logging
 
+from openerp import api
 from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.modules.module import get_module_resource
@@ -102,6 +103,12 @@ class hr_job(osv.Model):
             'no_of_hired_employee': 0
         }, context=context)
         return True
+
+    # TDE note: done in new api, because called with new api -> context is a
+    # frozendict -> error when tryign to manipulate it
+    @api.model
+    def create(self, values):
+        return super(hr_job, self.with_context(mail_create_nosubscribe=True)).create(values)
 
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
@@ -215,8 +222,8 @@ class hr_employee(osv.osv):
         address_id = False
         if company:
             company_id = self.pool.get('res.company').browse(cr, uid, company, context=context)
-            address = self.pool.get('res.partner').address_get(cr, uid, [company_id.partner_id.id], ['default'])
-            address_id = address and address['default'] or False
+            address = self.pool.get('res.partner').address_get(cr, uid, [company_id.partner_id.id], ['contact'])
+            address_id = address and address['contact'] or False
         return {'value': {'address_id': address_id}}
 
     def onchange_department_id(self, cr, uid, ids, department_id, context=None):
@@ -308,6 +315,9 @@ class hr_department(osv.osv):
         return res
 
     def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+        context['mail_create_nosubscribe'] = True
         # TDE note: auto-subscription of manager done by hand, because currently
         # the tracking allows to track+subscribe fields linked to a res.user record
         # An update of the limited behavior should come, but not currently done.

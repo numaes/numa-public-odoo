@@ -14,7 +14,7 @@ class HrEquipmentStage(models.Model):
 
     name = fields.Char('Name', required=True, translate=True)
     sequence = fields.Integer('Sequence', default=20)
-    fold = fields.Boolean('Folded in Kanban View')
+    fold = fields.Boolean('Folded in Recruitment Pipe')
 
 
 class HrEquipmentCategory(models.Model):
@@ -40,7 +40,7 @@ class HrEquipmentCategory(models.Model):
         'mail.alias', 'Alias', ondelete='cascade', required=True,
         help="Email alias for this equipment category. New emails will automatically "
         "create new maintenance request for this equipment category.")
-    fold = fields.Boolean(string='Folded in Kanban View', compute='_compute_fold', store=True)
+    fold = fields.Boolean(string='Folded in Maintenance Pipe', compute='_compute_fold', store=True)
 
     @api.multi
     def _compute_equipment_count(self):
@@ -238,6 +238,21 @@ class HrEquipmentRequest(models.Model):
     close_date = fields.Date('Close Date')
     kanban_state = fields.Selection([('normal', 'In Progress'), ('blocked', 'Blocked'), ('done', 'Ready for next stage')],
                                     string='Kanban State', required=True, default='normal', track_visibility='onchange')
+    active = fields.Boolean(default=True, help="Set active to false to hide the maintenance request without deleting it.")
+
+
+    @api.multi
+    def archive_equipment_request(self):
+        """ Archive an hr.equipment.request as it was refused """
+        for equipment_request in self:
+            equipment_request.write({'active': False})
+
+    @api.multi
+    def reset_equipment_request(self):
+        """ Reinsert the equipment request into the maintenance pipe"""
+        for equipment_request in self:
+            first_stage_obj = self.env['hr.equipment.stage'].search([], order="sequence asc", limit=1)
+            equipment_request.write({'active': True, 'stage_id': first_stage_obj.id})
 
     @api.onchange('employee_id', 'department_id')
     def onchange_department_or_employee_id(self):
@@ -310,21 +325,6 @@ class HrEquipmentRequest(models.Model):
     _group_by_full = {
         'stage_id': _read_group_stage_ids
     }
-
-    @api.model
-    def get_empty_list_help(self, help):
-        res = super(HrEquipmentRequest, self).get_empty_list_help(help)
-        alias_record = self.env.ref('hr_equipment.mail_alias_equipment')
-        check_alias_manage = self.env['ir.values'].get_default('hr.config.settings', 'alias_manage')
-        if alias_record and alias_record.alias_domain and alias_record.alias_name and res and check_alias_manage:
-            return _("""<p class="oe_view_nocontent_create">
-                            Click to add a new maintenance request or send an email to: <a>%(alias_name)s</a>
-                        </p>
-                        <p>
-                            Follow the process of the request and communicate with the collaborator.
-                        </p>"""
-                     ) % {'alias_name': alias_record.alias_name + '@' + alias_record.alias_domain}
-        return res
 
     @api.model
     def message_new(self, msg, custom_values=None):
