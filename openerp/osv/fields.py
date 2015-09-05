@@ -211,13 +211,10 @@ class _column(object):
         """ return a dictionary with all the arguments to pass to the field """
         base_items = [
             ('copy', self.copy),
-<<<<<<< HEAD
             ('readonly', self.readonly),
             ('required', self.required),
         ]
         truthy_items = filter(itemgetter(1), [
-=======
->>>>>>> 9c8b99acf748e810bf9d145cd4c2f439acdf7329
             ('index', self.select),
             ('manual', self.manual),
             ('string', self.string),

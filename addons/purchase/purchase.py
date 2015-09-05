@@ -47,10 +47,6 @@ class purchase_order(osv.osv):
             val = val1 = 0.0
             cur = order.pricelist_id.currency_id
             for line in order.order_line:
-<<<<<<< HEAD
-               val1 += line.price_subtotal
-               for c in self.pool.get('account.tax').compute_all(cr, uid, [t.id for t in line.taxes_id], line.price_unit, line.product_qty, line.product_id, order.partner_id)['taxes']:
-=======
                 val1 += line.price_subtotal
                 line_price = line_obj._calc_line_base_price(cr, uid, line,
                                                             context=context)
@@ -59,7 +55,6 @@ class purchase_order(osv.osv):
                 for c in self.pool['account.tax'].compute_all(
                         cr, uid, line.taxes_id, line_price, line_qty,
                         line.product_id, order.partner_id)['taxes']:
->>>>>>> 9c8b99acf748e810bf9d145cd4c2f439acdf7329
                     val += c.get('amount', 0.0)
             res[order.id]['amount_tax']=cur_obj.round(cr, uid, cur, val)
             res[order.id]['amount_untaxed']=cur_obj.round(cr, uid, cur, val1)
@@ -1053,9 +1048,6 @@ class purchase_order_line(osv.osv):
         cur_obj=self.pool.get('res.currency')
         tax_obj = self.pool.get('account.tax')
         for line in self.browse(cr, uid, ids, context=context):
-<<<<<<< HEAD
-            taxes = tax_obj.compute_all(cr, uid, [t.id for t in line.taxes_id], line.price_unit, line.product_qty, line.product_id, line.order_id.partner_id)
-=======
             line_price = self._calc_line_base_price(cr, uid, line,
                                                     context=context)
             line_qty = self._calc_line_quantity(cr, uid, line,
@@ -1063,7 +1055,6 @@ class purchase_order_line(osv.osv):
             taxes = tax_obj.compute_all(cr, uid, line.taxes_id, line_price,
                                         line_qty, line.product_id,
                                         line.order_id.partner_id)
->>>>>>> 9c8b99acf748e810bf9d145cd4c2f439acdf7329
             cur = line.order_id.pricelist_id.currency_id
             res[line.id] = cur_obj.round(cr, uid, cur, taxes['total'])
         return res

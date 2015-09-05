@@ -47,16 +47,12 @@ class sale_order(osv.osv):
 
     def _amount_line_tax(self, cr, uid, line, context=None):
         val = 0.0
-<<<<<<< HEAD
-        for c in self.pool.get('account.tax').compute_all(cr, uid, [t.id for t in line.tax_id], line.price_unit * (1-(line.discount or 0.0)/100.0), line.product_uom_qty, line.product_id, line.order_id.partner_id)['taxes']:
-=======
         line_obj = self.pool['sale.order.line']
         price = line_obj._calc_line_base_price(cr, uid, line, context=context)
         qty = line_obj._calc_line_quantity(cr, uid, line, context=context)
         for c in self.pool['account.tax'].compute_all(
                 cr, uid, line.tax_id, price, qty, line.product_id,
                 line.order_id.partner_id)['taxes']:
->>>>>>> 9c8b99acf748e810bf9d145cd4c2f439acdf7329
             val += c.get('amount', 0.0)
         return val
 
@@ -875,16 +871,11 @@ class sale_order_line(osv.osv):
         if context is None:
             context = {}
         for line in self.browse(cr, uid, ids, context=context):
-<<<<<<< HEAD
-            price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-            taxes = tax_obj.compute_all(cr, uid, [t.id for t in line.tax_id], price, line.product_uom_qty, line.product_id, line.order_id.partner_id)
-=======
             price = self._calc_line_base_price(cr, uid, line, context=context)
             qty = self._calc_line_quantity(cr, uid, line, context=context)
             taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, qty,
                                         line.product_id,
                                         line.order_id.partner_id)
->>>>>>> 9c8b99acf748e810bf9d145cd4c2f439acdf7329
             cur = line.order_id.pricelist_id.currency_id
             res[line.id] = cur_obj.round(cr, uid, cur, taxes['total'])
         return res
@@ -1120,12 +1111,9 @@ class sale_order_line(osv.osv):
         product_uom_obj = self.pool.get('product.uom')
         partner_obj = self.pool.get('res.partner')
         product_obj = self.pool.get('product.product')
-<<<<<<< HEAD
         fpos_obj = self.pool['account.fiscal.position']
         
         context = {'lang': lang, 'partner_id': partner_id}
-=======
->>>>>>> 9c8b99acf748e810bf9d145cd4c2f439acdf7329
         partner = partner_obj.browse(cr, uid, partner_id)
         lang = partner.lang
         context_partner = context.copy()
@@ -1179,9 +1167,6 @@ class sale_order_line(osv.osv):
             result['name'] += '\n' + product_obj.description_sale
 
         if update_tax: #The quantity only have changed
-<<<<<<< HEAD
-            result['tax_id'] = fpos_obj.map_tax(cr, uid, fpos, taxes)
-=======
             # The superuser is used by website_sale in order to create a sale order. We need to make
             # sure we only select the taxes related to the company of the partner. This should only
             # apply if the partner is linked to a company.
@@ -1190,7 +1175,6 @@ class sale_order_line(osv.osv):
             else:
                 taxes = product_obj.taxes_id
             result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
->>>>>>> 9c8b99acf748e810bf9d145cd4c2f439acdf7329
 
         domain = {}
         if (not uom) and (not uos):
@@ -1238,14 +1222,7 @@ class sale_order_line(osv.osv):
                 date=date_order,
             )
             price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
-<<<<<<< HEAD
-                    product, qty or 1.0, partner_id, {
-                        'uom': uom or result.get('product_uom'),
-                        'date': date_order[0:10],
-                        })[pricelist]
-=======
                     product, qty or 1.0, partner_id, ctx)[pricelist]
->>>>>>> 9c8b99acf748e810bf9d145cd4c2f439acdf7329
             if price is False:
                 warn_msg = _("Cannot find a pricelist line matching this product and quantity.\n"
                         "You have to change either the product, the quantity or the pricelist.")

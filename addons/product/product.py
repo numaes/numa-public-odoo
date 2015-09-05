@@ -24,14 +24,7 @@ import re
 import time
 from _common import ceiling
 
-<<<<<<< HEAD
-from openerp import api
-from openerp import SUPERUSER_ID
-from openerp import tools
-=======
-
 from openerp import api, tools, SUPERUSER_ID
->>>>>>> 9c8b99acf748e810bf9d145cd4c2f439acdf7329
 from openerp.osv import osv, fields, expression
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
