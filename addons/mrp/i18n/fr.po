@@ -4,6 +4,7 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Florian Hatat, 2015
 # Lionel Sausin <ls@numerigraphe.com>, 2015
 # Quentin THEURET <quentin@theuret.net>, 2015
 msgid ""
@@ -11,9 +12,9 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-06-01 07:10+0000\n"
-"Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
-"Language-Team: French (http://www.transifex.com/projects/p/odoo-8/language/fr/)\n"
+"PO-Revision-Date: 2015-08-27 12:01+0000\n"
+"Last-Translator: Florian Hatat\n"
+"Language-Team: French (http://www.transifex.com/odoo/odoo-8/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -178,12 +179,12 @@ msgid ""
 "                stock rule.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nCliquez pour démarrer un nouvel ordre de fabrication.\n</p><p>\nUn ordre de fabrication, basé sur une nomenclature, consommera des matières premières et produira des produits finis.\n</p><p>\nLes ordres de fabrication sont normalement proposés automatiquement en se basant sur les besoins des clients et sur des règles automatiques comme les règles de stock minimum.\n</p>"
 
 #. module: mrp
 #: help:mrp.bom,product_efficiency:0
 msgid "A factor of 0.9 means a loss of 10% during the production process."
-msgstr ""
+msgstr "Un facteur de 0.9 indique une perte de 10% pendant la production."
 
 #. module: mrp
 #: help:mrp.bom.line,product_efficiency:0
@@ -368,7 +369,7 @@ msgstr "La nomenclature \"%s\" contient un composant appelant aussi cette nomenc
 msgid ""
 "BoM \"%s\" contains a phantom BoM line but the product \"%s\" does not have "
 "any BoM defined."
-msgstr ""
+msgstr "La nomenclature \"%s\" contient une ligne de nomenclature fantôme mais le produit \"%s\" n'a pas de nomenclature définie."
 
 #. module: mrp
 #: field:mrp.bom.line,type:0
@@ -1073,7 +1074,7 @@ msgstr "Ordres de fabrication en attente de matières premières."
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Mark as Started"
-msgstr "Marqué comme démarré"
+msgstr "Marquer comme démarré"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_property
