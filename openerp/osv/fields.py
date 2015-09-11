@@ -223,7 +223,7 @@ class _column(object):
             ('groups', self.groups),
             ('change_default', self.change_default),
             ('deprecated', self.deprecated),
-        ]
+        ])
         truthy_items = filter(itemgetter(1), [
             ('group_operator', self.group_operator),
             ('size', self.size),
