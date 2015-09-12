@@ -532,7 +532,8 @@ class account_bank_statement_line(osv.osv):
                   ('reconcile_id', '=', False),
                   ('state', '=', 'valid'),
                   ('account_id.reconcile', '=', True),
-                  ('id', 'not in', excluded_ids)]
+                  ('id', 'not in', excluded_ids),
+                  ('partner_id', 'in', (False, st_line.partner_id.id))]
         return domain
 
     def get_reconciliation_proposition(self, cr, uid, st_line, excluded_ids=None, context=None):
@@ -573,7 +574,11 @@ class account_bank_statement_line(osv.osv):
 
         # Look for a matching amount
         domain_exact_amount = domain + [(amount_field, '=', float_round(sign * amount, precision_digits=precision_digits))]
-        match_id = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, offset=0, limit=2, additional_domain=domain_exact_amount)
+        domain_exact_amount_ref = domain_exact_amount + [('ref', '=', st_line.ref)]
+        match_id = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, offset=0, limit=2, additional_domain=domain_exact_amount_ref)
+        if not match_id:
+            match_id = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, offset=0, limit=2, additional_domain=domain_exact_amount)
+
         if match_id and len(match_id) == 1:
             return match_id
 
@@ -940,7 +945,7 @@ class account_bank_statement_line(osv.osv):
         'currency_id': fields.many2one('res.currency', 'Currency', help="The optional other currency if it is a multi-currency entry."),
     }
     _defaults = {
-        'name': lambda self,cr,uid,context={}: self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement.line'),
+        'name': lambda self,cr,uid,context={}: self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement.line', context=context),
         'date': lambda self,cr,uid,context={}: context.get('date', fields.date.context_today(self,cr,uid,context=context)),
     }
 

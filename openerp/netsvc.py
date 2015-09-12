@@ -138,7 +138,7 @@ def init_logger():
     resetlocale()
 
     # create a format for log messages and dates
-    format = u'%(asctime)s %(pid)s %(levelname)s %(dbname)s %(name)s: %(message)s'
+    format = u'%(asctime)s %(pid)s %(levelname)s %(dbname)s %(name)s (%(lineno)d): %(message)s'
 
     if tools.config['syslog']:
         # SysLog Handler

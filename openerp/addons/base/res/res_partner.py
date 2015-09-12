@@ -708,7 +708,7 @@ class res_partner(osv.Model, format_address):
         emails = tools.email_split(email)
         if emails:
             email = emails[0]
-        ids = self.search(cr, uid, [('email','ilike',email)], context=context)
+        ids = self.search(cr, uid, [('email','=ilike',email)], context=context)
         if not ids:
             return self.name_create(cr, uid, email, context=context)[0]
         return ids[0]
@@ -743,6 +743,8 @@ class res_partner(osv.Model, format_address):
             adr_pref.add('default')
         result = {}
         visited = set()
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         for partner in self.browse(cr, uid, filter(None, ids), context=context):
             current_partner = partner
             while current_partner:
@@ -764,12 +766,11 @@ class res_partner(osv.Model, format_address):
                     break
                 current_partner = current_partner.parent_id
 
-            # default to type 'default' or the partner itself
-            default = result.get('default', partner.id)
-            for adr_type in adr_pref:
-                result[adr_type] = result.get(adr_type) or default 
-            return result
-        return {}
+        # default to type 'default' or the partner itself
+        default = result.get('default', ids and ids[0] or False)
+        for adr_type in adr_pref:
+            result[adr_type] = result.get(adr_type) or default 
+        return result
 
     def view_header_get(self, cr, uid, view_id, view_type, context):
         res = super(res_partner, self).view_header_get(cr, uid, view_id, view_type, context)
