@@ -325,7 +325,7 @@ class product_attribute_value(osv.osv):
         ctx = dict(context or {}, active_test=False)
         product_ids = self.pool['product.product'].search(cr, uid, [('attribute_value_ids', 'in', ids)], context=ctx)
         if product_ids:
-            raise UserError(_('The operation cannot be completed:\nYou trying to delete an attribute value with a reference on a product variant.'))
+            raise UserError(_('The operation cannot be completed:\nYou are trying to delete an attribute value with a reference on a product variant.'))
         return super(product_attribute_value, self).unlink(cr, uid, ids, context=context)
 
 class product_attribute_price(osv.osv):
@@ -450,6 +450,8 @@ class product_template(osv.osv):
 
     def _compute_product_template_field(self, cr, uid, ids, names, arg, context=None):
         ''' Compute the field from the product_variant if there is only one variant, otherwise returns 0.0 '''
+        if isinstance(names, basestring):
+            names = [names]
         res = {id: {} for id in ids}
         templates = self.browse(cr, uid, ids, context=context)
         unique_templates = [template.id for template in templates if template.product_variant_count == 1]
@@ -950,7 +952,7 @@ class product_product(osv.osv):
     _columns = {
         'price': fields.function(_product_price, fnct_inv=_set_product_lst_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
         'price_extra': fields.function(_get_price_extra, type='float', string='Variant Extra Price', help="This is the sum of the extra price of all attributes", digits_compute=dp.get_precision('Product Price')),
-        'lst_price': fields.function(_product_lst_price, fnct_inv=_set_product_lst_price, type='float', string='Public Price', digits_compute=dp.get_precision('Product Price')),
+        'lst_price': fields.function(_product_lst_price, fnct_inv=_set_product_lst_price, type='float', string='Sale Price', digits_compute=dp.get_precision('Product Price')),
         'code': fields.function(_product_code, type='char', string='Internal Reference'),
         'partner_ref' : fields.function(_product_partner_ref, type='char', string='Customer ref'),
         'default_code' : fields.char('Internal Reference', select=True),

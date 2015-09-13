@@ -1197,6 +1197,8 @@ Update your business card, phone book, social media,... Send an email right now 
         res['done']['target'] = user.target_sales_done
         res['won']['target'] = user.target_sales_won
 
+        res['currency_id'] = user.company_id.currency_id.id
+
         return res
 
     def modify_target_sales_dashboard(self, cr, uid, target_name, target_value, context=None):
@@ -1213,6 +1215,7 @@ class crm_lead_tag(osv.Model):
     _description = "Category of lead"
     _columns = {
         'name': fields.char('Name', required=True),
+        'color': fields.integer('Color Index'),
         'team_id': fields.many2one('crm.team', 'Sales Team'),
     }
     _sql_constraints = [

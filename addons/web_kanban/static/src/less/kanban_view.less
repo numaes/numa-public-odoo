@@ -75,6 +75,7 @@
         .o_kanban_footer {
             .o-flex-display();
             .o-justify-content(space-between);
+            .o-align-items(center);
             > * {
                 .o-flex(0, 0, auto);
             }
@@ -93,17 +94,26 @@
         }
 
         .o_kanban_tags {
-            margin-left: -8px;
+            margin: 0 0 8px -8px;
             height: 9px;
             .o_tag {
-                width: 50px;
+                width: 40px;
                 height: 9px;
                 display: inline-block;
                 vertical-align: top;
+                opacity: 0.7;
+
+                &:hover {
+                    opacity: 1;
+                }
             }
         }
         .o_form_field_many2manytags {
             display: block;
+        }
+        .oe_kanban_text_red {
+            color: #A61300;
+            font-weight: bold;
         }
     }
 
@@ -273,7 +283,7 @@
 
         .o_kanban_attachment_image {
             // The image should take the whole card
-            margin: -8px;
+            margin: 0 -8px -8px;
             > img {
                 width: 100%;
             }

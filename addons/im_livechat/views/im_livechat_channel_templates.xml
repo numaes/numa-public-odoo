@@ -76,7 +76,7 @@
                 <body>
                      <div class="main" style="opacity: 1;">
                         <h1 class="channel_name"><t t-esc="channel.name"/></h1>
-                        <div>Live Chat Powered by <strong>Odoo</strong>.</div>
+                        <div>Website Live Chat Powered by <strong>Odoo</strong>.</div>
                     </div>
                 </body>
             </html>
@@ -139,7 +139,7 @@
                 <t t-set="info" t-value="request.env['im_livechat.channel'].match_rules(request, channel)"/>
             </t>
 
-            <t t-if="info" t-translate="off">
+            <t t-if="info" t-translation="off">
                 document.addEventListener("DOMContentLoaded", function(event) {
 
                     odoo.define('web.session', function (require) {

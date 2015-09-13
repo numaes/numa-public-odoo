@@ -105,9 +105,12 @@ class project(osv.osv):
             res[id] = (project_attachments or 0) + (task_attachments or 0)
         return res
     def _task_count(self, cr, uid, ids, field_name, arg, context=None):
+        if context is None:
+            context = {}
         res={}
-        for tasks in self.browse(cr, uid, ids, dict(context, active_test=False)):
-            res[tasks.id] = len(tasks.task_ids)
+        for project in self.browse(cr, uid, ids, context=context):
+            tasks_undefined_stage = self.pool['project.task'].search_count(cr, uid, [('stage_id', '=', None), ('project_id', '=', project.id)], context=context)
+            res[project.id] = len(project.task_ids) + int(tasks_undefined_stage) 
         return res
     def _get_alias_models(self, cr, uid, context=None):
         """ Overriden in project_issue to offer more options """
@@ -155,7 +158,7 @@ class project(osv.osv):
             help="Link this project to an analytic account if you need financial management on projects. "
                  "It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.",
             ondelete="cascade", required=True, auto_join=True),
-        'label_tasks': fields.char('Use Tasks as', help="Gives label to tasks on project's kanaban view."),
+        'label_tasks': fields.char('Use Tasks as', help="Gives label to tasks on project's kanban view."),
         'tasks': fields.one2many('project.task', 'project_id', "Task Activities"),
         'resource_calendar_id': fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report", states={'close':[('readonly',True)]} ),
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
@@ -411,12 +414,6 @@ class task(osv.osv):
             default['name'] = _("%s (copy)") % current.name
         return super(task, self).copy_data(cr, uid, id, default, context)
 
-    def _compute_displayed_image(self, cr, uid, ids, prop, arg, context=None):
-        res = {}
-        for line in self.browse(cr, uid, ids, context=context):
-            res[line.id] = line.attachment_ids and line.attachment_ids.filtered(lambda x: x.mimetype.startswith('image'))[0] or None
-        return res
-
     _columns = {
         'active': fields.boolean('Active'),
         'name': fields.char('Task Title', track_visibility='onchange', size=128, required=True, select=True),
@@ -454,7 +451,8 @@ class task(osv.osv):
         'color': fields.integer('Color Index'),
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
         'attachment_ids': fields.one2many('ir.attachment', 'res_id', domain=lambda self: [('res_model', '=', self._name)], auto_join=True, string='Attachments'),
-        'displayed_image_id': fields.function(_compute_displayed_image, relation='ir.attachment', type="many2one", string='Attachment'),
+        # In the domain of displayed_image_id, we couln't use attachment_ids because a one2many is represented as a list of commands so we used res_model & res_id
+        'displayed_image_id': fields.many2one('ir.attachment', domain="[('res_model', '=', 'project.task'), ('res_id', '=', id), ('mimetype', 'ilike', 'image')]", string='Displayed Image'),
         }
     _defaults = {
         'stage_id': _get_default_stage_id,
@@ -1018,6 +1016,7 @@ class project_tags(osv.Model):
     _description = "Tags of project's tasks, issues..."
     _columns = {
         'name': fields.char('Name', required=True),
+        'color': fields.integer('Color Index'),
     }
     _sql_constraints = [
             ('name_uniq', 'unique (name)', "Tag name already exists !"),

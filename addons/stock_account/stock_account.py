@@ -8,11 +8,26 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
+class stock_inventory(osv.osv):
+    _inherit = "stock.inventory"
+    _columns = {
+        'accounting_date': fields.date('Force Accounting Date', help="Choose the accounting date at which you want to value the stock moves created by the inventory instead of the default one (the inventory end date)"),
+    }
+
+    def post_inventory(self, cr, uid, inv, context=None):
+        if context is None:
+            context = {}
+        ctx = context.copy()
+        if inv.accounting_date:
+            ctx['force_period_date'] = inv.accounting_date
+        return super(stock_inventory, self).post_inventory(cr, uid, inv, context=ctx)
+
+
 class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
 
     _columns = {
-        'move_id': fields.many2one('stock.move', string="Move line", help="If the invoice was generated from a stock.picking, reference to the related move line."),
+        'move_id': fields.many2one('stock.move', string="Move line", help="If the invoice was generated from a stock transfer, specify the reference to the related stock move."),
     }
 
     def move_line_get(self, cr, uid, invoice_id, context=None):
@@ -26,7 +41,6 @@ class account_invoice_line(osv.osv):
 
     def _get_price(self, cr, uid, inv, company_currency, i_line, price_unit):
         cur_obj = self.pool.get('res.currency')
-        decimal_precision = self.pool.get('decimal.precision')
         if inv.currency_id.id != company_currency:
             price = cur_obj.compute(cr, uid, company_currency, inv.currency_id.id, price_unit * i_line.quantity, context={'date': inv.date_invoice})
         else:
@@ -236,12 +250,11 @@ class stock_quant(osv.osv):
             self._account_entry_move(cr, uid, [quant], move, context)
         return quant
 
-    def move_quants_write(self, cr, uid, quants, move, location_dest_id, dest_package_id, lot_id=False, context=None):
-        res = super(stock_quant, self).move_quants_write(cr, uid, quants, move, location_dest_id,  dest_package_id, lot_id=lot_id, context=context)
+    def move_quants_write(self, cr, uid, quants, move, location_dest_id, dest_package_id, lot_id=False, entire_pack=False, context=None):
+        res = super(stock_quant, self).move_quants_write(cr, uid, quants, move, location_dest_id,  dest_package_id, lot_id=lot_id, entire_pack=entire_pack, context=context)
         if move.product_id.valuation == 'real_time':
             self._account_entry_move(cr, uid, quants, move, context=context)
         return res
-
 
     def _get_accounting_data_for_valuation(self, cr, uid, move, context=None):
         """
@@ -295,7 +308,6 @@ class stock_quant(osv.osv):
                     'quantity': qty,
                     'product_uom_id': move.product_id.uom_id.id,
                     'ref': move.picking_id and move.picking_id.name or False,
-                    'date': move.date,
                     'partner_id': partner_id,
                     'debit': valuation_amount > 0 and valuation_amount or 0,
                     'credit': valuation_amount < 0 and -valuation_amount or 0,
@@ -307,7 +319,6 @@ class stock_quant(osv.osv):
                     'quantity': qty,
                     'product_uom_id': move.product_id.uom_id.id,
                     'ref': move.picking_id and move.picking_id.name or False,
-                    'date': move.date,
                     'partner_id': partner_id,
                     'credit': valuation_amount > 0 and valuation_amount or 0,
                     'debit': valuation_amount < 0 and -valuation_amount or 0,

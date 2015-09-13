@@ -16,7 +16,7 @@ class PurchaseOrder(models.Model):
     _description = "Purchase Order"
     _order = 'date_order desc, id desc'
 
-    @api.depends('order_line.product_qty', 'order_line.price_unit', 'order_line.taxes_id')
+    @api.depends('order_line.price_total')
     def _amount_all(self):
         amount_untaxed = amount_tax = 0.0
         for line in self.order_line:
@@ -111,13 +111,13 @@ class PurchaseOrder(models.Model):
     currency_id = fields.Many2one('res.currency', 'Currency', required=True, states=READONLY_STATES,\
         default=lambda self: self.env.user.company_id.currency_id.id)
     state = fields.Selection([
-        ('draft', 'Draft RFQ'),
+        ('draft', 'Draft PO'),
         ('sent', 'RFQ Sent'),
         ('to approve', 'To Approve'),
         ('purchase', 'Purchase Order'),
         ('done', 'Done'),
         ('cancel', 'Cancelled')
-        ], string='Status', readonly=True, select=True, copy=False, default='draft')
+        ], string='Status', readonly=True, select=True, copy=False, default='draft', track_visibility='onchange')
     order_line = fields.One2many('purchase.order.line', 'order_id', string='Order Lines', states=READONLY_STATES, copy=True)
     notes = fields.Text('Terms and Conditions')
 
@@ -145,11 +145,30 @@ class PurchaseOrder(models.Model):
     product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
     create_uid = fields.Many2one('res.users', 'Responsible')
     company_id = fields.Many2one('res.company', 'Company', required=True, select=1, states=READONLY_STATES, default=lambda self: self.env.user.company_id.id)
-    po_double_validation = fields.Selection(related='company_id.po_double_validation', store=False, readonly=True)
 
     picking_type_id = fields.Many2one('stock.picking.type', 'Deliver To', states=READONLY_STATES, required=True, default=_default_picking_type,\
         help="This will determine picking type of incoming shipment")
     group_id = fields.Many2one('procurement.group', string="Procurement Group")
+
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        args = args or []
+        domain = []
+        if name:
+            domain = ['|', ('name', operator, name), ('partner_ref', operator, name)]
+        pos = self.search(domain + args, limit=limit)
+        return pos.name_get()
+
+    @api.multi
+    @api.depends('name', 'partner_ref')
+    def name_get(self):
+        result = []
+        for po in self:
+            name = po.name
+            if po.partner_ref:
+                name += ' ('+po.partner_ref+')'
+            result.append((po.id, name))
+        return result
 
     @api.model
     def create(self, vals):
@@ -167,9 +186,9 @@ class PurchaseOrder(models.Model):
     @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
-        if 'state' in init_values and self.state == 'approved':
+        if 'state' in init_values and self.state == 'purchase':
             return 'purchase.mt_rfq_approved'
-        elif 'state' in init_values and self.state == 'confirmed':
+        elif 'state' in init_values and self.state == 'to approve':
             return 'purchase.mt_rfq_confirmed'
         elif 'state' in init_values and self.state == 'done':
             return 'purchase.mt_rfq_done'
@@ -243,11 +262,14 @@ class PurchaseOrder(models.Model):
 
     @api.multi
     def button_confirm(self):
-        # Add the partner in the supplier list of the product if no supplier for this product
+        # Add the partner in the supplier list of the product if the supplier is not registered for
+        # this product. We limit to 10 the number of suppliers for a product to avoid the mess that
+        # could be caused for some generic products ("Miscellaneous").
         for line in self.order_line:
-            if not line.product_id.seller_ids:
+            if self.partner_id not in line.product_id.seller_ids.mapped('name') and len(line.product_id.seller_ids) <= 10:
                 supplierinfo = {
                     'name': self.partner_id.id,
+                    'sequence': max(line.product_id.seller_ids.mapped('sequence')) + 1 if line.product_id.seller_ids else 1,
                     'product_uom': line.product_uom.id,
                     'min_qty': 0.0,
                     'price': line.price_unit,
@@ -260,12 +282,14 @@ class PurchaseOrder(models.Model):
                 line.product_id.write(vals)
 
         # Deal with double validation process
-        if self.user_has_groups('purchase.group_purchase_manager'):
+        if self.company_id.po_double_validation == 'one_step'\
+                or (self.company_id.po_double_validation == 'two_step'\
+                    and self.amount_total < self.env.user.company_id.currency_id.compute(self.company_id.po_double_validation_amount, self.currency_id))\
+                or self.user_has_groups('purchase.group_purchase_manager'):
             return self.button_approve()
-        elif self.po_double_validation == 'two_step':
-            self.write({'state': 'to approve'})
         else:
-            return self.button_approve()
+            self.write({'state': 'to approve'})
+            return {}
 
     @api.multi
     def button_cancel(self):
@@ -363,7 +387,7 @@ class PurchaseOrderLine(models.Model):
             line.qty_received = total
 
     name = fields.Text(string='Description', required=True)
-    product_qty = fields.Float(string='Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True, default=0.0)
+    product_qty = fields.Float(string='Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
     date_planned = fields.Datetime(string='Scheduled Date', required=True, select=True)
     taxes_id = fields.Many2many('account.tax', string='Taxes')
     product_uom = fields.Many2one('product.uom', string='Product Unit of Measure', required=True)
@@ -531,26 +555,40 @@ class PurchaseOrderLine(models.Model):
            :rtype: dict
            :return: name, seller quantity, seller price, date planned
         """
-        # Switch quantity in uom_id
-        quantity_uom_id = quantity
-        if quantity_uom_id and product_id.uom_id != product_uom:
-            quantity_uom_id = product_uom._compute_qty_obj(product_uom, quantity_uom_id, product_id.uom_id)
+        # This is useful in case partner is not registered supplier
+        if not product_id or not partner_id or not product_uom or not currency_id:
+            return {
+                'name': False,
+                'quantity': 0.0,
+                'price_unit': 0.0,
+                'date_planned': False,
+            }
+
+        # The first browse is used to know the uom_id and the currency_id for the given vendor
+        product = product_id.with_context({'partner_id': partner_id.id})
+        seller_currency_id = product.selected_seller_id.currency_id if product.selected_seller_id else partner_id.currency_id
+        seller_product_uom = product.selected_seller_id.product_uom if product.selected_seller_id else product_id.uom_id
+
+        # Switch quantity to uom_id
+        quantity_seller_uom_id = quantity
+        if quantity_seller_uom_id and seller_product_uom != product_uom:
+            quantity_seller_uom_id = product_uom._compute_qty_obj(product_uom, quantity_seller_uom_id, seller_product_uom)
 
         product = product_id.with_context({
             'lang': partner_id.lang,
             'partner_id': partner_id.id,
             'date': date,
-            'quantity': quantity_uom_id,
+            'quantity': quantity_seller_uom_id,
         })
 
         # Switch quantity back in product_uom
-        quantity = max(quantity_uom_id, product.seller_qty)
-        if quantity and product_id.uom_id != product_uom:
-            quantity = product_id.uom_id._compute_qty_obj(product_id.uom_id, quantity, product_uom)
+        quantity = max(quantity_seller_uom_id, product.seller_qty)
+        if quantity and seller_product_uom != product_uom:
+            quantity = seller_product_uom._compute_qty_obj(seller_product_uom, quantity, product_uom)
 
         price_unit = product.seller_price
-        if price_unit and partner_id.currency_id != currency_id:
-            price_unit = partner_id.currency_id.compute(price_unit, currency_id)
+        if price_unit and seller_currency_id != currency_id:
+            price_unit = seller_currency_id.compute(price_unit, currency_id)
 
         date_planned = self._get_date_planned(product, po=order_id).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
@@ -798,7 +836,7 @@ class ProductTemplate(models.Model):
     purchase_ok = fields.Boolean('Can be Purchased', default=True)
     purchase_count = fields.Integer(compute='_purchase_count', string='# Purchases')
     purchase_method = fields.Selection([
-        ('purchase', 'On purchased quantities'),
+        ('purchase', 'On ordered quantities'),
         ('receive', 'On received quantities'),
         ], string="Control Purchase Bills", default="receive")
     route_ids = fields.Many2many(default=lambda self: self._get_buy_route())

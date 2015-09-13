@@ -57,7 +57,6 @@
             <field name="context">{
                 'search_default_project_id': [active_id],
                 'default_project_id': active_id,
-                'active_test': False,
             }</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
@@ -91,21 +90,20 @@
                         </button>
                         <button name="toggle_active" type="object"
                                 confirm="(Un)archiving a project automatically (un)archives its tasks and issues. Do you want to proceed?"
-                                class="oe_stat_button" icon="fa-archive"
-                                attrs="{'invisible':[('state','in',['open', 'pending'])]}">
+                                class="oe_stat_button" icon="fa-archive">
                             <field name="active" widget="boolean_button"
                                 options='{"terminology": "archive"}'/>
                         </button>
                     </div>
                     <div class="oe_title">
                         <h1>
-                            <field name="name" placeholder="Project Name" class="oe_inline"/>
+                            <field name="name" placeholder="Project Name"/>
                         </h1>
                         <div name="options_active" class="oe_edit_only">
                             <div>
                                 <field name="use_tasks" class="oe_inline" string="Use Tasks"/>
                                 <label for="use_tasks" class="oe_inline"/>
-                                <span attrs="{'invisible':[('use_tasks', '=', False)]}">as</span>
+                                <span attrs="{'invisible':[('use_tasks', '=', False)]}">as </span>
                                 <field name="label_tasks" class="oe_inline oe_input_align" attrs="{'invisible': [('use_tasks', '=', False)]}"/>
                             </div>
                         </div>
@@ -163,7 +161,6 @@
                     <field name="name" string="Project Name"/>
                     <filter string="Open" name="Current" domain="[('state', '=','open')]"/>
                     <filter string="Pending" name="Pending" domain="[('state', '=','pending')]"/>
-                    <filter string="Template" name="Template" domain="[('state', '=','template')]"/>
                     <separator/>
                     <filter string="Manager" domain="[('user_id','=',uid)]"/>
                     <filter string="Followed by Me" domain="[('message_is_follower','=',True)]"/>
@@ -293,6 +290,7 @@
                                     <field name="sequence" groups="base.group_no_one"/>
                                     <field name="partner_id"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                    <field name="displayed_image_id" groups="base.group_no_one"/>
                                 </group>
                                 <group col="2">
                                     <field name="date_assign" groups="base.group_no_one"/>
@@ -327,6 +325,7 @@
                     <field name="date_deadline"/>
                     <field name="message_needaction_counter"/>
                     <field name="tag_ids"/>
+                    <field name="attachment_ids"/>
                     <field name="displayed_image_id"/>
                     <field name="active"/>
                     <templates>
@@ -338,6 +337,7 @@
                                     <span class="fa fa-bars fa-lg"/>
                                 </a>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                    <t t-if="widget.editable"><li><a type="set_cover">Set Cover Image</a></li></t>
                                     <t t-if="widget.editable"><li><a type="edit">Edit Task</a></li></t>
                                     <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
                                     <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
@@ -489,7 +489,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,kanban</field>
             <field name="domain">[('project_id', 'child_of', [active_id])]</field>
-            <field name="context">{'project_id':active_id, 'active_test':False}</field>
+            <field name="context">{'project_id':active_id}</field>
         </record>
 
         <record id="ir_project_task_open" model="ir.values">
