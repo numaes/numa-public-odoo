@@ -193,7 +193,7 @@ class product_pricelist(osv.osv):
         return results
 
     def _price_get_multi(self, cr, uid, pricelist, products_by_qty_by_partner, context=None):
-        return dict((key, price) for key, price in self._price_rule_get_multi(cr, uid, pricelist, products_by_qty_by_partner, context=context).items())
+        return dict((key, price[0]) for key, price in self._price_rule_get_multi(cr, uid, pricelist, products_by_qty_by_partner, context=context).items())
 
     def _price_rule_get_multi(self, cr, uid, pricelist, products_by_qty_by_partner, context=None):
         context = context or {}
@@ -369,7 +369,7 @@ class product_pricelist(osv.osv):
         return results
 
     def price_get(self, cr, uid, ids, prod_id, qty, partner=None, context=None):
-        return dict((key, price) for key, price in self.price_rule_get(cr, uid, ids, prod_id, qty, partner=partner, context=context).items())
+        return dict((key, price[0]) for key, price in self.price_rule_get(cr, uid, ids, prod_id, qty, partner=partner, context=context).items())
 
     def price_rule_get(self, cr, uid, ids, prod_id, qty, partner=None, context=None):
         product = self.pool.get('product.product').browse(cr, uid, prod_id, context=context)
