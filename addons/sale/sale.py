@@ -1166,14 +1166,13 @@ class sale_order_line(osv.osv):
         if product_obj.description_sale:
             result['name'] += '\n' + product_obj.description_sale
 
-        if update_tax: #The quantity only have changed
+        if update_tax: 
+            #The quantity only have changed
             # The superuser is used by website_sale in order to create a sale order. We need to make
             # sure we only select the taxes related to the company of the partner. This should only
             # apply if the partner is linked to a company.
             if uid == SUPERUSER_ID and context.get('company_id'):
-                taxes = product_obj.taxes_id.filtered(lambda r: r.company_id.id == context['company_id'])
-            else:
-                taxes = product_obj.taxes_id
+                taxes = taxes.filtered(lambda r: r.company_id.id == context['company_id'])
             result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
 
         domain = {}
