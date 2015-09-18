@@ -53,7 +53,7 @@ class purchase_order(osv.osv):
                 line_qty = line_obj._calc_line_quantity(cr, uid, line,
                                                         context=context)
                 for c in self.pool['account.tax'].compute_all(
-                        cr, uid, line.taxes_id, line_price, line_qty,
+                        cr, uid, [t.id for t in line.taxes_id], line_price, line_qty,
                         line.product_id, order.partner_id)['taxes']:
                     val += c.get('amount', 0.0)
             res[order.id]['amount_tax']=cur_obj.round(cr, uid, cur, val)
@@ -1052,7 +1052,7 @@ class purchase_order_line(osv.osv):
                                                     context=context)
             line_qty = self._calc_line_quantity(cr, uid, line,
                                                 context=context)
-            taxes = tax_obj.compute_all(cr, uid, line.taxes_id, line_price,
+            taxes = tax_obj.compute_all(cr, uid, [t.id for t in line.taxes_id], line_price,
                                         line_qty, line.product_id,
                                         line.order_id.partner_id)
             cur = line.order_id.pricelist_id.currency_id
