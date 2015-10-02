@@ -8,7 +8,7 @@
              <graph string="Invoices Analysis" type="pivot">
                  <field name="categ_id" type="row"/>
                  <field name="period_id" type="col"/>
-                 <field name="price_total" type="measure"/>
+                 <field name="user_currency_price_total" type="measure"/>
              </graph>
          </field>
     </record>

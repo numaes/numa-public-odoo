@@ -52,7 +52,7 @@ class sale_order(osv.Model):
             partner_id=so.partner_id.id,
             fiscal_position=so.fiscal_position.id,
             qty=qty,
-            context=context
+            context=dict(context or {}, company_id=so.company_id.id)
         )['value']
 
         if line_id:
@@ -190,7 +190,8 @@ class website(orm.Model):
                 values.update(sale_order.onchange_pricelist_id(pricelist_id, None)['value'])
                 sale_order.write(values)
                 for line in sale_order.order_line:
-                    sale_order._cart_update(product_id=line.product_id.id, line_id=line.id, add_qty=0)
+                    if line.exists():
+                        sale_order._cart_update(product_id=line.product_id.id, line_id=line.id, add_qty=0)
 
             # update browse record
             if (code and code != sale_order.pricelist_id.code) or sale_order.partner_id.id !=  partner.id:

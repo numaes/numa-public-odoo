@@ -343,8 +343,8 @@ class account_invoice(models.Model):
 
         # adapt selection of field journal_id
         for field in res['fields']:
-            if field == 'journal_id' and type:
-                journal_select = self.env['account.journal']._name_search('', [('type', '=', type)], name_get_uid=1)
+            if field == 'journal_id' and context.get('journal_type'):
+                journal_select = self.env['account.journal']._name_search('', [('type', '=', context['journal_type'])], name_get_uid=1)
                 res['fields'][field]['selection'] = journal_select
 
         doc = etree.XML(res['arch'])
@@ -743,11 +743,12 @@ class account_invoice(models.Model):
             if self.currency_id != company_currency:
                 currency = self.currency_id.with_context(date=self.date_invoice or fields.Date.context_today(self))
                 line['currency_id'] = currency.id
-                line['amount_currency'] = line['price']
+                line['amount_currency'] = currency.round(line['price'])
                 line['price'] = currency.compute(line['price'], company_currency)
             else:
                 line['currency_id'] = False
                 line['amount_currency'] = False
+                line['price'] = self.currency_id.round(line['price'])
             line['ref'] = ref
             if self.type in ('out_invoice','in_refund'):
                 total += line['price']
@@ -921,7 +922,10 @@ class account_invoice(models.Model):
                     i[2]['period_id'] = period.id
 
             ctx['invoice'] = inv
-            move = account_move.with_context(ctx).create(move_vals)
+            ctx_nolang = ctx.copy()
+            ctx_nolang.pop('lang', None)
+            move = account_move.with_context(ctx_nolang).create(move_vals)
+
             # make the invoice point to that move
             vals = {
                 'move_id': move.id,
@@ -1320,9 +1324,9 @@ class account_invoice_line(models.Model):
             raise except_orm(_('No Partner Defined!'), _("You must first select a partner!"))
         if not product:
             if type in ('in_invoice', 'in_refund'):
-                return {'value': {}, 'domain': {'product_uom': []}}
+                return {'value': {}, 'domain': {'uos_id': []}}
             else:
-                return {'value': {'price_unit': 0.0}, 'domain': {'product_uom': []}}
+                return {'value': {'price_unit': 0.0}, 'domain': {'uos_id': []}}
 
         values = {}
 
@@ -1538,7 +1542,8 @@ class account_invoice_tax(models.Model):
             currency = self.env['res.currency'].browse(currency_id)
             currency = currency.with_context(date=date_invoice or fields.Date.context_today(self))
             amount = currency.compute(amount, company.currency_id, round=False)
-        return {'value': {'tax_amount': amount}}
+        tax_sign = (self.tax_amount / self.amount) if self.amount else 1
+        return {'value': {'tax_amount': amount * tax_sign}}
 
     @api.v8
     def compute(self, invoice):

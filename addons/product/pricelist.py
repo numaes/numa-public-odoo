@@ -364,8 +364,8 @@ class product_pricelist(osv.osv):
 
             # Final price conversion to target UoM
             price = product_uom_obj._compute_price(cr, uid, price_uom_id, price, qty_uom_id)
-
             results[product.id] = (price, rule_id)
+
         return results
 
     def price_get(self, cr, uid, ids, prod_id, qty, partner=None, context=None):
