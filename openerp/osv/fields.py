@@ -203,6 +203,8 @@ class _column(object):
             ('index', self.select),
             ('manual', self.manual),
             ('string', self.string),
+            ('readonly', self.readonly),
+            ('required', self.required),
             ('help', self.help),
             ('states', self.states),
             ('groups', self.groups),
