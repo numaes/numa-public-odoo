@@ -3003,8 +3003,6 @@ class BaseModel(object):
         # set up fields, and determine their corresponding column
         cls._columns = {}
         for name, field in cls._fields.iteritems():
-            if cls._name == 'account.sv_odoc' and name == 'doc':
-                import pdb; pdb.set_trace()
             field.setup(self.env)
             column = field.to_column()
             if column:
