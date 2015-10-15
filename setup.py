@@ -96,7 +96,6 @@ def py2exe_options():
                         'reportlab',
                         'requests',
                         'select',
-                        'simplejson',
                         'smtplib',
                         'suds',
                         'uuid',
@@ -148,7 +147,7 @@ setup(
         'psycopg2 >= 2.2',
         'python-chart',
         'pydot',
-        'pyparsing < 2',
+        'pyparsing',
         'pypdf',
         'pyserial',
         'python-dateutil',
@@ -160,9 +159,7 @@ setup(
         'qrcode',
         'reportlab',  # windows binary pypi.python.org/pypi/reportlab
         'requests',
-        'simplejson',
         'suds-jurko',
-        'unittest2',
         'vatnumber',
         'vobject',
         'werkzeug',
@@ -172,7 +169,6 @@ setup(
         'SSL': ['pyopenssl'],
     },
     tests_require=[
-        'unittest2',
         'mock',
     ],
     **py2exe_options()
