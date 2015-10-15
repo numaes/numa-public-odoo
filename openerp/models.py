@@ -2247,7 +2247,7 @@ class BaseModel(object):
                 # if val is a many2one, just write the ID
                 if type(val) == tuple:
                     val = val[0]
-                if val is not False:
+                if f._type == 'boolean' or val is not False:
                     cr.execute(update_query, (ss[1](val), key))
 
     @api.model
@@ -3213,6 +3213,14 @@ class BaseModel(object):
             fnames = {fname
                 for fname, fcolumn in self._columns.iteritems()
                 if fcolumn._prefetch
+                if not fcolumn.groups or self.user_has_groups(fcolumn.groups)
+            }
+        elif self._columns[field.name]._multi:
+            # prefetch all function fields with the same value for 'multi'
+            multi = self._columns[field.name]._multi
+            fnames = {fname
+                for fname, fcolumn in self._columns.iteritems()
+                if fcolumn._multi == multi
                 if not fcolumn.groups or self.user_has_groups(fcolumn.groups)
             }
         else:
