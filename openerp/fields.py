@@ -1684,6 +1684,10 @@ class _RelationalMulti(_Relational):
 
         # add new and existing records
         for record in value:
+            if target and record.id:
+                for r in target[self.name]:
+                    if r.id == record.id:
+                        continue
             if not record.id:
                 values = {k: v for k, v in record._cache.iteritems() if k in fnames}
                 values = record._convert_to_write(values)
