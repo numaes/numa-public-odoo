@@ -51,7 +51,7 @@ class sale_order(osv.osv):
         price = line_obj._calc_line_base_price(cr, uid, line, context=context)
         qty = line_obj._calc_line_quantity(cr, uid, line, context=context)
         for c in self.pool['account.tax'].compute_all(
-                cr, uid, [t.id for t in line.tax_id], price, qty, line.product_id,
+                cr, uid, line.tax_id, price, qty, line.product_id,
                 line.order_id.partner_id)['taxes']:
             val += c.get('amount', 0.0)
         return val
@@ -871,7 +871,7 @@ class sale_order_line(osv.osv):
         for line in self.browse(cr, uid, ids, context=context):
             price = self._calc_line_base_price(cr, uid, line, context=context)
             qty = self._calc_line_quantity(cr, uid, line, context=context)
-            taxes = tax_obj.compute_all(cr, uid, [t.id for t in line.tax_id], price, qty,
+            taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, qty,
                                         line.product_id,
                                         line.order_id.partner_id)
             cur = line.order_id.pricelist_id.currency_id
