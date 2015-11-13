@@ -512,7 +512,11 @@ class product_template(osv.osv):
 
         # related to display product product information if is_product_variant
         'barcode': fields.related('product_variant_ids', 'barcode', type='char', string='Barcode', oldname='ean13'),
-        'default_code': fields.related('product_variant_ids', 'default_code', type='char', string='Internal Reference'),
+        'default_code': fields.function(_compute_product_template_field, fnct_inv=_set_product_template_field, multi='_compute_product_template_field', type='char', string='Internal Reference', store={
+            _name: (lambda s,c,u,i,t: i, ['product_variant_ids'], 10),
+            'product.product': (_get_template_id_from_product, ['product_tmpl_id', 'default_code'], 10),
+        }),
+
         'item_ids': fields.one2many('product.pricelist.item', 'product_tmpl_id', 'Pricelist Items'),
     }
 
@@ -757,6 +761,7 @@ class product_template(osv.osv):
             template_ids.add(p.product_tmpl_id.id)
         while (results and len(template_ids) < limit):
             domain = [('product_tmpl_id', 'not in', list(template_ids))]
+            args = args if args is not None else []
             results = product_product.name_search(
                 cr, user, name, args+domain, operator=operator, context=context, limit=limit)
             product_ids = [p[0] for p in results]

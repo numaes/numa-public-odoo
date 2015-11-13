@@ -305,9 +305,7 @@ class PaymentTransaction(osv.Model):
     _rec_name = 'reference'
 
     def _lang_get(self, cr, uid, context=None):
-        lang_ids = self.pool['res.lang'].search(cr, uid, [], context=context)
-        languages = self.pool['res.lang'].browse(cr, uid, lang_ids, context=context)
-        return [(language.code, language.name) for language in languages]
+        return self.pool['res.lang'].get_installed(cr, uid, context=context)
 
     def _default_partner_country_id(self, cr, uid, context=None):
         comp = self.pool['res.company'].browse(cr, uid, context.get('company_id', 1), context=context)
@@ -395,7 +393,7 @@ class PaymentTransaction(osv.Model):
             custom_method_name = '%s_compute_fees' % acquirer.provider
             if hasattr(Acquirer, custom_method_name):
                 fees = getattr(Acquirer, custom_method_name)(
-                    cr, uid, acquirer.id, values.get('amount', 0.0), values.get('currency_id'), values.get('country_id'), context=None)
+                    cr, uid, acquirer.id, values.get('amount', 0.0), values.get('currency_id'), values.get('partner_country_id'), context=None)
                 values['fees'] = float_round(fees, 2)
 
             # custom create

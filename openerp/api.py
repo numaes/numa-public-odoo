@@ -153,6 +153,15 @@ def onchange(*args):
         when one of the given fields is modified. The method is invoked on a
         pseudo-record that contains the values present in the form. Field
         assignments on that record are automatically sent back to the client.
+
+        The method may return a dictionary for changing field domains and pop up
+        a warning message, like in the old API::
+
+            return {
+                'domain': {'other_id': [('partner_id', '=', partner_id)]},
+                'warning': {'title': "Warning", 'message': "What is this?"},
+            }
+
     """
     return lambda method: decorate(method, '_onchange', args)
 
@@ -541,6 +550,57 @@ def cr_uid_ids_context(method):
     return make_wrapper(cr_uid_ids_context, method, method, new_api)
 
 
+def cr_uid_records(method):
+    """ Decorate a traditional-style method that takes ``cr``, ``uid``, a
+        recordset of model ``self`` as parameters. Such a method::
+
+            @api.cr_uid_records
+            def method(self, cr, uid, records, args):
+                ...
+
+        may be called in both record and traditional styles, like::
+
+            # records = model.browse(cr, uid, ids, context)
+            records.method(args)
+
+            model.method(cr, uid, records, args)
+    """
+    upgrade = get_upgrade(method)
+
+    def new_api(self, *args, **kwargs):
+        cr, uid, context = self.env.args
+        result = method(self._model, cr, uid, self, *args, **kwargs)
+        return upgrade(self, result)
+
+    return make_wrapper(cr_uid_records, method, method, new_api)
+
+
+def cr_uid_records_context(method):
+    """ Decorate a traditional-style method that takes ``cr``, ``uid``, a
+        recordset of model ``self``, ``context`` as parameters. Such a method::
+
+            @api.cr_uid_records_context
+            def method(self, cr, uid, records, args, context=None):
+                ...
+
+        may be called in both record and traditional styles, like::
+
+            # records = model.browse(cr, uid, ids, context)
+            records.method(args)
+
+            model.method(cr, uid, records, args, context=context)
+    """
+    upgrade = get_upgrade(method)
+
+    def new_api(self, *args, **kwargs):
+        cr, uid, context = self.env.args
+        kwargs['context'] = context
+        result = method(self._model, cr, uid, self, *args, **kwargs)
+        return upgrade(self, result)
+
+    return make_wrapper(cr_uid_records_context, method, method, new_api)
+
+
 def v7(method_v7):
     """ Decorate a method that supports the old-style api only. A new-style api
         may be provided by redefining a method with the same name and decorated
@@ -871,9 +931,11 @@ class Environment(object):
         return bool(self.all.todo)
 
     def get_todo(self):
-        """ Return a pair `(field, records)` to recompute. """
-        for field, recs_list in self.all.todo.iteritems():
-            return field, recs_list[0]
+        """ Return a pair ``(field, records)`` to recompute.
+            The field is such that none of its dependencies must be recomputed.
+        """
+        field = min(self.all.todo, key=self.registry.field_sequence)
+        return field, self.all.todo[field][0]
 
     def check_cache(self):
         """ Check the cache consistency. """

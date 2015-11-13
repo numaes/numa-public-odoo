@@ -53,7 +53,7 @@ class Message(models.Model):
         'ir.attachment', 'message_attachment_rel',
         'message_id', 'attachment_id',
         string='Attachments',
-        help='Attachments are linked to a document through model / res_id and to the message'
+        help='Attachments are linked to a document through model / res_id and to the message '
              'through this field.')
     parent_id = fields.Many2one(
         'mail.message', 'Parent Message', select=True, ondelete='set null',
@@ -101,7 +101,7 @@ class Message(models.Model):
     tracking_value_ids = fields.One2many(
         'mail.tracking.value', 'mail_message_id',
         string='Tracking values',
-        help='Tracked values are stored in a separate model. This field allow to reconstruct'
+        help='Tracked values are stored in a separate model. This field allow to reconstruct '
              'the tracking and to generate statistics on the model.')
     # mail gateway
     no_auto_thread = fields.Boolean(
@@ -150,12 +150,18 @@ class Message(models.Model):
     def set_message_needaction(self, partner_ids=None):
         if not partner_ids:
             partner_ids = [self.env.user.partner_id.id]
+        if set(partner_ids) == set([self.env.user.partner_id.id]):
+            # a user should be able to mark a message as needaction for him
+            self = self.sudo()
         return self.write({'needaction_partner_ids': [(4, pid) for pid in partner_ids]})
 
     @api.multi
     def set_message_done(self, partner_ids=None):
         if not partner_ids:
             partner_ids = [self.env.user.partner_id.id]
+        if set(partner_ids) == set([self.env.user.partner_id.id]):
+            # a user should be able to mark a message as done for him
+            self = self.sudo()
         return self.write({'needaction_partner_ids': [(3, pid) for pid in partner_ids]})
 
     @api.multi
@@ -167,10 +173,12 @@ class Message(models.Model):
             :param bool create_missing: create notifications for missing entries
                 (i.e. when acting on displayed messages not notified)
         """
+        # a user should always be able to star a message he can read
+        self.check_access_rule('read')
         if starred:
-            self.write({'starred_partner_ids': [(4, self.env.user.partner_id.id)]})
+            self.sudo().write({'starred_partner_ids': [(4, self.env.user.partner_id.id)]})
         else:
-            self.write({'starred_partner_ids': [(3, self.env.user.partner_id.id)]})
+            self.sudo().write({'starred_partner_ids': [(3, self.env.user.partner_id.id)]})
         return starred
 
     #------------------------------------------------------

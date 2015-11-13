@@ -268,7 +268,7 @@ IdType = (int, long, basestring, NewId)
 
 
 # maximum number of prefetched records
-PREFETCH_MAX = 200
+PREFETCH_MAX = 1000
 
 # special columns automatically created by the ORM
 LOG_ACCESS_COLUMNS = ['create_uid', 'create_date', 'write_uid', 'write_date']
@@ -2152,7 +2152,7 @@ class BaseModel(object):
         return parent_alias
 
     @api.model
-    def _inherits_join_calc(self, alias, field, query):
+    def _inherits_join_calc(self, alias, field, query, implicit=True, outer=False):
         """
         Adds missing table select and join clause(s) to ``query`` for reaching
         the field coming from an '_inherits' parent table (no duplicates).
@@ -2172,7 +2172,7 @@ class BaseModel(object):
             # JOIN parent_model._table AS parent_alias ON alias.parent_field = parent_alias.id
             parent_alias, _ = query.add_join(
                 (alias, parent_model._table, parent_field, 'id', parent_field),
-                implicit=True,
+                implicit=implicit, outer=outer,
             )
             model, alias = parent_model, parent_alias
         # handle the case where the field is translated
@@ -2225,7 +2225,7 @@ class BaseModel(object):
                 # if val is a many2one, just write the ID
                 if type(val) == tuple:
                     val = val[0]
-                if val is not False:
+                if f._type == 'boolean' or val is not False:
                     cr.execute(update_query, (ss[1](val), key))
 
     @api.model
@@ -3239,6 +3239,17 @@ class BaseModel(object):
                 # discard fields that must be recomputed
                 if not (f.compute and self.env.field_todo(f))
             )
+        elif field.column._multi:
+            # prefetch all function fields with the same value for 'multi'
+            multi = field.column._multi
+            fs.update(
+                f
+                for f in self._fields.itervalues()
+                # select stored fields with the same multi
+                if f.column and f.column._multi == multi
+                # discard fields with groups that the user may not access
+                if not (f.groups and not self.user_has_groups(f.groups))
+            )
 
         # special case: discard records to recompute for field
         records -= self.env.field_todo(field)
@@ -3879,6 +3890,7 @@ class BaseModel(object):
         updend = []
         direct = []
         has_trans = context.get('lang') and context['lang'] != 'en_US'
+        single_lang = len(self.pool['res.lang'].get_installed(cr, user, context)) <= 1
         for field in vals:
             ffield = self._fields.get(field)
             if ffield and ffield.deprecated:
@@ -3888,7 +3900,7 @@ class BaseModel(object):
                 if hasattr(column, 'selection') and vals[field]:
                     self._check_selection_field_value(cr, user, field, vals[field], context=context)
                 if column._classic_write and not hasattr(column, '_fnct_inv'):
-                    if not (has_trans and column.translate and not callable(column.translate)):
+                    if single_lang or not (has_trans and column.translate and not callable(column.translate)):
                         # vals[field] is not a translation: update the table
                         updates.append((field, '%s', column._symbol_set[1](vals[field])))
                     direct.append(field)
@@ -4208,13 +4220,13 @@ class BaseModel(object):
                 if not edit:
                     vals.pop(field)
         for field in vals:
-            current_field = self._columns[field]
-            if current_field._classic_write:
-                updates.append((field, '%s', current_field._symbol_set[1](vals[field])))
+            column = self._columns[field]
+            if column._classic_write:
+                updates.append((field, '%s', column._symbol_set[1](vals[field])))
 
                 #for the function fields that receive a value, we set them directly in the database
                 #(they may be required), but we also need to trigger the _fct_inv()
-                if (hasattr(current_field, '_fnct_inv')) and not isinstance(current_field, fields.related):
+                if (hasattr(column, '_fnct_inv')) and not isinstance(column, fields.related):
                     #TODO: this way to special case the related fields is really creepy but it shouldn't be changed at
                     #one week of the release candidate. It seems the only good way to handle correctly this is to add an
                     #attribute to make a field `really readonly´ and thus totally ignored by the create()... otherwise
@@ -4226,11 +4238,9 @@ class BaseModel(object):
             else:
                 #TODO: this `if´ statement should be removed because there is no good reason to special case the fields
                 #related. See the above TODO comment for further explanations.
-                if not isinstance(current_field, fields.related):
+                if not isinstance(column, fields.related):
                     upd_todo.append(field)
-            if field in self._columns \
-                    and hasattr(current_field, 'selection') \
-                    and vals[field]:
+            if hasattr(column, 'selection') and vals[field]:
                 self._check_selection_field_value(cr, user, field, vals[field], context=context)
         if self._log_access:
             updates.append(('create_uid', '%s', user))
@@ -4254,6 +4264,16 @@ class BaseModel(object):
 
         id_new, = cr.fetchone()
         recs = self.browse(cr, user, id_new, context)
+
+        if context.get('lang') and context['lang'] != 'en_US':
+            # add translations for context['lang']
+            for field in vals:
+                column = self._columns[field]
+                if column._classic_write and column.translate and not callable(column.translate):
+                    self.pool['ir.translation']._set_ids(
+                        cr, user, self._name+','+field, 'model',
+                        context['lang'], recs.ids, vals[field], vals[field],
+                    )
 
         if self._parent_store and not context.get('defer_parent_store_computation'):
             if self.pool._init:
@@ -4662,7 +4682,7 @@ class BaseModel(object):
                 parent_obj = self.pool[self._inherit_fields[order_field][3]]
                 order_column = parent_obj._columns[order_field]
                 if order_column._classic_read:
-                    inner_clauses = [self._inherits_join_calc(alias, order_field, query)]
+                    inner_clauses = [self._inherits_join_calc(alias, order_field, query, implicit=False, outer=True)]
                     add_dir = True
                 elif order_column._type == 'many2one':
                     key = (parent_obj._name, order_column._obj, order_field)
