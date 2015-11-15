@@ -4256,7 +4256,7 @@ class BaseModel(object):
                     pleft = cr.fetchone()[0] or 0
                 cr.execute('update '+self._table+' set parent_left=parent_left+2 where parent_left>%s', (pleft,))
                 cr.execute('update '+self._table+' set parent_right=parent_right+2 where parent_right>%s', (pleft,))
-                cr.execute('update '+self._table+' set parent_left=%s,parent_right=%s where id=%s', (pleft+1, pleft+2, id_new))
+                cr.execute('update '+self._table+' set parent_left=%s,parent_right=%s where id=%s', ((pleft or 0)+1, (pleft or 0)+2, id_new))
                 recs.invalidate_cache(['parent_left', 'parent_right'])
 
         # invalidate and mark new-style fields to recompute; do this before
