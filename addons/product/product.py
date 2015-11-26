@@ -436,6 +436,15 @@ class product_attribute_line(osv.osv):
     def onchange_attribute_id(self):
         self.value_ids = [(6,0,[])]
 
+    def _check_valid_attribute(self, cr, uid, ids, context=None):
+        obj_pal = self.browse(cr, uid, ids[0], context=context)
+        return obj_pal.value_ids <= obj_pal.attribute_id.value_ids
+
+    _constraints = [
+        (_check_valid_attribute, 'Error ! You cannot use this attribute with the following value.', ['attribute_id'])
+    ]
+
+
 #----------------------------------------------------------
 # Products
 #----------------------------------------------------------
