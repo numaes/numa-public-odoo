@@ -169,7 +169,7 @@ class MassMailingCampaign(osv.Model):
     """Model of mass mailing campaigns. """
     _name = "mail.mass_mailing.campaign"
     _description = 'Mass Mailing Campaign'
-
+    _rec_name = "campaign_id"
     _inherit = ['utm.mixin']
     _inherits = {'utm.campaign': 'campaign_id'}
 
@@ -229,7 +229,6 @@ class MassMailingCampaign(osv.Model):
         return result
 
     _columns = {
-        'name': fields.char('Name', required=True),
         'stage_id': fields.many2one('mail.mass_mailing.stage', 'Stage', required=True),
         'user_id': fields.many2one(
             'res.users', 'Responsible',
@@ -340,17 +339,6 @@ class MassMailingCampaign(osv.Model):
             stat_ids = Statistics.search(cr, uid, domain, context=context)
             res[cid] = set(stat.res_id for stat in Statistics.browse(cr, uid, stat_ids, context=context))
         return res
-
-    def on_change_campaign_name(self, cr, uid, ids, name, context=None):
-        if name:
-            mass_mailing_campaign = self.browse(cr, uid, ids, context=context)
-            if mass_mailing_campaign.campaign_id:
-                utm_campaign_id = mass_mailing_campaign.campaign_id.id
-                self.pool['utm.campaign'].write(cr, uid, [utm_campaign_id], {'name': name}, context=context)
-            else:
-                utm_campaign_id = self.pool['utm.campaign'].create(cr, uid, {'name': name}, context=context)
-
-            return {'value': {'campaign_id': utm_campaign_id}}
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
         """ Override read_group to always display all states. """
@@ -677,7 +665,9 @@ class MassMailing(osv.Model):
             for item in list_ids:
                 if isinstance(item, (int, long)):
                     mailing_list_ids.add(item)
-                elif len(item) == 3:
+                elif len(item) == 2 and item[0] == 4:  # 4, id
+                    mailing_list_ids.add(item[1])
+                elif len(item) == 3:  # 6, 0, ids
                     mailing_list_ids |= set(item[2])
             if mailing_list_ids:
                 value['mailing_domain'] = "[('list_id', 'in', %s), ('opt_out', '=', False)]" % list(mailing_list_ids)

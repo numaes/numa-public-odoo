@@ -150,7 +150,7 @@
                     <button name="button_draft" states="cancel" string="Set to Draft" type="object" />
                     <button name="button_cancel" states="draft,to approve,sent,purchase" string="Cancel" type="object" />
                     <button name="button_done" type="object" string="Set to Done" states="purchase"
-                        help="If a purchase order is done, you cannot modify it manually anymore. You will not be able to receive invoices anymore for this purchase order."/>
+                        help="Set a purchase order as done if you don't want to receive vendor bills anymore for this purchase order."/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,sent,purchase,done" readonly="1" />
                 </header>
                 <sheet>
@@ -200,7 +200,7 @@
                                     <field name="qty_invoiced" invisible="not context.get('show_purchase', False)"/>
                                     <field name="product_uom" groups="product.group_uom"/>
                                     <field name="price_unit"/>
-                                    <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use','=','purchase')]"/>
+                                    <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use','=','purchase')]" context="{'default_type_tax_use': 'purchase'}"/>
                                     <field name="price_subtotal" widget="monetary"/>
                                 </tree>
                                 <form string="Purchase Order Line">
