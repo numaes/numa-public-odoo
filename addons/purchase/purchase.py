@@ -1256,7 +1256,7 @@ class purchase_order_line(osv.osv):
         account = product.property_account_expense or product.categ_id.property_account_expense_categ
         taxes = product.supplier_taxes_id or (account and account.tax_ids)
         fpos = fiscal_position_id and account_fiscal_position.browse(cr, uid, fiscal_position_id, context=context) or False
-        taxes_ids = account_fiscal_position.map_tax(cr, uid, fpos, taxes)
+        taxes_ids = account_fiscal_position.map_tax(cr, uid, fpos, taxes, context=context)
         price = self.pool['account.tax']._fix_tax_included_price(cr, uid, price, product.supplier_taxes_id, taxes_ids)
         res['value'].update({'price_unit': price, 'taxes_id': taxes_ids})
 
@@ -1421,7 +1421,7 @@ class procurement_order(osv.osv):
         fiscal_position_id = po_obj.onchange_partner_id(cr, uid, None, partner.id, context=context)['value']['fiscal_position']
         if fiscal_position_id:
             fiscal_position = acc_pos_obj.browse(cr, uid, fiscal_position_id, context=context)
-        taxes = acc_pos_obj.map_tax(cr, uid, fiscal_position, taxes_ids)
+        taxes = acc_pos_obj.map_tax(cr, uid, fiscal_position, taxes_ids, context=context)
         name = product.display_name
         if product.description_purchase:
             name += '\n' + product.description_purchase
