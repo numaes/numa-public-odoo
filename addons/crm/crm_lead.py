@@ -72,14 +72,6 @@ class crm_lead(format_address, osv.osv):
         team_id = self.pool['crm.team']._get_default_team_id(cr, SUPERUSER_ID, context=context, user_id=uid)
         return self.stage_find(cr, uid, [], team_id, [('fold', '=', False)], context=context)
 
-    def _resolve_type_from_context(self, cr, uid, context=None):
-        """ Returns the type (lead or opportunity) from the type context
-            key. Returns None if it cannot be resolved.
-        """
-        if context is None:
-            context = {}
-        return context.get('default_type')
-
     def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
         access_rights_uid = access_rights_uid or uid
         stage_obj = self.pool.get('crm.stage')
@@ -91,17 +83,11 @@ class crm_lead(format_address, osv.osv):
         # - ('id', 'in', 'ids'): add columns that should be present
         # - OR ('fold', '=', False): add default columns that are not folded
         # - OR ('team_ids', '=', team_id), ('fold', '=', False) if team_id: add team columns that are not folded
-        search_domain = []
         team_id = context and context.get('default_team_id') or False
         if team_id:
-            search_domain += ['|', ('team_ids', '=', team_id)]
-            search_domain += [('id', 'in', ids)]
+            search_domain = ['|', ('id', 'in', ids), '|', ('team_id', '=', False), ('team_id', '=', team_id)]
         else:
-            search_domain += [('id', 'in', ids)]
-        # retrieve type from the context (if set: choose 'type' or 'both')
-        type = self._resolve_type_from_context(cr, uid, context=context)
-        if type:
-            search_domain += ['|', ('type', '=', type), ('type', '=', 'both')]
+            search_domain = ['|', ('id', 'in', ids), ('team_id', '=', False)]
         # perform search
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
@@ -131,11 +117,11 @@ class crm_lead(format_address, osv.osv):
         """ Very interesting kanban state color. This makes complete sense. Or
         not. """
         result = {}
-        today = datetime.now()
+        today = date.today()
         for lead in self.browse(cr, uid, ids, context=context):
-            result[lead.id] = 'normal'
+            result[lead.id] = 'grey'
             if lead.date_action:
-                lead_date = datetime.strptime(lead.date_action, tools.DEFAULT_SERVER_DATE_FORMAT)
+                lead_date = datetime.strptime(lead.date_action, tools.DEFAULT_SERVER_DATE_FORMAT).date()
                 if lead_date > today:
                     result[lead.id] = 'green'
                 elif lead_date < today:
@@ -206,7 +192,7 @@ class crm_lead(format_address, osv.osv):
         'priority': fields.selection(crm_stage.AVAILABLE_PRIORITIES, 'Rating', select=True),
         'date_closed': fields.datetime('Closed', readonly=True, copy=False),
         'stage_id': fields.many2one('crm.stage', 'Stage', track_visibility='onchange', select=True,
-                        domain="['&', ('team_ids', '=', team_id), '|', ('type', '=', type), ('type', '=', 'both')]"),
+                        domain="['|', ('team_id', '=', False), ('team_id', '=', team_id)]"),
         'user_id': fields.many2one('res.users', 'Salesperson', select=True, track_visibility='onchange'),
         'referred': fields.char('Referred By'),
         'date_open': fields.datetime('Assigned', readonly=True),
@@ -305,6 +291,10 @@ class crm_lead(format_address, osv.osv):
     def on_change_user(self, cr, uid, ids, user_id, context=None):
         """ When changing the user, also set a team_id or restrict team id
             to the ones user_id is member of. """
+        if user_id and context.get('team_id'):
+            team = self.pool['crm.team'].browse(cr, uid, context['team_id'], context=context)
+            if user_id in team.member_ids.ids:
+                return {}
         team_id = self.pool['crm.team']._get_default_team_id(cr, uid, context=context, user_id=user_id)
         return {'value': {'team_id': team_id}}
 
@@ -320,32 +310,20 @@ class crm_lead(format_address, osv.osv):
             cases = self.browse(cr, uid, cases, context=context)
         if context is None:
             context = {}
-        # check whether we should try to add a condition on type
-        avoid_add_type_term = any([term for term in domain if len(term) == 3 if term[0] == 'type'])
         # collect all team_ids
         team_ids = set()
-        types = ['both']
-        if not cases and context.get('default_type'):
-            ctx_type = context.get('default_type')
-            types += [ctx_type]
         if team_id:
             team_ids.add(team_id)
         for lead in cases:
             if lead.team_id:
                 team_ids.add(lead.team_id.id)
-            if lead.type not in types:
-                types.append(lead.type)
         # OR all team_ids
-        search_domain = []
         if team_ids:
-            search_domain += [('|')] * (len(team_ids) - 1)
-            for team_id in team_ids:
-                search_domain.append(('team_ids', '=', team_id))
-        # AND with cases types
-        if not avoid_add_type_term:
-            search_domain.append(('type', 'in', types))
+            search_domain = ['|', ('team_id', '=', False), ('team_id', 'in', list(team_ids))]
+        else:
+            search_domain = [('team_id', '=', False)]
         # AND with the domain in parameter
-        search_domain += list(domain)
+        search_domain = ['&'] + list(domain) + search_domain
         # perform search, return the first found
         stage_ids = self.pool.get('crm.stage').search(cr, uid, search_domain, order=order, limit=1, context=context)
         if stage_ids:
@@ -628,7 +606,7 @@ class crm_lead(format_address, osv.osv):
 
         # Check if the stage is in the stages of the sales team. If not, assign the stage with the lowest sequence
         if merged_data.get('team_id'):
-            team_stage_ids = self.pool.get('crm.stage').search(cr, uid, [('team_ids', 'in', merged_data['team_id']), ('type', 'in', [merged_data.get('type'), 'both'])], order='sequence', context=context)
+            team_stage_ids = self.pool.get('crm.stage').search(cr, uid, [('team_id', '=', merged_data['team_id'])], order='sequence', context=context)
             if merged_data.get('stage_id') not in team_stage_ids:
                 merged_data['stage_id'] = team_stage_ids and team_stage_ids[0] or False
         # Write merged data into first opportunity
@@ -640,10 +618,6 @@ class crm_lead(format_address, osv.osv):
         return highest.id
 
     def _convert_opportunity_data(self, cr, uid, lead, customer, team_id=False, context=None):
-        crm_stage = self.pool.get('crm.stage')
-        contact_id = False
-        if customer:
-            contact_id = self.pool.get('res.partner').address_get(cr, uid, [customer.id])['contact']
         if not team_id:
             team_id = lead.team_id and lead.team_id.id or False
         val = {
@@ -657,8 +631,8 @@ class crm_lead(format_address, osv.osv):
             'phone': customer and customer.phone or lead.phone,
             'date_conversion': fields.datetime.now(),
         }
-        if not lead.stage_id or lead.stage_id.type=='lead':
-            val['stage_id'] = self.stage_find(cr, uid, [lead], team_id, [('type', 'in', ('opportunity', 'both'))], context=context)
+        if not lead.stage_id:
+            val['stage_id'] = self.stage_find(cr, uid, [lead], team_id, [], context=context)
         return val
 
     def convert_opportunity(self, cr, uid, ids, partner_id, user_ids=False, team_id=False, context=None):
@@ -1193,7 +1167,7 @@ class crm_lost_reason(osv.Model):
     _name = "crm.lost.reason"
     _description = 'Reason for loosing leads'
     _columns = {
-        'name': fields.char('Name', required=True),
+        'name': fields.char('Name', required=True, translate=True),
         'active': fields.boolean('Active'),
     }
     _defaults = {

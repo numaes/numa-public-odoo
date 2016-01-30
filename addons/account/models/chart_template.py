@@ -9,10 +9,31 @@ from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.exceptions import AccessError, UserError, ValidationError
 import openerp.addons.decimal_precision as dp
 from openerp import api, fields, models, _
+from openerp import SUPERUSER_ID
 
 import logging
 _logger = logging.getLogger(__name__)
 
+def migrate_set_tags_and_taxes_updatable(cr, registry, module):
+    ''' This is a utility function used to manually set the flag noupdate to False on tags and account tax templates on localization modules
+    that need migration (for example in case of VAT report improvements)
+    '''
+    xml_record_ids = registry['ir.model.data'].search(cr, SUPERUSER_ID, [('model', 'in', ['account.tax.template', 'account.account.tag']), ('module', 'like', module)])
+    cr.execute("update ir_model_data set noupdate = 'f' where id in %s", (tuple(xml_record_ids),))
+
+def migrate_tags_on_taxes(cr, registry):
+    ''' This is a utiliy function to help migrate the tags of taxes when the localization has been modified on stable version. If
+    called accordingly in a post_init_hooked function, it will reset the tags set on taxes as per their equivalent template.
+
+    Note: This unusual decision has been made in order to help the improvement of VAT reports on version 9.0, to have them more flexible
+    and working out of the box when people are creating/using new taxes.
+    '''
+    xml_record_ids = registry['ir.model.data'].search(cr, SUPERUSER_ID, [('model', '=', 'account.tax.template'), ('module', 'like', 'l10n_%')])
+    tax_template_ids = [x['res_id'] for x in registry['ir.model.data'].read(cr, SUPERUSER_ID, xml_record_ids, ['res_id'])]
+    for tax_template in registry['account.tax.template'].browse(cr, SUPERUSER_ID, tax_template_ids):
+        tax_id = registry['account.tax'].search(cr, SUPERUSER_ID, [('name', '=', tax_template.name), ('type_tax_use', '=', tax_template.type_tax_use), ('description', '=', tax_template.description)])
+        if len(tax_id) == 1:
+            registry['account.tax'].write(cr, SUPERUSER_ID, tax_id, {'tag_ids': [(6,0,[x.id for x in tax_template.tag_ids])]})
 
 #  ---------------------------------------------------------------
 #   Account Templates: Account, Tax, Tax Code and chart. + Wizard
@@ -311,6 +332,16 @@ class AccountChartTemplate(models.Model):
         return account_ref, taxes_ref
 
     @api.multi
+    def create_record_with_xmlid(self, company, template, model, vals):
+        # Create a record for the given model with the given vals and 
+        # also create an entry in ir_model_data to have an xmlid for the newly created record
+        # xmlid is the concatenation of company_id and template_xml_id
+        ir_model_data = self.env['ir.model.data']
+        template_xmlid = ir_model_data.search([('model', '=', str(template._model)), ('res_id', '=', template.id)])
+        new_xml_id = str(company.id)+'_'+template_xmlid.name
+        return ir_model_data._update(model, template_xmlid.module, vals, xml_id=new_xml_id, store=True, noupdate=True, mode='init', res_id=False)
+
+    @api.multi
     def generate_account(self, tax_template_ref, acc_template_ref, code_digits, company):
         """ This method for generating accounts from templates.
 
@@ -344,8 +375,8 @@ class AccountChartTemplate(models.Model):
                 'company_id': company.id,
                 'tag_ids': [(6, 0, [t.id for t in account_template.tag_ids])],
             }
-            new_account = self.env['account.account'].create(vals)
-            acc_template_ref[account_template.id] = new_account.id
+            new_account = self.create_record_with_xmlid(company, account_template, 'account.account', vals)
+            acc_template_ref[account_template.id] = new_account
         return acc_template_ref
 
     @api.multi
@@ -361,18 +392,18 @@ class AccountChartTemplate(models.Model):
         self.ensure_one()
         positions = self.env['account.fiscal.position.template'].search([('chart_template_id', '=', self.id)])
         for position in positions:
-            new_fp = self.env['account.fiscal.position'].create({'company_id': company.id, 'name': position.name, 'note': position.note})
+            new_fp = self.create_record_with_xmlid(company, position, 'account.fiscal.position', {'company_id': company.id, 'name': position.name, 'note': position.note})
             for tax in position.tax_ids:
-                self.env['account.fiscal.position.tax'].create({
+                self.create_record_with_xmlid(company, tax, 'account.fiscal.position.tax', {
                     'tax_src_id': tax_template_ref[tax.tax_src_id.id],
                     'tax_dest_id': tax.tax_dest_id and tax_template_ref[tax.tax_dest_id.id] or False,
-                    'position_id': new_fp.id
+                    'position_id': new_fp
                 })
             for acc in position.account_ids:
-                self.env['account.fiscal.position.account'].create({
+                self.create_record_with_xmlid(company, acc, 'account.fiscal.position.account', {
                     'account_src_id': acc_template_ref[acc.account_src_id.id],
                     'account_dest_id': acc_template_ref[acc.account_dest_id.id],
-                    'position_id': new_fp.id
+                    'position_id': new_fp
                 })
         return True
 
@@ -406,6 +437,7 @@ class AccountTaxTemplate(models.Model):
         help="If set, taxes which are computed after this one will be computed based on the price tax included.")
     analytic = fields.Boolean(string="Analytic Cost", help="If set, the amount computed by this tax will be assigned to the same analytic account as the invoice line (if any)")
     tag_ids = fields.Many2many('account.account.tag', string='Account tag', help="Optional tags you may want to assign for custom reporting")
+    tax_group_id = fields.Many2one('account.tax.group', string="Tax Group")
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id, type_tax_use)', 'Tax names must be unique !'),
@@ -424,7 +456,7 @@ class AccountTaxTemplate(models.Model):
         """ This method generates a dictionnary of all the values for the tax that will be created.
         """
         self.ensure_one()
-        return {
+        val = {
             'name': self.name,
             'type_tax_use': self.type_tax_use,
             'amount_type': self.amount_type,
@@ -438,6 +470,9 @@ class AccountTaxTemplate(models.Model):
             'analytic': self.analytic,
             'tag_ids': [(6, 0, [t.id for t in self.tag_ids])],
         }
+        if self.tax_group_id:
+            val['tax_group_id'] = self.tax_group_id.id
+        return val
 
     @api.multi
     def _generate_tax(self, company):
@@ -459,10 +494,10 @@ class AccountTaxTemplate(models.Model):
                     children_ids.append(tax_template_to_tax[child_tax.id])
             vals_tax = tax._get_tax_vals(company)
             vals_tax['children_tax_ids'] = children_ids and [(6, 0, children_ids)] or []
-            new_tax = self.env['account.tax'].create(vals_tax)
-            tax_template_to_tax[tax.id] = new_tax.id
+            new_tax = self.env['account.chart.template'].create_record_with_xmlid(company, tax, 'account.tax', vals_tax)
+            tax_template_to_tax[tax.id] = new_tax
             # Since the accounts have not been created yet, we have to wait before filling these fields
-            todo_dict[new_tax.id] = {
+            todo_dict[new_tax] = {
                 'account_id': tax.account_id.id,
                 'refund_account_id': tax.refund_account_id.id,
             }
@@ -735,7 +770,7 @@ class WizardMultiChartsAccounts(models.TransientModel):
 
         # Create the current year earning account (outside of the CoA)
         self.env['account.account'].create({
-            'code': '9999',
+            'code': '999999',
             'name': _('Undistributed Profits/Losses'),
             'user_type_id': self.env.ref("account.data_unaffected_earnings").id,
             'company_id': company.id,})

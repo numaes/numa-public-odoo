@@ -6,7 +6,7 @@
 
 <template id="assets_common" inherit_id="web.assets_common" name="Website assets">
     <xpath expr="." position="inside">
-        <script groups="base.group_website_designer" type="text/javascript" src="/website/static/src/js/website.tour.rte.js"></script>
+        <script type="text/javascript" src="/website/static/src/js/website.tour.rte.js"></script>
     </xpath>
 </template>
 
@@ -102,6 +102,9 @@
             <t t-if="not title">
                 <t t-set="title"><t t-if="additional_title"><t t-raw="additional_title"/> | </t><t t-esc="(website or res_company).name"/></t>
             </t>
+            <t groups="base.group_website_designer">
+                <t t-set="load_editor" t-value="True"/>
+            </t>
 
             <meta name="viewport" content="initial-scale=1"/>
             <meta name="description" t-att-content="main_object and 'website_meta_description' in main_object
@@ -132,7 +135,12 @@
             <t t-call-assets="web.assets_common" t-js="false"/>
             <t t-call-assets="website.assets_frontend" t-js="false"/>
             <t t-call-assets="web.assets_common" t-css="false"/>
+            <t t-if="load_editor">
+                <t t-call-assets="web_editor.summernote"/>
+            </t>
+            <t groups="base.group_website_designer" t-call-assets="web_editor.editor"/>
             <t t-call-assets="website.assets_frontend" t-css="false"/>
+            <t groups="base.group_website_publisher" t-call-assets="website.assets_editor" async="True"/>
             <script type="text/javascript">
                 odoo.define('web.csrf', function (require) {
                     var token = "<t t-esc="request.csrf_token(None)"/>";
@@ -198,16 +206,6 @@
             </script>
         </body>
     </html>
-</template>
-
-<template id="layout_editor" inherit_id="website.layout" name="Editor" groups="base.group_website_publisher,base.group_website_designer">
-    <xpath expr='//t[@t-call-assets="website.assets_frontend"][@t-css="false"]' position="before">
-        <t groups="base.group_website_designer" t-call-assets="web_editor.summernote"/>
-        <t groups="base.group_website_designer" t-call-assets="web_editor.editor"/>
-    </xpath>
-    <xpath expr='//t[@t-call-assets="website.assets_frontend"][@t-css="false"]' position="after">
-        <t t-call-assets="website.assets_editor" async="True"/>
-    </xpath>
 </template>
 
 <template id="layout_footer_copyright" inherit_id="website.layout" name="Footer Copyright">
@@ -645,7 +643,7 @@
         <div class="container">
             <div class="well mt32">
                 <p>This page does not exists, but you can create it as you are administrator of this site.</p>
-                <a class="btn btn-primary" t-attf-href="/website/add/#{ path }">Create Page</a>
+                <a class="btn btn-primary" t-attf-href="/website/add/#{ path }#{ from_template and '?template=%s' % from_template }">Create Page</a>
             </div>
             <div class="text-center text-muted">Edit the content below this line to adapt the default "page not found" page.</div>
         </div>

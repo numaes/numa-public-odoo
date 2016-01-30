@@ -190,15 +190,9 @@
         }
     }
 
-    &.o_kanban_mobile {
-        .o_kanban_record {
-            width: 400px;
-        }
-        span {
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
-            display: block;
+    &.o_kanban_mobile .o_kanban_record {
+        span, div.label {
+            .o_text_overflow;
         }
     }
 

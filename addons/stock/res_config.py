@@ -74,8 +74,8 @@ class stock_config_settings(osv.osv_memory):
             implied_group='product.group_product_variant'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'module_procurement_jit': fields.selection([
-            (1, 'Reserve sale orders immediately on confirmation'),
-            (0, 'Reserve sale orders manually or by running the schedulers')
+            (1, 'Reserve products immediately after the sale order confirmation'),
+            (0, 'Reserve products manually or based on automatic scheduler')
             ], "Procurements",
             help="""Allows you to automatically reserve the available
             products when confirming a sale order.
@@ -99,8 +99,8 @@ class stock_config_settings(osv.osv_memory):
                     This installs the module product_expiry."""),
         'group_uom': fields.selection([
             (0, 'Products have only one unit of measure (easier)'),
-            (1, 'Some products may be sold/purchased in different unit of measures (advanced)')
-            ], "Unit of Measures",
+            (1, 'Some products may be sold/purchased in different units of measure (advanced)')
+            ], "Units of Measure",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
         'group_stock_packaging': fields.selection([

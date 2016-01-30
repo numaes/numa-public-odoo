@@ -58,6 +58,7 @@
                 <thead>
                     <tr>
                         <th>Description</th>
+                        <th class="hidden">Source Document</th>
                         <th class="text-right">Quantity</th>
                         <th class="text-right">Unit Price</th>
                         <th t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">Disc.(%)</th>
@@ -68,6 +69,7 @@
                 <tbody class="invoice_tbody">
                     <tr t-foreach="o.invoice_line_ids" t-as="l">
                         <td><span t-field="l.name"/></td>
+                        <td class="hidden"><span t-field="l.origin"/></td>
                         <td class="text-right">
                             <span t-field="l.quantity"/>
                             <span t-field="l.uom_id"  groups="product.group_uom"/>
@@ -112,6 +114,28 @@
                                  <span t-field="o.amount_total" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
                             </td>
                         </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="row" t-if="o.tax_line_ids">
+                <div class="col-xs-6">
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Tax</th>
+                                <th class="text-right">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="o.tax_line_ids" t-as="t">
+                                <td><span t-field="t.name"/></td>
+                                <td class="text-right">
+                                    <span t-field="t.amount"
+                                        t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>

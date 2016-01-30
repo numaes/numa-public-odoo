@@ -517,7 +517,7 @@
               </p>
             </field>
         </record>
-        <menuitem action="action_location_form" id="menu_action_location_form" groups="stock.group_stock_manager"
+        <menuitem action="action_location_form" id="menu_action_location_form" groups="stock.group_locations"
             parent="menu_warehouse_config" sequence="2"/>
 
         <record id="view_warehouse" model="ir.ui.view">
@@ -637,7 +637,9 @@
                                         <strong><span><t t-esc="record.name.value"/></span></strong>
                                     </div>
                                     <div class="col-xs-6">
-                                        <strong><span t-attf-class="pull-right text-right label #{['draft', 'cancel'].indexOf(record.state.raw_value) > -1 ? 'label-default' : ['none'].indexOf(record.state.raw_value) > -1 ? 'label-danger' : ['waiting', 'confirmed', 'partially_available'].indexOf(record.state.raw_value) > -1 ? 'label-warning' : ['done'].indexOf(record.state.raw_value) > -1 ? 'label-success' : 'label-primary'}"><t t-esc="record.state.value"/></span></strong>
+                                        <strong><span class="pull-right text-right">
+                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'cancel': 'default', 'none': 'danger', 'waiting': 'warning', 'confirmed': 'warning', 'partially_available': 'warning', 'done': 'success'}}"/>
+                                        </span></strong>
                                     </div>
                                 </div>
                                 <div class="row text-muted">
@@ -1338,6 +1340,7 @@
                         <group name="destination_grp" string="Destination" groups="stock.group_locations">
                             <field name="location_dest_id" />
                             <field name="partner_id" context="{'contact_display':'partner'}" />
+                            <field name="picking_partner_id" context="{'contact_display':'partner'}"/>
                             <field name="move_dest_id" groups="base.group_no_one" readonly="1"/>
                         </group>
                         <group name="quants_grp" string="Reserved Quants" colspan="2" groups="base.group_no_one" attrs="{'invisible': [('state', '=', 'done')]}">
@@ -1707,12 +1710,6 @@
             parent="menu_stock_root" sequence="0"
             name="Dashboard"/>
 
-        <menuitem
-            id="menu_pickingtype"
-            name="Types of Operation"
-            parent="stock.menu_stock_config_settings"
-            action="action_picking_type_list" />
-
 
         <!-- Order Point -->
         <record id="do_view_procurement_op" model="ir.actions.act_window">
@@ -1955,7 +1952,7 @@
             <field name="model">stock.quant</field>
             <field eval="10" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Quants" create="false" edit="false">
+                <form string="Quants" create="false" edit="false" delete="false">
                     <group>
                         <group>
                             <field name="product_id"/>
