@@ -312,7 +312,6 @@ var KanbanView = View.extend({
         this.$buttons = $(QWeb.render("KanbanView.buttons", {'widget': this, display: display}));
         this.$buttons.on('click', 'button.o-kanban-button-new', this.add_record.bind(this));
 
-        $node = $node || this.options.$buttons;
         this.$buttons.appendTo($node);
     },
 
@@ -804,17 +803,7 @@ function transform_qweb_template (node, fvg, many2manys) {
     }
 }
 
-var One2ManyKanbanView = KanbanView.extend({
-    render_pager: function($node, options) {
-        options = _.extend(options || {}, {
-            single_page_hidden: true,
-        });
-        this._super($node, options);
-    },
-});
-
 core.view_registry.add('kanban', KanbanView);
-core.one2many_view_registry.add('kanban', One2ManyKanbanView);
 
 return KanbanView;
 

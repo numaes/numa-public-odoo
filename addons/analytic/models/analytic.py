@@ -55,7 +55,7 @@ class account_analytic_account(models.Model):
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
 
     # use auto_join to speed up name_search call
-    partner_id = fields.Many2one('res.partner', string='Customer', auto_join=True)
+    partner_id = fields.Many2one('res.partner', string='Customer', auto_join=True, track_visibility='onchange')
 
     balance = fields.Monetary(compute='_compute_debit_credit_balance', string='Balance')
     debit = fields.Monetary(compute='_compute_debit_credit_balance', string='Debit')
@@ -77,6 +77,8 @@ class account_analytic_account(models.Model):
 
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
+        if operator not in ('ilike', 'like', '=', '=like', '=ilike'):
+            return super(account_analytic_account, self).name_search(name, args, operator, limit)
         args = args or []
         domain = ['|', ('code', operator, name), ('name', operator, name)]
         partners = self.env['res.partner'].search([('name', operator, name)], limit=limit)

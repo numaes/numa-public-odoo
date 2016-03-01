@@ -20,7 +20,7 @@ class sale_order_line(osv.osv):
         """Retrieve the price before applying the pricelist"""
         item_obj = self.pool['product.pricelist.item']
         product_obj = self.pool['product.product']
-        field_name = 'list_price'
+        field_name = 'lst_price'
         currency_id = None
         if res_dict.get(pricelist):
             rule_id = res_dict[pricelist][1]
@@ -61,7 +61,7 @@ class sale_order_line(osv.osv):
             if self.product_id.company_id and self.order_id.pricelist_id.currency_id != self.product_id.company_id.currency_id:
                 # new_list_price is in company's currency while price in pricelist currency
                 ctx = dict(context_partner, date=self.order_id.date_order)
-                new_list_price = self.env['res.currency'].browse(currency_id).with_context(ctx).compute(new_list_price, self.order_id.pricelist_id.currency_id.id)
+                new_list_price = self.env['res.currency'].browse(currency_id).with_context(ctx).compute(new_list_price, self.order_id.pricelist_id.currency_id)
             discount = (new_list_price - self.price_unit) / new_list_price * 100
             if discount > 0:
                 self.discount = discount
