@@ -129,8 +129,9 @@ class account_invoice(models.Model):
                 continue
             if line.reconcile_partial_id and line.reconcile_partial_id.id in partial_reconciliations_done:
                 continue
+            
             # Get the correct line residual amount
-            if line.currency_id == self.currency_id:
+            if not line.currency_id or line.currency_id == self.currency_id:
                 line_amount = line.amount_residual_currency if line.currency_id else line.amount_residual
             else:
                 from_currency = line.company_id.currency_id.with_context(date=line.date)
