@@ -12,7 +12,6 @@ var Model = require('web.DataModel');
 var session = require('web.session');
 var utils = require('web.utils');
 var ViewManager = require('web.ViewManager');
-var formats = require('web.formats');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -489,8 +488,13 @@ var AbstractManyField = common.AbstractField.extend({
         }
         var tmp = this.no_rerender;
         this.no_rerender = true;
-        this.data_replace(ids.slice());
+        var def = this.data_replace(ids.slice());
         this.no_rerender = tmp;
+        return def;
+    },
+
+    commit_value: function() {
+        return this.mutex.def;
     },
 
     /*
@@ -632,6 +636,7 @@ var AbstractManyField = common.AbstractField.extend({
     get_value: function() {
         var self = this,
             is_one2many = this.field.type === "one2many",
+            not_delete = this.options.not_delete,
             starting_ids = this.starting_ids.slice(),
             replace_with_ids = [],
             add_ids = [],
@@ -663,13 +668,13 @@ var AbstractManyField = common.AbstractField.extend({
                 }
                 return;
             }
-            if (!is_one2many || self.dataset.delete_all) {
+            if (!is_one2many || not_delete || self.dataset.delete_all) {
                 replace_with_ids.push(id);
             } else {
                 command_list.push(COMMANDS.link_to(id));
             }
         });
-        if ((!is_one2many || self.dataset.delete_all) && (replace_with_ids.length || starting_ids.length)) {
+        if ((!is_one2many || not_delete || self.dataset.delete_all) && (replace_with_ids.length || starting_ids.length)) {
             _.each(command_list, function (command) {
                 if (command[0] === COMMANDS.UPDATE) {
                     replace_with_ids.push(command[1]);
@@ -679,7 +684,7 @@ var AbstractManyField = common.AbstractField.extend({
         }
 
         _.each(starting_ids, function(id) {
-            if (is_one2many) {
+            if (is_one2many && !not_delete) {
                 command_list.push(COMMANDS.delete(id));
             } else if (is_one2many && !self.dataset.delete_all) {
                 command_list.push(COMMANDS.forget(id));
@@ -752,11 +757,9 @@ var FieldX2Many = AbstractManyField.extend({
             var view = {
                 view_id: false,
                 view_type: view_type === "tree" ? "list" : view_type,
-                options: {}
+                fields_view: self.field.views && self.field.views[view_type],
+                options: {},
             };
-            if (self.field.views && self.field.views[view_type]) {
-                view.embedded_view = self.field.views[view_type];
-            }
             if(view.view_type === "list") {
                 _.extend(view.options, {
                     action_buttons: false, // to avoid 'Save' and 'Discard' buttons to appear in X2M fields
@@ -774,6 +777,7 @@ var FieldX2Many = AbstractManyField.extend({
                 }
             } else if (view.view_type === "kanban") {
                 _.extend(view.options, {
+                    action_buttons: true,
                     confirm_on_delete: false,
                 });
                 if (self.get("effective_readonly")) {
@@ -824,9 +828,7 @@ var FieldX2Many = AbstractManyField.extend({
             });
         });
         $.async_when().done(function () {
-            if (!self.isDestroyed()) {
-                self.viewmanager.appendTo(self.$el);
-            }
+            self.alive( self.viewmanager.appendTo(self.$el));
         });
         return def;
     },
@@ -859,13 +861,9 @@ var FieldX2Many = AbstractManyField.extend({
     commit_value: function() {
         var view = this.get_active_view();
         if (view && view.type === "list" && view.controller.__focus) {
-            var def = $.Deferred();
-            view.controller._on_blur_one2many().always(function () {
-                def.resolve();
-            });
-            return def;
+            return $.when(this.mutex.def, view.controller._on_blur_one2many());
         }
-        return $.when(false);
+        return this.mutex.def;
     },
     is_syntax_valid: function() {
         var view = this.get_active_view();
@@ -899,7 +897,7 @@ var X2ManyDataSet = data.BufferedDataSet.extend({
 var X2ManyViewManager = ViewManager.extend({
     init: function(parent, dataset, views, flags, x2many_views) {
         // By default, render buttons and pager in X2M fields, but no sidebar
-        var flags = _.extend({}, flags, {
+        flags = _.extend({}, flags, {
             headless: false,
             search_view: false,
             action_buttons: true,
@@ -925,7 +923,6 @@ var X2ManyViewManager = ViewManager.extend({
             res_model: self.x2m.field.relation,
             res_id: id,
             context: self.x2m.build_context(),
-
             title: _t("Open: ") + self.x2m.string,
             create_function: function(data, options) {
                 return self.x2m.data_create(data, options);
@@ -952,7 +949,6 @@ var X2ManyViewManager = ViewManager.extend({
 
 var X2ManyListView = ListView.extend({
     is_valid: function () {
-        var self = this;
         if (!this.fields_view || !this.editable()){
             return true;
         }
@@ -963,17 +959,17 @@ var X2ManyListView = ListView.extend({
         var current_values = {};
         _.each(fields, function(field){
             field._inhibit_on_change_flag = true;
+            field.__no_rerender = field.no_rerender;
             field.no_rerender = true;
             current_values[field.name] = field.get('value');
         });
-        var cached_records = _.filter(this.dataset.cache, function(item){return !_.isEmpty(item.values)});
+        var cached_records = _.filter(this.dataset.cache, function(item){return !_.isEmpty(item.values);});
         var valid = _.every(cached_records, function(record){
             _.each(fields, function(field){
                 var value = record.values[field.name];
-                var tmp = field.no_rerender;
+                field._inhibit_on_change_flag = true;
                 field.no_rerender = true;
                 field.set_value(_.isArray(value) && _.isArray(value[0]) ? [COMMANDS.delete_all()].concat(value) : value);
-                field.no_rerender = tmp;
             });
             return _.every(fields, function(field){
                 field.process_modifiers();
@@ -984,7 +980,7 @@ var X2ManyListView = ListView.extend({
         _.each(fields, function(field){
             field.set('value', current_values[field.name], {silent: true});
             field._inhibit_on_change_flag = false;
-            field.no_rerender = false;
+            field.no_rerender = field.__no_rerender;
         });
         return valid;
     },
@@ -1018,14 +1014,16 @@ var X2ManyList = ListView.List.extend({
                 .click(function (e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    // FIXME: there should also be an API for that one
-                    if (self.view.editor.form.__blur_timeout) {
-                        clearTimeout(self.view.editor.form.__blur_timeout);
-                        self.view.editor.form.__blur_timeout = false;
+                    var def;
+                    if (self.view.editable()) {
+                        // FIXME: there should also be an API for that one
+                        if (self.view.editor.form.__blur_timeout) {
+                            clearTimeout(self.view.editor.form.__blur_timeout);
+                            self.view.editor.form.__blur_timeout = false;
+                        }
+                        def = self.view.save_edition();
                     }
-                    self.view.save_edition().done(function () {
-                        self.view.do_add_record();
-                    });
+                    $.when(def).done(self.view.do_add_record.bind(self));
                 }));
 
         var $padding = this.$current.find('tr:not([data-id]):first');
@@ -1040,12 +1038,12 @@ var X2ManyList = ListView.List.extend({
 
 var One2ManyListView = X2ManyListView.extend({
     _template: 'One2Many.listview',
-    init: function (parent, dataset, view_id, options) {
-        var self = this;
-        this._super(parent, dataset, view_id, _.extend(options || {}, {
+    init: function () {
+        this._super.apply(this, arguments);
+        this.options = _.extend(this.options, {
             GroupsType: One2ManyGroups,
             ListType: X2ManyList
-        }));
+        });
         this.on('edit:after', this, this.proxy('_after_edit'));
         this.on('save:before cancel:before', this, this.proxy('_before_unedit'));
 
@@ -1054,6 +1052,7 @@ var One2ManyListView = X2ManyListView.extend({
 
         this.dataset.on('dataset_changed', this, function () {
             this._dataset_changed = true;
+            this.dataset.x2m._dirty_flag = true;
         });
         this.dataset.x2m.on('load_record', this, function () {
             this._dataset_changed = false;
@@ -1271,7 +1270,7 @@ var One2ManyFormView = FormView.extend({
 });
 
 var FieldOne2Many = FieldX2Many.extend({
-   init: function() {
+    init: function() {
         this._super.apply(this, arguments);
         this.x2many_views = {
             form: One2ManyFormView,
@@ -1283,24 +1282,24 @@ var FieldOne2Many = FieldX2Many.extend({
         this.$el.addClass('oe_form_field_one2many');
         return this._super.apply(this, arguments);
     },
-    before_save: function() {
-        if(this.viewmanager.active_view.type === "list"
-            && this.viewmanager.active_view.controller.editable()) {
-            return this.viewmanager.active_view.controller.save_edition();
+    commit_value: function() {
+        var self = this;
+        var view = this.viewmanager.active_view;
+        if(view.type === "list" && view.controller.editable()) {
+            return this.mutex.def.then(function () {
+                return view.controller.save_edition();
+            });
         }
-        return $.when();
+        return this.mutex.def;
     },
 });
 
-/**
- * @class
- * @extends instance.web.ListView
- */
-var Many2ManyListView = X2ManyListView.extend(/** @lends instance.web.form.Many2ManyListView# */{
-    init: function (parent, dataset, view_id, options) {
-        this._super(parent, dataset, view_id, _.extend(options || {}, {
+var Many2ManyListView = X2ManyListView.extend({
+    init: function () {
+        this._super.apply(this, arguments);
+        this.options = _.extend(this.options, {
             ListType: X2ManyList,
-        }));
+        });
     },
     do_add_record: function () {
         var self = this;
@@ -1322,7 +1321,7 @@ var Many2ManyListView = X2ManyListView.extend(/** @lends instance.web.form.Many2
     do_activate_record: function(index, id) {
         var self = this;
         var pop = new common.FormViewDialog(this, {
-            res_model: this.dataset.model, 
+            res_model: this.model,
             res_id: id,
             context: this.x2m.build_context(),
             title: _t("Open: ") + this.x2m.string,
@@ -1390,15 +1389,16 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
         this._super(field_manager, node);
         common.CompletionFieldMixin.init.call(this);
         this.set({"value": []});
-        this._display_orderer = new utils.DropMisordered();
-
+    },
+    willStart: function () {
         var self = this;
-        // We need to know if the field 'color' exists on the model
-        this.mutex.exec(function(){
-            return self.dataset.call('fields_get', []).then(function(fields) {
-               self.fields = fields;
-            });
+        return this.dataset.call('fields_get', []).then(function(fields) {
+           self.fields = fields;
         });
+    },
+    commit_value: function() {
+        this.dataset.cancel_read();
+        return this._super();
     },
     initialize_content: function() {
         if(!this.get("effective_readonly")) {
@@ -1436,10 +1436,9 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
     },
     get_render_data: function(ids){
         var self = this;
-        return this.mutex.exec(function(){
-            var fields = self.fields.color ? ['display_name', 'name', 'color'] : ['display_name', 'name']; // TODO master: remove useless 'name'
-            return self.dataset.read_ids(ids, fields);
-        });
+        this.dataset.cancel_read();
+        var fields = this.fields.color ? ['display_name', 'name', 'color'] : ['display_name', 'name']; // TODO master: remove useless 'name'
+        return this.dataset.read_ids(ids, fields);
     },
     render_tag: function(data) {
         this.$('.badge').remove();
@@ -1459,7 +1458,7 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
             self.render_tag(data);
         };
         if (!values || values.length > 0) {
-            return this._display_orderer.add(self.get_render_data(values)).done(handle_names);
+            return self.get_render_data(values).done(handle_names);
         } else {
             handle_names([]);
         }
@@ -1725,4 +1724,3 @@ return {
 };
 
 });
-

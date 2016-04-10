@@ -358,7 +358,7 @@
                         <button name="%(crm.crm_lead_lost_action)d" string="Mark Lost"
                                 type="action" class="oe_highlight"
                                 context="{'default_lead_id': active_id}"
-                                attrs="{'invisible': [('active', '=', False)]}"/>
+                                attrs="{'invisible': [('active', '=', False),('probability', '&lt;', 100)]}"/>
                         <button name="%(crm.crm_activity_log_action)d" string="Log Activity" type="action" class="btn-link"
                             attrs="{'invisible': [('active', '=', False)]}"/>
                         <field name="stage_id" widget="statusbar" clickable="True"
@@ -409,8 +409,8 @@
                             <group>
                                 <field name="partner_id"
                                     on_change="on_change_partner_id(partner_id)"
-                                    string="Customer"
-                                    context="{'default_name': partner_name, 'default_email': email_from, 'default_phone': phone}"/>
+                                    string="Customer" domain="[('customer', '=', True)]"
+                                    context="{'default_name': partner_name, 'search_default_customer': 1, 'default_email': email_from, 'default_phone': phone}"/>
                                 <field name="email_from" string="Email" widget="email"/>
                                 <field name="phone" widget="phone"/>
                             </group>
@@ -563,8 +563,8 @@
                                      ('date_action', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
                             ]"/>
                     <filter string="Overdue Activities" name="overdue"
-                            domain="[('date_action', '&lt;=', context_today().strftime('%Y-%m-%d'))]"
-                            help="Show all opportunities for which the next action date is today or before"/>
+                            domain="[('date_action', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                            help="Show all opportunities for which the next action date is before today"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <filter string="Lost" domain="[('active', '=', False)]"/>

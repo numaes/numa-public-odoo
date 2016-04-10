@@ -16,45 +16,29 @@ var _lt = core._lt;
 var QWeb = core.qweb;
 var Class = core.Class;
 
-/** @namespace */
-// instance.web.form = instance.web.form || {};
-
 /**
  * Properties:
  *      - actual_mode: always "view", "edit" or "create". Read-only property. Determines
  *      the mode used by the view.
  */
 var FormView = View.extend(common.FieldManagerMixin, {
-    /**
-     * Indicates that this view is not searchable, and thus that no search
-     * view should be displayed (if there is one active).
-     */
+    accesskey: "F",
+    defaults: _.extend({}, View.prototype.defaults, {
+        not_interactible_on_create: false,
+        initial_mode: "view",
+        disable_autofocus: false,
+        footer_to_buttons: false,
+    }),
+    display_name: _lt('Form'),
+    icon: 'fa-edit',
+    multi_record: false,
+    // Indicates that this view is not searchable, and thus that no search view should be displayed.
     searchable: false,
     template: "FormView",
-    display_name: _lt('Form'),
-    view_type: "form",
-    multi_record: false,
-    accesskey: "F",
-    icon: 'fa-edit',
-    /**
-     * @constructs instance.web.FormView
-     * @extends instance.web.View
-     *
-     * @param {instance.web.Session} session the current openerp session
-     * @param {instance.web.DataSet} dataset the dataset this view will work with
-     * @param {String} view_id the identifier of the OpenERP view object
-     *
-     * @property {instance.web.Registry} registry=instance.web.form.widgets widgets registry for this form view instance
-     */
-    init: function(parent, dataset, view_id, options) {
+
+    init: function() {
         var self = this;
-        this._super(parent);
-        this.ViewManager = parent;
-        this.set_default_options(options);
-        this.dataset = dataset;
-        this.model = dataset.model;
-        this.view_id = view_id || false;
-        this.fields_view = {};
+        this._super.apply(this, arguments);
         this.fields = {};
         this.fields_order = [];
         this.datarecord = {};
@@ -67,13 +51,8 @@ var FormView = View.extend(common.FieldManagerMixin, {
         this.widgets_registry = core.form_custom_registry;
         this.has_been_loaded = $.Deferred();
         this.translatable_fields = [];
-        _.defaults(this.options, {
-            "not_interactible_on_create": false,
-            "initial_mode": "view",
-            "disable_autofocus": false,
-            "footer_to_buttons": false,
-        });
         this.is_initialized = $.Deferred();
+        this.record_loaded = $.Deferred();
         this.mutating_mutex = new utils.Mutex();
         this.save_list = [];
         this.render_value_defs = [];
@@ -104,34 +83,13 @@ var FormView = View.extend(common.FieldManagerMixin, {
             });
         });
     },
-    view_loading: function(r) {
-        return this.load_form(r);
-    },
-    destroy: function() {
-        _.each(this.get_widgets(), function(w) {
-            w.off('focused blurred');
-            w.destroy();
-        });
-        if (this.$el) {
-            this.$el.off('.formBlur');
-        }
-        this._super();
-    },
-    load_form: function(data) {
+    start: function() {
         var self = this;
-        if (!data) {
-            throw new Error(_t("No data provided."));
-        }
-        if (this.arch) {
-            throw "Form view does not support multiple calls to load_form";
-        }
-        this.fields_order = [];
-        this.fields_view = data;
 
         this.rendering_engine.set_fields_registry(this.fields_registry);
         this.rendering_engine.set_tags_registry(this.tags_registry);
         this.rendering_engine.set_widgets_registry(this.widgets_registry);
-        this.rendering_engine.set_fields_view(data);
+        this.rendering_engine.set_fields_view(this.fields_view);
         var $dest = this.$el.hasClass("oe_form_container") ? this.$el : this.$el.find('.oe_form_container');
         this.rendering_engine.render_to($dest);
 
@@ -143,7 +101,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
 
         // Add bounce effect on button 'Edit' when click on readonly page view.
         this.$el.find(".oe_form_group_row,.oe_form_field,label,h1,.oe_title,.oe_notebook_page, .oe_list_content").on('click', function (e) {
-            if(self.get("actual_mode") == "view" && self.$buttons && !$(e.target).is('[data-toggle]')) {
+            if(self.get("actual_mode") === "view" && self.$buttons && !$(e.target).is('[data-toggle]')) {
                 var $button = self.$buttons.find(".oe_form_button_edit");
                 $button.openerpBounce();
                 e.stopPropagation();
@@ -152,14 +110,23 @@ var FormView = View.extend(common.FieldManagerMixin, {
         });
         //bounce effect on red button when click on statusbar.
         this.$el.find(".oe_form_field_status:not(.oe_form_status_clickable)").on('click', function (e) {
-            if((self.get("actual_mode") == "view")) {
+            if((self.get("actual_mode") === "view")) {
                 var $button = self.$el.find(".oe_highlight:not(.o_form_invisible)").css({'float':'left','clear':'none'});
                 $button.openerpBounce();
                 e.stopPropagation();
             }
          });
-        this.trigger('form_view_loaded', data);
-        return $.when();
+        return this._super();
+    },
+    destroy: function() {
+        _.each(this.get_widgets(), function(w) {
+            w.off('focused blurred');
+            w.destroy();
+        });
+        if (this.$el) {
+            this.$el.off('.formBlur');
+        }
+        this._super();
     },
     /**
      * Render the buttons according to the FormView.buttons template and add listeners on it.
@@ -181,14 +148,10 @@ var FormView = View.extend(common.FieldManagerMixin, {
 
         // Show or hide the buttons according to the view mode
         this.toggle_buttons();
-        this.$buttons.on('click', '.oe_form_button_create',
-                         this.guard_active(this.on_button_create));
-        this.$buttons.on('click', '.oe_form_button_edit',
-                         this.guard_active(this.on_button_edit));
-        this.$buttons.on('click', '.oe_form_button_save',
-                         this.guard_active(this.on_button_save));
-        this.$buttons.on('click', '.oe_form_button_cancel',
-                         this.guard_active(this.on_button_cancel));
+        this.$buttons.on('click', '.oe_form_button_create', this.on_button_create);
+        this.$buttons.on('click', '.oe_form_button_edit', this.on_button_edit);
+        this.$buttons.on('click', '.oe_form_button_save', this.on_button_save);
+        this.$buttons.on('click', '.oe_form_button_cancel', this.on_button_cancel);
 
         if ($node) {
             this.$buttons.appendTo($node);
@@ -311,10 +274,8 @@ var FormView = View.extend(common.FieldManagerMixin, {
         }
     },
     /**
-     *
-     * @param {Object} [options]
-     * @param {Boolean} [mode=undefined] If specified, switch the form to specified mode. Can be "edit" or "view".
-     * @param {Boolean} [reload=true] whether the form should reload its content on show, or use the currently loaded record
+     * @param {Boolean} [options.mode=undefined] If specified, switch the form to specified mode. Can be "edit" or "view".
+     * @param {Boolean} [options.reload=true] whether the form should reload its content on show, or use the currently loaded record
      * @return {$.Deferred}
      */
     do_show: function (options) {
@@ -364,6 +325,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
         this._actualize_mode();
         this.set({ 'title' : record.id ? record.display_name : _t("New") });
 
+        this.record_loaded = $.Deferred();
         _(this.fields).each(function (field, f) {
             field._dirty_flag = false;
             field._inhibit_on_change_flag = true;
@@ -379,6 +341,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
             self.on_form_changed();
             self.rendering_engine.init_fields();
             self.is_initialized.resolve();
+            self.record_loaded.resolve();
             self.do_update_pager(record.id === null || record.id === undefined);
             if (self.sidebar) {
                self.sidebar.do_attachement_update(self.dataset, self.datarecord.id);
@@ -521,7 +484,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
                     // In case of a o2m virtual id, we should pass an empty ids list
                     ids.push(self.datarecord.id);
                 }
-                def = self.alive(new Model(self.dataset.model).call(
+                def = self.alive(self.dataset.call(
                     "onchange", [ids, values, trigger_field_name, onchange_specs, context]));
             }
             this.onchanges_mutex.exec(function(){
@@ -587,9 +550,8 @@ var FormView = View.extend(common.FieldManagerMixin, {
             field.node.attrs.domain = domain;
         });
 
-        if (!_.isEmpty(result.value)) {
-            this._internal_set_values(result.value);
-        }
+        var def = $.when(!_.isEmpty(result.value) && this._internal_set_values(result.value));
+
         // FIXME XXX a list of warnings?
         if (!_.isEmpty(result.warning)) {
             this.warning_displayed = true;
@@ -604,7 +566,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
             });
         }
 
-        return $.Deferred().resolve();
+        return def;
         } catch(e) {
             console.error(e);
             crash_manager.show_message(e);
@@ -614,18 +576,18 @@ var FormView = View.extend(common.FieldManagerMixin, {
     _process_operations: function() {
         var self = this;
         return this.mutating_mutex.exec(function() {
+            function onchanges_mutex () {return self.onchanges_mutex.def;}
             function iterate() {
-
                 var mutex = new utils.Mutex();
+                mutex.exec(onchanges_mutex);
                 _.each(self.fields, function(field) {
-                    self.onchanges_mutex.def.then(function(){
-                        mutex.exec(function(){
-                            return field.commit_value();
-                        });
+                    mutex.exec(function(){
+                        return field.commit_value();
                     });
+                    mutex.exec(onchanges_mutex);
                 });
 
-                return mutex.def.then(function () { return self.onchanges_mutex.def; }).then(function() {
+                return mutex.def.then(function() {
                     var save_obj = self.save_list.pop();
                     if (save_obj) {
                         return self._process_save(save_obj).then(function() {
@@ -728,9 +690,20 @@ var FormView = View.extend(common.FieldManagerMixin, {
             }
         }
     },
+    disable_button: function () {
+        this.$('.oe_form_buttons').add(this.$buttons).find('button').addClass('o_disabled').prop('disabled', true);
+        this.is_disabled = true;
+    },
+    enable_button: function () {
+        this.$('.oe_form_buttons').add(this.$buttons).find('button.o_disabled').removeClass('o_disabled').prop('disabled', false);
+        this.is_disabled = false;
+    },
     on_button_save: function(e) {
         var self = this;
-        $(e.target).attr("disabled", true);
+        if (this.is_disabled) {
+            return;
+        }
+        this.disable_button();
         return this.save().done(function(result) {
             self.trigger("save", result);
             self.reload().then(function() {
@@ -739,7 +712,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
                 core.bus.trigger('form_view_saved', self);
             });
         }).always(function(){
-            $(e.target).attr("disabled", false);
+            self.enable_button();
         });
     },
     on_button_cancel: function(event) {
@@ -856,19 +829,6 @@ var FormView = View.extend(common.FieldManagerMixin, {
                 first_invalid_field = null,
                 readonly_values = {},
                 deferred = [];
-
-            _.each(self.fields, function (f) {
-                var res = f.before_save();
-                if (res) {
-                    deferred.push(res);
-                    res.fail(function () {
-                        form_invalid = true;
-                        if (!first_invalid_field) {
-                            first_invalid_field = f;
-                        }
-                    });
-                }
-            });
 
             $.when.apply($, deferred).always(function () {
 
@@ -1199,7 +1159,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
                         all_users = d.$el.find('#formview_default_all').is(':checked');
                     new data.DataSet(self, 'ir.values').call(
                         'set_default', [
-                            self.dataset.model,
+                            self.model,
                             field_to_set,
                             self.fields[field_to_set].get_value(),
                             all_users,

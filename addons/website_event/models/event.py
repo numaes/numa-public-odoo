@@ -22,6 +22,15 @@ class event(models.Model):
         string='Website Messages',
         help="Website communication history",
     )
+    is_participating = fields.Boolean("Is Participating", compute="_compute_is_participating")
+
+    def _compute_is_participating(self):
+        # we don't allow public user to see participating label
+        if self.env.user != self.env.ref('base.public_user'):
+            email = self.env.user.partner_id.email
+            for event in self:
+                domain = ['&', '|', ('email', '=', email), ('partner_id', '=', self.env.user.partner_id.id), ('event_id', '=', event.id)]
+                event.is_participating = self.env['event.registration'].search_count(domain)
 
     @api.multi
     @api.depends('name')
@@ -36,7 +45,7 @@ class event(models.Model):
     show_menu = fields.Boolean('Dedicated Menu', compute='_get_show_menu', inverse='_set_show_menu',
                                help="Creates menus Introduction, Location and Register on the page "
                                     " of the event on the website.", store=True)
-    menu_id = fields.Many2one('website.menu', 'Event Menu')
+    menu_id = fields.Many2one('website.menu', 'Event Menu', copy=False)
 
     @api.one
     def _get_new_menu_pages(self):

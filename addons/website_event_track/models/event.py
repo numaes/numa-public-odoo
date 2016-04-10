@@ -12,6 +12,7 @@ class event_track_tag(models.Model):
 
     name = fields.Char('Tag')
     track_ids = fields.Many2many('event.track', string='Tracks')
+    color = fields.Integer(string='Color Index')
 
     _sql_constraints = [
             ('name_uniq', 'unique (name)', "Tag name already exists !"),
@@ -32,6 +33,7 @@ class event_track(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin', 'website.seo.metadata', 'website.published.mixin']
 
     name = fields.Char('Title', required=True, translate=True)
+    active = fields.Boolean(default=True)
     user_id = fields.Many2one('res.users', 'Responsible', track_visibility='onchange', default=lambda self: self.env.user)
     partner_id = fields.Many2one('res.partner', 'Proposed by')
     partner_name = fields.Char('Partner Name')
@@ -53,15 +55,7 @@ class event_track(models.Model):
         ('0', 'Low'), ('1', 'Medium'),
         ('2', 'High'), ('3', 'Highest')],
         'Priority', required=True, default='1')
-    image = fields.Binary('Image', compute='_compute_image', store=True, attachment=True)
-
-    @api.one
-    @api.depends('speaker_ids.image')
-    def _compute_image(self):
-        if self.speaker_ids:
-            self.image = self.speaker_ids[0].image
-        else:
-            self.image = False
+    image = fields.Binary('Image', related='speaker_ids.image_medium', store=True, attachment=True)
 
     @api.model
     def create(self, vals):

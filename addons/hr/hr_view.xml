@@ -11,7 +11,7 @@
             sequence="75"/>
         <menuitem id="menu_hr_main" parent="menu_hr_root" name="Human Resources" sequence="0"/>
         <menuitem id="menu_hr_reporting_timesheet" name="Reports" parent="menu_hr_root" sequence="99" groups="base.group_hr_manager,base.group_hr_user"/>
-        <menuitem id="menu_human_resources_configuration" name="Configuration" parent="menu_hr_root" sequence="100" groups="base.group_configuration,base.group_hr_manager"/>
+        <menuitem id="menu_human_resources_configuration" name="Configuration" parent="menu_hr_root" sequence="100" groups="base.group_hr_manager"/>
 
         <!-- Employee -->
         <record id="view_employee_form" model="ir.ui.view">
@@ -151,6 +151,7 @@
                 <templates>
                     <t t-name="kanban-box">
                     <div class="oe_kanban_global_click">
+                        <field name="category_ids"/>
                         <div class="o_kanban_image">
                             <img t-att-src="kanban_image('hr.employee', 'image_medium', record.id.value)"/>
                             <div class="o_employee_summary_icons">
@@ -423,6 +424,11 @@
             <field name="arch" type="xml">
                 <form string="department">
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
                         <group col="4">
                             <field name="name"/>
                             <field name="manager_id"/>
@@ -458,6 +464,8 @@
                     <field name="name" string="Department"/>
                     <field name="manager_id" />
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 </search>
              </field>
         </record>
