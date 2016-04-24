@@ -2172,7 +2172,11 @@ class BaseModel(object):
         # (range, label) by just the formatted label, in-place
         for group in result:
             for df in dt:
-                if group.get(df, False) and (len(group[df])>1):
+                # could group on a date(time) field which is empty in some
+                # records, in which case as with m2o the _raw value will be
+                # `False` instead of a (value, label) pair. In that case,
+                # leave the `False` value alone
+                if group.get(df):
                     group[df] = group[df][1]
         return result
 
@@ -3186,17 +3190,32 @@ class BaseModel(object):
         cls._setup_done = True
 
     @api.model
-    def _setup_fields(self):
+    def _setup_fields(self, partial):
         """ Setup the fields, except for recomputation triggers. """
         cls = type(self)
 
         # set up fields, and determine their corresponding column
         cls._columns = {}
+        bad_fields = []
         for name, field in cls._fields.iteritems():
-            field.setup_full(self)
+            try:
+                field.setup_full(self)
+            except Exception:
+                if partial and field.manual:
+                    # Something goes wrong when setup a manual field.
+                    # This can happen with related fields using another manual many2one field
+                    # that hasn't been loaded because the comodel does not exist yet.
+                    # This can also be a manual function field depending on not loaded fields yet.
+                    bad_fields.append(name)
+                    continue
+                raise
             column = field.to_column()
             if column:
                 cls._columns[name] = column
+
+        for name in bad_fields:
+            del cls._fields[name]
+            delattr(cls, name)
 
         # map each field to the fields computed with the same method
         groups = defaultdict(list)

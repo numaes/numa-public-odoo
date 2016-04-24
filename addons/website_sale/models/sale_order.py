@@ -51,8 +51,8 @@ class SaleOrder(models.Model):
     def _website_product_id_change(self, order_id, product_id, qty=0):
         order = self.sudo().browse(order_id)
         product_context = dict(self.env.context)
+        product_context.setdefault('lang', order.partner_id.lang)
         product_context.update({
-            'lang': order.partner_id.lang,
             'partner': order.partner_id.id,
             'quantity': qty,
             'date': order.date_order,
@@ -195,7 +195,7 @@ class Website(models.Model):
         order_pl = partner.last_website_so_id and partner.last_website_so_id.state == 'draft' and partner.last_website_so_id.pricelist_id
         partner_pl = partner.property_product_pricelist
         pricelists = website._get_pl_partner_order(isocountry, show_visible,
-                                                   website.user_id.partner_id.property_product_pricelist.id,
+                                                   website.user_id.sudo().partner_id.property_product_pricelist.id,
                                                    request.session.get('website_sale_current_pl'),
                                                    website.website_pricelist_ids,
                                                    partner_pl=partner_pl and partner_pl.id or None,

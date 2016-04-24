@@ -73,7 +73,8 @@ var KanbanView = View.extend({
         this.grouped_by_m2o = undefined;
         this.relation = undefined;
         this.is_empty = undefined;
-        this.many2manys = [];
+        // Retrieve many2manys stored in the fields_view if it has already been processed
+        this.many2manys = this.fields_view.many2manys || [];
         this.m2m_context = {};
         this.widgets = [];
         this.data = undefined;
@@ -95,6 +96,13 @@ var KanbanView = View.extend({
             var child = this.fields_view.arch.children[i];
             if (child.tag === "templates") {
                 transform_qweb_template(child, this.fields_view, this.many2manys);
+                // transform_qweb_template(), among other things, identifies and processes the
+                // many2manys. Unfortunately, it modifies the fields_view in place and, as
+                // the fields_view is stored in the JS cache, the many2manys are only identified the
+                // first time the fields_view is processed. We thus store the identified many2manys
+                // on the fields_view, so that we can retrieve them later. A better fix would be to
+                // stop modifying shared resources in place.
+                this.fields_view.many2manys = this.many2manys;
                 this.qweb.add_template(utils.json_node_to_xml(child));
                 break;
             } else if (child.tag === 'field') {
@@ -130,13 +138,16 @@ var KanbanView = View.extend({
         return this.search_orderer
             .add(options.grouped ? this.load_groups(options) : this.load_records())
             .then(function (data) {
+                var new_ids;
                 _.extend(self, options);
                 if (options.grouped) {
-                    var new_ids = _.union.apply(null, _.map(data.groups, function (group) {
+                    new_ids = _.union.apply(null, _.map(data.groups, function (group) {
                         return group.dataset.ids;
                     }));
-                    self.dataset.alter_ids(new_ids);
+                } else {
+                    new_ids = _.pluck(data.records, 'id');
                 }
+                self.dataset.alter_ids(new_ids);
                 self.data = data;
             })
             .then(this.proxy('render'))
@@ -153,20 +164,18 @@ var KanbanView = View.extend({
     },
 
     load_records: function (offset, dataset) {
-        var options = {
-            'limit': this.limit,
-            'offset': offset,
-        };
-        dataset = dataset || this.dataset;
-        return dataset
-            .read_slice(this.fields_keys.concat(['__last_update']), options)
-            .then(function(records) {
-                return {
-                    records: records,
-                    is_empty: !records.length,
-                    grouped: false,
-                };
-            });
+        dataset = dataset || this.dataset;        
+        return dataset._model.query(this.fields_keys.concat(['__last_update']))
+                .limit(this.limit || false)
+                .offset(offset || 0)
+                .all()
+                .then(function (records) {
+                    return {
+                        records: records,
+                        is_empty: !records.length,
+                        grouped: false,
+                    };
+                });
     },
 
     load_groups: function (options) {
