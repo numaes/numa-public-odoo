@@ -76,15 +76,19 @@ The result of applying children views yields the final ``arch``
 Inheritance specs
 -----------------
 
-There are three types of inheritance specs:
+Inheritance specs are comprised of an element locator, to match
+the inherited element in the parent view, and children element that
+will be used to modify the inherited element.
+
+There are three types of element locators for matching a target element:
 
 * An ``xpath`` element with an ``expr`` attribute. ``expr`` is an XPath_
   expression\ [#hasclass]_ applied to the current ``arch``, the first node
   it finds is the match
 * a ``field`` element with a ``name`` attribute, matches the first ``field``
-  with the same ``name``
-* any other element, the first element with the same name and identical
-  attributes (ignoring ``position``) is matched
+  with the same ``name``. All other attributes are ignored during matching
+* any other element: the first element with the same name and identical
+  attributes (ignoring ``position`` and ``version`` attributes) is matched
 
 The inheritance spec may have an optional ``position`` attribute specifying
 how the matched node should be altered:
@@ -92,7 +96,10 @@ how the matched node should be altered:
 ``inside`` (default)
     the content of the inheritance spec is appended to the matched node
 ``replace``
-    the content of the inheritance spec replaces the matched node
+    the content of the inheritance spec replaces the matched node.
+    Any text node containing only `$0` within the contents of the spec will
+    be replaced  by a complete copy of the matched node, effectively wrapping
+    the matched node.
 ``after``
     the content of the inheritance spec is added to the matched node's
     parent, after the matched node
@@ -158,7 +165,8 @@ root can have the following attributes:
     as a string of the form ``yyyy-MM-dd``).
 
     ``{$name}`` can be ``bf`` (``font-weight: bold``), ``it``
-    (``font-style: italic``), or any bootstrap contextual color (``danger``,
+    (``font-style: italic``), or any `bootstrap contextual color
+    <http://getbootstrap.com/components/#available-variations>`_ (``danger``,
     ``info``, ``muted``, ``primary``, ``success`` or ``warning``).
 ``create``, ``edit``, ``delete``
     allows *dis*\ abling the corresponding action in the view by setting the
@@ -362,7 +370,7 @@ system. Available semantic components are:
     .. todo:: list of widgets
 
        & options & specific attributes (e.g. widget=statusbar
-       statusbar_visible statusbar_colors clickable)
+       statusbar_visible clickable)
   ``options``
     JSON object specifying configuration option for the field's widget
     (including default widgets)
@@ -501,13 +509,16 @@ The states are shown following the order used in the field (the list in a
 selection field, etc). States that are always visible are specified with the
 attribute ``statusbar_visible``.
 
-``statusbar_colors`` can be used to give a custom color to specific states.
+``statusbar_colors``
+    can be used to give a custom color to specific states.
+
+    .. deprecated:: 9.0
+
 
 ::
 
     <field name="state" widget="statusbar"
-        statusbar_visible="draft,sent,progress,invoiced,done"
-        statusbar_colors="{'shipping_except':'red','waiting_date':'blue'}"/>
+        statusbar_visible="draft,sent,progress,invoiced,done" />
 
 The Sheet
 '''''''''

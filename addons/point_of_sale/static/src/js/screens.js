@@ -1023,7 +1023,9 @@ var ClientListScreenWidget = ScreenWidget.extend({
         if (this.editing_client) {
             this.$('.detail.barcode').val(code.code);
         } else if (this.pos.db.get_partner_by_barcode(code.code)) {
-            this.display_client_details('show',this.pos.db.get_partner_by_barcode(code.code));
+            var partner = this.pos.db.get_partner_by_barcode(code.code);
+            this.new_client = partner;
+            this.display_client_details('show', partner);
         }
     },
     perform_search: function(query, associate_result){
@@ -1390,8 +1392,6 @@ var ReceiptScreenWidget = ScreenWidget.extend({
     print_xml: function() {
         var env = {
             widget:  this,
-            pos:     this.pos,
-            order:   this.pos.get_order(),
             receipt: this.pos.get_order().export_for_printing(),
             paymentlines: this.pos.get_order().get_paymentlines()
         };

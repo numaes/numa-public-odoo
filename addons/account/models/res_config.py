@@ -85,10 +85,10 @@ class AccountConfigSettings(models.TransientModel):
     group_analytic_accounting = fields.Boolean(string='Analytic accounting',
         implied_group='analytic.group_analytic_accounting',
         help="Allows you to use the analytic accounting.")
-    group_warning = fields.Selection([
+    group_warning_account = fields.Selection([
             (0, 'All the partners can be used in invoices'),
             (1, 'An informative or blocking warning can be set on a partner')
-            ], "Warning", implied_group='account.group_warning')
+            ], "Warning", implied_group='account.group_warning_account')
     currency_exchange_journal_id = fields.Many2one('account.journal',
         related='company_id.currency_exchange_journal_id',
         string="Rate Difference Journal",)
@@ -232,8 +232,10 @@ class AccountConfigSettings(models.TransientModel):
     def set_product_taxes(self):
         """ Set the product taxes if they have changed """
         ir_values_obj = self.env['ir.values']
-        ir_values_obj.sudo().set_default('product.template', "taxes_id", [self.default_sale_tax_id.id] if self.default_sale_tax_id else False, for_all_users=True, company_id=self.company_id.id)
-        ir_values_obj.sudo().set_default('product.template', "supplier_taxes_id", [self.default_purchase_tax_id.id] if self.default_purchase_tax_id else False, for_all_users=True, company_id=self.company_id.id)
+        if self.default_sale_tax_id:
+            ir_values_obj.sudo().set_default('product.template', "taxes_id", [self.default_sale_tax_id.id], for_all_users=True, company_id=self.company_id.id)
+        if self.default_purchase_tax_id:
+            ir_values_obj.sudo().set_default('product.template', "supplier_taxes_id", [self.default_purchase_tax_id.id], for_all_users=True, company_id=self.company_id.id)
 
     @api.multi
     def set_chart_of_accounts(self):
@@ -252,8 +254,8 @@ class AccountConfigSettings(models.TransientModel):
                 'purchase_tax_rate': self.purchase_tax_rate,
                 'complete_tax_set': self.complete_tax_set,
                 'currency_id': self.currency_id.id,
-                'bank_account_code_prefix': self.bank_account_code_prefix,
-                'cash_account_code_prefix': self.cash_account_code_prefix,
+                'bank_account_code_prefix': self.bank_account_code_prefix or self.chart_template_id.bank_account_code_prefix,
+                'cash_account_code_prefix': self.cash_account_code_prefix or self.chart_template_id.cash_account_code_prefix,
             })
             wizard.execute()
 

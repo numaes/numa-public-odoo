@@ -9,8 +9,10 @@ var utils = require('mail.utils');
 var config = require('web.config');
 var core = require('web.core');
 var form_common = require('web.form_common');
+var web_utils = require('web.utils');
 
 var _t = core._t;
+var QWeb = core.qweb;
 
 // -----------------------------------------------------------------------------
 // Chat Composer for the Chatter
@@ -187,11 +189,13 @@ var ChatterComposer = composer.BasicComposer.extend({
                 dialog.on('closed', self, function () {
                     deferred.resolve();
                 });
-                dialog.view_form.on('on_button_cancel', self, function () {
-                    names_to_remove.push(partner_name);
-                    if (partner_id) {
-                        recipient_ids_to_remove.push(partner_id);
-                    }
+                dialog.opened().then(function () {
+                    dialog.view_form.on('on_button_cancel', self, function () {
+                        names_to_remove.push(partner_name);
+                        if (partner_id) {
+                            recipient_ids_to_remove.push(partner_id);
+                        }
+                    });
                 });
             });
             $.when.apply($, emails_deferred).then(function () {
@@ -282,6 +286,7 @@ var Chatter = form_common.AbstractField.extend({
         this.model = this.view.dataset.model;
         this.res_id = undefined;
         this.context = this.options.context || {};
+        this.dp = new web_utils.DropPrevious();
     },
 
     willStart: function () {
@@ -342,7 +347,17 @@ var Chatter = form_common.AbstractField.extend({
         var self = this;
         options = options || {};
         options.ids = ids;
-        return chat_manager.get_messages(options).then(function (raw_messages) {
+
+        // Ensure that only the last loaded thread is rendered to prevent displaying the wrong thread
+        var fetch_def = this.dp.add(chat_manager.get_messages(options));
+
+        // Empty thread and display a spinner after 1s to indicate that it is loading
+        this.thread.$el.empty();
+        web_utils.reject_after(web_utils.delay(1000), fetch_def).then(function () {
+            self.thread.$el.append(QWeb.render('Spinner'));
+        });
+
+        return fetch_def.then(function (raw_messages) {
             self.thread.render(raw_messages, {display_load_more: raw_messages.length < ids.length});
         });
     },
@@ -476,6 +491,7 @@ var Chatter = form_common.AbstractField.extend({
         var old_composer = this.composer;
         // create the new composer
         this.composer = new ChatterComposer(this, this.thread_dataset, {
+            commands_enabled: false,
             context: this.context,
             input_min_height: 50,
             input_max_height: Number.MAX_VALUE, // no max_height limit for the chatter
@@ -503,7 +519,7 @@ var Chatter = form_common.AbstractField.extend({
         this.mute_new_message_button(true);
     },
     close_composer: function (force) {
-        if (this.composer.is_empty() || force) {
+        if (this.composer && (this.composer.is_empty() || force)) {
             this.composer.do_hide();
             this.composer.$input.val('');
             this.mute_new_message_button(false);

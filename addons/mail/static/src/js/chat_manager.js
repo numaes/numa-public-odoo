@@ -15,6 +15,7 @@ var _t = core._t;
 var _lt = core._lt;
 var LIMIT = 100;
 var preview_msg_max_size = 350;  // optimal for native english speakers
+var ODOOBOT_ID = "ODOOBOT";
 
 var MessageModel = new Model('mail.message', session.context);
 var ChannelModel = new Model('mail.channel', session.context);
@@ -34,6 +35,8 @@ var emoji_substitutions = {};
 var needaction_counter = 0;
 var starred_counter = 0;
 var mention_partner_suggestions = [];
+var canned_responses = [];
+var commands = [];
 var discuss_menu_id;
 var global_unread_counter = 0;
 var pinned_dm_partners = [];  // partner_ids we have a pinned DM with
@@ -125,7 +128,7 @@ function make_message (data) {
         is_author: data.author_id && data.author_id[0] === session.partner_id,
         is_note: data.is_note,
         is_system_notification: data.message_type === 'notification' && data.model === 'mail.channel',
-        attachment_ids: data.attachment_ids,
+        attachment_ids: data.attachment_ids || [],
         subject: data.subject,
         email_from: data.email_from,
         record_name: data.record_name,
@@ -183,15 +186,18 @@ function make_message (data) {
     if ((!msg.author_id || !msg.author_id[0]) && msg.email_from) {
         msg.mailto = msg.email_from;
     } else {
-        msg.displayed_author = msg.author_id && msg.author_id[1] ||
+        msg.displayed_author = (msg.author_id === ODOOBOT_ID) && "OdooBot" ||
+                               msg.author_id && msg.author_id[1] ||
                                msg.email_from || _t('Anonymous');
     }
 
-    // Don't redirect on author clicked of self-posted messages
-    msg.author_redirect = !msg.is_author;
+    // Don't redirect on author clicked of self-posted or OdooBot messages
+    msg.author_redirect = !msg.is_author && msg.author_id !== ODOOBOT_ID;
 
     // Compute the avatar_url
-    if (msg.author_id && msg.author_id[0]) {
+    if (msg.author_id === ODOOBOT_ID) {
+        msg.avatar_src = "/mail/static/src/img/odoo_o.png";
+    } else if (msg.author_id && msg.author_id[0]) {
         msg.avatar_src = "/web/image/res.partner/" + msg.author_id[0] + "/image_small";
     } else if (msg.message_type === 'email') {
         msg.avatar_src = "/mail/static/src/img/email_icon.png";
@@ -243,6 +249,7 @@ function make_channel (data, options) {
     var channel = {
         id: data.id,
         name: data.name,
+        server_type: data.channel_type,
         type: data.type || data.channel_type,
         all_history_loaded: false,
         uuid: data.uuid,
@@ -261,10 +268,8 @@ function make_channel (data, options) {
             messages: [],
         }},
     };
-    if (channel.type === "channel" && data.public !== "private") {
-        channel.type = "public";
-    } else if (data.public === "private") {
-        channel.type = "private";
+    if (channel.type === "channel") {
+        channel.type = data.public !== "private" ? "public" : "private";
     }
     if (_.size(data.direct_partner) > 0) {
         channel.type = "dm";
@@ -479,8 +484,18 @@ function on_channel_notification (message) {
 
 function on_partner_notification (data) {
     if (data.info === "unsubscribe") {
-        remove_channel(chat_manager.get_channel(data.id));
-        chat_manager.bus.trigger("unsubscribe_from_channel", data.id);
+        var channel = chat_manager.get_channel(data.id);
+        if (channel) {
+            var msg;
+            if (_.contains(['public', 'private'], channel.type)) {
+                msg = _.str.sprintf(_t('You unsubscribed from <b>%s</b>.'), channel.name);
+            } else {
+                msg = _.str.sprintf(_t('You unpinned your conversation with <b>%s</b>.'), channel.name);
+            }
+            remove_channel(channel);
+            chat_manager.bus.trigger("unsubscribe_from_channel", data.id);
+            web_client.do_notify(_("Unsubscribed"), msg);
+        }
     } else if (data.type === 'toggle_star') {
         on_toggle_star_notification(data);
     } else if (data.type === 'mark_as_read') {
@@ -489,6 +504,8 @@ function on_partner_notification (data) {
         on_mark_as_unread_notification(data);
     } else if (data.info === 'channel_seen') {
         on_channel_seen_notification(data);
+    } else if (data.info === 'transient_message') {
+        on_transient_message_notification(data);
     } else {
         on_chat_session_notification(data);
     }
@@ -605,6 +622,13 @@ function on_presence_notification (data) {
     }
 }
 
+function on_transient_message_notification (data) {
+    var last_message = _.last(messages);
+    data.id = (last_message ? last_message.id : 0) + 0.01;
+    data.author_id = data.author_id || ODOOBOT_ID;
+    add_message(data);
+}
+
 // Public interface
 //----------------------------------------------------------------------------------
 var chat_manager = {
@@ -623,11 +647,12 @@ var chat_manager = {
             msg.subject = data.subject;
         }
         if ('channel_id' in options) {
-            // post a message in a channel
-            return ChannelModel.call('message_post', [options.channel_id], _.extend(msg, {
+            // post a message in a channel or execute a command
+            return ChannelModel.call(data.command ? 'execute_command' : 'message_post', [options.channel_id], _.extend(msg, {
                 message_type: 'comment',
                 content_subtype: 'html',
                 subtype: 'mail.mt_comment',
+                command: data.command,
             }));
         }
         if ('model' in options && 'res_id' in options) {
@@ -689,8 +714,6 @@ var chat_manager = {
         }
     },
     toggle_star_status: function (message_id) {
-        var msg = _.findWhere(messages, { id: message_id });
-
         return MessageModel.call('toggle_message_starred', [[message_id]]);
     },
     unstar_all: function () {
@@ -759,6 +782,15 @@ var chat_manager = {
                 });
         }
         return channel.members_deferred;
+    },
+
+    get_commands: function (channel) {
+        return _.filter(commands, function (command) {
+            return !command.channel_types || _.contains(command.channel_types, channel.server_type);
+        });
+    },
+    get_canned_responses: function () {
+        return canned_responses;
     },
 
     get_emojis: function() {
@@ -841,15 +873,11 @@ var chat_manager = {
     },
 
     unsubscribe: function (channel) {
-        var def;
         if (_.contains(['public', 'private'], channel.type)) {
-            def = ChannelModel.call('action_unfollow', [[channel.id]]);
+            return ChannelModel.call('action_unfollow', [[channel.id]]);
         } else {
-            def = ChannelModel.call('channel_pin', [channel.uuid, false]);
+            return ChannelModel.call('channel_pin', [channel.uuid, false]);
         }
-        return def.then(function () {
-            remove_channel(channel);
-        });
     },
     close_chat_session: function (channel_id) {
         var channel = this.get_channel(channel_id);
@@ -938,16 +966,28 @@ var chat_manager = {
     },
 
     search_partner: function (search_val, limit) {
-        return PartnerModel.call('im_search', [search_val, limit || 20], {}, {shadow: true}).then(function(result) {
-            var values = [];
-            _.each(result, function(user) {
-                var escaped_name = _.escape(user.name);
-                values.push(_.extend(user, {
-                    'value': escaped_name,
-                    'label': escaped_name,
-                }));
+        var def = $.Deferred();
+        var values = [];
+        // search among prefetched partners
+        var search_regexp = new RegExp(_.str.escapeRegExp(utils.unaccent(search_val)), 'i');
+        _.each(mention_partner_suggestions, function (partners) {
+            if (values.length < limit) {
+                values = values.concat(_.filter(partners, function (partner) {
+                    return session.partner_id !== partner.id && search_regexp.test(partner.name);
+                })).splice(0, limit);
+            }
+        });
+        if (!values.length) {
+            // extend the research to all users
+            def = PartnerModel.call('im_search', [search_val, limit || 20], {}, {shadow: true});
+        } else {
+            def = $.when(values);
+        }
+        return def.then(function (values) {
+            var autocomplete_data = _.map(values, function (value) {
+                return { id: value.id, value: value.name, label: value.name };
             });
-            return values;
+            return _.sortBy(autocomplete_data, 'label');
         });
     },
 };
@@ -979,12 +1019,21 @@ function init () {
         });
         needaction_counter = result.needaction_inbox_counter;
         starred_counter = result.starred_counter;
-        mention_partner_suggestions = result.mention_partner_suggestions;
-        emojis = result.emoji;
-        _.each(emojis, function(emoji) {
-            emoji_substitutions[_.escape(emoji.source)] = emoji.substitution;
+        commands = _.map(result.commands, function (command) {
+            return _.extend({ id: command.name }, command);
         });
+        mention_partner_suggestions = result.mention_partner_suggestions;
         discuss_menu_id = result.menu_id;
+
+        // Shortcodes: canned responses and emojis
+        _.each(result.shortcodes, function (s) {
+            if (s.shortcode_type === 'text') {
+                canned_responses.push(_.pick(s, ['id', 'source', 'substitution']));
+            } else {
+                emojis.push(_.pick(s, ['id', 'source', 'substitution', 'description']));
+                emoji_substitutions[_.escape(s.source)] = s.substitution;
+            }
+        });
 
         bus.start_polling();
     });

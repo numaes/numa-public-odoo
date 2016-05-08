@@ -251,12 +251,16 @@ class AccountMoveLine(models.Model):
 
                 amount += sign_partial_line * partial_line.amount
                 #getting the date of the matched item to compute the amount_residual in currency
-                date = partial_line.credit_move_id.date if partial_line.debit_move_id == line else partial_line.debit_move_id.date
                 if line.currency_id:
                     if partial_line.currency_id and partial_line.currency_id == line.currency_id:
                         amount_residual_currency += sign_partial_line * partial_line.amount_currency
                     else:
-                        amount_residual_currency += sign_partial_line * line.company_id.currency_id.with_context(date=date).compute(partial_line.amount, line.currency_id)
+                        if line.balance and line.amount_currency:
+                            rate = line.amount_currency / line.balance
+                        else:
+                            date = partial_line.credit_move_id.date if partial_line.debit_move_id == line else partial_line.debit_move_id.date
+                            rate = line.currency_id.with_context(date=date).rate
+                        amount_residual_currency += sign_partial_line * line.currency_id.round(partial_line.amount * rate)
 
             #computing the `reconciled` field. As we book exchange rate difference on each partial matching,
             #we can only check the amount in company currency
@@ -372,6 +376,7 @@ class AccountMoveLine(models.Model):
     tax_ids = fields.Many2many('account.tax', string='Taxes')
     tax_line_id = fields.Many2one('account.tax', string='Originator tax')
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account')
+    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic tags')
     company_id = fields.Many2one('res.company', related='account_id.company_id', string='Company', store=True)
     counterpart = fields.Char("Counterpart", compute='_get_counterpart', help="Compute the counter part accounts of this journal item for this journal entry. This can be needed in reports.")
 
@@ -985,8 +990,9 @@ class AccountMoveLine(models.Model):
             # Since create() receives ids instead of recordset, let's just use the old-api bridge
             taxes = self.env['account.tax'].browse(tax_ids)
             currency = self.env['res.currency'].browse(vals.get('currency_id'))
+            partner = self.env['res.partner'].browse(vals.get('partner_id'))
             res = taxes.compute_all(amount,
-                currency, 1, vals.get('product_id'), vals.get('partner_id'))
+                currency, 1, vals.get('product_id'), partner)
             # Adjust line amount if any tax is price_include
             if abs(res['total_excluded']) < abs(amount):
                 if vals['debit'] != 0.0: vals['debit'] = res['total_excluded']
@@ -1117,9 +1123,9 @@ class AccountMoveLine(models.Model):
             method first remove any existing analytic item related to the line before creating any new one.
         """
         for obj_line in self:
+            if obj_line.analytic_line_ids:
+                obj_line.analytic_line_ids.unlink()
             if obj_line.analytic_account_id:
-                if obj_line.analytic_line_ids:
-                    obj_line.analytic_line_ids.unlink()
                 vals_line = obj_line._prepare_analytic_line()[0]
                 self.env['account.analytic.line'].create(vals_line)
 
@@ -1133,6 +1139,7 @@ class AccountMoveLine(models.Model):
             'name': self.name,
             'date': self.date,
             'account_id': self.analytic_account_id.id,
+            'tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
             'unit_amount': self.quantity,
             'product_id': self.product_id and self.product_id.id or False,
             'product_uom_id': self.product_uom_id and self.product_uom_id.id or False,
@@ -1146,7 +1153,7 @@ class AccountMoveLine(models.Model):
     @api.model
     def _query_get(self, domain=None):
         context = dict(self._context or {})
-        domain = domain and safe_eval(domain) or []
+        domain = domain and safe_eval(str(domain)) or []
 
         date_field = 'date'
         if context.get('aged_balance'):
@@ -1176,6 +1183,15 @@ class AccountMoveLine(models.Model):
 
         if context.get('reconcile_date'):
             domain += ['|', ('reconciled', '=', False), '|', ('matched_debit_ids.create_date', '>', context['reconcile_date']), ('matched_credit_ids.create_date', '>', context['reconcile_date'])]
+
+        if context.get('account_tag_ids'):
+            domain += [('account_id.tag_ids', 'in', context['account_tag_ids'].ids)]
+
+        if context.get('analytic_tag_ids'):
+            domain += ['|', ('analytic_account_id.tag_ids', 'in', context['analytic_tag_ids'].ids), ('analytic_tag_ids', 'in', context['analytic_tag_ids'].ids)]
+
+        if context.get('analytic_account_ids'):
+            domain += [('analytic_account_id', 'in', context['analytic_account_ids'].ids)]
 
         where_clause = ""
         where_clause_params = []
@@ -1232,6 +1248,8 @@ class AccountPartialReconcile(models.Model):
             if move_date > rec.company_id.fiscalyear_lock_date:
                 move_vals['date'] = move_date
             move = rec.env['account.move'].create(move_vals)
+            amount_diff = rec.company_id.currency_id.round(amount_diff)
+            diff_in_currency = currency.round(diff_in_currency)
             line_to_reconcile = rec.env['account.move.line'].with_context(check_move_validity=False).create({
                 'name': _('Currency exchange rate difference'),
                 'debit': amount_diff < 0 and -amount_diff or 0.0,

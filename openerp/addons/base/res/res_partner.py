@@ -122,6 +122,8 @@ class PartnerTitle(models.Model):
     name = fields.Char(string='Title', required=True, translate=True)
     shortcut = fields.Char(string='Abbreviation', translate=True)
 
+    _sql_constraints = [('name_uniq', 'unique (name)', "Title name already exists !")]
+
 class Partner(models.Model, FormatAddress):
     _description = 'Partner'
     _name = "res.partner"
@@ -450,8 +452,6 @@ class Partner(models.Model, FormatAddress):
             any(self[f] for f in address_fields) and not any(parent[f] for f in address_fields):
             addr_vals = self._update_fields_values(address_fields)
             parent.update_address(addr_vals)
-            if not parent.is_company:
-                parent.write({'is_company': True})
 
     def _clean_website(self, website):
         (scheme, netloc, path, params, query, fragment) = urlparse.urlparse(website)
@@ -645,7 +645,7 @@ class Partner(models.Model, FormatAddress):
         emails = tools.email_split(email)
         if emails:
             email = emails[0]
-        partners = self.search([('email', '=ilike', email)])
+        partners = self.search([('email', '=ilike', email)], limit=1)
         return partners.id or self.name_create(email)[0]
 
     def _get_gravatar_image(self, email):

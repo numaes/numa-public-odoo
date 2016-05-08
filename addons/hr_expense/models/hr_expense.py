@@ -16,6 +16,7 @@ class HrExpense(models.Model):
 
     name = fields.Char(string='Expense Description', readonly=True, required=True, states={'draft': [('readonly', False)]})
     date = fields.Date(readonly=True, states={'draft': [('readonly', False)]}, default=fields.Date.context_today, string="Date")
+    accounting_date = fields.Date(readonly=True, states={'draft': [('readonly', False)]}, string='Accounting Date')
     employee_id = fields.Many2one('hr.employee', string="Employee", required=True, readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1))
     product_id = fields.Many2one('product.product', string='Product', readonly=True, states={'draft': [('readonly', False)]}, domain=[('can_be_expensed', '=', True)], required=True)
     product_uom_id = fields.Many2one('product.uom', string='Unit of Measure', required=True, readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env['product.uom'].search([], limit=1, order='id'))
@@ -214,11 +215,12 @@ class HrExpense(models.Model):
         journal_dict = {}
         maxdate = False
         for expense in self:
-            if expense.date > maxdate:
-                maxdate = expense.date
-            if expense.journal_id not in journal_dict:
-                journal_dict[expense.journal_id] = []
-            journal_dict[expense.journal_id].append(expense)
+            acc_date = expense.accounting_date or expense.date
+            if acc_date > maxdate:
+                maxdate = acc_date
+            jrn = expense.bank_journal_id if expense.payment_mode == 'company_account' else expense.journal_id
+            journal_dict.setdefault(jrn, [])
+            journal_dict[jrn].append(expense)
 
         for journal, expense_list in journal_dict.items():
             #create the move that will contain the accounting entries
@@ -249,7 +251,7 @@ class HrExpense(models.Model):
                         'name': expense.employee_id.name,
                         'price': total,
                         'account_id': emp_account,
-                        'date_maturity': expense.date,
+                        'date_maturity': expense.accounting_date or expense.date,
                         'amount_currency': diff_currency_p and total_currency or False,
                         'currency_id': diff_currency_p and expense.currency_id.id or False,
                         'ref': expense.employee_id.address_home_id.ref or False

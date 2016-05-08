@@ -3,6 +3,8 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from openerp import api, fields, models
+from openerp.exceptions import Warning
+from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 
@@ -14,6 +16,10 @@ class AccountInvoice(models.Model):
     def action_move_create(self):
         result = super(AccountInvoice, self).action_move_create()
         for inv in self:
+            if inv.number:
+                asset_ids = self.env['account.asset.asset'].sudo().search([('invoice_id', '=', inv.id), ('company_id', '=', inv.company_id.id)])
+                if asset_ids:
+                    asset_ids.write({'active': False})
             inv.invoice_line_ids.asset_create()
         return result
 
@@ -65,12 +71,19 @@ class AccountInvoiceLine(models.Model):
         return True
 
     @api.onchange('product_id')
-    def onchange_product_id(self):
+    def _onchange_product_id(self):
+        vals = super(AccountInvoiceLine, self)._onchange_product_id()
         if self.product_id:
             if self.invoice_id.type == 'out_invoice':
                 self.asset_category_id = self.product_id.product_tmpl_id.deferred_revenue_category_id
             elif self.invoice_id.type == 'in_invoice':
                 self.asset_category_id = self.product_id.product_tmpl_id.asset_category_id
+        return vals
+
+    @api.onchange('asset_category_id')
+    def onchange_asset_category_id(self):
+        if self.asset_category_id:
+            self.account_id = self.asset_category_id.account_asset_id
 
     def _set_additional_fields(self, invoice):
         if not self.asset_category_id:
@@ -85,8 +98,3 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'
     asset_category_id = fields.Many2one('account.asset.category', string='Asset Type', ondelete="restrict")
     deferred_revenue_category_id = fields.Many2one('account.asset.category', string='Deferred Revenue Type', ondelete="restrict")
-
-    @api.onchange('deferred_revenue_category_id')
-    def onchange_revenue_category_id(self):
-        if self.deferred_revenue_category_id:
-            self.property_account_income_id = self.deferred_revenue_category_id.account_depreciation_id.id

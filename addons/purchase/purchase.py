@@ -293,6 +293,14 @@ class PurchaseOrder(models.Model):
     def print_quotation(self):
         self.write({'state': "sent"})
         return self.env['report'].get_action(self, 'purchase.report_purchasequotation')
+        for po in self.browse(cr, SUPERUSER_ID, ids, context=context):
+            for picking in po.picking_ids:
+                picking.move_lines.write({'purchase_line_id': False})
+            for invoice in po.invoice_ids:
+                po.write({'invoice_ids': [(3, invoice.id, _)]})
+            for po_line in po.order_line:
+                for invoice_line in po_line.invoice_lines:
+                    po_line.write({'invoice_lines': [(3, invoice_line.id, _)]})
 
     @api.multi
     def button_approve(self):
@@ -331,6 +339,7 @@ class PurchaseOrder(models.Model):
 
             for pick in order.picking_ids.filtered(lambda r: r.state != 'cancel'):
                 pick.action_cancel()
+            # TDE FIXME: I don' think context key is necessary, as actions are not related / called from each other
             if not self.env.context.get('cancel_procurement'):
                 procurements = order.order_line.mapped('procurement_ids')
                 procurements.filtered(lambda r: r.state not in ('cancel', 'exception') and r.rule_id.propagate).write({'state': 'cancel'})
@@ -374,8 +383,7 @@ class PurchaseOrder(models.Model):
                 res = order._prepare_picking()
                 picking = self.env['stock.picking'].create(res)
                 moves = order.order_line.filtered(lambda r: r.product_id.type in ['product', 'consu'])._create_stock_moves(picking)
-                move_ids = moves.action_confirm()
-                moves = self.env['stock.move'].browse(move_ids)
+                moves.action_confirm()
                 moves.force_assign()
         return True
 
@@ -552,6 +560,7 @@ class PurchaseOrderLine(models.Model):
 
     order_id = fields.Many2one('purchase.order', string='Order Reference', select=True, required=True, ondelete='cascade')
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
+    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
     company_id = fields.Many2one('res.company', related='order_id.company_id', string='Company', store=True, readonly=True)
     state = fields.Selection(related='order_id.state', stored=True)
 
@@ -635,7 +644,7 @@ class PurchaseOrderLine(models.Model):
                 raise UserError(_('Cannot delete a purchase order line which is in state \'%s\'.') %(line.state,))
             for proc in line.procurement_ids:
                 proc.message_post(body=_('Purchase order line deleted.'))
-            line.procurement_ids.write({'state': 'exception'})
+            line.procurement_ids.filtered(lambda r: r.state != 'cancel').write({'state': 'exception'})
         return super(PurchaseOrderLine, self).unlink()
 
     @api.model
@@ -789,33 +798,35 @@ class ProcurementOrder(models.Model):
                         partner_id=procurement.purchase_line_id.partner_id,
                         quantity=product_qty,
                         date=procurement.purchase_line_id.order_id.date_order and procurement.purchase_line_id.order_id.date_order[:10],
-                        uom_id=procurement.product_uom)
+                        uom_id=procurement.purchase_line_id.product_uom)
 
                     price_unit = self.env['account.tax']._fix_tax_included_price(seller.price, procurement.purchase_line_id.product_id.supplier_taxes_id, procurement.purchase_line_id.taxes_id) if seller else 0.0
                     if price_unit and seller and procurement.purchase_line_id.order_id.currency_id and seller.currency_id != procurement.purchase_line_id.order_id.currency_id:
                         price_unit = seller.currency_id.compute(price_unit, procurement.purchase_line_id.order_id.currency_id)
 
-                    if seller and seller.product_uom != procurement.product_uom:
-                        price_unit = self.env['product.uom']._compute_price(seller.product_uom.id, price_unit, to_uom_id=procurement.product_uom.id)
+                    if seller and seller.product_uom != procurement.purchase_line_id.product_uom:
+                        price_unit = self.env['product.uom']._compute_price(seller.product_uom.id, price_unit, to_uom_id=procurement.purchase_line_id.product_uom.id)
 
-                procurement.purchase_line_id.product_qty = product_qty
-                procurement.purchase_line_id.price_unit = price_unit
+                    procurement.purchase_line_id.product_qty = product_qty
+                    procurement.purchase_line_id.price_unit = price_unit
+                else:
+                    procurement.purchase_line_id.unlink()
 
         return result
 
-    @api.model
-    def _run(self, procurement):
-        if procurement.rule_id and procurement.rule_id.action == 'buy':
-            return procurement.make_po()
-        return super(ProcurementOrder, self)._run(procurement)
+    @api.multi
+    def _run(self):
+        if self.rule_id and self.rule_id.action == 'buy':
+            return self.make_po()
+        return super(ProcurementOrder, self)._run()
 
-    @api.model
-    def _check(self, procurement):
-        if procurement.purchase_line_id:
-            if not procurement.move_ids:
+    @api.multi
+    def _check(self):
+        if self.purchase_line_id:
+            if not self.move_ids:
                 return False
-            return all(move.state == 'done' for move in procurement.move_ids)
-        return super(ProcurementOrder, self)._check(procurement)
+            return all(move.state == 'done' for move in self.move_ids)
+        return super(ProcurementOrder, self)._check()
 
     @api.v8
     def _get_purchase_schedule_date(self):
@@ -860,12 +871,13 @@ class ProcurementOrder(models.Model):
     def _prepare_purchase_order_line(self, po, supplier):
         self.ensure_one()
 
+        procurement_uom_po_qty = self.env['product.uom']._compute_qty_obj(self.product_uom, self.product_qty, self.product_id.uom_po_id)
         seller = self.product_id._select_seller(
             self.product_id,
             partner_id=supplier.name,
-            quantity=self.product_qty,
+            quantity=procurement_uom_po_qty,
             date=po.date_order and po.date_order[:10],
-            uom_id=self.product_uom)
+            uom_id=self.product_id.uom_po_id)
 
         taxes = self.product_id.supplier_taxes_id
         fpos = po.fiscal_position_id
@@ -876,9 +888,6 @@ class ProcurementOrder(models.Model):
         price_unit = self.env['account.tax']._fix_tax_included_price(seller.price, self.product_id.supplier_taxes_id, taxes_id) if seller else 0.0
         if price_unit and seller and po.currency_id and seller.currency_id != po.currency_id:
             price_unit = seller.currency_id.compute(price_unit, po.currency_id)
-
-        if seller and self.product_uom and seller.product_uom != self.product_uom:
-            price_unit = self.env['product.uom']._compute_price(seller.product_uom.id, price_unit, to_uom_id=self.product_uom.id)
 
         product_lang = self.product_id.with_context({
             'lang': supplier.name.lang,
@@ -892,9 +901,9 @@ class ProcurementOrder(models.Model):
 
         return {
             'name': name,
-            'product_qty': self.product_qty,
+            'product_qty': procurement_uom_po_qty,
             'product_id': self.product_id.id,
-            'product_uom': self.product_uom.id,
+            'product_uom': self.product_id.uom_po_id.id,
             'price_unit': price_unit,
             'date_planned': date_planned,
             'taxes_id': [(6, 0, taxes_id.ids)],
@@ -976,23 +985,21 @@ class ProcurementOrder(models.Model):
             # Create Line
             po_line = False
             for line in po.order_line:
-                if line.product_id == procurement.product_id and line.product_uom == procurement.product_uom:
+                if line.product_id == procurement.product_id and line.product_uom == procurement.product_id.uom_po_id:
+                    procurement_uom_po_qty = self.env['product.uom']._compute_qty_obj(procurement.product_uom, procurement.product_qty, procurement.product_id.uom_po_id)
                     seller = self.product_id._select_seller(
-                        self.product_id,
+                        procurement.product_id,
                         partner_id=partner,
-                        quantity=line.product_qty + procurement.product_qty,
+                        quantity=line.product_qty + procurement_uom_po_qty,
                         date=po.date_order and po.date_order[:10],
-                        uom_id=self.product_uom)
+                        uom_id=procurement.product_id.uom_po_id)
 
                     price_unit = self.env['account.tax']._fix_tax_included_price(seller.price, line.product_id.supplier_taxes_id, line.taxes_id) if seller else 0.0
                     if price_unit and seller and po.currency_id and seller.currency_id != po.currency_id:
                         price_unit = seller.currency_id.compute(price_unit, po.currency_id)
 
-                    if seller and self.product_uom and seller.product_uom != self.product_uom:
-                        price_unit = self.env['product.uom']._compute_price(seller.product_uom.id, price_unit, to_uom_id=self.product_uom.id)
-
                     po_line = line.write({
-                        'product_qty': line.product_qty + procurement.product_qty,
+                        'product_qty': line.product_qty + procurement_uom_po_qty,
                         'price_unit': price_unit,
                         'procurement_ids': [(4, procurement.id)]
                     })

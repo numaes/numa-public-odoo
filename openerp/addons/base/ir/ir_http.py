@@ -154,7 +154,7 @@ class IrHttp(models.AbstractModel):
                 return attach
 
         # Don't handle exception but use werkeug debugger if server in --dev mode
-        if tools.config['dev_mode']:
+        if 'werkzeug' in tools.config['dev_mode']:
             raise
         try:
             return request._handle_exception(exception)
@@ -301,6 +301,10 @@ class IrHttp(models.AbstractModel):
                 mimetype = obj.mimetype
             elif filename:
                 mimetype = mimetypes.guess_type(filename)[0]
+            if not mimetype and getattr(env[model]._fields[field], 'attachment', False):
+                # for binary fields, fetch the ir_attachement for mimetype check
+                attach_mimetype = env['ir.attachment'].search_read(domain=[('res_model', '=', model), ('res_id', '=', id), ('res_field', '=', field)], fields=['mimetype'], limit=1)
+                mimetype = attach_mimetype and attach_mimetype[0]['mimetype']
             if not mimetype:
                 mimetype = default_mimetype
         headers.append(('Content-Type', mimetype))

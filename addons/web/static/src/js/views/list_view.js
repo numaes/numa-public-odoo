@@ -35,7 +35,7 @@ var row_decoration = [
 
 var ListView = View.extend({
     _template: 'ListView',
-    accesskey: "L",
+    accesskey: "l",
     defaults: _.extend({}, View.prototype.defaults, {
         // records can be selected one by one
         selectable: true,
@@ -1776,6 +1776,7 @@ var Column = Class.extend({
             row_data[this.id].value, this, options.value_if_empty));
     }
 });
+ListView.Column = Column;
 
 var MetaColumn = Column.extend({
     meta: true,

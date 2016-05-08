@@ -220,6 +220,7 @@
                                     <field name="date_planned"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                     <field name="account_analytic_id" context="{'default_partner_id':parent.partner_id}" groups="purchase.group_analytic_accounting"/>
+                                    <field name="analytic_tag_ids" groups="purchase.group_analytic_accounting" widget="many2many_tags"/>
                                     <field name="product_qty"/>
                                     <field name="qty_received" invisible="not context.get('show_purchase', False)"/>
                                     <field name="qty_invoiced" invisible="not context.get('show_purchase', False)"/>
@@ -539,7 +540,7 @@
                     <field name="purchase_method" widget="radio" groups="purchase.group_purchase_manager"/>
                 </field>
                 <group name="description" position="after">
-                    <group string="Warning when Purchasing this Product" colspan="2" groups="purchase.group_warning">
+                    <group string="Warning when Purchasing this Product" colspan="2" groups="purchase.group_warning_purchase">
                         <field name="purchase_line_warn" nolabel="1"/>
                         <field name="purchase_line_warn_msg" colspan="3" nolabel="1"
                                 attrs="{'required':[('purchase_line_warn','!=','no-message')],'readonly':[('purchase_line_warn','=','no-message')]}"/>

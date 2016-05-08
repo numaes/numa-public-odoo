@@ -53,6 +53,9 @@ class SaleOrder(models.Model):
         """
         for order in self:
             invoice_ids = order.order_line.mapped('invoice_lines').mapped('invoice_id')
+            # Search for invoices which have been 'cancelled' (filter_refund = 'modify' in
+            # 'account.invoice.refund')
+            invoice_ids |= invoice_ids.search([('origin', 'like', order.name)])
             # Search for refunds as well
             refund_ids = self.env['account.invoice'].browse()
             if invoice_ids:
@@ -108,7 +111,7 @@ class SaleOrder(models.Model):
     validity_date = fields.Date(string='Expiration Date', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
         help="Manually set the expiration date of your quotation (offer), or it will set the date automatically based on the template if online quotation is installed.")
     create_date = fields.Datetime(string='Creation Date', readonly=True, index=True, help="Date on which sales order is created.")
-    confirmation_date = fields.Datetime(string='Confirmation Date', readonly=True, index=True,  help="Date on which the sale order is confirmed.")
+    confirmation_date = fields.Datetime(string='Confirmation Date', readonly=True, index=True, help="Date on which the sale order is confirmed.", oldname="date_confirm")
     user_id = fields.Many2one('res.users', string='Salesperson', index=True, track_visibility='onchange', default=lambda self: self.env.user)
     partner_id = fields.Many2one('res.partner', string='Customer', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, required=True, change_default=True, index=True, track_visibility='always')
     partner_invoice_id = fields.Many2one('res.partner', string='Invoice Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Invoice address for current sales order.")
@@ -273,7 +276,6 @@ class SaleOrder(models.Model):
             'name': self.client_order_ref or '',
             'origin': self.name,
             'type': 'out_invoice',
-            'reference': self.client_order_ref or self.name,
             'account_id': self.partner_invoice_id.property_account_receivable_id.id,
             'partner_id': self.partner_invoice_id.id,
             'journal_id': journal_id,
@@ -323,7 +325,7 @@ class SaleOrder(models.Model):
         """
         Create the invoice associated to the SO.
         :param grouped: if True, invoices are grouped by SO id. If False, invoices are grouped by
-                        (partner, currency)
+                        (partner_invoice_id, currency)
         :param final: if True, refunds will be generated if necessary
         :returns: list of created invoices
         """
@@ -332,7 +334,7 @@ class SaleOrder(models.Model):
         invoices = {}
 
         for order in self:
-            group_key = order.id if grouped else (order.partner_id.id, order.currency_id.id)
+            group_key = order.id if grouped else (order.partner_invoice_id.id, order.currency_id.id)
             for line in order.order_line.sorted(key=lambda l: l.qty_to_invoice < 0):
                 if float_is_zero(line.qty_to_invoice, precision_digits=precision):
                     continue
@@ -340,8 +342,13 @@ class SaleOrder(models.Model):
                     inv_data = order._prepare_invoice()
                     invoice = inv_obj.create(inv_data)
                     invoices[group_key] = invoice
-                elif group_key in invoices and order.name not in invoices[group_key].origin.split(', '):
-                    invoices[group_key].write({'origin': invoices[group_key].origin + ', ' + order.name})
+                elif group_key in invoices:
+                    vals = {}
+                    if order.name not in invoices[group_key].origin.split(', '):
+                        vals['origin'] = invoices[group_key].origin + ', ' + order.name
+                    if order.client_order_ref and order.client_order_ref not in invoices[group_key].name.split(', '):
+                        vals['name'] = invoices[group_key].name + ', ' + order.client_order_ref
+                    invoices[group_key].write(vals)
                 if line.qty_to_invoice > 0:
                     line.invoice_line_create(invoices[group_key].id, line.qty_to_invoice)
                 elif line.qty_to_invoice < 0 and final:
@@ -445,6 +452,7 @@ class SaleOrder(models.Model):
                         break
         if self.env['ir.values'].get_default('sale.config.settings', 'auto_done_setting'):
             self.action_done()
+        return True
 
     @api.multi
     def _create_analytic_account(self, prefix=None):
@@ -656,6 +664,13 @@ class SaleOrderLine(models.Model):
 
     @api.model
     def create(self, values):
+        onchange_fields = ['name', 'price_unit', 'product_uom', 'tax_id']
+        if values.get('order_id') and values.get('product_id') and any(f not in values for f in onchange_fields):
+            line = self.new(values)
+            line.product_id_change()
+            for field in onchange_fields:
+                if field not in values:
+                    values[field] = line._fields[field].convert_to_write(line[field], line)
         line = super(SaleOrderLine, self).create(values)
         if line.state == 'sale':
             if (not line.order_id.project_id and
@@ -717,6 +732,7 @@ class SaleOrderLine(models.Model):
     currency_id = fields.Many2one(related='order_id.currency_id', store=True, string='Currency', readonly=True)
     company_id = fields.Many2one(related='order_id.company_id', string='Company', store=True, readonly=True)
     order_partner_id = fields.Many2one(related='order_id.partner_id', store=True, string='Customer')
+    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
 
     state = fields.Selection([
         ('draft', 'Quotation'),
@@ -767,6 +783,7 @@ class SaleOrderLine(models.Model):
             'product_id': self.product_id.id or False,
             'invoice_line_tax_ids': [(6, 0, self.tax_id.ids)],
             'account_analytic_id': self.order_id.project_id.id,
+            'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
         }
         return res
 
@@ -895,6 +912,17 @@ class AccountInvoice(models.Model):
         for (order, name) in todo:
             order.message_post(body=_("Invoice %s paid") % (name))
         return res
+
+    @api.model
+    def _refund_cleanup_lines(self, lines):
+        result = super(AccountInvoice, self)._refund_cleanup_lines(lines)
+        if self.env.context.get('mode') == 'modify':
+            for i in xrange(0, len(lines)):
+                for name, field in lines[i]._fields.iteritems():
+                    if name == 'sale_line_ids':
+                        result[i][2][name] = [(6, 0, lines[i][name].ids)]
+                        lines[i][name] = False
+        return result
 
     @api.multi
     def order_lines_layouted(self):

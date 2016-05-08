@@ -55,7 +55,8 @@ SLEEP_INTERVAL = 60     # 1 min
 def memory_info(process):
     """ psutil < 2.0 does not have memory_info, >= 3.0 does not have
     get_memory_info """
-    return (getattr(process, 'memory_info', None) or process.get_memory_info)()
+    pmem = (getattr(process, 'memory_info', None) or process.get_memory_info)()
+    return (pmem.rss, pmem.vms)
 
 #----------------------------------------------------------
 # Werkzeug WSGI servers patched
@@ -919,12 +920,13 @@ def start(preload=None, stop=False):
         server = ThreadedServer(openerp.service.wsgi_server.application)
 
     watcher = None
-    if config['dev_mode']:
+    if 'reload' in config['dev_mode']:
         if watchdog:
             watcher = FSWatcher()
             watcher.start()
         else:
             _logger.warning("'watchdog' module not installed. Code autoreload feature is disabled")
+    if 'werkzeug' in config['dev_mode']:
         server.app = DebuggedApplication(server.app, evalex=True)
 
     rc = server.run(preload, stop)

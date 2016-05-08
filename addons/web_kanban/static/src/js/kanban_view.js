@@ -25,7 +25,7 @@ var ColumnQuickCreate = quick_create.ColumnQuickCreate;
 var fields_registry = kanban_widgets.registry;
 
 var KanbanView = View.extend({
-    accesskey: "K",
+    accesskey: "k",
     className: "o_kanban_view",
     custom_events: {
         'kanban_record_open': 'open_record',
@@ -138,16 +138,13 @@ var KanbanView = View.extend({
         return this.search_orderer
             .add(options.grouped ? this.load_groups(options) : this.load_records())
             .then(function (data) {
-                var new_ids;
                 _.extend(self, options);
                 if (options.grouped) {
-                    new_ids = _.union.apply(null, _.map(data.groups, function (group) {
+                    var new_ids = _.union.apply(null, _.map(data.groups, function (group) {
                         return group.dataset.ids;
                     }));
-                } else {
-                    new_ids = _.pluck(data.records, 'id');
+                    self.dataset.alter_ids(new_ids);
                 }
-                self.dataset.alter_ids(new_ids);
                 self.data = data;
             })
             .then(this.proxy('render'))
@@ -164,18 +161,20 @@ var KanbanView = View.extend({
     },
 
     load_records: function (offset, dataset) {
-        dataset = dataset || this.dataset;        
-        return dataset._model.query(this.fields_keys.concat(['__last_update']))
-                .limit(this.limit || false)
-                .offset(offset || 0)
-                .all()
-                .then(function (records) {
-                    return {
-                        records: records,
-                        is_empty: !records.length,
-                        grouped: false,
-                    };
-                });
+        var options = {
+            'limit': this.limit,
+            'offset': offset,
+        };
+        dataset = dataset || this.dataset;
+        return dataset
+            .read_slice(this.fields_keys.concat(['__last_update']), options)
+            .then(function(records) {
+                return {
+                    records: records,
+                    is_empty: !records.length,
+                    grouped: false,
+                };
+            });
     },
 
     load_groups: function (options) {
@@ -522,13 +521,14 @@ var KanbanView = View.extend({
 
     open_action: function (event) {
         var self = this;
-        var node_context = event.data.context || {};
-        var context = new data.CompoundContext(node_context);
-        context.set_eval_context({
-            active_id: event.target.id,
-            active_ids: [event.target.id],
-            active_model: this.model,
-        });
+        if (event.data.context) {
+            event.data.context = new data.CompoundContext(event.data.context)
+                .set_eval_context({
+                    active_id: event.target.id,
+                    active_ids: [event.target.id],
+                    active_model: this.model,
+                });
+        }
         this.do_execute_action(event.data, this.dataset, event.target.id).then(function () {
             self.reload_record(event.target);
         });
