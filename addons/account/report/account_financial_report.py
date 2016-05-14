@@ -29,7 +29,8 @@ class account_financial_report(models.Model):
         children = self.search([('parent_id', 'in', self.ids)], order='sequence ASC')
         if children:
             for child in children:
-                res += child._get_children_by_order()
+                if self not in children:
+                    res += child._get_children_by_order()
         return res
 
     name = fields.Char('Report Name', required=True, translate=True)

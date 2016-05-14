@@ -39,11 +39,11 @@ class ReportFinancial(models.AbstractModel):
 
     def _compute_report_balance(self, reports):
         '''returns a dictionary with key=the ID of a record and value=the credit, debit and balance amount
-           computed for this record. If the record is of type :
-               'accounts' : it's the sum of the linked accounts
-               'account_type' : it's the sum of leaf accoutns with such an account_type
-               'account_report' : it's the amount of the related report
-               'sum' : it's the sum of the children of this record (aka a 'view' record)'''
+           computed for this record. If the record is of type :
+               'accounts' : it's the sum of the linked accounts
+               'account_type' : it's the sum of leaf accoutns with such an account_type
+               'account_report' : it's the amount of the related report
+               'sum' : it's the sum of the children of this record (aka a 'view' record)'''
         res = {}
         fields = ['credit', 'debit', 'balance']
         for report in reports:
@@ -65,16 +65,18 @@ class ReportFinancial(models.AbstractModel):
                         res[report.id][field] += value.get(field)
             elif report.type == 'account_report' and report.account_report_id:
                 # it's the amount of the linked report
-                res2 = self._compute_report_balance(report.account_report_id)
-                for key, value in res2.items():
-                    for field in fields:
-                        res[report.id][field] += value[field]
+                if report not in report.account_report_id:
+                    res2 = self._compute_report_balance(report.account_report_id)
+                    for key, value in res2.items():
+                        for field in fields:
+                            res[report.id][field] += value[field]
             elif report.type == 'sum':
                 # it's the sum of the children of this account.report
-                res2 = self._compute_report_balance(report.children_ids)
-                for key, value in res2.items():
-                    for field in fields:
-                        res[report.id][field] += value[field]
+                if report not in report.children_ids:
+                    res2 = self._compute_report_balance(report.children_ids)
+                    for key, value in res2.items():
+                        for field in fields:
+                            res[report.id][field] += value[field]
         return res
 
     def get_account_lines(self, data):
