@@ -42,6 +42,8 @@ class ReturnPicking(models.TransientModel):
             if picking.state != 'done':
                 raise UserError(_("You may only return Done pickings"))
             for move in picking.move_lines:
+                if move.scrapped:
+                    continue
                 if move.move_dest_id:
                     move_dest_exists = True
                 # Sum the quants in that location that can be returned (they should have been moved by the moves that were included in the returned picking)
@@ -78,7 +80,8 @@ class ReturnPicking(models.TransientModel):
         for move in return_moves:
             to_check_moves = self.env['stock.move'] | move.move_dest_id
             while to_check_moves:
-                current_move = to_check_moves.pop()
+                current_move = to_check_moves[-1]
+                to_check_moves = to_check_moves[:-1]
                 if current_move.state not in ('done', 'cancel') and current_move.reserved_quant_ids:
                     unreserve_moves |= current_move
                 split_move_ids = self.env['stock.move'].search([('split_from', '=', current_move.id)])

@@ -1827,11 +1827,6 @@ var PaymentScreenWidget = ScreenWidget.extend({
             return;
         }
 
-        // get rid of payment lines with an amount of 0, because
-        // since accounting v9 we cannot have bank statement lines
-        // with an amount of 0
-        order.clean_empty_paymentlines();
-
         var plines = order.get_paymentlines();
         for (var i = 0; i < plines.length; i++) {
             if (plines[i].get_type() === 'bank' && plines[i].get_amount() < 0) {
@@ -1886,6 +1881,8 @@ var PaymentScreenWidget = ScreenWidget.extend({
 
                 this.pos.proxy.open_cashbox();
         }
+
+        order.initialize_validation_date();
 
         if (order.is_to_invoice()) {
             var invoiced = this.pos.push_and_invoice_order(order);
