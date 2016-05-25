@@ -1163,9 +1163,6 @@ class sale_order_line(osv.osv):
         if account:
             taxes = taxes or account.tax_ids
 
-        if product_obj.description_sale:
-            result['name'] += '\n' + product_obj.description_sale
-
         if update_tax: 
             #The quantity only have changed
             # The superuser is used by website_sale in order to create a sale order. We need to make
