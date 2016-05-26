@@ -50,9 +50,8 @@
         <menuitem
             id="reporting_menuitem"
             name="Reports"
-            parent="base.menu_custom"
+            parent="base.menu_administration"
             sequence="15"
-            groups="base.group_no_one"
             />
         <menuitem
             id="paper_format_menuitem"
@@ -60,7 +59,6 @@
             parent="reporting_menuitem"
             action="paper_format_action"
             sequence="2"
-            groups="base.group_no_one"
             />
         <menuitem
             id="reports_menuitem"
@@ -68,7 +66,6 @@
             parent="reporting_menuitem"
             action="reports_action"
             sequence="3"
-            groups="base.group_no_one"
             />
 
         <!-- Add a paperformat and web button to the report form view -->

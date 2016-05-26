@@ -395,6 +395,8 @@ class Report(osv.Model):
             # Convert the paperformat record into arguments
             command_args.extend(self._build_wkhtmltopdf_args(paperformat, spec_paperformat_args))
 
+        command_args.extend(['--disable-smart-shrinking'])  # no autoscaling
+
         # Force the landscape orientation if necessary
         if landscape and '--orientation' in command_args:
             command_args_copy = list(command_args)
