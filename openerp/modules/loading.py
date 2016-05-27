@@ -113,7 +113,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             for filename in _get_files_of_kind(kind):
                 _logger.info("loading %s/%s", module_name, filename)
                 noupdate = False
-                if kind in ('demo', 'demo_xml') or (filename.endswith('.csv') and kind in ('init', 'init_xml')):
+                if kind in ('demo', 'demo_xml') or (filename.endswith('.csv') and kind in ('data', 'init', 'init_xml')):
                     noupdate = True
                 tools.convert_file(cr, module_name, filename, idref, mode, noupdate, kind, report)
         finally:
