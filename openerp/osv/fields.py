@@ -1563,8 +1563,14 @@ class related(function):
             # traverse all fields except the last one
             for field in self.arg[:-1]:
                 value = value[field][:1]
+                if not value.exists():
+                    value = False
+                    break
             # read the last field on the target record
-            res[record.id] = value[self.arg[-1]]
+            if value:
+                res[record.id] = value[self.arg[-1]]
+            else:
+                res[record.id] = False
 
         if self._type == 'many2one':
             # res[id] is a recordset; convert it to (id, name) or False.
