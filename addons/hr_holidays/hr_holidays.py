@@ -231,7 +231,7 @@ class hr_holidays(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         res = []
         for leave in self.browse(cr, uid, ids, context=context):
-            res.append((leave.id, leave.name or _("%s on %s") % (leave.employee_id.name, leave.holiday_status_id.name)))
+            res.append((leave.id, _("%s on %s : %.2f day(s)") % (leave.employee_id.name, leave.holiday_status_id.name, leave.number_of_days_temp)))
         return res
 
     def _create_resource_leave(self, cr, uid, leaves, context=None):
@@ -369,10 +369,6 @@ class hr_holidays(osv.osv):
         context = dict(context, mail_create_nolog=True, mail_create_nosubscribe=True)
         if not self._check_state_access_right(cr, uid, values, context):
             raise AccessError(_('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % values.get('state'))
-        if not values.get('name'):
-            employee_name = self.pool['hr.employee'].browse(cr, uid, employee_id, context=context).name
-            holiday_type = self.pool['hr.holidays.status'].browse(cr, uid, values.get('holiday_status_id'), context=context).name
-            values['name'] = _("%s on %s") % (employee_name, holiday_type)
         hr_holiday_id = super(hr_holidays, self).create(cr, uid, values, context=context)
         self.add_follower(cr, uid, [hr_holiday_id], employee_id, context=context)
         return hr_holiday_id
@@ -492,7 +488,7 @@ class hr_holidays(osv.osv):
         return True
 
     def holidays_cancel(self, cr, uid, ids, context=None):
-        for record in self.browse(cr, uid, ids):
+        for record in self.browse(cr, uid, ids, context=context):
             # Delete the meeting
             if record.meeting_id:
                 record.meeting_id.unlink()
@@ -597,14 +593,14 @@ class hr_employee(osv.Model):
             # Find for holidays status
             status_ids = type_obj.search(cr, uid, [('limit', '=', False)], context=context)
             if len(status_ids) != 1 :
-                raise osv.except_osv(_('Warning!'),_("The feature behind the field 'Remaining Legal Leaves' can only be used when there is only one leave type with the option 'Allow to Override Limit' unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot decide on which leave type the update has to be done. \nYou may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in 'Human Resources \ Leaves' to manage the leave days of the employees if the configuration does not allow to use this field.") % (len(status_ids)))
+                raise UserError(_("The feature behind the field 'Remaining Legal Leaves' can only be used when there is only one leave type with the option 'Allow to Override Limit' unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot decide on which leave type the update has to be done. \nYou may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in 'Human Resources \ Leaves' to manage the leave days of the employees if the configuration does not allow to use this field.") % (len(status_ids)))
             status_id = status_ids and status_ids[0] or False
             if not status_id:
                 return False
             if diff > 0:
                 leave_id = holiday_obj.create(cr, uid, {'name': _('Allocation for %s') % employee.name, 'employee_id': employee.id, 'holiday_status_id': status_id, 'type': 'add', 'holiday_type': 'employee', 'number_of_days_temp': diff}, context=context)
             elif diff < 0:
-                raise osv.except_osv(_('Warning!'), _('You cannot reduce validated allocation requests'))
+                raise UserError(_('You cannot reduce validated allocation requests'))
             else:
                 return False
             for sig in ('confirm', 'validate', 'second_validate'):

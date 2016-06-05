@@ -148,19 +148,15 @@ class AccountAssetAsset(models.Model):
                 amount = amount_to_depr / (undone_dotation_number - len(posted_depreciation_line_ids))
                 if self.prorata and self.category_id.type == 'purchase':
                     amount = amount_to_depr / self.method_number
-                    days = total_days - float(depreciation_date.strftime('%j'))
                     if sequence == 1:
+                        days = (self.company_id.compute_fiscalyear_dates(depreciation_date)['date_to'] - depreciation_date).days + 1
                         amount = (amount_to_depr / self.method_number) / total_days * days
-                    elif sequence == undone_dotation_number:
-                        amount = (amount_to_depr / self.method_number) / total_days * (total_days - days)
             elif self.method == 'degressive':
                 amount = residual_amount * self.method_progress_factor
                 if self.prorata:
-                    days = total_days - float(depreciation_date.strftime('%j'))
                     if sequence == 1:
+                        days = (self.company_id.compute_fiscalyear_dates(depreciation_date)['date_to'] - depreciation_date).days + 1
                         amount = (residual_amount * self.method_progress_factor) / total_days * days
-                    elif sequence == undone_dotation_number:
-                        amount = (residual_amount * self.method_progress_factor) / total_days * (total_days - days)
         return amount
 
     def _compute_board_undone_dotation_nb(self, depreciation_date, total_days):
@@ -191,7 +187,7 @@ class AccountAssetAsset(models.Model):
                 depreciation_date = datetime.strptime(self._get_last_depreciation_date()[self.id], DF).date()
             else:
                 # depreciation_date = 1st of January of purchase year
-                asset_date = datetime.strptime(self.date, DF).date()
+                asset_date = datetime.strptime(self.date[:4] + '-01-01', DF).date()
                 # if we already have some previous validated entries, starting date isn't 1st January but last entry + method period
                 if posted_depreciation_line_ids and posted_depreciation_line_ids[0].depreciation_date:
                     last_depreciation_date = datetime.strptime(posted_depreciation_line_ids[0].depreciation_date, DF).date()

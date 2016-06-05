@@ -86,7 +86,7 @@ class product_uom(osv.osv):
         'rounding': fields.float('Rounding Precision', digits=0, required=True,
             help="The computed quantity will be a multiple of this value. "\
                  "Use 1.0 for a Unit of Measure that cannot be further split, such as a piece."),
-        'active': fields.boolean('Active', help="By unchecking the active field you can disable a unit of measure without deleting it."),
+        'active': fields.boolean('Active', help="Uncheck the active field to disable a unit of measure without deleting it."),
         'uom_type': fields.selection([('bigger','Bigger than the reference Unit of Measure'),
                                       ('reference','Reference Unit of Measure for this category'),
                                       ('smaller','Smaller than the reference Unit of Measure')],'Type', required=1),
@@ -198,6 +198,13 @@ class product_category(osv.osv):
         res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
 
+    def _compute_product_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        prod_templates = self.pool['product.template'].read_group(cr, uid, [('categ_id', 'in', ids)], ['categ_id'], ['categ_id'], context=context)
+        for prod_template in prod_templates:
+            res[prod_template['categ_id'][0]] = prod_template['categ_id_count']
+        return res
+
     _name = "product.category"
     _description = "Product Category"
     _columns = {
@@ -205,10 +212,10 @@ class product_category(osv.osv):
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
         'parent_id': fields.many2one('product.category','Parent Category', select=True, ondelete='cascade'),
         'child_id': fields.one2many('product.category', 'parent_id', string='Child Categories'),
-        'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of product categories."),
         'type': fields.selection([('view','View'), ('normal','Normal')], 'Category Type', help="A category of the view type is a virtual category that can be used as the parent of another category to create a hierarchical structure."),
         'parent_left': fields.integer('Left Parent', select=1),
         'parent_right': fields.integer('Right Parent', select=1),
+        'product_count': fields.function(_compute_product_count, type="integer", help="The number of products under this category (Does not consider the children categories)"),
     }
 
 
@@ -218,7 +225,7 @@ class product_category(osv.osv):
 
     _parent_name = "parent_id"
     _parent_store = True
-    _parent_order = 'sequence, name'
+    _parent_order = 'name'
     _order = 'parent_left'
 
     _constraints = [
@@ -1245,8 +1252,8 @@ class product_packaging(osv.osv):
         'name' : fields.char('Packaging Type', required=True),
         'sequence': fields.integer('Sequence', help="The first in the sequence is the default one."),
         'product_tmpl_id': fields.many2one('product.template', string='Product'),
-        'qty' : fields.float('Quantity by Package',
-            help="The total number of products you can put by pallet or box."),
+        'qty' : fields.float('Quantity per Package',
+            help="The total number of products you can have per pallet or box."),
     }
     _defaults = {
         'sequence' : 1,

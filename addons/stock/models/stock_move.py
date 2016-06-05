@@ -270,10 +270,6 @@ class StockMove(models.Model):
             propagated_changes_dict['product_uom_qty'] = vals['product_uom_qty']
         if vals.get('product_uom_id'):
             propagated_changes_dict['product_uom_id'] = vals['product_uom_id']
-        if vals.get('product_uos_qty'):
-            propagated_changes_dict['product_uos_qty'] = vals['product_uos_qty']
-        if vals.get('product_uos_id'):
-            propagated_changes_dict['product_uos_id'] = vals['product_uos_id']
         #propagation of expected date:
         propagated_date_field = False
         if vals.get('date_expected'):
@@ -931,7 +927,6 @@ class StockMove(models.Model):
         return scrap_moves
 
     @api.multi
-    # @api.returns('self')
     def split(self, qty, restrict_lot_id=False, restrict_partner_id=False):
         """ Splits qty from move move into a new move
 
@@ -974,7 +969,7 @@ class StockMove(models.Model):
         self.with_context(do_not_propagate=True).write({'product_uom_qty': self.product_uom_qty - uom_qty})
 
         if self.move_dest_id and self.propagate and self.move_dest_id.state not in ('done', 'cancel'):
-            new_move_prop = self.dest_id.split(qty)
+            new_move_prop = self.move_dest_id.split(qty)
             new_move.write({'move_dest_id': new_move_prop})
         # returning the first element of list returned by action_confirm is ok because we checked it wouldn't be exploded (and
         # thus the result of action_confirm should always be a list of 1 element length)

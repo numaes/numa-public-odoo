@@ -22,7 +22,7 @@
   </xpath>
 </template>
 
-<template id="assets_editor" inherit_id="website.assets_editor" name="Shop Editor" groups="base.group_sale_manager">
+<template id="assets_editor" inherit_id="website.assets_editor" name="Shop Editor">
   <xpath expr="." position="inside">
       <script type="text/javascript" src="/website_sale/static/src/js/website_sale.editor.js"></script>
       <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_shop.js"></script>
@@ -388,6 +388,16 @@
                   </div>
 
                 </form>
+
+                <hr/>
+                <div t-if="product.availability == 'in_stock'" class="alert alert-success">
+                  <span class="fa fa-check"/>
+                  <span>In Stock</span>
+                </div>
+                <div t-if="product.availability == 'warning'" class="alert alert-warning">
+                  <span class="fa fa-warning"/>
+                  <span t-field="product.availability_warning"/>
+                </div>
 
                 <hr t-if="product.description_sale"/>
                 <div><p t-field="product.description_sale" class="text-muted"/></div>

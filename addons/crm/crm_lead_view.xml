@@ -12,7 +12,7 @@
                 <form string="Lead Tags">
                     <group>
                         <field name="name"/>
-                        <field name="color"/>
+                        <field name="color" groups="base.group_no_one"/>
                     </group>
                 </form>
             </field>
@@ -24,7 +24,6 @@
             <field name="arch" type="xml">
                 <tree string="Lead Tags">
                     <field name="name"/>
-                    <field name="color"/>
                 </tree>
             </field>
         </record>
@@ -143,12 +142,10 @@
                                     <field name="source_id"/>
                                     <field name="referred"/>
                                 </group>
-                                <group string="Opportunity" name="misc">
-                                    <field name="probability" groups="base.group_no_one"/>
-                                </group>
                                 <group string="Analysis" groups="base.group_no_one">
                                     <field name="date_open"/>
                                     <field name="date_closed"/>
+                                    <field name="probability"/>
                                 </group>
                             </group>
                         </page>
@@ -275,7 +272,7 @@
                                         <strong><field name="name"/></strong>
                                     </div>
                                     <div class="text-muted">
-                                        <t t-if="record.planned_revenue.raw_value"><field name="planned_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/></t> <span t-if="record.partner_id.value">, <t t-esc="record.partner_id.value"/></span>
+                                        <t t-if="record.planned_revenue.raw_value"><field name="planned_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/><span t-if="record.partner_id.value">,</span></t> <span t-if="record.partner_id.value"> <t t-esc="record.partner_id.value"/></span>
                                     </div>
 
                                     <div class="o_kanban_footer">
@@ -591,7 +588,7 @@
                         <filter string="Source" domain="[]" context="{'group_by':'source_id'}"/>
                         <separator orientation="vertical" />
                         <filter string="Creation Month" context="{'group_by':'create_date:month'}" name="month"/>
-                        <filter string="Expected Closing" context="{'group_by':'date_deadline'}"/>
+                        <filter string="Expected Closing Date" context="{'group_by':'date_deadline'}"/>
                         <filter string="Lost Reason" context="{'group_by':'lost_reason'}"/>
                     </group>
                 </search>

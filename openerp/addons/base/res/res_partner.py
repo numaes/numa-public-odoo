@@ -190,7 +190,6 @@ class Partner(models.Model, FormatAddress):
     phone = fields.Char()
     fax = fields.Char()
     mobile = fields.Char()
-    birthdate = fields.Char()
     is_company = fields.Boolean(string='Is a Company', default=False,
         help="Check if the contact is a company, otherwise it is a person")
     # company_type is only an interface field, do not use it in business logic
@@ -494,10 +493,10 @@ class Partner(models.Model, FormatAddress):
         # cannot be easily performed if default images are in the way
         if not vals.get('image'):
             vals['image'] = self._get_default_image(vals.get('type'), vals.get('is_company'), vals.get('parent_id'))
+        tools.image_resize_images(vals)
         partner = super(Partner, self).create(vals)
         partner._fields_sync(vals)
         partner._handle_first_contact_creation()
-        tools.image_resize_images(vals)
         return partner
 
     @api.multi
