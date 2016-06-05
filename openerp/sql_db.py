@@ -44,7 +44,6 @@ for name, typeoid in types_mapping.items():
     psycopg2.extensions.register_type(psycopg2.extensions.new_type(typeoid, name, lambda x, cr: x))
 psycopg2.extensions.register_type(psycopg2.extensions.new_type((700, 701, 1700,), 'float', undecimalize))
 
-
 import tools
 from tools.func import frame_codeinfo
 from datetime import datetime as mdt
@@ -222,9 +221,9 @@ class Cursor(object):
             if self._default_log_exceptions if log_exceptions is None else log_exceptions:
                 _logger.info("Programming error: %s, in query %s", pe, query)
             raise
-        except Exception:
+        except Exception, e:
             if self._default_log_exceptions if log_exceptions is None else log_exceptions:
-                _logger.info("bad query: %s", self._obj.query or query)
+                _logger.info("bad query: %s, in query %s", e, self._obj.query or query)
             raise
 
         # simple query count is always computed
