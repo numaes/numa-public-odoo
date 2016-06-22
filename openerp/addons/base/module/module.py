@@ -112,7 +112,7 @@ class MyFilterMessages(Transform):
 
     def apply(self):
         for node in self.document.traverse(nodes.system_message):
-            _logger.warning("docutils' system message present: %s", str(node))
+            _logger.warning("docutils' system message present: %s", unicode(node))
             node.parent.remove(node)
 
 class MyWriter(Writer):
