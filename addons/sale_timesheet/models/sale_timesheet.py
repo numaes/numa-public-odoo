@@ -163,9 +163,9 @@ class SaleOrder(models.Model):
             'name': action.name,
             'help': action.help,
             'type': action.type,
-            'views': [[list_view_id, 'tree'], [False, 'kanban'], [form_view_id, 'form'], [False, 'graph'], [False, 'calendar'], [False, 'pivot'], [False, 'graph']],
+            'views': [[False, 'kanban'], [list_view_id, 'tree'], [form_view_id, 'form'], [False, 'graph'], [False, 'calendar'], [False, 'pivot'], [False, 'graph']],
             'target': action.target,
-            'context': action.context,
+            'context': "{'group_by':'stage_id'}",
             'res_model': action.res_model,
         }
         if len(self.tasks_ids) > 1:
@@ -210,7 +210,7 @@ class SaleOrder(models.Model):
                 for line in order.order_line:
                     if line.product_id.track_service == 'timesheet':
                         if not order.project_id:
-                            order._create_analytic_account(prefix=order.product_id.default_code or None)
+                            order._create_analytic_account(prefix=line.product_id.default_code or None)
                         order.project_id.project_create({'name': order.project_id.name, 'use_tasks': True})
                         break
         return result

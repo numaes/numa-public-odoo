@@ -136,7 +136,7 @@ class Partner(models.Model, FormatAddress):
         return self.env['res.company']._company_default_get('res.partner')
 
     name = fields.Char(index=True)
-    display_name = fields.Char(compute='_compute_display_name', string='Name', store=True, index=True)
+    display_name = fields.Char(compute='_compute_display_name', store=True, index=True)
     date = fields.Date(index=True)
     title = fields.Many2one('res.partner.title')
     parent_id = fields.Many2one('res.partner', string='Related Company', index=True)
@@ -526,12 +526,11 @@ class Partner(models.Model, FormatAddress):
     @api.multi
     def name_get(self):
         res = []
-        types_dict = dict(self.fields_get()['type']['selection'])
         for partner in self:
             name = partner.name or ''
             if partner.parent_id and not partner.is_company:
                 if not name and partner.type in ['invoice', 'delivery', 'other']:
-                    name = types_dict[partner.type]
+                    name = dict(self.fields_get(['type'])['type']['selection'])[partner.type]
                 name = "%s, %s" % (partner.parent_name, name)
             if self._context.get('show_address_only'):
                 name = partner._display_address(without_company=True)

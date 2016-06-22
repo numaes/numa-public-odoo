@@ -32,7 +32,7 @@ class Job(models.Model):
     _description = "Job Position"
     _inherit = ['mail.thread']
 
-    name = fields.Char(string='Job Name', required=True, index=True, translate=True)
+    name = fields.Char(string='Job Title', required=True, index=True, translate=True)
     expected_employees = fields.Integer(compute='_compute_employees', string='Total Forecasted Employees', store=True,
         help='Expected number of employees for this job position after new recruitment.')
     no_of_employee = fields.Integer(compute='_compute_employees', string="Current Number of Employees", store=True,
@@ -48,7 +48,7 @@ class Job(models.Model):
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
     state = fields.Selection([
         ('recruit', 'Recruitment in Progress'),
-        ('open', 'Recruitment Closed')
+        ('open', 'Not Recruiting')
     ], string='Status', readonly=True, required=True, track_visibility='always', copy=False, default='recruit', help="Set whether the recruitment process is open or closed for this job position.")
 
     _sql_constraints = [
@@ -108,7 +108,7 @@ class Employee(models.Model):
         return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
 
     # we need a related field in order to be able to sort the employee by name
-    name_related = fields.Char('Name', related='resource_id.name', readonly=True, store=True)
+    name_related = fields.Char(related='resource_id.name', string="Resource Name", readonly=True, store=True)
     country_id = fields.Many2one('res.country', string='Nationality (Country)')
     birthday = fields.Date('Date of Birth')
     ssnid = fields.Char('SSN No', help='Social Security Number')

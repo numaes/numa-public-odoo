@@ -151,6 +151,8 @@ TRANSLATED_ATTRS = {
     'string', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title',
 }
 
+avoid_pattern = re.compile(r"[\s\n]*<!DOCTYPE", re.IGNORECASE)
+
 class XMLTranslator(object):
     """ A sequence of serialized XML/HTML items, with some of them to translate
         (todo) and others already translated (done). The purpose of this object
@@ -232,7 +234,7 @@ class XMLTranslator(object):
             node.tag in SKIPPED_ELEMENTS or
             node.get("t-translation", "").strip() == "off" or
             node.tag == "attribute" and node.get("name") not in TRANSLATED_ATTRS or
-            not node.getparent() and node.text and '<!DOCTYPE' in node.text
+            node.getparent() is None and node.text and '<!DOCTYPE' in node.text
         ):
             # do not translate the contents of the node
             tail, node.tail = node.tail, None
@@ -242,7 +244,11 @@ class XMLTranslator(object):
 
         # process children nodes locally in child_trans
         child_trans = XMLTranslator(self.callback, self.method, parser=self.parser)
-        child_trans.todo(escape(node.text or ""))
+        if node.text:
+            if avoid_pattern.match(node.text):
+                child_trans.done(escape(node.text)) # do not translate <!DOCTYPE...
+            else:
+                child_trans.todo(escape(node.text))
         for child in node:
             child_trans.process(child)
 

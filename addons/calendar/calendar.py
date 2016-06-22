@@ -901,7 +901,7 @@ class calendar_event(osv.Model):
         'stop_datetime': fields.datetime('End Datetime', states={'done': [('readonly', True)]}, track_visibility='onchange'),  # old date_deadline
         'duration': fields.float('Duration', states={'done': [('readonly', True)]}),
         'description': fields.text('Description', states={'done': [('readonly', True)]}),
-        'class': fields.selection([('public', 'Everyone'), ('private', 'Only me'), ('confidential', 'Only internal users')], 'Privacy', states={'done': [('readonly', True)]}),
+        'privacy': fields.selection([('public', 'Everyone'), ('private', 'Only me'), ('confidential', 'Only internal users')], 'Privacy', states={'done': [('readonly', True)]}, oldname='class'),
         'location': fields.char('Location', help="Location of Event", track_visibility='onchange', states={'done': [('readonly', True)]}),
         'show_as': fields.selection([('free', 'Free'), ('busy', 'Busy')], 'Show Time as', states={'done': [('readonly', True)]}),
 
@@ -931,7 +931,7 @@ class calendar_event(osv.Model):
         'color_partner_id': fields.related('user_id', 'partner_id', 'id', type="integer", string="Color index of creator", store=False),  # Color of creator
         'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the event alarm information without removing it."),
         'categ_ids': fields.many2many('calendar.event.type', 'meeting_category_rel', 'event_id', 'type_id', 'Tags'),
-        'attendee_ids': fields.one2many('calendar.attendee', 'event_id', 'Attendees', ondelete='cascade'),
+        'attendee_ids': fields.one2many('calendar.attendee', 'event_id', 'Participant', ondelete='cascade'),
         'partner_ids': fields.many2many('res.partner', 'calendar_event_res_partner_rel', string='Attendees', states={'done': [('readonly', True)]}),
         'alarm_ids': fields.many2many('calendar.alarm', 'calendar_alarm_calendar_event_rel', string='Reminders', ondelete="restrict", copy=False),
     }
@@ -950,7 +950,7 @@ class calendar_event(osv.Model):
         'rrule_type': False,
         'allday': False,
         'state': 'draft',
-        'class': 'public',
+        'privacy': 'public',
         'show_as': 'busy',
         'month_by': 'date',
         'interval': 1,
@@ -1399,6 +1399,7 @@ class calendar_event(osv.Model):
             event.message_needaction = rec.message_needaction
 
     @api.cr_uid_ids_context
+    @api.returns('mail.message', lambda value: value.id)
     def message_post(self, cr, uid, thread_id, context=None, **kwargs):
         if isinstance(thread_id, basestring):
             thread_id = get_real_ids(thread_id)
@@ -1656,7 +1657,7 @@ class calendar_event(osv.Model):
         if context is None:
             context = {}
         fields2 = fields and fields[:] or None
-        EXTRAFIELDS = ('class', 'user_id', 'duration', 'allday', 'start', 'start_date', 'start_datetime', 'rrule')
+        EXTRAFIELDS = ('privacy', 'user_id', 'duration', 'allday', 'start', 'start_date', 'start_datetime', 'rrule')
         for f in EXTRAFIELDS:
             if fields and (f not in fields):
                 fields2.append(f)
@@ -1694,7 +1695,7 @@ class calendar_event(osv.Model):
                 user_id = type(r['user_id']) in (tuple, list) and r['user_id'][0] or r['user_id']
                 if user_id == uid:
                     continue
-            if r['class'] == 'private':
+            if r['privacy'] == 'private':
                 for f in r.keys():
                     recurrent_fields = self._get_recurrent_fields(cr, uid, context=context)
                     public_fields = list(set(recurrent_fields + ['id', 'allday', 'start', 'stop', 'display_start', 'display_stop', 'duration', 'user_id', 'state', 'interval', 'count', 'recurrent_id_date', 'rrule']))

@@ -1,3 +1,5 @@
+import json
+
 import openerp
 from openerp import models
 from openerp.http import request
@@ -6,6 +8,12 @@ from openerp.http import request
 class Http(models.Model):
     _inherit = 'ir.http'
 
+    def webclient_rendering_context(self):
+        return {
+            'menu_data': request.registry['ir.ui.menu'].load_menus(request.cr, request.uid, request.debug, context=request.context),
+            'session_info': json.dumps(self.session_info()),
+        }
+
     def session_info(self):
         user = request.env.user
         display_switch_company_menu = user.has_group('base.group_multi_company') and len(user.company_ids) > 1
@@ -13,6 +21,7 @@ class Http(models.Model):
         return {
             "session_id": request.session_id,
             "uid": request.session.uid,
+            "is_admin": request.env.user.has_group('base.group_system'),
             "user_context": request.session.get_context() if request.session.uid else {},
             "db": request.session.db,
             "server_version": version_info.get('server_version'),
