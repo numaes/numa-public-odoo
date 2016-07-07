@@ -5,7 +5,7 @@ import random
 
 from odoo import api, models, fields, tools, _
 from odoo.http import request
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -92,7 +92,11 @@ class SaleOrder(models.Model):
         if not order_line:
             values = self._website_product_id_change(self.id, product_id, qty=1)
             order_line = SaleOrderLineSudo.create(values)
-            order_line._compute_tax_id()
+            try:
+                order_line._compute_tax_id()
+            except ValidationError as e:
+                # The validation may occur in backend (eg: taxcloud) but should fail silently in frontend
+                _logger.debug("ValidationError occurs during tax compute. %s" % (e))
             if add_qty:
                 add_qty -= 1
 
@@ -420,6 +424,16 @@ class WebsitePricelist(models.Model):
         res = super(WebsitePricelist, self).unlink()
         self.clear_cache()
         return res
+
+
+class ResCountry(models.Model):
+    _inherit = 'res.country'
+
+    def get_website_sale_countries(self, mode='billing'):
+        return self.sudo().search([])
+
+    def get_website_sale_states(self, mode='billing'):
+        return self.sudo().state_ids
 
 
 class ResCountryGroup(models.Model):

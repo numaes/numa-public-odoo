@@ -184,15 +184,16 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         with self.assertRaises(ValidationError):
             hol2_manager_group.signal_workflow('confirm')
 
-        # cl can be of maximum 20 days for employee_fp
-        hol3_status = self.env.ref('hr_holidays.holiday_status_cl')
+        employee_id = self.ref('hr.employee_root')
+        # cl can be of maximum 20 days for employee_root
+        hol3_status = self.env.ref('hr_holidays.holiday_status_cl').with_context(employee_id=employee_id)
         # I assign the dates in the holiday request for 1 day
         hol3 = Holidays.create({
             'name': 'Sick Leave',
             'holiday_status_id': hol3_status.id,
             'date_from': datetime.today().strftime('%Y-%m-10 10:00:00'),
             'date_to': datetime.today().strftime('%Y-%m-11 19:00:00'),
-            'employee_id': self.ref('hr.employee_fp'),
+            'employee_id': employee_id,
             'type': 'remove',
             'number_of_days_temp': 1
         })
@@ -214,7 +215,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         # Print the HR Holidays(Summary Department) Report through the wizard
         ctx = {
             'model': 'hr.department',
-            'active_ids': [self.ref('hr.employee_fp'), self.ref('hr.employee_qdp'), self.ref('hr.employee_al')]
+            'active_ids': [self.ref('hr.employee_root'), self.ref('hr.employee_qdp'), self.ref('hr.employee_al')]
         }
         data_dict = {
             'date_from': datetime.today().strftime('%Y-%m-01'),
@@ -226,11 +227,11 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         # Print the HR Holidays(Summary Employee) Report through the wizard
         ctx = {
             'model': 'hr.employee',
-            'active_ids': [self.ref('hr.employee_fp'), self.ref('hr.employee_qdp'), self.ref('hr.employee_al')]
+            'active_ids': [self.ref('hr.employee_root'), self.ref('hr.employee_qdp'), self.ref('hr.employee_al')]
         }
         data_dict = {
             'date_from': datetime.today().strftime('%Y-%m-01'),
-            'emp': [(6, 0, [self.ref('hr.employee_fp'), self.ref('hr.employee_qdp'), self.ref('hr.employee_al')])],
+            'emp': [(6, 0, [self.ref('hr.employee_root'), self.ref('hr.employee_qdp'), self.ref('hr.employee_al')])],
             'holiday_type': 'Approved'
         }
         test_reports.try_report_action(self.env.cr, self.env.uid, 'action_hr_holidays_summary_employee', wiz_data=data_dict, context=ctx, our_module='hr_holidays')

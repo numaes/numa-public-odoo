@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (c) 2009 Veritos - Jan Verlaan - www.veritos.nl
@@ -66,7 +66,7 @@
 {
     'name' : 'Netherlands - Accounting',
     'version' : '2.0',
-    'category': 'Localization/Account Charts',
+    'category': 'Localization',
     'description': """
 This is the module to manage the accounting chart for Netherlands in Odoo.
 =============================================================================
@@ -99,12 +99,10 @@ De extra cijfers worden dan achter het rekeningnummer aangevult met 'nullen'.
                  'base_vat',
                  'base_iban',
     ],
-    'data' : ['account_chart_netherlands.xml',
-              "account_fiscal_position_template.xml",
-              "account_fiscal_position_tax_template.xml",
-              "account_fiscal_position_account_template.xml",
-              "l10n_nl_account_chart.yml",
-    ],
-    'demo' : [],
-    'installable': True,
+    'data': ['data/l10n_nl_chart_data.xml',
+             'data/account_tax_fiscal_position_data.xml',
+             'data/account_fiscal_position_tax_template_data.xml',
+             'data/account_fiscal_position_account_template_data.xml',
+             'data/account_chart_template_data.yml',
+             ],
 }

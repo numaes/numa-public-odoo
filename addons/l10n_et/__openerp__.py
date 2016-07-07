@@ -6,7 +6,7 @@
 {
     'name': 'Ethiopia - Accounting',
     'version': '2.0',
-    'category': 'Localization/Account Charts',
+    'category': 'Localization',
     'description': """
 Base Module for Ethiopian Localization
 ======================================
@@ -23,14 +23,12 @@ This is the latest Ethiopian Odoo localization and consists of:
         'base_vat',
     ],
     'data': [
-        'data/account_chart_template.xml',
+        'data/l10n_et_chart_data.xml',
         'data/account.account.template.csv',
-        'data/set_account_on_chart_template.xml',
-        'data/account_account_tag.xml',
+        'data/account_chart_template_data.xml',
+        'data/account_account_tag_data.xml',
         'data/account.tax.template.csv',
-        'data/account_chart_template.yml',
+        'data/account_chart_template_data.yml',
         'data/res.country.state.csv',
     ],
-    'installable': True,
-    'active': False,
 }

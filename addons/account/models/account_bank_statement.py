@@ -433,7 +433,8 @@ class AccountBankStatementLine(models.Model):
                 moves_to_cancel |= st_line.journal_entry_ids
         if moves_to_unbind:
             moves_to_unbind.write({'statement_line_id': False})
-            moves_to_unbind.line_ids.filtered(lambda x:x.statement_id == st_line.statement_id).write({'statement_id': False})
+            for move in moves_to_unbind:
+                move.line_ids.filtered(lambda x:x.statement_id == st_line.statement_id).write({'statement_id': False})
 
         if moves_to_cancel:
             for move in moves_to_cancel:
@@ -736,10 +737,10 @@ class AccountBankStatementLine(models.Model):
                 total_amount = self.amount_currency
             else:
                 total_amount = statement_currency.with_context({'date': self.date}).compute(self.amount, company_currency, round=False)
-            if float_is_zero(total_amount - amount, precision_rounding=company_currency.rounding):
-                ratio = total_amount / amount
-            else:
+            if float_compare(total_amount, amount, precision_digits=company_currency.rounding) == 0:
                 ratio = 1.0
+            else:
+                ratio = total_amount / amount
             # Then use it to adjust the statement.line field that correspond to the move.line amount_currency
             if statement_currency != company_currency:
                 amount_currency = self.amount * ratio

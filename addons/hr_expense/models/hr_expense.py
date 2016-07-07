@@ -283,12 +283,12 @@ class HrExpense(models.Model):
         if help_message:
             alias_record = self.env.ref('hr_expense.mail_alias_expense')
             if alias_record and alias_record.alias_domain and alias_record.alias_name:
-                dynamic_help = '<p>%s</p>' % _("""Create a new expense, or send receipts by email to %(link)s  to automatically create a new expense. Send an email right now and see it here.""") % {
-                    'link': "<a href='mailto:%(email)s'>%(email)s</a>" % {'email': '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)}
+                link = "<a id='o_mail_test' href='mailto:%(email)s&subject=Lunch+with+customer%%3A+%%2412.32'>%(email)s</a>" % {
+                    'email': '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)
                 }
-                return '<p class="oe_view_nocontent_create">%s</p>%s%s' % (
-                    _('Click to add a new expense'),
-                    dynamic_help,
+                return '<p class="oe_view_nocontent_create">%s<br/>%s</p>%s' % (
+                    _('Click to add a new expense,'),
+                    _('or send receipts by email to %s.') % (link,),
                     help_message)
         return super(HrExpense, self).get_empty_list_help(help_message)
 
@@ -307,6 +307,11 @@ class HrExpense(models.Model):
         employee = self.env['hr.employee'].search([('work_email', 'ilike', email_address)], limit=1)
         if not employee:
             employee = self.env['hr.employee'].search([('user_id.email', 'ilike', email_address)], limit=1)
+        if not employee:
+            access = self.env['ir.config_parameter'].get_param("hr_expense.email.gateway") or 'open'
+            if access == 'open':
+                # Open access is mostly used during the on boarding flow, should not be used in production
+                employee = self.env['hr.employee'].search([('user_id','<>',False)], limit=1)
         if not employee:
             # Send back an email to explain why the expense has not been created
             mail_template = self.env.ref('hr_expense.mail_template_data_expense_unknown_email_address')
@@ -507,7 +512,10 @@ class HrExpenseSheet(models.Model):
         if not self.accounting_date:
             self.accounting_date = self.account_move_id.date
 
-        self.write({'state': 'post'})
+        if self.payment_mode=='own_account':
+            self.write({'state': 'post'})
+        else:
+            self.write({'state': 'done'})
         return res
 
     @api.multi

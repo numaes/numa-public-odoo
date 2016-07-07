@@ -6,7 +6,8 @@ import re
 import traceback
 from itertools import count
 from textwrap import dedent
-from werkzeug.utils import escape
+import werkzeug
+from werkzeug.utils import escape as _escape
 from itertools import izip, tee
 import __builtin__
 builtin_defaults = {name: getattr(__builtin__, name) for name in dir(__builtin__)}
@@ -121,33 +122,28 @@ class QWebException(Exception):
         else:
             self.code = None
 
+        if self.error:
+            self.message = "%s\n%s: %s" % (self.message, self.error.__class__.__name__, self.error)
+        if self.name:
+            self.message = "%s\nTemplate: %s" % (self.message, self.name)
+        if self.path:
+            self.message = "%s\nPath: %s" % (self.message, self.path)
+        if self.html:
+            self.message = "%s\nNode: %s" % (self.message, self.html)
+
         super(QWebException, self).__init__(message)
 
     def __str__(self):
         message = "%s\n%s\n%s" % (self.error, self.stack, self.message)
-        if self.name:
-            message = "%s\nTemplate: %s" % (message, self.name)
         if self.code:
             message = "%s\nCompiled code:\n%s" % (message, self.code)
-        if self.path:
-            message = "%s\nPath: %s" % (message, self.path)
-        if self.html:
-            message = "%s\nNode: %s" % (message, self.html)
         return message
 
     def __repr__(self):
         return str(self)
 
-
-import werkzeug
-from werkzeug.utils import escape
 # Avoid DeprecationWarning while still remaining compatible with werkzeug pre-0.9
-if getattr(werkzeug, '__version__', '0.0') < '0.9.0':
-    def qweb_escape(text):
-        return escape(unicodifier(text), quote=True)
-else:
-    def qweb_escape(text):
-        return escape(unicodifier(text))
+escape = (lambda text: _escape(text, quote=True)) if getattr(werkzeug, '__version__', '0.0') < '0.9.0' else _escape
 
 def unicodifier(val):
     if val is None or val is False:
@@ -309,7 +305,7 @@ class QWeb(object):
 
         def _compiled_fn(self, append, values):
             log = {'last_path_node': None}
-            values.update(self.default_values())
+            values = dict(self.default_values(), **values)
             try:
                 return compiled(self, append, values, options, log)
             except QWebException, e:
@@ -324,43 +320,7 @@ class QWeb(object):
 
     def default_values(self):
         """ Return attributes added to the values for each computed template. """
-        return {
-            'True': True,
-            'False': False,
-            'None': None,
-            'str': str,
-            'unicode': unicode,
-            'bool': bool,
-            'int': int,
-            'float': float,
-            'long': long,
-            'enumerate': enumerate,
-            'dict': dict,
-            'list': list,
-            'tuple': tuple,
-            'map': map,
-            'abs': abs,
-            'min': min,
-            'max': max,
-            'sum': sum,
-            'reduce': reduce,
-            'filter': filter,
-            'round': round,
-            'len': len,
-            'repr': repr,
-            'set': set,
-            'all': all,
-            'any': any,
-            'ord': ord,
-            'chr': chr,
-            'cmp': cmp,
-            'divmod': divmod,
-            'isinstance': isinstance,
-            'range': range,
-            'xrange': xrange,
-            'zip': zip,
-            'format': self.format,
-        }
+        return dict(format=self.format)
 
     def get_template(self, template, options):
         """ Retrieve the given template, and return it as a pair ``(element,
@@ -526,14 +486,14 @@ class QWeb(object):
         * collections
         * itertools
         Define:
-        * qweb_escape
+        * escape
         * unicodifier (empty string for a None or False, otherwise unicode string)
         """
         return ast.parse(dedent("""
             from collections import OrderedDict
             import itertools
             from itertools import repeat, imap
-            from openerp.addons.base.ir.ir_qweb.qweb import qweb_escape, unicodifier, foreach_iterator
+            from openerp.addons.base.ir.ir_qweb.qweb import escape, unicodifier, foreach_iterator
             """))
 
     def _create_def(self, options, body, prefix='fn', lineno=None):
@@ -717,11 +677,11 @@ class QWeb(object):
         return [
             'debug',
             'groups', 'foreach', 'if', 'else',
-            'field',
+            'field', 'esc', 'raw',
             'tag',
             'call',
             'set',
-            'esc', 'raw', 'content',
+            'content',
         ]
 
     def _is_static_node(self, el):
@@ -737,7 +697,7 @@ class QWeb(object):
         content = self._compile_directive_content(el, options)
         if el.tag == 't':
             return content
-        tag = u'<%s%s' % (el.tag, u''.join([u' %s="%s"' % (name, qweb_escape(value)) for name, value in el.attrib.iteritems()]))
+        tag = u'<%s%s' % (el.tag, u''.join([u' %s="%s"' % (name, escape(unicodifier(value))) for name, value in el.attrib.iteritems()]))
         if el.tag in self._void_elements:
             return [self._append(ast.Str(tag + '/>'))] + content
         else:
@@ -828,7 +788,7 @@ class QWeb(object):
             #         append(u' ')
             #         append(name)
             #         append(u'="')
-            #         append(qweb_escape(value))
+            #         append(escape(unicodifier((value)))
             #         append(u'"')
             body.append(ast.For(
                 target=ast.Tuple(elts=[ast.Name(id='name', ctx=ast.Store()), ast.Name(id='value', ctx=ast.Store())], ctx=ast.Store()),
@@ -862,8 +822,12 @@ class QWeb(object):
                         self._append(ast.Name(id='name', ctx=ast.Load())),
                         self._append(ast.Str(u'="')),
                         self._append(ast.Call(
-                            func=ast.Name(id='qweb_escape', ctx=ast.Load()),
-                            args=[ast.Name(id='value', ctx=ast.Load())], keywords=[],
+                            func=ast.Name(id='escape', ctx=ast.Load()),
+                            args=[ast.Call(
+                                func=ast.Name(id='unicodifier', ctx=ast.Load()),
+                                args=[ast.Name(id='value', ctx=ast.Load())], keywords=[],
+                                starargs=None, kwargs=None
+                            )], keywords=[],
                             starargs=None, kwargs=None
                         )),
                         self._append(ast.Str(u'"')),
@@ -877,6 +841,8 @@ class QWeb(object):
 
     def _compile_tag(self, el, content, options, attr_already_created=False):
         """ Compile the tag of the given element into a list of AST nodes. """
+        if el.tag == 't':
+            return content
         body = [self._append(ast.Str(u'<%s' % el.tag))]
         body.extend(self._compile_all_attributes(el, options, attr_already_created))
         if el.tag in self._void_elements:
@@ -902,8 +868,6 @@ class QWeb(object):
     def _compile_directive_tag(self, el, options):
         el.attrib.pop('t-tag', None)
         content = self._compile_directives(el, options)
-        if el.tag == 't':
-            return content
         return self._compile_tag(el, content, options, False)
 
     def _compile_directive_set(self, el, options):
@@ -957,45 +921,6 @@ class QWeb(object):
             value=value
         )]
 
-    def _compile_directive_esc(self, el, options):
-        return [
-            # content = t-raw value
-            ast.Assign(
-                targets=[ast.Name(id='content', ctx=ast.Store())],
-                value=self._compile_expr0(el.attrib.pop('t-esc')),
-            ),
-            # if content is not None: display
-            self._if_content_is_not_Falsy(
-                # append(escape($content))
-                body=[self._append(ast.Call(
-                    func=ast.Name(id='qweb_escape', ctx=ast.Load()),
-                    args=[ast.Name(id='content', ctx=ast.Load())], keywords=[],
-                    starargs=None, kwargs=None
-                ))],
-                # append(body default value)
-                orelse=self._compile_directive_content(el, options),
-            )
-        ]
-
-    def _compile_directive_raw(self, el, options):
-        return [
-            # content = t-raw value
-            ast.Assign(
-                targets=[ast.Name(id='content', ctx=ast.Store())],
-                value=self._compile_expr0(el.attrib.pop('t-raw')),
-            ),
-            self._if_content_is_not_Falsy(
-                # append($content)
-                body=[self._append(ast.Call(
-                    func=ast.Name(id='unicodifier', ctx=ast.Load()),
-                    args=[ast.Name(id='content', ctx=ast.Load())], keywords=[],
-                    starargs=None, kwargs=None
-                ))],
-                # append(body default value)
-                orelse=self._compile_directive_content(el, options),
-            )
-        ]
-
     def _compile_directive_content(self, el, options):
         body = []
         if el.text is not None:
@@ -1010,10 +935,13 @@ class QWeb(object):
         return body
 
     def _compile_directive_else(self, el, options):
+        if el.attrib.pop('t-else') == '_t_skip_else_':
+            return []
         if not options.pop('t_if', None):
             raise ValueError("t-else directive must be preceded by t-if directive")
-        el.attrib.pop('t-else')
-        return self._compile_directives(el, options)
+        compiled = self._compile_directives(el, options)
+        el.attrib['t-else'] = '_t_skip_else_'
+        return compiled
 
     def _compile_directive_if(self, el, options):
         orelse = []
@@ -1023,7 +951,6 @@ class QWeb(object):
                 raise ValueError("Unexpected non-whitespace characters between t-if and t-else directives")
             el.tail = None
             orelse = self._compile_node(next_el, dict(options, t_if=True))
-            next_el.getparent().remove(next_el)
         return [
             # if $t-if:
             #    next tag directive
@@ -1079,6 +1006,103 @@ class QWeb(object):
     def _compile_tail(self, el):
         return el.tail is not None and [self._append(ast.Str(unicodifier(el.tail)))] or []
 
+    def _compile_directive_esc(self, el, options):
+        field_options = self._compile_widget_options(el, 'esc')
+        content = self._compile_widget(el, el.attrib.pop('t-esc'), field_options, 'escape')
+        return content + self._compile_widget_value(el, options)
+
+    def _compile_directive_raw(self, el, options):
+        field_options = self._compile_widget_options(el, 'raw')
+        content = self._compile_widget(el, el.attrib.pop('t-raw'), field_options)
+        return content + self._compile_widget_value(el, options)
+
+    def _compile_widget(self, el, expression, field_options, escape=None):
+        # if isinstance(value, basestring):
+        #   value = escape(unicodifier(value))
+        escaped = ast.If(
+            test=ast.Call(
+                func=ast.Name(id='isinstance', ctx=ast.Load()),
+                args=[
+                    ast.Name(id='content', ctx=ast.Load()),
+                    ast.Name(id='basestring', ctx=ast.Load())
+                ], keywords=[],
+                starargs=None, kwargs=None
+            ),
+            body=[ast.Assign(
+                targets=[ast.Name(id='content', ctx=ast.Store())],
+                value=ast.Call(
+                    func=ast.Name(id=escape, ctx=ast.Load()),
+                    args=[ast.Call(
+                        func=ast.Name(id='unicodifier', ctx=ast.Load()),
+                        args=[ast.Name(id='content', ctx=ast.Load())], keywords=[],
+                        starargs=None, kwargs=None
+                    )], keywords=[],
+                    starargs=None, kwargs=None
+                ) if escape else ast.Name(id='content', ctx=ast.Load())
+            )],
+            orelse=[]
+        )
+
+        if field_options:
+            return [
+                # value = t-(esc|raw)
+                ast.Assign(
+                    targets=[ast.Name(id='content', ctx=ast.Store())],
+                    value=self._compile_expr0(expression)
+                ),
+                escaped,
+                # t_attrs, content, force_display = self._get_widget(value, expression, tagName, field options, template options, values)
+                ast.Assign(
+                    targets=[ast.Tuple(elts=[
+                        ast.Name(id='t_attrs', ctx=ast.Store()),
+                        ast.Name(id='content', ctx=ast.Store()),
+                        ast.Name(id='force_display', ctx=ast.Store())
+                    ], ctx=ast.Store())],
+                    value=ast.Call(
+                        func=ast.Attribute(
+                            value=ast.Name(id='self', ctx=ast.Load()),
+                            attr='_get_widget',
+                            ctx=ast.Load()
+                        ),
+                        args=[
+                            ast.Name(id='content', ctx=ast.Load()),
+                            ast.Str(expression),
+                            ast.Str(el.tag),
+                            field_options and self._compile_expr(field_options) or ast.Dict(keys=[], values=[]),
+                            ast.Name(id='options', ctx=ast.Load()),
+                            ast.Name(id='values', ctx=ast.Load()),
+                        ],
+                        keywords=[], starargs=None, kwargs=None
+                    )
+                )
+            ]
+
+        return [
+            # t_attrs, content, force_display = OrderedDict(), t-(esc|raw), None
+            ast.Assign(
+                targets=[ast.Tuple(elts=[
+                    ast.Name(id='t_attrs', ctx=ast.Store()),
+                    ast.Name(id='content', ctx=ast.Store()),
+                    ast.Name(id='force_display', ctx=ast.Store()),
+                ], ctx=ast.Store())],
+                value=ast.Tuple(elts=[
+                    ast.Call(
+                        func=ast.Name(id='OrderedDict', ctx=ast.Load()),
+                        args=[],
+                        keywords=[], starargs=None, kwargs=None
+                    ),
+                    self._compile_expr0(expression),
+                    ast.Name(id='None', ctx=ast.Load()),
+                ], ctx=ast.Load())
+            ),
+            escaped
+        ]
+
+    # for backward compatibility to remove after v10
+    def _compile_widget_options(self, el, directive_type):
+        return el.attrib.pop('t-options', None)
+    # end backward
+
     def _compile_directive_field(self, el, options):
         """ Compile something like ``<span t-field="record.phone">+1 555 555 8069</span>`` """
         node_name = el.tag
@@ -1091,10 +1115,10 @@ class QWeb(object):
             "t-field must have at least a dot like 'record.field_name'"
 
         expression = el.attrib.pop('t-field')
-        field_options = el.attrib.pop('t-field-options', None)
+        field_options = self._compile_widget_options(el, 'field')
         record, field_name = expression.rsplit('.', 1)
 
-        content = [
+        return [
             # t_attrs, content, force_display = self._get_field(record, field_name, expression, tagName, field options, template options, values)
             ast.Assign(
                 targets=[ast.Tuple(elts=[
@@ -1120,8 +1144,9 @@ class QWeb(object):
                     keywords=[], starargs=None, kwargs=None
                 )
             )
-        ]
+        ] + self._compile_widget_value(el, options)
 
+    def _compile_widget_value(self, el, options):
         # if force_display:
         #    display the tag without content
         orelse = [ast.If(
@@ -1176,17 +1201,22 @@ class QWeb(object):
             ]
 
         # if content is not None:
-        #    display the tag
+        #    display the tag (unicodifier(content))
         # else
         #    if default_content:
         #       display the tag with default content
         #    elif force_display:
         #       display the tag without content
-        content.append(self._if_content_is_not_Falsy(
-            body=self._compile_tag(el, [self._append(ast.Name(id='content', ctx=ast.Load()))], options, True),
+        return [self._if_content_is_not_Falsy(
+            body=self._compile_tag(el, [self._append(
+                ast.Call(
+                    func=ast.Name(id='unicodifier', ctx=ast.Load()),
+                    args=[ast.Name(id='content', ctx=ast.Load())], keywords=[],
+                    starargs=None, kwargs=None
+                )
+            )], options, True),
             orelse=orelse,
-        ))
-        return content
+        )]
 
     def _compile_directive_call(self, el, options):
         tmpl = el.attrib.pop('t-call')
@@ -1330,7 +1360,16 @@ class QWeb(object):
             * string or None: content
             * boolean: force_display display the tag if the content and default_content are None
         """
-        return (OrderedDict(), escape(unicodifier(getattr(record, field_name, None))), False)
+        return self._get_widget(getattr(record, field_name, None), expression, tagName, field_options, options, values)
+
+    def _get_widget(self, value, expression, tagName, field_options, options, values):
+        """
+        :returns: tuple:
+            * OrderedDict: attributes
+            * string or None: content
+            * boolean: force_display display the tag if the content and default_content are None
+        """
+        return (OrderedDict(), value, False)
 
     # compile expression
 
@@ -1399,11 +1438,13 @@ class QWeb(object):
 
     def _compile_expr(self, expr):
         """ Compiles a purported Python expression to ast, and alter its
-        variable references to access values data instead. Can be overridden to
-        use a safe eval method.
+        variable references to access values data instead exept for
+        python buildins.
+        This compile method is unsafe!
+        Can be overridden to use a safe eval method.
         """
         # string must be stripped otherwise whitespace before the start for
         # formatting purpose are going to break parse/compile
         st = ast.parse(expr.strip(), mode='eval')
         # ast.Expression().body -> expr
-        return Contextifier().visit(st).body
+        return Contextifier(builtin_defaults).visit(st).body

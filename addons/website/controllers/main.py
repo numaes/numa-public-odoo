@@ -12,10 +12,11 @@ import urllib2
 import werkzeug.wrappers
 
 import openerp
-from openerp.addons.base.ir.ir_qweb import AssetsBundle
 from openerp.addons.web.controllers.main import WebClient, Binary
 from openerp.addons.web import http
 from openerp.http import request
+from openerp.osv.orm import browse_record
+from openerp.addons.website.models.website import slug
 
 logger = logging.getLogger(__name__)
 
@@ -23,6 +24,37 @@ logger = logging.getLogger(__name__)
 MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT = IMAGE_LIMITS = (1024, 768)
 LOC_PER_SITEMAP = 45000
 SITEMAP_CACHE_TIME = datetime.timedelta(hours=12)
+
+
+class QueryURL(object):
+    def __init__(self, path='', path_args=None, **args):
+        self.path = path
+        self.args = args
+        self.path_args = set(path_args or [])
+
+    def __call__(self, path=None, path_args=None, **kw):
+        path = path or self.path
+        for k, v in self.args.items():
+            kw.setdefault(k, v)
+        path_args = set(path_args or []).union(self.path_args)
+        paths, fragments = [], []
+        for key, value in kw.items():
+            if value and key in path_args:
+                if isinstance(value, browse_record):
+                    paths.append((key, slug(value)))
+                else:
+                    paths.append((key, value))
+            elif value:
+                if isinstance(value, list) or isinstance(value, set):
+                    fragments.append(werkzeug.url_encode([(key, item) for item in value]))
+                else:
+                    fragments.append(werkzeug.url_encode([(key, value)]))
+        for key, value in paths:
+            path += '/' + key + '/%s' % value
+        if fragments:
+            path += '?' + '&'.join(fragments)
+        return path
+
 
 class Website(openerp.addons.web.controllers.main.Home):
     #------------------------------------------------------
@@ -91,6 +123,11 @@ class Website(openerp.addons.web.controllers.main.Home):
                 return request.registry['ir.http']._handle_exception(e, 404)
 
         return request.render(page, values)
+
+    @http.route(['/website/country_infos/<model("res.country"):country>'], type='json', auth="public", methods=['POST'], website=True)
+    def country_infos(self, country, **kw):
+        fields = country.get_address_fields()
+        return dict(fields=fields, states=[(st.id, st.name, st.code) for st in country.state_ids], phone_code=country.phone_code)
 
     @http.route(['/robots.txt'], type='http', auth="public")
     def robots(self):
@@ -307,6 +344,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         """
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         view = pool["ir.ui.view"]
+
         context = dict(request.context or {}, active_test=True)
 
         def set_active(ids, active):
@@ -317,8 +355,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         set_active(enable, True)
 
         if get_bundle:
-            bundle = AssetsBundle('web.assets_frontend', env=request.env(context={}))
-            return bundle.to_html()
+            return request.env["ir.qweb"]._get_asset('web.assets_frontend', options=context)
 
         return True
 

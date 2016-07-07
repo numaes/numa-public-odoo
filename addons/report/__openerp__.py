@@ -1,7 +1,7 @@
 {
     'name': 'Report',
     'category': 'Base',
-    'summary': 'Report',
+    'summary': 'Hidden',
     'version': '1.0',
     'description': """
 Report
@@ -14,6 +14,9 @@ Report
         'security/ir.model.access.csv',
         'views/report.xml',
         'views/ir_actions.xml',
+    ],
+    'qweb' : [
+        'static/src/xml/*.xml',
     ],
     'installable': True,
     'auto_install': True,

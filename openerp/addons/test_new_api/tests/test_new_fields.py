@@ -186,6 +186,34 @@ class TestNewFields(common.TransactionCase):
         self.assertEqual(ewan.parent, cath)
         self.assertEqual(ewan.name, "Erwan")
 
+        record = self.env['test_new_api.compute.inverse']
+
+        # create/write on 'foo' should only invoke the compute method
+        record.counts.update(compute=0, inverse=0)
+        record = record.create({'foo': 'Hi'})
+        self.assertEqual(record.foo, 'Hi')
+        self.assertEqual(record.bar, 'Hi')
+        self.assertEqual(record.counts, {'compute': 1, 'inverse': 0})
+
+        record.counts.update(compute=0, inverse=0)
+        record.write({'foo': 'Ho'})
+        self.assertEqual(record.foo, 'Ho')
+        self.assertEqual(record.bar, 'Ho')
+        self.assertEqual(record.counts, {'compute': 1, 'inverse': 0})
+
+        # create/write on 'bar' should only invoke the inverse method
+        record.counts.update(compute=0, inverse=0)
+        record = record.create({'bar': 'Hi'})
+        self.assertEqual(record.foo, 'Hi')
+        self.assertEqual(record.bar, 'Hi')
+        self.assertEqual(record.counts, {'compute': 0, 'inverse': 1})
+
+        record.counts.update(compute=0, inverse=0)
+        record.write({'bar': 'Ho'})
+        self.assertEqual(record.foo, 'Ho')
+        self.assertEqual(record.bar, 'Ho')
+        self.assertEqual(record.counts, {'compute': 0, 'inverse': 1})
+
     def test_14_search(self):
         """ test search on computed fields """
         discussion = self.env.ref('test_new_api.discussion_0')
@@ -234,6 +262,22 @@ class TestNewFields(common.TransactionCase):
         # same with field setter
         record.number = 2.4999999999999996
         self.assertEqual(record.number, 2.50)
+
+    def test_20_monetary(self):
+        """ test monetary fields """
+        record = self.env['test_new_api.mixed'].create({})
+        self.assertTrue(record.currency_id)
+        self.assertEqual(record.currency_id.rounding, 0.01)
+
+        # the conversion to cache should round the value to 14.700000000000001
+        record.amount = 14.7
+        self.assertNotEqual(record.amount, 14.7)
+        self.assertEqual(record.amount, 14.700000000000001)
+
+        # however when stored to database, it should be serialized as 14.70
+        self.cr.execute('SELECT amount FROM test_new_api_mixed WHERE id=%s', (record.id,))
+        (amount,) = self.cr.fetchone()
+        self.assertEqual(amount, 14.7)
 
     def test_21_date(self):
         """ test date fields """
@@ -360,6 +404,19 @@ class TestNewFields(common.TransactionCase):
         message_field = message.fields_get(['discussion_name'])['discussion_name']
         discussion_field = discussion.fields_get(['name'])['name']
         self.assertEqual(message_field['help'], discussion_field['help'])
+
+    def test_25_related_multi(self):
+        """ test write() on several related fields based on a common computed field. """
+        foo = self.env['test_new_api.foo'].create({'name': 'A', 'value1': 1, 'value2': 2})
+        bar = self.env['test_new_api.bar'].create({'name': 'A'})
+        self.assertEqual(bar.foo, foo)
+        self.assertEqual(bar.value1, 1)
+        self.assertEqual(bar.value2, 2)
+
+        foo.invalidate_cache()
+        bar.write({'value1': 3, 'value2': 4})
+        self.assertEqual(foo.value1, 3)
+        self.assertEqual(foo.value2, 4)
 
     def test_26_inherited(self):
         """ test inherited fields. """

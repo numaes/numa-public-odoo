@@ -8,6 +8,7 @@ import os.path
 import re
 
 from lxml import etree
+from itertools import chain
 
 from odoo.modules import get_module_resource
 from odoo.tests.common import TransactionCase

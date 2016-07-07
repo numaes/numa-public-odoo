@@ -6,11 +6,9 @@ var tour = require('web_tour.tour');
 
 var _t = core._t;
 
-tour.register('crm_tour', {
-    'skip_enabled': true,
-}, [{
+tour.register('crm_tour', [{
     trigger: '.o_app[data-menu-xmlid="sales_team.menu_base_partner"], .oe_menu_toggler[data-menu-xmlid="sales_team.menu_base_partner"]',
-    content: _t("Ready to boost you sales? It starts with the <b>CRM app</b>."),
+    content: _t("Ready to boost you sales? Your <b>sales pipeline</b> can be found here, under this app."),
     position: 'bottom',
 }, {
     trigger: ".o_welcome_content .o_dashboard_action",
@@ -20,7 +18,7 @@ tour.register('crm_tour', {
 }, {
     trigger: ".o-kanban-button-new",
     extra_trigger: '.o_opportunity_kanban',
-    content: _t("Create your first business opportunity."),
+    content: _t("Click here to <b>create your first opportunity</b> and add it to your pipeline."),
     position: "right"
 }, {
     trigger: ".o_opportunity_kanban .o_kanban_record:nth-child(2)",
@@ -50,6 +48,19 @@ tour.register('crm_tour', {
     extra_trigger: '.o_opportunity_form',
     content: _t("Use the breadcrumbs to <b>go back to your sales pipeline</b>."),
     position: "bottom"
+}, {
+    trigger: ".o_main_navbar .o_menu_toggle",
+    content: _t('Click the <i>Home icon</i> to navigate across apps.'),
+    edition: "enterprise",
+    position: "bottom"
+}, {
+    trigger: '.o_app[data-menu-xmlid="base.menu_administration"], .oe_menu_toggler[data-menu-xmlid="base.menu_administration"]',
+    content: _t("Configuration options are available in the Settings app."),
+    position: "bottom"
+}, {
+    trigger: ".o_web_settings_dashboard textarea#user_emails",
+    content: _t("<b>Invite collegues</b> via email.<br/><i>Enter one email per line.</i>"),
+    position: "right"
 }]);
 
 });

@@ -14,7 +14,7 @@ var web_client = require('web.web_client');
 
 var _t = core._t;
 var _lt = core._lt;
-var LIMIT = 100;
+var LIMIT = 25;
 var preview_msg_max_size = 350;  // optimal for native english speakers
 var ODOOBOT_ID = "ODOOBOT";
 
@@ -282,6 +282,9 @@ function make_channel (data, options) {
     } else if ('anonymous_name' in data) {
         channel.name = data.anonymous_name;
     }
+    if (data.last_message_date) {
+        channel.last_message_date = moment(time.str_to_datetime(data.last_message_date));
+    }
     channel.is_chat = !channel.type.match(/^(public|private|static)$/);
     if (data.message_unread_counter) {
         update_channel_unread_counter(channel, data.message_unread_counter);
@@ -392,7 +395,7 @@ function fetch_document_messages (ids, options) {
                 processed_msgs.push(add_message(msg, {silent: true}));
             });
             return _.sortBy(loaded_msgs.concat(processed_msgs), function (msg) {
-                return msg.date;
+                return msg.id;
             });
         });
     } else {

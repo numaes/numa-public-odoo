@@ -751,12 +751,9 @@ class product_template(osv.osv):
         (_check_uom, 'Error: The default Unit of Measure and the purchase Unit of Measure must be in the same category.', ['uom_id', 'uom_po_id']),
     ]
 
-    def name_get(self, cr, user, ids, context=None):
-        if context is None:
-            context = {}
-        if 'partner_id' in context:
-            pass
-        return super(product_template, self).name_get(cr, user, ids, context)
+    def name_get(self, cr, uid, ids, context=None):
+        return [(product.id, '%s%s' % (product.default_code and '[%s] ' % product.default_code or '', product.name))
+                for product in self.browse(cr, uid, ids, context=context)]
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
         # Only use the product.product heuristics if there is a search term and the domain
@@ -952,11 +949,11 @@ class product_product(osv.osv):
 
     def _get_pricelist_items(self, cr, uid, ids, field_name, args, context=None):
         res = {}
-        for prod_id in ids:
-            prod = self.browse(cr, uid, [prod_id], context=context)
-            item_ids = self.pool['product.pricelist.item'].search(cr, uid, ['|', ('product_id', '=', prod_id), ('product_tmpl_id', '=', prod.product_tmpl_id.id)], context=context)
-            res[prod_id] = item_ids
+        for prod in self.browse(cr, uid, ids, context=context):
+            item_ids = self.pool['product.pricelist.item'].search(cr, uid, ['|', ('product_id', '=', prod.id), ('product_tmpl_id', '=', prod.product_tmpl_id.id)], context=context)
+            res[prod.id] = item_ids
         return res
+
 
     _columns = {
         'price': fields.function(_product_price, fnct_inv=_set_product_lst_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),

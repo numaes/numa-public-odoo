@@ -307,7 +307,8 @@ class BaseModel(object):
     __metaclass__ = MetaModel
     _auto = False               # don't create any database backend
     _register = False           # not visible in ORM registry
-    _transient = False          # not transient
+    _abstract = True            # whether model is abstract
+    _transient = False          # whether model is transient
 
     _name = None                # the model name
     _description = None         # the model's informal name
@@ -606,6 +607,8 @@ class BaseModel(object):
             if name not in pool:
                 raise TypeError("Model %r does not exist in registry." % name)
             ModelClass = type(pool[name])
+            ModelClass._build_model_check_base(cls)
+            check_parent = ModelClass._build_model_check_parent
         else:
             ModelClass = type(name, (BaseModel,), {
                 '_name': name,
@@ -615,6 +618,7 @@ class BaseModel(object):
                 '_fields': {},                          # populated in _setup_base()
                 '_defaults': {},                        # populated in _setup_base()
             })
+            check_parent = cls._build_model_check_parent
 
         # determine all the classes the model should inherit from
         bases = LastOrderedSet([cls])
@@ -626,6 +630,7 @@ class BaseModel(object):
                 for base in parent_class.__bases__:
                     bases.add(base)
             else:
+                check_parent(cls, parent_class)
                 bases.add(parent_class)
                 parent_class._inherit_children.add(name)
         ModelClass.__bases__ = tuple(bases)
@@ -637,6 +642,29 @@ class BaseModel(object):
         model = object.__new__(ModelClass)
         model.__init__(pool, cr)
         return model
+
+    @classmethod
+    def _build_model_check_base(model_class, cls):
+        """ Check whether ``model_class`` can be extended with ``cls``. """
+        if model_class._abstract and not cls._abstract:
+            msg = ("%s transforms the abstract model %r into a non-abstract model. "
+                   "That class should either inherit from AbstractModel, or set a different '_name'.")
+            raise TypeError(msg % (cls, model_class._name))
+        if model_class._transient != cls._transient:
+            if model_class._transient:
+                msg = ("%s transforms the transient model %r into a non-transient model. "
+                       "That class should either inherit from TransientModel, or set a different '_name'.")
+            else:
+                msg = ("%s transforms the model %r into a transient model. "
+                       "That class should either inherit from Model, or set a different '_name'.")
+            raise TypeError(msg % (cls, model_class._name))
+
+    @classmethod
+    def _build_model_check_parent(model_class, cls, parent_class):
+        """ Check whether ``model_class`` can inherit from ``parent_class``. """
+        if model_class._abstract and not parent_class._abstract:
+            msg = ("In %s, the abstract model %r cannot inherit from the non-abstract model %r.")
+            raise TypeError(msg % (cls, model_class._name, parent_class._name))
 
     @classmethod
     def _build_model_attributes(cls, pool):
@@ -2101,10 +2129,10 @@ class BaseModel(object):
 
         aggregated_fields = [
             f for f in fields
-            if f not in ('id', 'sequence')
+            if f != 'sequence'
             if f not in groupby_fields
             if f in self._fields
-            if self._fields[f].type in ('integer', 'float', 'monetary')
+            if self._fields[f].group_operator
             if getattr(self._fields[f].base_field.column, '_classic_write', False)
         ]
 
@@ -3521,7 +3549,7 @@ class BaseModel(object):
         """
         fields = ['id']
         if self._log_access:
-            fields += ['create_uid', 'create_date', 'write_uid', 'write_date']
+            fields += LOG_ACCESS_COLUMNS
         quoted_table = '"%s"' % self._table
         fields_str = ",".join('%s.%s' % (quoted_table, field) for field in fields)
         query = '''SELECT %s, __imd.noupdate, __imd.module, __imd.name
@@ -3882,16 +3910,18 @@ class BaseModel(object):
         if unknown:
             _logger.warning("%s.write() with unknown fields: %s", self._name, ', '.join(sorted(unknown)))
 
-        # write old-style fields with (low-level) method _write
-        if old_vals:
-            self._write(old_vals)
+        protected_fields = map(self._fields.get, new_vals)
+        with self.env.protecting(protected_fields, self):
+            # write old-style fields with (low-level) method _write
+            if old_vals:
+                self._write(old_vals)
 
-        # put the values of pure new-style fields into cache, and inverse them
-        if new_vals:
-            for record in self:
-                record._cache.update(record._convert_to_cache(new_vals, update=True))
-            for key in new_vals:
-                self._fields[key].determine_inverse(self)
+            if new_vals:
+                # put the values of pure new-style fields into cache, and inverse them
+                for record in self:
+                    record._cache.update(record._convert_to_cache(new_vals, update=True))
+                for key in new_vals:
+                    self._fields[key].determine_inverse(self)
 
         return True
 
@@ -4177,8 +4207,10 @@ class BaseModel(object):
 
         # put the values of pure new-style fields into cache, and inverse them
         record._cache.update(record._convert_to_cache(new_vals))
-        for key in new_vals:
-            self._fields[key].determine_inverse(record)
+        protected_fields = map(self._fields.get, new_vals)
+        with self.env.protecting(protected_fields, record):
+            for key in new_vals:
+                self._fields[key].determine_inverse(record)
 
         return record
 
@@ -4205,6 +4237,7 @@ class BaseModel(object):
 
         upd_todo = []
         unknown_fields = []
+        protected_fields = []
         for name, val in vals.items():
             field = self._fields.get(name)
             if not field:
@@ -4215,6 +4248,8 @@ class BaseModel(object):
                 del vals[name]
             elif not field.column:
                 del vals[name]
+            elif field.inverse:
+                protected_fields.append(field)
         if unknown_fields:
             _logger.warning('No such field(s) in model %s: %s.', self._name, ', '.join(unknown_fields))
 
@@ -4325,46 +4360,46 @@ class BaseModel(object):
                            (pleft, pleft + 1, id_new))
                 self.invalidate_cache(['parent_left', 'parent_right'])
 
-        # invalidate and mark new-style fields to recompute; do this before
-        # setting other fields, because it can require the value of computed
-        # fields, e.g., a one2many checking constraints on records
-        self.modified(self._fields)
+        with self.env.protecting(protected_fields, self):
+            # invalidate and mark new-style fields to recompute; do this before
+            # setting other fields, because it can require the value of computed
+            # fields, e.g., a one2many checking constraints on records
+            self.modified(self._fields)
 
+            # defaults in context must be removed when call a one2many or many2many
+            rel_context = {key: val
+                           for key, val in self._context.iteritems()
+                           if not key.startswith('default_')}
 
-        # defaults in context must be removed when call a one2many or many2many
-        rel_context = {key: val
-                       for key, val in self._context.iteritems()
-                       if not key.startswith('default_')}
+            # call the 'set' method of fields which are not classic_write
+            result_store = []
+            for name in sorted(upd_todo, key=lambda name: self._columns[name].priority):
+                column = self._columns[name]
+                result_store += column.set(self._cr, self._model, id_new, name, vals[name],
+                                           self._uid, context=rel_context) or []
 
-        # call the 'set' method of fields which are not classic_write
-        result_store = []
-        for name in sorted(upd_todo, key=lambda name: self._columns[name].priority):
-            column = self._columns[name]
-            result_store += column.set(self._cr, self._model, id_new, name, vals[name],
-                                       self._uid, context=rel_context) or []
+            # for recomputing new-style fields
+            self.modified(upd_todo)
 
-        # for recomputing new-style fields
-        self.modified(upd_todo)
+            # check Python constraints
+            self._validate_fields(vals)
 
-        # check Python constraints
-        self._validate_fields(vals)
+            result_store += self._store_get_values(list(set(vals.keys() + self._inherits.values())))
+            self.env.recompute_old.extend(result_store)
 
-        result_store += self._store_get_values(list(set(vals.keys() + self._inherits.values())))
-        self.env.recompute_old.extend(result_store)
+            if self.env.recompute and self._context.get('recompute', True):
+                done = []
+                while self.env.recompute_old:
+                    sorted_recompute_old = sorted(self.env.recompute_old)
+                    self.env.clear_recompute_old()
+                    for order, model_name, ids, fnames in sorted_recompute_old:
+                        if (model_name, ids, fnames) not in done:
+                            recs = self.env[model_name].browse(ids)
+                            recs._store_set_values(fnames)
+                            done.append((model_name, ids, fnames))
 
-        if self.env.recompute and self._context.get('recompute', True):
-            done = []
-            while self.env.recompute_old:
-                sorted_recompute_old = sorted(self.env.recompute_old)
-                self.env.clear_recompute_old()
-                for order, model_name, ids, fnames in sorted_recompute_old:
-                    if (model_name, ids, fnames) not in done:
-                        recs = self.env[model_name].browse(ids)
-                        recs._store_set_values(fnames)
-                        done.append((model_name, ids, fnames))
-
-            # recompute new-style fields
-            self.recompute()
+                # recompute new-style fields
+                self.recompute()
 
         self.check_access_rule('create')
         self.create_workflow()
@@ -5496,7 +5531,10 @@ class BaseModel(object):
             case, the order of the returned recordset is arbitrary.
 
             :param func: a function or a dot-separated sequence of field names
+                (string); any falsy value simply returns the recordset ``self``
         """
+        if not func:
+            return self                 # support for an empty path of fields
         if isinstance(func, basestring):
             recs = self
             for name in func.split('.'):
@@ -6140,6 +6178,7 @@ class Model(AbstractModel):
     """
     _auto = True                # automatically create database backend
     _register = False           # not visible in ORM registry, meant to be python-inherited only
+    _abstract = False           # not abstract
     _transient = False          # not transient
 
 class TransientModel(Model):
@@ -6152,6 +6191,7 @@ class TransientModel(Model):
     """
     _auto = True                # automatically create database backend
     _register = False           # not visible in ORM registry, meant to be python-inherited only
+    _abstract = False           # not abstract
     _transient = True           # transient
 
 def itemgetter_tuple(items):

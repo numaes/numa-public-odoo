@@ -13,7 +13,7 @@ import pytz
 import xmlrpclib
 
 from openerp.sql_db import LazyCursor
-from openerp.tools import float_round, frozendict, html_sanitize, ustr, OrderedSet
+from openerp.tools import float_precision, float_round, frozendict, html_sanitize, ustr, OrderedSet
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from openerp.tools.translate import html_translate
@@ -342,6 +342,7 @@ class Field(object):
         'deprecated': None,             # whether the field is deprecated
 
         'related_field': None,          # corresponding related field
+        'group_operator': None,         # operator for aggregating values
     }
 
     def __init__(self, string=Default, **kwargs):
@@ -612,6 +613,7 @@ class Field(object):
     _related_help = property(attrgetter('help'))
     _related_readonly = property(attrgetter('readonly'))
     _related_groups = property(attrgetter('groups'))
+    _related_group_operator = property(attrgetter('group_operator'))
 
     @property
     def base_field(self):
@@ -751,6 +753,7 @@ class Field(object):
     _column_groups = property(attrgetter('groups'))
     _column_change_default = property(attrgetter('change_default'))
     _column_deprecated = property(attrgetter('deprecated'))
+    _column_group_operator = property(attrgetter('group_operator'))
 
     ############################################################################
     #
@@ -881,17 +884,15 @@ class Field(object):
     def _compute_value(self, records):
         """ Invoke the compute method on ``records``. """
         # initialize the fields to their corresponding null value in cache
-        computed = records._field_computed[self]
-        for field in computed:
+        fields = records._field_computed[self]
+        for field in fields:
             for record in records:
                 record._cache[field] = field.convert_to_cache(False, record, validate=False)
-            records.env.computed[field].update(records._ids)
-        if isinstance(self.compute, basestring):
-            getattr(records, self.compute)()
-        else:
-            self.compute(records)
-        for field in computed:
-            records.env.computed[field].difference_update(records._ids)
+        with records.env.protecting(fields, records):
+            if isinstance(self.compute, basestring):
+                getattr(records, self.compute)()
+            else:
+                self.compute(records)
 
     def compute_value(self, records):
         """ Invoke the compute method on ``records``; the results are in cache. """
@@ -995,13 +996,17 @@ class Field(object):
                     stored = set(field for field in fields if field.compute and field.store)
                     fields = set(fields) - stored
                     if path == 'id':
-                        target = records
+                        target0 = records
                     else:
                         # don't move this line to function top, see log
                         env = records.env(user=SUPERUSER_ID, context={'active_test': False})
-                        target = env[model_name].search([(path, 'in', records.ids)])
-                    if target:
+                        target0 = env[model_name].search([(path, 'in', records.ids)])
+                    if target0:
                         for field in stored:
+                            # discard records to not recompute for field
+                            target = target0 - records.env.protected(field)
+                            if not target:
+                                continue
                             spec.append((field, target._ids))
                             # recompute field on target in the environment of
                             # records, and as user admin if required
@@ -1032,15 +1037,15 @@ class Field(object):
                 continue
 
             target = env[field.model_name]
-            computed = target.browse(env.computed[field])
+            protected = env.protected(field)
             if path == 'id' and field.model_name == records._name:
-                target = records - computed
+                target = records - protected
             elif path and env.in_onchange:
-                target = (target.browse(env.cache[field]) - computed).filtered(
+                target = (target.browse(env.cache[field]) - protected).filtered(
                     lambda rec: rec if path == 'id' else rec._mapped_cache(path) & records
                 )
             else:
-                target = target.browse(env.cache[field]) - computed
+                target = target.browse(env.cache[field]) - protected
 
             if target:
                 spec.append((field, target._ids))
@@ -1062,12 +1067,11 @@ class Boolean(Field):
 
 class Integer(Field):
     type = 'integer'
-    _slots = {
-        'group_operator': None,         # operator for aggregating values
-    }
 
-    _related_group_operator = property(attrgetter('group_operator'))
-    _column_group_operator = property(attrgetter('group_operator'))
+    def _setup_regular_base(self, model):
+        super(Integer, self)._setup_regular_base(model)
+        if not self.group_operator:
+            self.group_operator = 'sum'
 
     def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, dict):
@@ -1101,11 +1105,15 @@ class Float(Field):
     type = 'float'
     _slots = {
         '_digits': None,                # digits argument passed to class initializer
-        'group_operator': None,         # operator for aggregating values
     }
 
     def __init__(self, string=Default, digits=Default, **kwargs):
         super(Float, self).__init__(string=string, _digits=digits, **kwargs)
+
+    def _setup_regular_base(self, model):
+        super(Float, self)._setup_regular_base(model)
+        if not self.group_operator:
+            self.group_operator = 'sum'
 
     @property
     def digits(self):
@@ -1116,13 +1124,11 @@ class Float(Field):
             return self._digits
 
     _related__digits = property(attrgetter('_digits'))
-    _related_group_operator = property(attrgetter('group_operator'))
 
     _description_digits = property(attrgetter('digits'))
 
     _column_digits = property(lambda self: not callable(self._digits) and self._digits)
     _column_digits_compute = property(lambda self: callable(self._digits) and self._digits)
-    _column_group_operator = property(attrgetter('group_operator'))
 
     def convert_to_cache(self, value, record, validate=True):
         # apply rounding here, otherwise value in cache may be wrong!
@@ -1147,24 +1153,23 @@ class Monetary(Field):
     type = 'monetary'
     _slots = {
         'currency_field': None,
-        'group_operator': None,         # operator for aggregating values
     }
 
     def __init__(self, string=Default, currency_field=Default, **kwargs):
         super(Monetary, self).__init__(string=string, currency_field=currency_field, **kwargs)
 
     _related_currency_field = property(attrgetter('currency_field'))
-    _related_group_operator = property(attrgetter('group_operator'))
 
     _description_currency_field = property(attrgetter('currency_field'))
 
     _column_currency_field = property(attrgetter('currency_field'))
-    _column_group_operator = property(attrgetter('group_operator'))
 
     def _setup_regular_base(self, model):
         super(Monetary, self)._setup_regular_base(model)
         if not self.currency_field:
             self.currency_field = 'currency_id'
+        if not self.group_operator:
+            self.group_operator = 'sum'
 
     def _setup_regular_full(self, model):
         super(Monetary, self)._setup_regular_full(model)
@@ -1177,7 +1182,8 @@ class Monetary(Field):
             # FIXME @rco-odoo: currency may not be already initialized if it is
             # a function or related field!
             if currency:
-                return currency.round(float(value or 0.0))
+                value = currency.round(float(value or 0.0))
+                return float_precision(value, currency.decimal_places)
         return float(value or 0.0)
 
 
@@ -2065,7 +2071,6 @@ class Id(Field):
 
     def __set__(self, record, value):
         raise TypeError("field 'id' cannot be assigned")
-
 
 # imported here to avoid dependency cycle issues
 from openerp import SUPERUSER_ID

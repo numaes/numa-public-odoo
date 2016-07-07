@@ -8,7 +8,7 @@ import time
 from odoo import api, fields, models, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_compare
-from odoo.addons.procurement import procurement
+from odoo.addons.procurement.models import procurement
 from odoo.exceptions import UserError
 
 
@@ -227,6 +227,8 @@ class Picking(models.Model):
         readonly=True, required=True,
         states={'draft': [('readonly', False)]})
     move_lines = fields.One2many('stock.move', 'picking_id', string="Stock Moves", copy=True)
+    has_scrap_move = fields.Boolean(
+        'Has Scrap Moves', compute='_has_scrap_move')
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Picking Type',
         required=True,
@@ -340,6 +342,11 @@ class Picking(models.Model):
     @api.one
     def _set_min_date(self):
         self.move_lines.write({'date_expected': self.min_date})
+
+    @api.one
+    def _has_scrap_move(self):
+        # TDE FIXME: better implementation
+        self.has_scrap_move = bool(self.env['stock.move'].search_count([('picking_id', '=', self.id), ('scrapped', '=', True)]))
 
     @api.one
     def _compute_quant_reserved_exist(self):
@@ -697,10 +704,11 @@ class Picking(models.Model):
                 # Check moves with same product
                 product_qty = ops.qty_done if done_qtys else ops.product_qty
                 qty_to_assign = Uom._compute_qty_obj(ops.product_uom_id, product_qty, ops.product_id.uom_id)
+                precision_rounding = ops.product_id.uom_id.rounding
                 for move_dict in prod2move_ids.get(ops.product_id.id, []):
                     move = move_dict['move']
                     for quant in move.reserved_quant_ids:
-                        if not qty_to_assign > 0:
+                        if float_compare(qty_to_assign, 0, precision_rounding=precision_rounding) != 1:
                             break
                         if quant.id in quants_in_package_done:
                             continue
@@ -723,7 +731,7 @@ class Picking(models.Model):
                                     qty_to_assign -= qty_on_link
                                     lot_qty[quant.lot_id.id] -= qty_on_link
 
-                qty_assign_cmp = float_compare(qty_to_assign, 0, precision_rounding=ops.product_id.uom_id.rounding)
+                qty_assign_cmp = float_compare(qty_to_assign, 0, precision_rounding=precision_rounding)
                 if qty_assign_cmp > 0:
                     # qty reserved is less than qty put in operations. We need to create a link but it's deferred after we processed
                     # all the quants (because they leave no choice on their related move and needs to be processed with higher priority)
@@ -845,6 +853,13 @@ class Picking(models.Model):
             if not all_op_processed:
                 todo_moves |= picking._create_extra_moves()
 
+            if need_rereserve or not all_op_processed:
+                moves_reassign = any(x.origin_returned_move_id or x.move_orig_ids for x in picking.move_lines if x.state not in ['done', 'cancel'])
+                if moves_reassign and picking.location_id.usage not in ("supplier", "production", "inventory"):
+                    # unnecessary to assign other quants than those involved with pack operations as they will be unreserved anyways.
+                    picking.with_context(reserve_only_ops=True).rereserve_quants(move_ids=todo_moves.ids)
+                picking.do_recompute_remaining_quantities()
+
             # split move lines if needed
             for move in picking.move_lines:
                 rounding = move.product_id.uom_id.rounding
@@ -865,14 +880,9 @@ class Picking(models.Model):
                     # Assign move as it was assigned before
                     toassign_moves |= new_move
 
-            if need_rereserve or not all_op_processed:
-                if picking.location_id.usage not in ("supplier", "production", "inventory"):
-                    picking.rereserve_quants(move_ids=todo_moves.ids)
-                picking.do_recompute_remaining_quantities()
-
             # TDE FIXME: do_only_split does not seem used anymore
             if todo_moves and not self.env.context.get('do_only_split'):
-                todo_moves.with_context(mail_notrack=True).action_done()
+                todo_moves.action_done()
             elif self.env.context.get('do_only_split'):
                 picking = picking.with_context(split=todo_moves.ids)
 
@@ -994,3 +1004,25 @@ class Picking(models.Model):
             else:
                 raise UserError(_('Please process some quantities to put in the pack first!'))
         return package
+
+    @api.multi
+    def button_scrap(self):
+        self.ensure_one()
+        return {
+            'name': _('Scrap'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'stock.scrap',
+            'view_id': self.env.ref('stock.stock_scrap_form_view2').id,
+            'type': 'ir.actions.act_window',
+            'context': {'default_picking_id': self.id, 'product_ids': self.pack_operation_product_ids.mapped('product_id').ids},
+            'target': 'new',
+        }
+
+    @api.multi
+    def action_see_move_scrap(self):
+        self.ensure_one()
+        action = self.env.ref('stock.action_stock_scrap').read()[0]
+        scraps = self.env['stock.scrap'].search([('picking_id', '=', self.id)])
+        action['domain'] = [('id', 'in', scraps.ids)]
+        return action

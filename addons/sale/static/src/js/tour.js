@@ -6,9 +6,7 @@ var tour = require('web_tour.tour');
 
 var _t = core._t;
 
-tour.register('sale_tour', {
-    'skip_enabled': true,
-}, [{
+tour.register('sale_tour', [{
     trigger: '.o_app[data-menu-xmlid="sales_team.menu_base_partner"], .oe_menu_toggler[data-menu-xmlid="sales_team.menu_base_partner"]',
     content: _t('Organize your sales activities with the <b>Sales app</b>.'),
     position: 'bottom',
@@ -31,6 +29,19 @@ tour.register('sale_tour', {
     trigger: 'li a[data-menu-xmlid="base.menu_sales"], .oe_secondary_menu_section[data-menu-xmlid="base.menu_sales"]',
     content: _t("Use this menu to access quotations, sales orders and customers."),
     position: "bottom"
+}, {
+    trigger: ".o_main_navbar .o_menu_toggle",
+    content: _t('Click the <i>Home icon</i> to navigate across apps.'),
+    edition: "enterprise",
+    position: "bottom"
+}, {
+    trigger: '.o_app[data-menu-xmlid="base.menu_administration"], .oe_menu_toggler[data-menu-xmlid="base.menu_administration"]',
+    content: _t("Configuration options are available in the Settings app."),
+    position: "bottom"
+}, {
+    trigger: ".o_web_settings_dashboard textarea#user_emails",
+    content: _t("<b>Invite salespeople or managers</b> via email.<br/><i>Enter one email per line.</i>"),
+    position: "right"
 }]);
 
 });

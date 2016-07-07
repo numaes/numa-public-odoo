@@ -4,12 +4,13 @@
 # 
 # Translators:
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2016
+# Martin Trigaux, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2016-06-10 05:42+0000\n"
+"PO-Revision-Date: 2016-06-30 09:52+0000\n"
 "Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>\n"
 "Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
 "MIME-Version: 1.0\n"
@@ -4369,7 +4370,7 @@ msgstr "(แก้ไข)"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_company_form
 msgid "(reload fonts)"
-msgstr ""
+msgstr "(โหลดฟอนต์ใหม่)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_repair
@@ -5476,7 +5477,7 @@ msgstr "แอพ:"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Arabic / الْعَرَبيّة"
-msgstr ""
+msgstr "อาราบิค / الْعَرَبيّة"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_arch_db
@@ -7664,7 +7665,7 @@ msgstr "วัน"
 #. module: base
 #: model:ir.ui.view,arch_db:base.sequence_view
 msgid "Day of the Week (0:Monday): %(weekday)s"
-msgstr "วันของสัปดาห์ (0:Monday): %(weekday)"
+msgstr "วันของสัปดาห์ (0:Monday): %(weekday)s"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.sequence_view
@@ -14688,7 +14689,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner_image_small
 #: model:ir.model.fields,field_description:base.field_res_users_image_small
 msgid "Small-sized image"
-msgstr ""
+msgstr "รูปขนาดเล็ก"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_image_small

@@ -131,10 +131,6 @@ renderer.tplPopovers = function (lang, options) {
     $imagePopover.find('button[data-event="removeMedia"]').parent().remove();
     $imagePopover.find('button[data-event="floatMe"][data-value="none"]').remove();
 
-    var $alt = $('<div class="btn-group"/>');
-    $alt.prependTo($imagePopover.find('.popover-content'));
-    $alt.append('<button class="btn btn-default btn-sm btn-small" data-event="alt"><strong>' + _t('Description') + ': </strong><span class="o_image_alt"/></button>');
-
     // padding button
     var $padding = $('<div class="btn-group"/>');
     $padding.insertBefore($imagePopover.find('.btn-group:first'));
@@ -198,6 +194,10 @@ renderer.tplPopovers = function (lang, options) {
     $imagePopover.find('.popover-content').append($airPopover.find(".note-history").clone());
 
     $imagePopover.find('[data-event="showImageDialog"]').before($airPopover.find('[data-event="showLinkDialog"]').clone());
+
+    var $alt = $('<div class="btn-group"/>');
+    $alt.appendTo($imagePopover.find('.popover-content'));
+    $alt.append('<button class="btn btn-default btn-sm btn-small" data-event="alt"><strong>' + _t('Description') + ': </strong><span class="o_image_alt"/></button>');
 
     //////////////// link popover
 
@@ -282,6 +282,7 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
             if (width) {
                 width = width[2];
             }
+            $container.find('button[data-event="resize"][data-value="auto"]').toggleClass("active", width !== "100%" && width !== "50%" && width !== "25%");
             $container.find('button[data-event="resize"][data-value="1"]').toggleClass("active", width === "100%");
             $container.find('button[data-event="resize"][data-value="0.5"]').toggleClass("active", width === "50%");
             $container.find('button[data-event="resize"][data-value="0.25"]').toggleClass("active", width === "25%");
@@ -370,7 +371,7 @@ eventHandler.modules.editor.resize = function ($editable, sValue) {
     if (width) {
         width = width[2]/100;
     }
-    $target.css('width', width != sValue ? (sValue * 100) + '%' : '');
+    $target.css('width', (width != sValue && sValue != "auto") ? (sValue * 100) + '%' : '');
 };
 eventHandler.modules.editor.resizefa = function ($editable, sValue) {
     var $target = $(getImgTarget($editable));
@@ -399,8 +400,7 @@ eventHandler.modules.linkDialog.showLinkDialog = function ($editable, $dialog, l
     $editable.data('range').select();
     $editable.data('NoteHistory').recordUndo();
 
-    var editor = new widgets.LinkDialog($editable, linkInfo);
-    editor.appendTo(document.body);
+    var editor = new widgets.LinkDialog(null, {}, $editable, linkInfo).open();
 
     var def = new $.Deferred();
     editor.on("save", this, function (linkInfo) {
@@ -420,15 +420,14 @@ eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
     if (r.sc.tagName && r.sc.childNodes.length) {
         r.sc = r.sc.childNodes[r.so];
     }
-    var editor = new widgets.MediaDialog($editable, dom.isImg(r.sc) ? r.sc : null);
-    editor.appendTo(document.body);
+    new widgets.MediaDialog(null, {}, $editable, dom.isImg(r.sc) ? r.sc : null).open();
     return new $.Deferred().reject();
 };
 $.summernote.pluginEvents.alt = function (event, editor, layoutInfo, sorted) {
     var $editable = layoutInfo.editable();
     var $selection = layoutInfo.handle().find('.note-control-selection');
     var media = $selection.data('target');
-    new widgets.alt($editable, media).appendTo(document.body);
+    new widgets.alt(null, {}, $editable, media).open();
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -758,7 +757,7 @@ eventHandler.attach = function (oLayoutInfo, options) {
     oLayoutInfo.editor().on('dblclick', imageSelector, function (event) {
         show_tooltip = false;
         if (!$(event.target).closest(".note-toolbar").length) { // prevent icon edition of top bar for default summernote
-            new widgets.MediaDialog(oLayoutInfo.editor(), event.target).appendTo(document.body);
+            new widgets.MediaDialog(null, {}, oLayoutInfo.editor(), event.target).open();
         }
     });
     oLayoutInfo.editor().on('click', imageSelector, function (event) {
