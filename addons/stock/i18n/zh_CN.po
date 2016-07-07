@@ -10,7 +10,9 @@
 # Jeffery Chenn <jeffery9@gmail.com>, 2016
 # Jonathon <jonathonli@gmail.com>, 2015
 # Joray <13637815@qq.com>, 2016
+# Joray <13637815@qq.com>, 2016
 # Joshua Jan <popkar77@gmail.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2016
 # Martin Trigaux, 2015-2016
 # Rona Lin <ssauapw@qq.com>, 2015
 # liAnGjiA <liangjia@qq.com>, 2016
@@ -19,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-13 09:40+0000\n"
-"PO-Revision-Date: 2016-06-07 12:21+0000\n"
+"PO-Revision-Date: 2016-06-29 13:50+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -663,7 +665,7 @@ msgstr "有效"
 #. module: stock
 #: selection:stock.config.settings,module_stock_calendar:0
 msgid "Adapt lead times using the suppliers' open days calendars (advanced)"
-msgstr "用供应商的旷量调整提前期(高级)"
+msgstr "使用供应商的开放天数日历调整提前时间(高级)"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -738,7 +740,7 @@ msgstr "所有产品"
 #. module: stock
 #: selection:stock.config.settings,group_stock_tracking_owner:0
 msgid "All products in your warehouse belong to your company"
-msgstr "你仓库中的所有产品都属于你的公司"
+msgstr "仓库中的所有产品都属于公司"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_returned_move_ids
@@ -1506,7 +1508,7 @@ msgstr "客户地址"
 #: model:ir.model.fields,field_description:stock.field_product_product_sale_delay
 #: model:ir.model.fields,field_description:stock.field_product_template_sale_delay
 msgid "Customer Lead Time"
-msgstr "客户提前时间"
+msgstr "客户提前期"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner_property_stock_customer
@@ -1613,7 +1615,7 @@ msgid ""
 "\n"
 "Thank you in advance for your cooperation.\n"
 "Best Regards,"
-msgstr "亲爱的女士/先生,\n    我们根据Odoo系统中的记录显示，您的到期帐款尚未支付。请看下面的明细信息。\n    如果这些金额已经支付，请忽略本次提醒。否则，请向我们说明如下金额。\n    如果有任何关于账单的疑问，请联系我们。\n\n    谢谢您的合作。\n    此致  \n           敬礼"
+msgstr "尊敬的先生/女士,\n    我们的记录表明，您的账户仍有到期的付款。请查找下面的明细。\n    如果款项已经支付，请忽略此通知。否则，请按如下所述的总金额转交给我们。\n    如果有任何关于账户的疑问，请联系我们。\n\n    谢谢您的合作。\n    此致  \n           敬礼"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_decimal_precision
@@ -1918,7 +1920,7 @@ msgstr "不管理包装方式"
 #. module: stock
 #: selection:stock.config.settings,group_stock_multiple_locations:0
 msgid "Do not record internal moves within a warehouse"
-msgstr "同一个仓库内不记录内部移动"
+msgstr "不记录仓库的内部移动"
 
 #. module: stock
 #: selection:stock.config.settings,group_stock_production_lot:0
@@ -2957,7 +2959,7 @@ msgstr "最后消息日期"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse___last_update
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint___last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后修改时间"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_write_uid
@@ -2990,7 +2992,7 @@ msgstr "最后修改日"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_write_uid
 msgid "Last Updated by"
-msgstr "最后更新人"
+msgstr "最后更新者"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_write_date
@@ -3341,7 +3343,7 @@ msgstr "管理产品的生产链"
 #. module: stock
 #: selection:stock.config.settings,group_stock_multiple_locations:0
 msgid "Manage several locations per warehouse"
-msgstr "仓库多位置管理"
+msgstr "管理仓库的多个位置"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
@@ -3411,7 +3413,7 @@ msgstr "最小库存规则"
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_propagation_minimum_delta
 msgid ""
 "Minimum days to trigger a propagation of date change in pushed/pull flows."
-msgstr "触发推拉式流传递的日期变化的最小天数。"
+msgstr "触发推/拉流中沿用的日期变化的最小天数"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
@@ -5206,12 +5208,12 @@ msgstr "供应仓库"
 msgid ""
 "Set a specific removal strategy that will be used regardless of the source "
 "location for this product category"
-msgstr "设置一个特殊的移除策略，它将被使用，而不考虑此产品分类的源位置。"
+msgstr "设置一个特定的下架策略，它将被使用，而不考虑此产品分类的源位置。"
 
 #. module: stock
 #: selection:stock.config.settings,module_stock_calendar:0
 msgid "Set lead times in calendar days (easy)"
-msgstr "以日历天数设置提前期(简单)"
+msgstr "按日历天数设置提前期(简单)"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -5642,7 +5644,7 @@ msgstr "位置编码必须在公司内唯一！"
 msgid ""
 "The chosen quantity for product %s is not compatible with the UoM rounding. "
 "It will be automatically converted at confirmation"
-msgstr "选择的产品数量%s不兼容四舍五入计量单位。确认后它将会自动转换"
+msgstr "选择的产品数量%s不兼容计量单位的舍入。确认后它将会自动转换"
 
 #. module: stock
 #: sql_constraint:stock.warehouse:0
@@ -6091,7 +6093,7 @@ msgid ""
 "                    - removal date\n"
 "                    - alert date.\n"
 "                    This installs the module product_expiry."
-msgstr "在产品和序列号中追踪不同的日期.\n                    以下日期能够被追踪到:\n                    - 寿命终止日期\n                    - 食品包装上标明的日期\n                    - 移除日期\n                    - 警报日期.\n                    需要安装模块 product_expiry."
+msgstr "在产品和序列号中追踪不同的日期.\n                    以下日期能够被追踪到:\n                    - 寿命终止日期\n                    - 食品包装上标明的日期\n                    - 下架日期\n                    - 警报日期.\n                    需要安装模块 product_expiry."
 
 #. module: stock
 #: selection:stock.config.settings,group_stock_production_lot:0
@@ -6159,12 +6161,12 @@ msgstr "包装类型"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_ups
 msgid "UPS integration"
-msgstr "UPS　集成"
+msgstr "UPS集成"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_usps
 msgid "USPS integration"
-msgstr "USPS　集成"
+msgstr "USPS集成"
 
 #. module: stock
 #: code:addons/stock/stock.py:730
@@ -6478,7 +6480,7 @@ msgstr "仓库名称"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_propagate_warehouse_id
 msgid "Warehouse to Propagate"
-msgstr "参与移动的仓库"
+msgstr "沿用的仓库"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_order_warehouse_id
@@ -6777,7 +6779,7 @@ msgstr "有些手动创建的产品明细需要删掉才能继续"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "You have processed less products than the initial demand."
-msgstr "你已经部分完成"
+msgstr "你已经处理了初始需求的部分产品"
 
 #. module: stock
 #: code:addons/stock/product.py:339

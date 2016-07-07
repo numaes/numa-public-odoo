@@ -1440,10 +1440,11 @@ class stock_picking(models.Model):
                 #Check moves with same product
                 product_qty = ops.qty_done if done_qtys else ops.product_qty
                 qty_to_assign = uom_obj._compute_qty_obj(cr, uid, ops.product_uom_id, product_qty, ops.product_id.uom_id, context=context)
+                precision_rounding = ops.product_id.uom_id.rounding
                 for move_dict in prod2move_ids.get(ops.product_id.id, []):
                     move = move_dict['move']
                     for quant in move.reserved_quant_ids:
-                        if not qty_to_assign > 0:
+                        if float_compare(qty_to_assign, 0, precision_rounding=precision_rounding) != 1:
                             break
                         if quant.id in quants_in_package_done:
                             continue
@@ -1466,7 +1467,7 @@ class stock_picking(models.Model):
                                     qty_to_assign -= qty_on_link
                                     lot_qty[quant.lot_id.id] -= qty_on_link
 
-                qty_assign_cmp = float_compare(qty_to_assign, 0, precision_rounding=ops.product_id.uom_id.rounding)
+                qty_assign_cmp = float_compare(qty_to_assign, 0, precision_rounding=precision_rounding)
                 if qty_assign_cmp > 0:
                     #qty reserved is less than qty put in operations. We need to create a link but it's deferred after we processed
                     #all the quants (because they leave no choice on their related move and needs to be processed with higher priority)
@@ -1660,6 +1661,13 @@ class stock_picking(models.Model):
                 todo_move_ids = []
                 if not all_op_processed:
                     todo_move_ids += self._create_extra_moves(cr, uid, picking, context=context)
+                if need_rereserve or not all_op_processed: 
+                    moves_reassign = any(x.origin_returned_move_id or x.move_orig_ids for x in picking.move_lines if x.state not in ['done', 'cancel'])
+                    if moves_reassign and (picking.location_id.usage not in ("supplier", "production", "inventory")):
+                        ctx = dict(context)
+                        ctx['reserve_only_ops'] = True #unnecessary to assign other quants than those involved with pack operations as they will be unreserved anyways.
+                        self.rereserve_quants(cr, uid, picking, move_ids=picking.move_lines.ids, context=ctx)
+                    self.do_recompute_remaining_quantities(cr, uid, [picking.id], context=context)
 
                 #split move lines if needed
                 toassign_move_ids = []
@@ -1680,12 +1688,8 @@ class stock_picking(models.Model):
                         #Assign move as it was assigned before
                         toassign_move_ids.append(new_move)
                 todo_move_ids = list(set(todo_move_ids))
-                if need_rereserve or not all_op_processed: 
-                    if not picking.location_id.usage in ("supplier", "production", "inventory"):
-                        self.rereserve_quants(cr, uid, picking, move_ids=todo_move_ids, context=context)
-                    self.do_recompute_remaining_quantities(cr, uid, [picking.id], context=context)
                 if todo_move_ids and not context.get('do_only_split'):
-                    self.pool.get('stock.move').action_done(cr, uid, todo_move_ids, context=notrack_context)
+                    self.pool.get('stock.move').action_done(cr, uid, todo_move_ids, context=context)
                 elif context.get('do_only_split'):
                     context = dict(context, split=todo_move_ids)
             self._create_backorder(cr, uid, picking, context=context)
@@ -2463,7 +2467,7 @@ class stock_move(osv.osv):
 
         for move in todo_moves:
             #then if the move isn't totally assigned, try to find quants without any specific domain
-            if move.state != 'assigned':
+            if (move.state != 'assigned') and not context.get("reserve_only_ops"):
                 qty_already_assigned = move.reserved_availability
                 qty = move.product_qty - qty_already_assigned
                 quants = quant_obj.quants_get_preferred_domain(cr, uid, qty, move, domain=main_domain[move.id], preferred_domain_list=[], context=context)
@@ -2562,8 +2566,9 @@ class stock_move(osv.osv):
             move_rec = self.pool['stock.move'].browse(cr, uid, move, context=context)
             # Assign quants already reserved with lot to the correct
             for quant in quants_taken:
-                move_quants_dict.setdefault(quant[0].lot_id.id, [])
-                move_quants_dict[quant[0].lot_id.id] += [quant]
+                if quant[0] <= move_rec.reserved_quant_ids:
+                    move_quants_dict.setdefault(quant[0].lot_id.id, [])
+                    move_quants_dict[quant[0].lot_id.id] += [quant]
             false_quants_move = [x for x in false_quants if x[0].reservation_id.id == move]
             for lot in lot_qty:
                 move_quants_dict.setdefault(lot, [])
@@ -4524,7 +4529,9 @@ class stock_pack_operation(osv.osv):
         picking_type = pack.picking_id.picking_type_id
         serial = (pack.product_id.tracking == 'serial')
         view = data_obj.xmlid_to_res_id(cr, uid, 'stock.view_pack_operation_lot_form')
-        only_create = picking_type.use_create_lots and not picking_type.use_existing_lots
+        # If it's a returned stock move, we do not want to create a lot
+        returned_move = pack.linked_move_operation_ids.mapped('move_id').mapped('origin_returned_move_id')
+        only_create = picking_type.use_create_lots and not picking_type.use_existing_lots and not returned_move
         show_reserved = any([x for x in pack.pack_lot_ids if x.qty_todo > 0.0])
         ctx.update({'serial': serial,
                     'only_create': only_create,
