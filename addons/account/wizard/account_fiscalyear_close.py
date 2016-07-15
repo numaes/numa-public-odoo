@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+import datetime
 
 class account_fiscalyear_close(osv.osv_memory):
     """
@@ -87,6 +88,8 @@ class account_fiscalyear_close(osv.osv_memory):
         cr.execute("SELECT id FROM account_period WHERE date_start > (SELECT date_stop FROM account_fiscalyear WHERE id = %s)", (str(fy_id),))
         fy2_period_set = ','.join(map(lambda id: str(id[0]), cr.fetchall()))
 
+        period_ids = obj_acc_period.search(cr, uid, [('fiscalyear_id','=',data[0].fy_id.id)], context=context)
+                
         if not fy_period_set or not fy2_period_set:
             raise osv.except_osv(_('User Error!'), _('The periods to generate opening entries cannot be found.'))
 
@@ -140,21 +143,27 @@ class account_fiscalyear_close(osv.osv_memory):
               AND t.close_method = %s''', (company_id, 'unreconciled', ))
         account_ids = map(lambda x: x[0], cr.fetchall())
         if account_ids:
+            today = "'%s'" % datetime.datetime.today().strftime('%Y-%m-%d')
             cr.execute('''
                 INSERT INTO account_move_line (
                      name, create_uid, create_date, write_uid, write_date,
                      statement_id, journal_id, currency_id, date_maturity,
-                     partner_id, blocked, credit, state, debit,
-                     ref, account_id, period_id, date, move_id, amount_currency,
+                     partner_id, blocked, 
+                     credit, 
+                     debit, 
+                     state, ref, account_id, period_id, date, move_id, amount_currency,
                      quantity, product_id, company_id)
-                  (SELECT name, create_uid, create_date, write_uid, write_date,
-                     statement_id, %s,currency_id, date_maturity, partner_id,
-                     blocked, credit, 'draft', debit, ref, account_id,
-                     %s, (%s) AS date, %s, amount_currency, quantity, product_id, company_id
+                  (SELECT 'Saldo inicial', ''' + ','.join([str(uid), today, str(uid), today]) + ''',
+                     null, %s, max(currency_id), null, partner_id, false, 
+                     case when sum(debit) - sum(credit) < 0 then sum(credit) - sum(debit) else 0 end as credit, 
+                     case when sum(debit) - sum(credit) > 0 then sum(debit) - sum(credit) else 0 end as debit,
+                     'draft', ' ', account_id, %s, (%s) AS date, %s, 0, 0, null, max(company_id)
                    FROM account_move_line
                    WHERE account_id IN %s
+                     AND period_id IN ('''+','.join(map(lambda id: str(id), period_ids))+''')
                      AND ''' + query_line + '''
-                     AND reconcile_id IS NULL)''', (new_journal.id, period.id, period.date_start, move_id, tuple(account_ids),))
+                     AND reconcile_id IS NULL
+                   GROUP BY partner_id, account_id)''', (new_journal.id, period.id, period.date_start, move_id, tuple(account_ids),))
 
             #We have also to consider all move_lines that were reconciled
             #on another fiscal year, and report them too
