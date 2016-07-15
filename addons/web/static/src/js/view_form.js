@@ -2593,7 +2593,13 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
         this.$el.html(instance.web.qweb.render("FieldCharDomain", {widget: this}));
         if (this.get('value')) {
             var model = this.options.model || this.field_manager.get_field_value(this.options.model_field);
-            var domain = instance.web.pyeval.eval('domain', this.get('value'));
+            try{
+                var domain = instance.web.pyeval.eval('domain', this.get('value'));
+            }
+            catch(e){
+                this.do_warn(_t('Error: Bad domain'), _t('The domain is wrong.'));
+                return;
+            }
             var ds = new instance.web.DataSetStatic(self, model, self.build_context());
             ds.call('search_count', [domain, self.build_context()]).then(function (results) {
                 $('.oe_domain_count', self.$el).text(results + _t(' records selected'));
@@ -4330,6 +4336,9 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
     },
     commit_value: function() {
         return this.save_any_view();
+    },
+    is_false: function () {
+        return _(this.dataset.ids).isEmpty();
     },
     save_any_view: function() {
         var view = this.get_active_view();
