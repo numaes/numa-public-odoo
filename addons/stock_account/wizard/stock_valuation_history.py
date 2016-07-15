@@ -24,7 +24,7 @@ class wizard_valuation_history(osv.osv_memory):
         data = self.read(cr, uid, ids, context=context)[0]
         ctx = context.copy()
         ctx['history_date'] = data['date']
-        ctx['search_default_group_by_product'] = True
+        #ctx['search_default_group_by_product'] = True
         ctx['search_default_group_by_location'] = True
         return {
             'domain': "[('date', '<=', '" + data['date'] + "')]",
@@ -63,7 +63,7 @@ class stock_history(osv.osv):
                 lines_rec = cr.dictfetchall()
             lines_dict = dict((line['id'], line) for line in lines_rec)
             product_ids = list(set(line_rec['product_id'] for line_rec in lines_rec))
-            products_rec = self.pool['product.product'].read(cr, uid, product_ids, ['cost_method', 'product_tmpl_id'], context=context)
+            products_rec = self.pool['product.product'].read(cr, uid, product_ids, ['cost_method', 'product_tmpl_id', 'standard_price'], context=context)
             products_dict = dict((product['id'], product) for product in products_rec)
             cost_method_product_tmpl_ids = list(set(product['product_tmpl_id'][0] for product in products_rec if product['cost_method'] != 'real'))
             histories = []
@@ -82,7 +82,7 @@ class stock_history(osv.osv):
                     if product['cost_method'] == 'real':
                         price = line_rec['price_unit_on_quant']
                     else:
-                        price = histories_dict.get((product['product_tmpl_id'][0], line_rec['company_id']), 0.0)
+                        price = histories_dict.get((product['product_tmpl_id'][0], line_rec['company_id']), products_dict.get(line_rec['product_id'], {}).get('standard_price', 0.0))
                     inv_value += price * line_rec['quantity']
                 line['inventory_value'] = inv_value
         return res
@@ -97,7 +97,8 @@ class stock_history(osv.osv):
             if line.product_id.cost_method == 'real':
                 res[line.id] = line.quantity * line.price_unit_on_quant
             else:
-                res[line.id] = line.quantity * product_tmpl_obj.get_history_price(cr, uid, line.product_id.product_tmpl_id.id, line.company_id.id, date=date, context=context)
+                #res[line.id] = line.quantity * product_tmpl_obj.get_history_price(cr, uid, line.product_id.product_tmpl_id.id, line.company_id.id, date=date, context=context)
+                res[line.id] = line.quantity * line.product_id.standard_price
         return res
 
     _columns = {
