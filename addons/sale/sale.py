@@ -60,7 +60,8 @@ class SaleOrder(models.Model):
             # Search for refunds as well
             refund_ids = self.env['account.invoice'].browse()
             if invoice_ids:
-                refund_ids = refund_ids.search([('type', '=', 'out_refund'), ('origin', 'in', invoice_ids.mapped('number')), ('origin', '!=', False)])
+                for inv in invoice_ids:
+                    refund_ids += refund_ids.search([('type', '=', 'out_refund'), ('origin', '=', inv.number), ('origin', '!=', False), ('journal_id', '=', inv.journal_id.id)])
 
             line_invoice_status = [line.invoice_status for line in order.order_line]
 
@@ -207,8 +208,9 @@ class SaleOrder(models.Model):
             'payment_term_id': self.partner_id.property_payment_term_id and self.partner_id.property_payment_term_id.id or False,
             'partner_invoice_id': addr['invoice'],
             'partner_shipping_id': addr['delivery'],
-            'note': self.with_context(lang=self.partner_id.lang).env.user.company_id.sale_note,
         }
+        if self.env.user.company_id.sale_note:
+            values['note'] = self.with_context(lang=self.partner_id.lang).env.user.company_id.sale_note
 
         if self.partner_id.user_id:
             values['user_id'] = self.partner_id.user_id.id

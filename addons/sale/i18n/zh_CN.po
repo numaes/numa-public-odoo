@@ -3,6 +3,7 @@
 # * sale
 # 
 # Translators:
+# Eddie Lim <bhweelim@yahoo.com>, 2016
 # Gary Wei <Gary.wei@elico-corp.com>, 2015
 # Jeffery Chenn <jeffery9@gmail.com>, 2015-2016
 # Jeffery Chenn <jeffery9@gmail.com>, 2016
@@ -14,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2016-06-29 13:48+0000\n"
+"PO-Revision-Date: 2016-08-03 04:06+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -144,7 +145,7 @@ msgstr "（更新）"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<span groups=\"sale.group_discount_per_so_line\">Disc.(%)</span>"
-msgstr ""
+msgstr "<span groups=\"sale.group_discount_per_so_line\">折扣(%)</span>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -276,7 +277,7 @@ msgstr "销售分析会计账户"
 #. module: sale
 #: model:ir.filters,name:sale.filter_isale_report_product
 msgid "By Product"
-msgstr "By Product"
+msgstr "按产品"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salespersons
@@ -622,7 +623,7 @@ msgstr "扩展过滤器"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_fiscal_position_id
 msgid "Fiscal Position"
-msgstr "财务状况:"
+msgstr "财政状态"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_sale_pricelist_setting
@@ -630,7 +631,7 @@ msgid ""
 "Fix Price: all price manage from products sale price.\n"
 "Different prices per Customer: you can assign price on buying of minimum quantity in products sale tab.\n"
 "Advanced pricing based on formula: You can have all the rights on pricelist"
-msgstr "固定价格：在产品销售价格中管理所有价格。\n每客户不同价格：你可在产品销售页卡指定购买最少数量产品的售价。\n基于公式的高级定价：你拥有价目表的所有权利"
+msgstr "固定价格：在产品销售价格中管理所有价格。\n每客户不同价格：你可在产品销售页卡指定购买最少数量产品的售价。\n基于公式的高级定价：你拥有价格表的所有权利"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_follower_ids
@@ -645,7 +646,7 @@ msgstr "关注者(频道)"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_partner_ids
 msgid "Followers (Partners)"
-msgstr "关注者（合作伙伴）"
+msgstr "关注者（业务伙伴）"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -957,7 +958,7 @@ msgstr "决不允许修改已确认的销售订单"
 #: code:addons/sale/sale.py:96
 #, python-format
 msgid "New"
-msgstr ""
+msgstr "新增"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotation_form
@@ -1573,12 +1574,12 @@ msgstr "在销售订单和发票中显示国际贸易术语"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_product_pricelist
 msgid "Show pricelists On Products"
-msgstr "显示产品的价目表"
+msgstr "显示产品的价格表"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_pricelist_item
 msgid "Show pricelists to customers"
-msgstr "给客户显示价目表"
+msgstr "给客户显示价格表"
 
 #. module: sale
 #: selection:sale.config.settings,group_uom:0

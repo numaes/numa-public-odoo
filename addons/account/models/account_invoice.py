@@ -69,9 +69,6 @@ class AccountInvoice(models.Model):
 
     @api.model
     def _default_currency(self):
-        if 'default_purchase_id' in self.env.context:
-            purchase_id = self.env.context['default_purchase_id']
-            return self.env['purchase.order'].browse(purchase_id).currency_id
         journal = self._default_journal()
         return journal.currency_id or journal.company_id.currency_id
 
@@ -207,7 +204,7 @@ class AccountInvoice(models.Model):
         track_visibility='always')
 
     number = fields.Char(related='move_id.name', store=True, readonly=True, copy=False)
-    move_name = fields.Char(string='Journal Entry', readonly=True,
+    move_name = fields.Char(string='Journal Entry', readonly=False,
         default=False, copy=False,
         help="Technical field holding the number given to the invoice, automatically set when the invoice is validated then stored to set the same number again if the invoice is cancelled, set to draft and re-validated.")
     reference = fields.Char(string='Vendor Reference',

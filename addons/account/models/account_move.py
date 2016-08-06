@@ -232,7 +232,7 @@ class AccountMoveLine(models.Model):
     _description = "Journal Item"
     _order = "date desc, id desc"
 
-    @api.depends('debit', 'credit', 'amount_currency', 'currency_id', 'matched_debit_ids.amount', 'matched_credit_ids.amount', 'account_id.currency_id', 'move_id.state')
+    @api.depends('debit', 'credit', 'amount_currency', 'currency_id', 'matched_debit_ids', 'matched_credit_ids', 'matched_debit_ids.amount', 'matched_credit_ids.amount', 'account_id.currency_id', 'move_id.state')
     def _amount_residual(self):
         """ Computes the residual amount of a move line from a reconciliable account in the company currency and the line's currency.
             This amount will be 0 for fully reconciled lines or lines from a non-reconciliable account, the original line amount
@@ -759,6 +759,10 @@ class AccountMoveLine(models.Model):
             #or if all lines share the same currency
             field = 'amount_residual_currency'
             rounding = self[0].currency_id.rounding
+        if self._context.get('skip_full_reconcile_check') == 'amount_currency_excluded':
+            field = 'amount_residual'
+        elif self._context.get('skip_full_reconcile_check') == 'amount_currency_only':
+            field = 'amount_residual_currency'
         #target the pair of move in self that are the oldest
         sorted_moves = sorted(self, key=lambda a: a.date)
         debit = credit = False
@@ -892,7 +896,7 @@ class AccountMoveLine(models.Model):
         vals['partner_id'] = self.env['res.partner']._find_accounting_partner(self[0].partner_id).id
         company_currency = self[0].account_id.company_id.currency_id
         writeoff_currency = self[0].currency_id or company_currency
-        if 'amount_currency' not in vals and writeoff_currency != company_currency:
+        if not self._context.get('skip_full_reconcile_check') == 'amount_currency_excluded' and 'amount_currency' not in vals and writeoff_currency != company_currency:
             vals['currency_id'] = writeoff_currency.id
             sign = 1 if vals['debit'] > 0 else -1
             vals['amount_currency'] = sign * abs(sum([r.amount_residual_currency for r in self]))

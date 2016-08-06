@@ -117,7 +117,7 @@ class account_journal(models.Model):
         for i in range(0,6):
             if i == 0:
                 query += "("+select_sql_clause+" and date < '"+start_date.strftime(DF)+"')"
-            elif i == 6:
+            elif i == 5:
                 query += " UNION ALL ("+select_sql_clause+" and date >= '"+start_date.strftime(DF)+"')"
             else:
                 next_date = start_date + timedelta(days=7)
