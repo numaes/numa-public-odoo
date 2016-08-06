@@ -205,7 +205,11 @@ class IrHttp(models.AbstractModel):
             if tools.config['test_enable']:
                 installed.add(odoo.modules.module.current_test)
             mods = [''] + odoo.conf.server_wide_modules + sorted(installed)
-            self._routing_map = http.routing_map(mods, False, converters=self._get_converters())
+            # Note : when routing map is generated, we put it on the class `type(self)`
+            # to make it available for all instance. Since `env` create an new instance
+            # of the model, each instance will regenared its own routing map and thus
+            # regenerate its EndPoint. The routing map should be static.
+            type(self)._routing_map = http.routing_map(mods, False, converters=self._get_converters())
 
         return self._routing_map
 
@@ -296,10 +300,9 @@ class IrHttp(models.AbstractModel):
                 filename = "%s-%s-%s" % (obj._model._name, obj.id, field)
 
         # mimetype
+        mimetype = 'mimetype' in obj and obj.mimetype or False
         if not mimetype:
-            if 'mimetype' in obj and obj.mimetype and obj.mimetype != 'application/octet-stream':
-                mimetype = obj.mimetype
-            elif filename:
+            if filename:
                 mimetype = mimetypes.guess_type(filename)[0]
             if not mimetype and getattr(env[model]._fields[field], 'attachment', False):
                 # for binary fields, fetch the ir_attachement for mimetype check
@@ -307,7 +310,7 @@ class IrHttp(models.AbstractModel):
                 mimetype = attach_mimetype and attach_mimetype[0]['mimetype']
             if not mimetype:
                 mimetype = default_mimetype
-        headers.append(('Content-Type', mimetype))
+        headers += [('Content-Type', mimetype), ('X-Content-Type-Options', 'nosniff')]
 
         # cache
         etag = hasattr(request, 'httprequest') and request.httprequest.headers.get('If-None-Match')

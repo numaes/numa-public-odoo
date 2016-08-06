@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import api, fields, models
 from odoo.addons.website.models.website import slug
 
@@ -10,16 +12,16 @@ class ResPartnerGrade(models.Model):
     website_published = fields.Boolean(default=True)
     sequence = fields.Integer('Sequence')
     active = fields.Boolean('Active', default=lambda *args: 1)
-    name = fields.Char('Level Name')
+    name = fields.Char('Level Name', translate=True)
     partner_weight = fields.Integer('Level Weight', default=1,
         help="Gives the probability to assign a lead to this partner. (0 means no assignation.)")
 
     @api.multi
-    def _website_url(self, field_name, arg):
-        res = super(ResPartnerGrade, self)._website_url(field_name, arg)
+    def _compute_website_url(self):
+        super(ResPartnerGrade, self)._compute_website_url()
         for grade in self:
-            res[grade.id] = "/partners/grade/%s" % (slug(grade))
-        return res
+            grade.website_url = "/partners/grade/%s" % (slug(grade))
+
 
 class ResPartnerActivation(models.Model):
     _name = 'res.partner.activation'
@@ -27,6 +29,7 @@ class ResPartnerActivation(models.Model):
 
     sequence = fields.Integer('Sequence')
     name = fields.Char('Name', required=True)
+
 
 class ResPartner(models.Model):
     _inherit = "res.partner"

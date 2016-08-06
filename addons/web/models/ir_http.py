@@ -1,8 +1,11 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import json
 
 import openerp
-from openerp import models
-from openerp.http import request
+from odoo import models
+from odoo.http import request
 
 
 class Http(models.AbstractModel):
@@ -22,6 +25,7 @@ class Http(models.AbstractModel):
             "session_id": request.session_id,
             "uid": request.session.uid,
             "is_admin": request.env.user.has_group('base.group_system'),
+            "is_superuser": request.env.user._is_superuser(),
             "user_context": request.session.get_context() if request.session.uid else {},
             "db": request.session.db,
             "server_version": version_info.get('server_version'),

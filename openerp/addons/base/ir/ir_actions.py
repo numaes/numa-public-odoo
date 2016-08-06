@@ -227,9 +227,9 @@ class IrActionsReportXml(models.Model):
             # yml tests originally written for RML reports.
             if tools.config['test_enable'] and not tools.config['test_report_directory']:
                 # Only generate the pdf when a destination folder has been provided.
-                return self.pool['report'].get_html(self._cr, self._uid, res_ids, report, data=data, context=self._context), 'html'
+                return self.env['report'].get_html(res_ids, report, data=data), 'html'
             else:
-                return self.pool['report'].get_pdf(self._cr, self._uid, res_ids, report, data=data, context=self._context), 'pdf'
+                return self.env['report'].get_pdf(res_ids, report, data=data), 'pdf'
         else:
             return report.create(self._cr, self._uid, res_ids, data, context=self._context)
 
@@ -1141,7 +1141,7 @@ class IrActionsActClient(models.Model):
                                 "the view tag")
     params_store = fields.Binary(string='Params storage', readonly=True)
 
-    @api.depends('params')
+    @api.depends('params_store')
     def _compute_params(self):
         self_bin = self.with_context(bin_size=False, bin_size_params_store=False)
         for record, record_bin in zip(self, self_bin):

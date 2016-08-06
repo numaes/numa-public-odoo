@@ -1142,6 +1142,7 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def message_route_process(self, message, message_dict, routes):
+        self = self.with_context(attachments_mime_plainxml=True) # import XML attachments as text
         # postpone setting message_dict.partner_ids after message_post, to avoid double notifications
         partner_ids = message_dict.pop('partner_ids', [])
         thread_id = False
@@ -1169,7 +1170,8 @@ class MailThread(models.AbstractModel):
                 Model = self.env['mail.thread']
             if not hasattr(Model, 'message_post'):
                 Model = self.env['mail.thread'].with_context(thread_model=model)
-            new_msg = Model.browse(thread_id).message_post(subtype='mail.mt_comment', **message_dict)
+            internal = message_dict.pop('internal', False)
+            new_msg = Model.browse(thread_id).message_post(subtype=internal and 'mail.mt_note' or 'mail.mt_comment', **message_dict)
 
             if partner_ids:
                 # postponed after message_post, because this is an external message and we don't want to create
@@ -1473,12 +1475,14 @@ class MailThread(models.AbstractModel):
             parent_ids = self.env['mail.message'].search([('message_id', '=', decode(message['In-Reply-To'].strip()))], limit=1)
             if parent_ids:
                 msg_dict['parent_id'] = parent_ids.id
+                msg_dict['internal'] = parent_ids.subtype_id and parent_ids.subtype_id.internal or False
 
         if message.get('References') and 'parent_id' not in msg_dict:
             msg_list = mail_header_msgid_re.findall(decode(message['References']))
             parent_ids = self.env['mail.message'].search([('message_id', 'in', [x.strip() for x in msg_list])], limit=1)
             if parent_ids:
                 msg_dict['parent_id'] = parent_ids.id
+                msg_dict['internal'] = parent_ids.subtype_id and parent_ids.subtype_id.internal or False
 
         msg_dict['body'], msg_dict['attachments'] = self._message_extract_payload(message, save_original=save_original)
         return msg_dict
@@ -2078,12 +2082,6 @@ class MailThread(models.AbstractModel):
     # ------------------------------------------------------
     # Thread management
     # ------------------------------------------------------
-
-    @api.multi
-    def message_set_read(self):
-        messages = self.env['mail.message'].search([('model', '=', self._name), ('res_id', 'in', self.ids), ('needaction', '=', True)])
-        messages.write({'needaction_partner_ids': [(3, self.env.user.partner_id.id)]})
-        return messages.ids
 
     @api.multi
     def message_change_thread(self, new_thread):

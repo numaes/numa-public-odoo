@@ -25,7 +25,7 @@ class SaleOrderLine(models.Model):
             lines.setdefault(line, 0.0)
             uom = self.env['product.uom'].browse(d['product_uom_id'][0])
             if line.product_uom.category_id == uom.category_id:
-                qty = self.env['product.uom']._compute_qty_obj(uom, d['unit_amount'], line.product_uom)
+                qty = uom._compute_quantity(d['unit_amount'], line.product_uom)
             else:
                 qty = d['unit_amount']
             lines[line] += qty
@@ -50,8 +50,9 @@ class AccountAnalyticLine(models.Model):
         if self.unit_amount == 0.0:
             return 0.0
         price_unit = abs(self.amount / self.unit_amount)
-        if self.currency_id and self.currency_id != order.currency_id:
-            price_unit = self.currency_id.compute(price_unit, order.currency_id)
+        currency_id = self.currency_id or self.account_id.currency_id
+        if currency_id and currency_id != order.currency_id:
+            price_unit = currency_id.compute(price_unit, order.currency_id)
         return price_unit
 
     def _get_sale_order_line_vals(self, order, price):

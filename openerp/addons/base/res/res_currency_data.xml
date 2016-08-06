@@ -517,13 +517,6 @@
             <field name="active" eval="False"/>
         </record>
 
-        <!-- East Timor -->
-        <record id="TPE" model="res.currency">
-            <field name="name">TPE</field>
-            <field name="rounding">0.01</field>
-            <field name="active" eval="False"/>
-        </record>
-
         <record id="ECS" model="res.currency">
             <field name="name">ECS</field>
             <field name="symbol">S/.</field>
@@ -597,12 +590,6 @@
         <record id="GNF" model="res.currency">
             <field name="name">GNF</field>
             <field name="symbol">FG</field>
-            <field name="rounding">0.01</field>
-            <field name="active" eval="False"/>
-        </record>
-
-        <record id="GWP" model="res.currency">
-            <field name="name">GWP</field>
             <field name="rounding">0.01</field>
             <field name="active" eval="False"/>
         </record>
@@ -984,8 +971,9 @@
             <field name="active" eval="False"/>
         </record>
 
-        <record id="TJR" model="res.currency">
-            <field name="name">TJR</field>
+        <record id="TJS" model="res.currency">
+            <field name="name">TJS</field>
+            <field name="symbol">TJS</field>
             <field name="rounding">0.01</field>
             <field name="active" eval="False"/>
         </record>
@@ -1190,12 +1178,6 @@
         <record id="SKK" model="res.currency">
             <field name="name">SKK</field>
             <field name="symbol">Sk</field>
-            <field name="rounding">0.01</field>
-            <field name="active" eval="False"/>
-        </record>
-
-        <record id="SIT" model="res.currency">
-            <field name="name">SIT</field>
             <field name="rounding">0.01</field>
             <field name="active" eval="False"/>
         </record>

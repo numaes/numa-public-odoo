@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from openerp.addons.web import http
-from openerp.addons.web.http import request
+from openerp import http
+from openerp.http import request
 
 import datetime
 from werkzeug.exceptions import NotFound
@@ -12,7 +12,7 @@ class WebsiteRatingProject(http.Controller):
     def index(self, **kw):
         projects = request.env['project.project'].sudo().search([('rating_status', '!=', 'no'), ('website_published', '=', True)])
         values = {'projects': projects}
-        return request.website.render('website_rating_project_issue.index', values)
+        return request.render('website_rating_project_issue.index', values)
 
     @http.route(['/project/rating/<int:project_id>'], type='http', auth="public", website=True)
     def page(self, project_id=None, **kw):
@@ -27,7 +27,7 @@ class WebsiteRatingProject(http.Controller):
             'task_data': self._calculate_rating(project.id, "project.task"),
             'issue_data': self._calculate_rating(project.id, "project.issue"),
         }
-        return request.website.render('website_rating_project_issue.project_rating_page', values)
+        return request.render('website_rating_project_issue.project_rating_page', values)
 
     def _calculate_rating(self, project_id, model_name):
         # Calculate rating for Tasks and Issues

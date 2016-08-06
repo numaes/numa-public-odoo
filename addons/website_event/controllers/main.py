@@ -131,7 +131,7 @@ class WebsiteEventController(http.Controller):
             'search_path': "?%s" % werkzeug.url_encode(searches),
         }
 
-        return request.website.render("website_event.index", values)
+        return request.render("website_event.index", values)
 
     @http.route(['/event/<model("event.event"):event>/page/<path:page>'], type='http', auth="public", website=True)
     def event_page(self, event, page, **post):
@@ -151,7 +151,7 @@ class WebsiteEventController(http.Controller):
             values['from_template'] = 'website_event.default_page'  # .strip('website_event.')
             page = 'website.page_404'
 
-        return request.website.render(page, values)
+        return request.render(page, values)
 
     @http.route(['/event/<model("event.event"):event>'], type='http', auth="public", website=True)
     def event(self, event, **post):
@@ -170,7 +170,7 @@ class WebsiteEventController(http.Controller):
             'main_object': event,
             'range': range,
         }
-        return request.website.render("website_event.event_description_full", values)
+        return request.render("website_event.event_description_full", values)
 
     @http.route('/event/add_event', type='http', auth="user", methods=['POST'], website=True)
     def add_event(self, event_name="New Event", **kwargs):
@@ -209,13 +209,13 @@ class WebsiteEventController(http.Controller):
         if not events:
             events = Event.search([('date_begin', '>=', '%s 00:00:00' % fields.Date.today()), ('state', '=', 'confirm')], order="date_begin")
         for event in events:
-            if country_code and event.country.code == country_code:
+            if country_code and event.country_id.code == country_code:
                 result['country'] = country
             result['events'].append({
                 "date": self.get_formated_date(event),
                 "event": event,
                 "url": event.website_url})
-        return request.website.render("website_event.country_events_list", result)
+        return request.render("website_event.country_events_list", result)
 
     def _process_tickets_details(self, data):
         nb_register = int(data.get('nb_register-0', 0))
@@ -228,7 +228,7 @@ class WebsiteEventController(http.Controller):
         tickets = self._process_tickets_details(post)
         if not tickets:
             return request.redirect("/event/%s" % slug(event))
-        return request.website._render("website_event.registration_attendee_details", {'tickets': tickets, 'event': event})
+        return request.env['ir.ui.view'].render_template("website_event.registration_attendee_details", {'tickets': tickets, 'event': event})
 
     def _process_registration_details(self, details):
         ''' Process data posted from the attendee details form. '''
@@ -255,7 +255,7 @@ class WebsiteEventController(http.Controller):
             Attendees += Attendees.sudo().create(
                 Attendees._prepare_attendee_values(registration))
 
-        return request.website.render("website_event.registration_complete", {
+        return request.render("website_event.registration_complete", {
             'attendees': Attendees,
             'event': event,
         })

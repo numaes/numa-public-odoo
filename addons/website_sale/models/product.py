@@ -100,7 +100,8 @@ class ProductTemplate(models.Model):
     availability_warning = fields.Text("Availability Warning", translate=True)
 
     def _default_website_sequence(self):
-        min_sequence = self.sudo().search([], order='website_sequence', limit=1).website_sequence
+        self._cr.execute("SELECT MIN(website_sequence) FROM %s" % self._table)
+        min_sequence = self._cr.fetchone()[0]
         return min_sequence and min_sequence - 1 or 10
 
     def set_sequence_top(self):
@@ -126,11 +127,10 @@ class ProductTemplate(models.Model):
             return self.set_sequence_bottom()
 
     @api.multi
-    def _website_url(self, field_name, arg):
-        res = super(ProductTemplate, self)._website_url(field_name, arg)
+    def _compute_website_url(self):
+        super(ProductTemplate, self)._compute_website_url()
         for product in self:
-            res[product.id] = "/shop/product/%s" % (product.id,)
-        return res
+            product.website_url = "/shop/product/%s" % (product.id,)
 
     @api.multi
     def display_price(self, pricelist, qty=1, public=False, **kw):

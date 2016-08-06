@@ -3,6 +3,7 @@
 # * website_quote
 # 
 # Translators:
+# Eddie Lim <bhweelim@yahoo.com>, 2016
 # fausthuang, 2015
 # fausthuang, 2015
 # Jeffery Chenn <jeffery9@gmail.com>, 2016
@@ -15,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-04-18 12:33+0000\n"
-"PO-Revision-Date: 2016-06-29 08:31+0000\n"
+"PO-Revision-Date: 2016-07-22 06:34+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -1107,7 +1108,7 @@ msgstr "支付交易"
 msgid ""
 "Preview the online quotation. You'll be able to edit the quotation content "
 "before send it to the customer."
-msgstr ""
+msgstr "预览在线报价单。在发送给客户之前您可以编辑报价内容。"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.optional_products
@@ -1119,7 +1120,7 @@ msgstr "价格"
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Pricelist and auto Segmentation"
-msgstr "价目表和经销商的分割"
+msgstr "价格表以及自动细分"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
@@ -1169,7 +1170,7 @@ msgstr "产品"
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Purchase Requisition and Purchase Order Management"
-msgstr "采购申请和采购订单管理"
+msgstr "采购请求和采购订单管理"
 
 #. module: website_quote
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
@@ -1443,7 +1444,7 @@ msgstr "这些课程特点在我们传统的课堂培训，发现相同的高品
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "This order"
-msgstr ""
+msgstr "此订单"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1681,12 +1682,12 @@ msgstr "已经被取消"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "has already been validated"
-msgstr ""
+msgstr "已经通过验证"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "has not yet been sent"
-msgstr ""
+msgstr "尚未发送"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation

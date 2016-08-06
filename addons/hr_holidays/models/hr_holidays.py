@@ -163,10 +163,10 @@ class Holidays(models.Model):
         ('validate1', 'Second Approval'),
         ('validate', 'Approved')
         ], string='Status', readonly=True, track_visibility='onchange', copy=False, default='confirm',
-        help="The status is set to 'To Submit', when a holiday request is created.\
-            \nThe status is 'To Approve', when holiday request is confirmed by user.\
-            \nThe status is 'Refused', when holiday request is refused by manager.\
-            \nThe status is 'Approved', when holiday request is approved by manager.")
+            help="The status is set to 'To Submit', when a holiday request is created." +
+            "\nThe status is 'To Approve', when holiday request is confirmed by user." +
+            "\nThe status is 'Refused', when holiday request is refused by manager." +
+            "\nThe status is 'Approved', when holiday request is approved by manager.")
     payslip_status = fields.Boolean('Reported in last payslips',
         help='Green this button when the leave has been taken into account in the payslip.')
     report_note = fields.Text('HR Comments')
@@ -284,7 +284,7 @@ class Holidays(models.Model):
                 uom_hour = resource.calendar_id.uom_id
                 uom_day = self.env.ref('product.product_uom_day')
                 if uom_hour and uom_day:
-                    return self.env['product.uom']._compute_qty_obj(uom_hour, hours[0], uom_day)
+                    return uom_hour._compute_quantity(hours, uom_day)
 
         time_delta = to_dt - from_dt
         return math.ceil(time_delta.days + float(time_delta.seconds) / 86400)
@@ -441,7 +441,7 @@ class Holidays(models.Model):
                 if holiday.user_id and holiday.user_id.partner_id:
                     meeting_values['partner_ids'] = [(4, holiday.user_id.partner_id.id)]
 
-                meeting = self.env['calendar.event'].with_context(no_email=True).create(meeting_values)
+                meeting = self.env['calendar.event'].with_context(no_mail_to_attendees=True).create(meeting_values)
                 holiday._create_resource_leave()
                 holiday.write({'meeting_id': meeting.id})
             elif holiday.holiday_type == 'category':

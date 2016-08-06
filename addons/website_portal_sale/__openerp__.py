@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 {
     'name': 'Website Portal for Sales',
     'category': 'Website',
@@ -12,10 +15,10 @@ Add your sales document in the frontend portal. Your customers will be able to c
         'website_payment',
     ],
     'data': [
-        'views/templates.xml',
+        'views/website_portal_sale_templates.xml',
     ],
     'demo': [
-        'data/demo.xml'
+        'data/sale_demo.xml'
     ],
     'installable': True,
 }

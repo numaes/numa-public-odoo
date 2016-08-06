@@ -267,7 +267,7 @@ class account_payment(models.Model):
         return {
             'name': _('Journal Items'),
             'view_type': 'form',
-            'view_mode': 'tree',
+            'view_mode': 'tree,form',
             'res_model': 'account.move.line',
             'view_id': False,
             'type': 'ir.actions.act_window',
@@ -291,6 +291,17 @@ class account_payment(models.Model):
         return True
 
     @api.multi
+    def unreconcile(self):
+        """ Set back the payments in 'posted' or 'sent' state, without deleting the journal entries.
+            Called when cancelling a bank statement line linked to a pre-registered payment.
+        """
+        for payment in self:
+            if payment.payment_reference:
+                payment.write({'state': 'sent'})
+            else:
+                payment.write({'state': 'posted'})
+
+    @api.multi
     def cancel(self):
         for rec in self:
             for move in rec.move_line_ids.mapped('move_id'):
@@ -302,7 +313,7 @@ class account_payment(models.Model):
 
     @api.multi
     def unlink(self):
-        if any(rec.state != 'draft' for rec in self):
+        if any(bool(rec.move_line_ids) for rec in self):
             raise UserError(_("You can not delete a payment that is already posted"))
         return super(account_payment, self).unlink()
 

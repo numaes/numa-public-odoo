@@ -16,6 +16,7 @@ if (config.device.size_class <= config.device.SIZES.XS) {
         run: function () {
             console.warn("Tours are disabled for mobile mode.");
         },
+        STEPS: {},
     };
 }
 
@@ -24,7 +25,7 @@ return session.is_bound.then(function () {
     // Load the list of consumed tours and the tip template only if we are admin, in the frontend,
     // tours being only available for the admin. For the backend, the list of consumed is directly
     // in the page source.
-    if (session.is_frontend && session.is_admin) {
+    if (session.is_frontend && session.is_superuser) {
         defs.push(new Model('web_tour.tour').call('get_consumed_tours'));
         defs.push(ajax.loadXML('/web_tour/static/src/xml/tip.xml', QWeb));
     }
@@ -33,16 +34,22 @@ return session.is_bound.then(function () {
 
         // Use a MutationObserver to detect DOM changes
         var untracked_classnames = ["o_tooltip", "o_tooltip_content", "o_tooltip_overlay"];
-        var check_tooltip = _.throttle(function (records) {
-            var update = _.find(records, function (record) {
-                var record_class = record.target.className;
-                return !_.isString(record_class) ||
-                       _.intersection(record_class.split(' '), untracked_classnames).length === 0;
+        var check_tooltip = _.debounce(function (records) {
+            var update = _.some(records, function (record) {
+                return !(is_untracked(record.target)
+                    || _.some(record.addedNodes, is_untracked)
+                    || _.some(record.removedNodes, is_untracked));
+
+                function is_untracked(node) {
+                    var record_class = node.className;
+                    return (_.isString(record_class)
+                        && _.intersection(record_class.split(' '), untracked_classnames).length !== 0);
+                }
             });
-            if (update) { // ignore mutations in the tooltip itself
+            if (update) { // ignore mutations which concern the tooltips
                 tour.update();
             }
-        }, 500, {leading: false});
+        }, 500);
         var observer = new MutationObserver(check_tooltip);
         var observe = function () {
             $(function () {
@@ -51,15 +58,16 @@ return session.is_bound.then(function () {
                     childList: true,
                     subtree: true,
                 });
+                tour.update();
             });
         };
 
         // Enable the MutationObserver for the admin or if a tour is running, when the DOM is ready
-        if (session.is_admin || tour.running_tour) {
+        if (session.is_superuser || tour.running_tour) {
             observe();
         }
         // Override the TourManager so that it enables/disables the observer when necessary
-        if (!session.is_admin) {
+        if (!session.is_superuser) {
             var run = tour.run;
             tour.run = function () {
                 run.apply(this, arguments);
