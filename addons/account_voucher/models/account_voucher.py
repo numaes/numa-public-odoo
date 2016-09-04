@@ -72,8 +72,8 @@ class AccountVoucher(models.Model):
     pay_now = fields.Selection([
             ('pay_now', 'Pay Directly'),
             ('pay_later', 'Pay Later'),
-        ], 'Payment', select=True, readonly=True, states={'draft': [('readonly', False)]}, default='pay_later')
-    date_due = fields.Date('Due Date', readonly=True, select=True, states={'draft': [('readonly', False)]})
+        ], 'Payment', index=True, readonly=True, states={'draft': [('readonly', False)]}, default='pay_later')
+    date_due = fields.Date('Due Date', readonly=True, index=True, states={'draft': [('readonly', False)]})
 
     @api.one
     @api.depends('move_id.line_ids.reconciled', 'move_id.line_ids.account_id.internal_type')
@@ -138,17 +138,11 @@ class AccountVoucher(models.Model):
                     if self.voucher_type == 'sale' else self.journal_id.default_credit_account_id
 
     @api.multi
-    def button_proforma_voucher(self):
-        self.signal_workflow('proforma_voucher')
-        return {'type': 'ir.actions.act_window_close'}
-
-    @api.multi
     def proforma_voucher(self):
         self.action_move_line_create()
 
     @api.multi
     def action_cancel_draft(self):
-        self.create_workflow()
         self.write({'state': 'draft'})
 
     @api.multi

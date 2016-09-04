@@ -7,7 +7,6 @@ from odoo.addons.website.models.website import slug
 
 
 class Event(models.Model):
-
     _name = 'event.event'
     _inherit = ['event.event', 'website.seo.metadata', 'website.published.mixin']
 
@@ -44,7 +43,8 @@ class Event(models.Model):
     def _compute_website_url(self):
         super(Event, self)._compute_website_url()
         for event in self:
-            event.website_url = '/event/%s' % slug(event)
+            if event.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
+                event.website_url = '/event/%s' % slug(event)
 
     @api.multi
     def _get_new_menu_pages(self):

@@ -27,6 +27,10 @@ class ProductTemplate(models.Model):
             'view_mode': 'kanban,form',
             'view_type': 'form',
             'context': "{'default_res_model': '%s','default_res_id': %d, 'default_product_downloadable': True}" % (self._name, self.id),
+            'help': """
+                <p class="oe_view_nocontent_create">Click on create to add attachments for this digital product.</p>
+                <p>The attached files are the ones that will be purchased and sent to the customer.</p>
+                """,
         }
 
 
@@ -49,11 +53,15 @@ class Product(models.Model):
         return {
             'name': _('Digital Attachments'),
             'domain': [('product_downloadable', '=', True), '|',
-                       '&', ('res_model', '=', 'product.template'), '&', ('res_id', '=', self.product_tmpl_id.id),
-                       '&', ('res_model', '=', self._name), '&', ('res_id', '=', self.id)],
+                       '&', ('res_model', '=', 'product.template'), ('res_id', '=', self.product_tmpl_id.id),
+                       '&', ('res_model', '=', self._name), ('res_id', '=', self.id)],
             'res_model': 'ir.attachment',
             'type': 'ir.actions.act_window',
             'view_mode': 'kanban,form',
             'view_type': 'form',
             'context': "{'default_res_model': '%s','default_res_id': %d, 'default_product_downloadable': True}" % (self._name, self.id),
+            'help': """
+                <p class="oe_view_nocontent_create">Click on create to add attachments for this digital product.</p>
+                <p>The attached files are the ones that will be purchased and sent to the customer.</p>
+                """,
         }

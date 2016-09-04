@@ -48,7 +48,7 @@
                 <div class="col-md-9" id="middle_column">
                     <div class="text-center text-muted" t-if="not event_ids">
                       <h1>No event found</h1>
-                      <t groups="base.group_website_publisher">
+                      <t groups="website.group_website_publisher">
                           <p groups="event.group_event_manager">Use the top menu <i>'Content'</i> to create your first event.</p>
                       </t>
                     </div>
@@ -334,9 +334,14 @@
                     <h4>Where</h4>
                 </div>
                 <div class="panel-body">
-                    <a t-att-href="event.google_map_link()" target="_BLANK">
-                        <img t-att-src="event.google_map_img()" width="100%%"/>
-                    </a>
+                    <t t-if="event.google_map_img()">
+                        <a t-att-href="event.google_map_link()" target="_BLANK">
+                           <img t-att-src="event.google_map_img()" width="100%%"/>
+                        </a>
+                    </t>
+                    <t t-else="1">
+                        <a t-att-href="event.google_map_link()" target="_BLANK">Visualize on Google Maps</a>
+                    </t>
                     <div itemprop="location" class="mt16 mb8" t-field="event.address_id" t-options='{
                         "widget": "contact",
                         "fields": ["address", "phone", "mobile", "fax", "email"]
@@ -457,8 +462,7 @@
                                     <strong>
                                         Ticket Type #<t t-raw="counter_type"/>: <t t-esc="ticket['name']"/> (
                                         <t t-if="ticket['price'] > 0">
-                                            <t t-esc="ticket['price']"/>
-                                            <t t-esc="website.pricelist_id.currency_id.symbol"/>
+                                            <t t-esc="ticket['price']" t-options='{"widget": "monetary", "display_currency": website.pricelist_id.currency_id}'/>
                                         </t>
                                         <t t-if="ticket['price'] == 0">Free</t>)
                                     </strong>

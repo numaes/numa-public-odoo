@@ -19,7 +19,8 @@ class PosOrder(models.Model):
     _description = "Point of Sale"
     _order = "id desc"
 
-    def _amount_line_tax(self, cr, uid, line, fiscal_position_id, context=None):
+    @api.model
+    def _amount_line_tax(self, line, fiscal_position_id):
         taxes = line.tax_ids.filtered(lambda t: t.company_id.id == line.order_id.company_id.id)
         if fiscal_position_id:
             taxes = fiscal_position_id.map_tax(taxes, line.product_id, line.order_id.partner_id)
@@ -79,7 +80,7 @@ class PosOrder(models.Model):
             _logger.warning('attempting to create new session for order %s', order['name'])
             new_session = PosSession.create({'config_id': closed_session.config_id.id})
             # bypass opening_control (necessary when using cash control)
-            new_session.signal_workflow('open')
+            new_session.action_pos_session_open()
             return new_session
 
     def _match_payment_to_invoice(self, order):
@@ -223,7 +224,7 @@ class PosOrder(models.Model):
                 })
 
                 if data_type == 'product':
-                    key = ('product', values['partner_id'], (values['product_id'], values['name']), values['analytic_account_id'], values['debit'] > 0)
+                    key = ('product', values['partner_id'], (values['product_id'], tuple(values['tax_ids'][0][2]), values['name']), values['analytic_account_id'], values['debit'] > 0)
                 elif data_type == 'tax':
                     key = ('tax', values['partner_id'], values['tax_line_id'], values['debit'] > 0)
                 elif data_type == 'counter_part':
@@ -237,18 +238,10 @@ class PosOrder(models.Model):
                     if not grouped_data[key]:
                         grouped_data[key].append(values)
                     else:
-                        for line in grouped_data[key]:
-                            if line.get('tax_code_id') == values.get('tax_code_id'):
-                                current_value = line
-                                current_value['quantity'] = current_value.get(
-                                    'quantity', 0.0) + values.get('quantity', 0.0)
-                                current_value['credit'] = current_value.get(
-                                    'credit', 0.0) + values.get('credit', 0.0)
-                                current_value['debit'] = current_value.get(
-                                    'debit', 0.0) + values.get('debit', 0.0)
-                                break
-                        else:
-                            grouped_data[key].append(values)
+                        current_value = grouped_data[key][0]
+                        current_value['quantity'] = current_value.get('quantity', 0.0) + values.get('quantity', 0.0)
+                        current_value['credit'] = current_value.get('credit', 0.0) + values.get('credit', 0.0)
+                        current_value['debit'] = current_value.get('debit', 0.0) + values.get('debit', 0.0)
                 else:
                     grouped_data[key].append(values)
 
@@ -287,7 +280,7 @@ class PosOrder(models.Model):
                     'analytic_account_id': self._prepare_analytic_account(line),
                     'credit': ((amount > 0) and amount) or 0.0,
                     'debit': ((amount < 0) and -amount) or 0.0,
-                    'tax_ids': [(6, 0, line.tax_ids.ids)],
+                    'tax_ids': [(6, 0, line.tax_ids_after_fiscal_position.ids)],
                     'partner_id': partner_id
                 })
 
@@ -419,10 +412,6 @@ class PosOrder(models.Model):
         return super(PosOrder, self).create(values)
 
     @api.multi
-    def action_invoice_state(self):
-        self.write({'state': 'invoiced'})
-
-    @api.multi
     def action_view_invoice(self):
         return {
             'name': _('Customer Invoice'),
@@ -435,7 +424,14 @@ class PosOrder(models.Model):
         }
 
     @api.multi
-    def action_invoice(self):
+    def action_pos_order_paid(self):
+        if not self.test_paid():
+            raise UserError(_("Order is not paid."))
+        self.write({'state': 'paid'})
+        return self.create_picking()
+
+    @api.multi
+    def action_pos_order_invoice(self):
         Invoice = self.env['account.invoice']
 
         for order in self:
@@ -455,7 +451,7 @@ class PosOrder(models.Model):
             inv = invoice._convert_to_write({name: invoice[name] for name in invoice._cache})
             new_invoice = Invoice.with_context(local_context).sudo().create(inv)
             message = _("This invoice has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (order.id, order.name)
-            new_invoice.message_post(body=message)            
+            new_invoice.message_post(body=message)
             order.write({'invoice_id': new_invoice.id, 'state': 'invoiced'})
             Invoice += new_invoice
 
@@ -463,8 +459,10 @@ class PosOrder(models.Model):
                 self.with_context(local_context)._action_create_invoice_line(line, new_invoice.id)
 
             new_invoice.with_context(local_context).sudo().compute_taxes()
-            order.sudo().signal_workflow('invoice')
-            new_invoice.sudo().signal_workflow('validate')
+            order.sudo().write({'state': 'invoiced'})
+            # this workflow signal didn't exist on account.invoice -> should it have been 'invoice_open' ? (and now method .action_invoice_open())
+            # shouldn't the created invoice be marked as paid, seing the customer paid in the POS?
+            # new_invoice.sudo().signal_workflow('validate')
 
         if not Invoice:
             return {}
@@ -482,18 +480,14 @@ class PosOrder(models.Model):
             'res_id': Invoice and Invoice.ids[0] or False,
         }
 
+    # this method is unused, and so is the state 'cancel'
     @api.multi
-    def action_paid(self):
-        self.write({'state': 'paid'})
-        self.create_picking()
+    def action_pos_order_cancel(self):
+        return self.write({'state': 'cancel'})
 
     @api.multi
-    def action_cancel(self):
-        self.write({'state': 'cancel'})
-
-    @api.multi
-    def action_done(self):
-        self._create_account_move_line()
+    def action_pos_order_done(self):
+        return self._create_account_move_line()
 
     @api.model
     def create_from_ui(self, orders):
@@ -514,7 +508,7 @@ class PosOrder(models.Model):
             order_ids.append(pos_order.id)
 
             try:
-                pos_order.signal_workflow('paid')
+                pos_order.action_pos_order_paid()
             except psycopg2.OperationalError:
                 # do not hide transactional errors, the order(s) won't be saved!
                 raise
@@ -522,8 +516,8 @@ class PosOrder(models.Model):
                 _logger.error('Could not fully process the POS Order: %s', tools.ustr(e))
 
             if to_invoice:
-                pos_order.action_invoice()
-                pos_order.invoice_id.sudo().signal_workflow('invoice_open')
+                pos_order.action_pos_order_invoice()
+                pos_order.invoice_id.sudo().action_invoice_open()
         return order_ids
 
     def test_paid(self):
@@ -532,7 +526,7 @@ class PosOrder(models.Model):
         """
         for order in self:
             if order.lines and not order.amount_total:
-                return True
+                continue
             if (not order.lines) or (not order.statement_ids) or (abs(order.amount_total - order.amount_paid) > 0.00001):
                 return False
         return True
@@ -569,7 +563,7 @@ class PosOrder(models.Model):
                     'location_dest_id': destination_id if pos_qty else location_id,
                 })
                 message = _("This transfer has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (order.id, order.name)
-                picking_id.message_post(body=message)                
+                picking_id.message_post(body=message)
                 order.write({'picking_id': picking_id.id})
 
             for line in order.lines.filtered(lambda l: l.product_id.type in ['product', 'consu']):
@@ -720,7 +714,7 @@ class PosOrderLine(models.Model):
     notice = fields.Char(string='Discount Notice')
     product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], required=True, change_default=True)
     price_unit = fields.Float(string='Unit Price', digits=0)
-    qty = fields.Float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), default=1)
+    qty = fields.Float('Quantity', digits=dp.get_precision('Product Unit of Measure'), default=1)
     price_subtotal = fields.Float(compute='_compute_amount_line_all', digits=0, string='Subtotal w/o Tax')
     price_subtotal_incl = fields.Float(compute='_compute_amount_line_all', digits=0, string='Subtotal')
     discount = fields.Float(string='Discount (%)', digits=0, default=0.0)

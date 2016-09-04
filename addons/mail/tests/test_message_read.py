@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from .common import TestMail
-from openerp.tools import mute_logger
+from odoo.addons.mail.tests.common import TestMail
+from odoo.tools import mute_logger
 
 
 class TestMessageRead(TestMail):
 
-    @mute_logger('openerp.addons.mail.models.mail_mail')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def setUp(self):
         super(TestMessageRead, self).setUp()
         self.user_employee.write({'notify_email': 'none'})

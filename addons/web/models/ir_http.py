@@ -3,9 +3,10 @@
 
 import json
 
-import openerp
 from odoo import models
 from odoo.http import request
+
+import odoo
 
 
 class Http(models.AbstractModel):
@@ -13,16 +14,16 @@ class Http(models.AbstractModel):
 
     def webclient_rendering_context(self):
         return {
-            'menu_data': request.registry['ir.ui.menu'].load_menus(request.cr, request.uid, request.debug, context=request.context),
+            'menu_data': request.env['ir.ui.menu'].load_menus(request.debug),
             'session_info': json.dumps(self.session_info()),
         }
 
     def session_info(self):
         user = request.env.user
         display_switch_company_menu = user.has_group('base.group_multi_company') and len(user.company_ids) > 1
-        version_info = openerp.service.common.exp_version()
+        version_info = odoo.service.common.exp_version()
         return {
-            "session_id": request.session_id,
+            "session_id": request.session.sid,
             "uid": request.session.uid,
             "is_admin": request.env.user.has_group('base.group_system'),
             "is_superuser": request.env.user._is_superuser(),

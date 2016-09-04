@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
 import datetime
 import logging
+import psycopg2
 import threading
 
 from email.utils import formataddr
 
-import psycopg2
-
-from openerp import _, api, fields, models
-from openerp import tools
-from openerp.addons.base.ir.ir_mail_server import MailDeliveryException
-from openerp.tools.safe_eval import safe_eval as eval
+from odoo import _, api, fields, models
+from odoo import tools
+from odoo.addons.base.ir.ir_mail_server import MailDeliveryException
+from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -74,7 +74,7 @@ class MailMail(models.Model):
     def default_get(self, fields):
         # protection for `default_type` values leaking from menu action context (e.g. for invoices)
         # To remove when automatic context propagation is removed in web client
-        if self._context.get('default_type') not in self._all_columns['message_type'].column.selection:
+        if self._context.get('default_type') not in type(self).message_type.base_field.selection:
             self = self.with_context(dict(self._context, default_type=None))
         return super(MailMail, self).default_get(fields)
 
@@ -129,6 +129,19 @@ class MailMail(models.Model):
         :param browse_record mail: the mail that was just sent
         :return: True
         """
+        notif_emails = self.filtered(lambda email: email.notification)
+        if notif_emails:
+            notifications = self.env['mail.notification'].search([
+                ('mail_message_id', 'in', notif_emails.mapped('mail_message_id').ids),
+                ('is_email', '=', True)])
+            if mail_sent:
+                notifications.write({
+                    'email_status': 'sent',
+                })
+            else:
+                notifications.write({
+                    'email_status': 'exception',
+                })
         if mail_sent:
             self.sudo().filtered(lambda self: self.auto_delete).unlink()
         return True
@@ -222,12 +235,12 @@ class MailMail(models.Model):
                 catchall_domain = self.env['ir.config_parameter'].get_param("mail.catchall.domain")
                 if bounce_alias and catchall_domain:
                     if mail.model and mail.res_id:
-                        headers['Return-Path'] = '%s-%d-%s-%d@%s' % (bounce_alias, mail.id, mail.model, mail.res_id, catchall_domain)
+                        headers['Return-Path'] = '%s+%d-%s-%d@%s' % (bounce_alias, mail.id, mail.model, mail.res_id, catchall_domain)
                     else:
-                        headers['Return-Path'] = '%s-%d@%s' % (bounce_alias, mail.id, catchall_domain)
+                        headers['Return-Path'] = '%s+%d@%s' % (bounce_alias, mail.id, catchall_domain)
                 if mail.headers:
                     try:
-                        headers.update(eval(mail.headers))
+                        headers.update(safe_eval(mail.headers))
                     except Exception:
                         pass
 

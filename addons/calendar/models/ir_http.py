@@ -2,22 +2,22 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo
-from odoo import api, models, SUPERUSER_ID
-from openerp.http import request
-from openerp.api import Environment
+from odoo import models, SUPERUSER_ID
+from odoo.http import request
+from odoo.api import Environment
 
 from werkzeug.exceptions import BadRequest
 
 
 class IrHttp(models.AbstractModel):
-
     _inherit = 'ir.http'
 
-    def _auth_method_calendar(self):
+    @classmethod
+    def _auth_method_calendar(cls):
         token = request.params['token']
         dbname = request.params['db']
 
-        registry = odoo.modules.registry.RegistryManager.get(dbname)
+        registry = odoo.registry(dbname)
         error_message = False
         with registry.cursor() as cr:
             env = Environment(cr, SUPERUSER_ID, {})

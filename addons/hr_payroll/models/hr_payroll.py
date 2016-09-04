@@ -7,7 +7,7 @@ from dateutil import relativedelta
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.tools.safe_eval import safe_eval
 
 from odoo.addons import decimal_precision as dp
 
@@ -173,6 +173,7 @@ class HrPayslip(models.Model):
     date_to = fields.Date(string='Date To', readonly=True, required=True,
         default=str(datetime.now() + relativedelta.relativedelta(months=+1, day=1, days=-1))[:10],
         states={'draft': [('readonly', False)]})
+    # this is chaos: 4 states are defined, 3 are used ('verify' isn't) and 5 exist ('confirm' seems to have existed)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('verify', 'Waiting'),
@@ -223,24 +224,25 @@ class HrPayslip(models.Model):
             raise ValidationError(_("Payslip 'Date From' must be before 'Date To'."))
 
     @api.multi
-    def cancel_sheet(self):
-        return self.write({'state': 'cancel'})
+    def action_payslip_draft(self):
+        return self.write({'state': 'draft'})
 
     @api.multi
-    def process_sheet(self):
-        return self.write({'paid': True, 'state': 'done'})
-
-    @api.multi
-    def hr_verify_sheet(self):
+    def action_payslip_done(self):
         self.compute_sheet()
-        return self.write({'state': 'verify'})
+        return self.write({'state': 'done'})
+
+    @api.multi
+    def action_payslip_cancel(self):
+        if self.filtered(lambda slip: slip.state == 'done'):
+            raise UserError(_("Cannot cancel a payslip that is done."))
+        return self.write({'state': 'cancel'})
 
     @api.multi
     def refund_sheet(self):
         for payslip in self:
             copied_payslip = payslip.copy({'credit_note': True, 'name': _('Refund: ') + payslip.name})
-            copied_payslip.signal_workflow('hr_verify_sheet')
-            copied_payslip.signal_workflow('process_sheet')
+            copied_payslip.action_payslip_done()
         formview_ref = self.env.ref('hr_payroll.view_hr_payslip_form', False)
         treeview_ref = self.env.ref('hr_payroll.view_hr_payslip_tree', False)
         return {
@@ -710,8 +712,8 @@ class HrSalaryRule(models.Model):
         ('fix', 'Fixed Amount'),
         ('code', 'Python Code'),
     ], string='Amount Type', index=True, required=True, default='fix', help="The computation method for the rule amount.")
-    amount_fix = fields.Float(string='Fixed Amount', digits_compute=dp.get_precision('Payroll'))
-    amount_percentage = fields.Float(string='Percentage (%)', digits_compute=dp.get_precision('Payroll Rate'),
+    amount_fix = fields.Float(string='Fixed Amount', digits=dp.get_precision('Payroll'))
+    amount_percentage = fields.Float(string='Percentage (%)', digits=dp.get_precision('Payroll Rate'),
         help='For example, enter 50.0 to apply a percentage of 50%')
     amount_python_compute = fields.Text(string='Python Code',
         default='''
@@ -756,19 +758,19 @@ class HrSalaryRule(models.Model):
         self.ensure_one()
         if self.amount_select == 'fix':
             try:
-                return self.amount_fix, float(eval(self.quantity, localdict)), 100.0
+                return self.amount_fix, float(safe_eval(self.quantity, localdict)), 100.0
             except:
                 raise UserError(_('Wrong quantity defined for salary rule %s (%s).') % (self.name, self.code))
         elif self.amount_select == 'percentage':
             try:
-                return (float(eval(self.amount_percentage_base, localdict)),
-                        float(eval(self.quantity, localdict)),
+                return (float(safe_eval(self.amount_percentage_base, localdict)),
+                        float(safe_eval(self.quantity, localdict)),
                         self.amount_percentage)
             except:
                 raise UserError(_('Wrong percentage base or quantity defined for salary rule %s (%s).') % (self.name, self.code))
         else:
             try:
-                eval(self.amount_python_compute, localdict, mode='exec', nocopy=True)
+                safe_eval(self.amount_python_compute, localdict, mode='exec', nocopy=True)
                 return float(localdict['result']), 'result_qty' in localdict and localdict['result_qty'] or 1.0, 'result_rate' in localdict and localdict['result_rate'] or 100.0
             except:
                 raise UserError(_('Wrong python code defined for salary rule %s (%s).') % (self.name, self.code))
@@ -785,13 +787,13 @@ class HrSalaryRule(models.Model):
             return True
         elif self.condition_select == 'range':
             try:
-                result = eval(self.condition_range, localdict)
+                result = safe_eval(self.condition_range, localdict)
                 return self.condition_range_min <= result and result <= self.condition_range_max or False
             except:
                 raise UserError(_('Wrong range condition defined for salary rule %s (%s).') % (self.name, self.code))
         else:  # python code
             try:
-                eval(self.condition_python, localdict, mode='exec', nocopy=True)
+                safe_eval(self.condition_python, localdict, mode='exec', nocopy=True)
                 return 'result' in localdict and localdict['result'] or False
             except:
                 raise UserError(_('Wrong python condition defined for salary rule %s (%s).') % (self.name, self.code))
@@ -816,10 +818,10 @@ class HrPayslipLine(models.Model):
     salary_rule_id = fields.Many2one('hr.salary.rule', string='Rule', required=True)
     employee_id = fields.Many2one('hr.employee', string='Employee', required=True)
     contract_id = fields.Many2one('hr.contract', string='Contract', required=True, index=True)
-    rate = fields.Float(string='Rate (%)', digits_compute=dp.get_precision('Payroll Rate'), default=100.0)
-    amount = fields.Float(digits_compute=dp.get_precision('Payroll'))
-    quantity = fields.Float(digits_compute=dp.get_precision('Payroll'), default=1.0)
-    total = fields.Float(compute='_compute_total', string='Total', digits_compute=dp.get_precision('Payroll'), store=True)
+    rate = fields.Float(string='Rate (%)', digits=dp.get_precision('Payroll Rate'), default=100.0)
+    amount = fields.Float(digits=dp.get_precision('Payroll'))
+    quantity = fields.Float(digits=dp.get_precision('Payroll'), default=1.0)
+    total = fields.Float(compute='_compute_total', string='Total', digits=dp.get_precision('Payroll'), store=True)
 
     @api.depends('quantity', 'amount', 'rate')
     def _compute_total(self):
@@ -841,7 +843,7 @@ class HrEmployee(models.Model):
     _description = 'Employee'
 
     slip_ids = fields.One2many('hr.payslip', 'employee_id', string='Payslips', readonly=True)
-    payslip_count = fields.Integer(compute='_compute_payslip_count', string='Payslips', groups="base.group_hr_user")
+    payslip_count = fields.Integer(compute='_compute_payslip_count', string='Payslips', groups="hr.group_hr_user")
 
     @api.multi
     def _compute_payslip_count(self):

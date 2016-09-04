@@ -1,16 +1,20 @@
 # -*- coding: utf-8 -*-
-import base64
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import json
 import pytz
+
 from datetime import datetime
 from psycopg2 import IntegrityError
-from openerp import http, SUPERUSER_ID
-from openerp.http import request
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.tools.translate import _
-from openerp.exceptions import ValidationError
-from openerp.addons.base.ir.ir_qweb.fields import nl2br
+
+from odoo import http
+from odoo.http import request
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools.translate import _
+from odoo.exceptions import ValidationError
+from odoo.addons.base.ir.ir_qweb.fields import nl2br
+
 
 class WebsiteForm(http.Controller):
 
@@ -216,7 +220,7 @@ class WebsiteForm(http.Controller):
         # If some attachments didn't match a field on the model,
         # we create a mail.message to link them to the record
         if orphan_attachment_ids:
-            if model.name != 'mail.mail':
+            if model.model != 'mail.mail':
                 values = {
                     'body': _('<p>Attached files : </p>'),
                     'model': model.model,

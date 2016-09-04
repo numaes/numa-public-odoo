@@ -8,6 +8,9 @@ class ProjectConfiguration(models.TransientModel):
     _name = 'project.config.settings'
     _inherit = 'res.config.settings'
 
+    company_id = fields.Many2one('res.company', string='Company', required=True,
+        default=lambda self: self.env.user.company_id)
+    project_time_mode_id = fields.Many2one(related='company_id.project_time_mode_id', string="Project Time Unit *")
     module_pad = fields.Selection([
         (0, "Task description is a plain text"),
         (1, "Collaborative rich text on task description")
@@ -17,8 +20,8 @@ class ProjectConfiguration(models.TransientModel):
              '-This installs the module pad.')
     module_rating_project = fields.Selection([
         (0, "No customer rating"),
-        (1, 'Allow customer ratings on tasks or issues')
-        ], string="Rating",
+        (1, 'Track customer satisfaction on tasks')
+        ], string="Rating on task",
         help="This allows customers to give rating on provided services")
     generate_project_alias = fields.Selection([
         (0, "Do not create an email alias automatically"),

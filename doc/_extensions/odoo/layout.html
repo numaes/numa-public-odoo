@@ -68,7 +68,7 @@
                   </div>
                   <ul>
                     <li><a href="https://www.odoo.com/page/website-builder">Website Builder</a></li>
-                    <li><a href="https://www.odoo.com/page/e-commerce">eCommerce</a></li>
+                    <li><a href="https://www.odoo.com/page/e-commerce">e-Commerce</a></li>
                     <li><a href="https://www.odoo.com/page/blog-engine">Blogs</a></li>
                     <li><a href="https://www.odoo.com/page/community-builder">Forums</a></li>
                     <li><a href="https://www.odoo.com/page/slides">Slides</a></li>
@@ -230,7 +230,7 @@
       <main class="container-fluid {{ ' '.join(classes) }}">
         {% if pagename != master_doc %}
         <div class="row">
-          {% if 'has-toc' not in meta %}
+          {% if 'has-toc' not in meta and not (pagename in toc) %}
           <aside>
             <div class="navbar-aside text-center">
               {{ toc }}
@@ -242,7 +242,7 @@
             </div>
           </aside>
           {% endif %}
-          <article class="doc-body {% if 'has-toc' in meta %}doc-toc{% endif %}">
+          <article class="doc-body {% if 'has-toc' in meta %}doc-toc{% endif %}{% if pagename in toc%}index-category{% endif %}">
             {% endif %}
             {% block body %} {% endblock %}
           {% if pagename != master_doc %}</article>
@@ -320,7 +320,7 @@
         <div class="col-sm-5 col-md-4 col-md-offset-1 col-lg-5 col-lg-offset-1">
           <p>
             <small>
-              Odoo is a suite of open source business apps that cover all your company needs: CRM, eCommerce, accounting, inventory, point of sale, project management, etc.
+              Odoo is a suite of open source business apps that cover all your company needs: CRM, e-Commerce, accounting, inventory, point of sale, project management, etc.
               <br/><br/>
               Odoo's unique value proposition is to be at the same time very easy to use and fully integrated.
             </small>

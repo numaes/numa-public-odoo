@@ -1,18 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
-from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from traceback import format_exception
 from sys import exc_info
+
 import re
-import openerp.addons.decimal_precision as dp
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.tools.safe_eval import safe_eval
 
+import odoo.addons.decimal_precision as dp
 
 _intervalTypes = {
     'hours': lambda interval: relativedelta(hours=interval),
@@ -20,6 +19,7 @@ _intervalTypes = {
     'months': lambda interval: relativedelta(months=interval),
     'years': lambda interval: relativedelta(years=interval),
 }
+
 
 class MarketingCampaign(models.Model):
     _name = "marketing.campaign"
@@ -65,7 +65,7 @@ class MarketingCampaign(models.Model):
     fixed_cost = fields.Float('Fixed Cost',
         help="Fixed cost for running this campaign. You may also specify variable cost and revenue on each "
              "campaign activity. Cost and Revenue statistics are included in Campaign Reporting.",
-        digits_compute=dp.get_precision('Product Price'))
+        digits=dp.get_precision('Product Price'))
     segment_ids = fields.One2many('marketing.campaign.segment', 'campaign_id', 'Segments', readonly=False)
     segments_count = fields.Integer(compute='_compute_segments_count', string='Segments')
 
@@ -73,6 +73,10 @@ class MarketingCampaign(models.Model):
     def _compute_segments_count(self):
         for campaign in self:
             campaign.segments_count = len(campaign.segment_ids)
+
+    @api.multi
+    def state_draft_set(self):
+        return self.write({'state': 'draft'})
 
     @api.multi
     def state_running_set(self):
@@ -118,7 +122,7 @@ class MarketingCampaign(models.Model):
 
     # prevent duplication until the server properly duplicates several levels of nested o2m
     @api.multi
-    def copy(self, cr, uid, id, default=None, context=None):
+    def copy(self, default=None):
         self.ensure_one()
         raise UserError(_('Duplicating campaigns is not supported.'))
 
@@ -200,8 +204,12 @@ class MarketingCampaignSegment(models.Model):
         if model:
             res['domain']['ir_filter_id'] = [('model_id', '=', model)]
         else:
-            res.ir_filter_id = False
+            self.ir_filter_id = False
         return res
+
+    @api.multi
+    def state_draft_set(self):
+        return self.write({'state': 'draft'})
 
     @api.multi
     def state_running_set(self):
@@ -247,7 +255,7 @@ class MarketingCampaignSegment(models.Model):
             if segment.sync_last_date and segment.sync_mode != 'all':
                 criteria += [(segment.sync_mode, '>', segment.sync_last_date)]
             if segment.ir_filter_id:
-                criteria += eval(segment.ir_filter_id.domain)
+                criteria += safe_eval(segment.ir_filter_id.domain)
 
             # XXX TODO: rewrite this loop more efficiently without doing 1 search per record!
             for record in self.env[segment.object_id.model].search(criteria):
@@ -308,7 +316,7 @@ class MarketingCampaignActivity(models.Model):
         help="The action to perform when this activity is activated")
     to_ids = fields.One2many('marketing.campaign.transition', 'activity_from_id', 'Next Activities')
     from_ids = fields.One2many('marketing.campaign.transition', 'activity_to_id', 'Previous Activities')
-    variable_cost = fields.Float('Variable Cost', digits_compute=dp.get_precision('Product Price'),
+    variable_cost = fields.Float('Variable Cost', digits=dp.get_precision('Product Price'),
         help="Set a variable cost if you consider that every campaign item that has reached this point has entailed a "
              "certain cost. You can get cost statistics in the Reporting section")
     revenue = fields.Float('Revenue', digits=0,
@@ -338,7 +346,7 @@ class MarketingCampaignActivity(models.Model):
         method = '_process_wi_%s' % (self.action_type,)
         action = getattr(self, method, None)
         if not action:
-            raise NotImplementedError('Method %r is not implemented on %r object.' % (method, self._model))
+            raise NotImplementedError('Method %r is not implemented on %r object.' % (method, self._name))
         return action(workitem)
 
 
@@ -485,7 +493,7 @@ class MarketingCampaignWorkitem(models.Model):
             condition = activity.condition
             campaign_mode = self.campaign_id.mode
             if condition:
-                if not eval(condition, eval_context):
+                if not safe_eval(condition, eval_context):
                     if activity.keep_if_condition_not_met:
                         self.write({'state': 'cancelled'})
                     else:

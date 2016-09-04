@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import base64
 import logging
 import werkzeug
 
-from openerp import http
-from openerp.exceptions import AccessError, UserError
-from openerp.http import request
-from openerp.tools.translate import _
+from odoo import http, _
+from odoo.exceptions import AccessError, UserError
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
 
-class website_slides(http.Controller):
+class WebsiteSlides(http.Controller):
     _slides_per_page = 12
     _slides_per_list = 20
     _order_by_criterion = {
@@ -21,7 +22,7 @@ class website_slides(http.Controller):
     }
 
     def _set_viewed_slide(self, slide, view_mode):
-        slide_key = '%s_%s' % (view_mode, request.session_id)
+        slide_key = '%s_%s' % (view_mode, request.session.sid)
         viewed_slides = request.session.setdefault(slide_key, list())
         if slide.id not in viewed_slides:
             if view_mode == 'slide':
@@ -295,8 +296,8 @@ class website_slides(http.Controller):
         payload = request.httprequest.content_length
         # payload is total request content size so it's not exact size of file.
         # already add client validation this is for double check if client alter.
-        if (payload / 1024 / 1024 > 15):
-            return {'error': _('File is too big. File size cannot exceed 15MB')}
+        if (payload / 1024 / 1024 > 25):
+            return {'error': _('File is too big. File size cannot exceed 25MB')}
 
         values = dict((fname, post[fname]) for fname in [
             'name', 'url', 'tag_ids', 'slide_type', 'channel_id',

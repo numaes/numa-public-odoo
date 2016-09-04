@@ -75,12 +75,15 @@ class PurchaseOrder(models.Model):
             types = type_obj.search([('code', '=', 'incoming'), ('warehouse_id', '=', False)])
         return types[:1]
 
-    @api.depends('order_line.move_ids.picking_id')
+    @api.depends('order_line.move_ids')
     def _compute_picking(self):
         for order in self:
             pickings = self.env['stock.picking']
             for line in order.order_line:
-                moves = line.move_ids.filtered(lambda r: r.state != 'cancel')
+                # We keep a limited scope on purpose. Ideally, we should also use move_orig_ids and
+                # do some recursive search, but that could be prohibitive if not done correctly.
+                moves = line.move_ids | line.move_ids.mapped('returned_move_ids')
+                moves = moves.filtered(lambda r: r.state != 'cancel')
                 pickings |= moves.mapped('picking_id')
             order.picking_ids = pickings
             order.picking_count = len(pickings)
@@ -145,7 +148,7 @@ class PurchaseOrder(models.Model):
     amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all')
 
     fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', oldname='fiscal_position')
-    payment_term_id = fields.Many2one('account.payment.term', 'Payment Term')
+    payment_term_id = fields.Many2one('account.payment.term', 'Payment Terms')
     incoterm_id = fields.Many2one('stock.incoterms', 'Incoterm', states={'done': [('readonly', True)]}, help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
 
     product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
@@ -156,7 +159,7 @@ class PurchaseOrder(models.Model):
         help="This will determine picking type of incoming shipment")
     default_location_dest_id_usage = fields.Selection(related='picking_type_id.default_location_dest_id.usage', string='Destination Location Type',\
         help="Technical field used to display the Drop Ship Address", readonly=True)
-    group_id = fields.Many2one('procurement.group', string="Procurement Group")
+    group_id = fields.Many2one('procurement.group', string="Procurement Group", copy=False)
     is_shipped = fields.Boolean(compute="_compute_is_shipped")
 
     @api.model
@@ -324,6 +327,8 @@ class PurchaseOrder(models.Model):
     @api.multi
     def button_confirm(self):
         for order in self:
+            if order.state not in ['draft', 'sent']:
+                continue
             order._add_supplier_to_product()
             # Deal with double validation process
             if order.company_id.po_double_validation == 'one_step':
@@ -353,6 +358,10 @@ class PurchaseOrder(models.Model):
                 moves.filtered(lambda r: r.state != 'cancel').action_cancel()
 
         self.write({'state': 'cancel'})
+
+    @api.multi
+    def button_unlock(self):
+        self.write({'state': 'purchase'})
 
     @api.multi
     def button_done(self):
@@ -1022,7 +1031,6 @@ class ProductTemplate(models.Model):
     property_account_creditor_price_difference = fields.Many2one(
         'account.account', string="Price Difference Account", company_dependent=True,
         help="This account will be used to value price difference between purchase price and cost price.")
-    purchase_ok = fields.Boolean('Can be Purchased', default=True)
     purchase_count = fields.Integer(compute='_purchase_count', string='# Purchases')
     purchase_method = fields.Selection([
         ('purchase', 'On ordered quantities'),

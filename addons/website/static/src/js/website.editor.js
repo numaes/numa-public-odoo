@@ -95,11 +95,8 @@ website.TopBarCustomize = Widget.extend({
         return ajax.jsonRpc('/web/dataset/call_kw', 'call', {
             model: 'ir.ui.view',
             method: 'toggle',
-            args: [],
-            kwargs: {
-                ids: [parseInt(view_id, 10)],
-                context: base.get_context(),
-            }
+            args: [[parseInt(view_id, 10)]],
+            kwargs: {context: base.get_context()}
         }).then(function () {
             window.location.reload();
         });
@@ -220,7 +217,9 @@ base.ready().then(function () {
     if (location.search.indexOf("enable_editor") < 0 && $(".editor_enable").length === 0) {
         var $wrap = $("#wrapwrap.homepage #wrap");
         if ($wrap.length && $wrap.html().trim() === "") {
-            $wrap.html(qweb.render("website.homepage_editor_welcome_message"));
+            var $welcome_message = $(qweb.render("website.homepage_editor_welcome_message"));
+            $welcome_message.css("height", $wrap.parent("main").height() - ($wrap.outerHeight(true) - $wrap.height()));
+            $wrap.empty().append($welcome_message);
         }
     }
 });

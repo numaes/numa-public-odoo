@@ -172,7 +172,7 @@ class TestMatchHeadersMultiple(TransactionCase):
 
     def test_mixed(self):
         self.assertEqual(
-            self.registry('base_import.import')._match_headers(
+            self.env['base_import.import']._match_headers(
                 iter(['foo bar baz qux/corge'.split()]),
                 [
                     {'name': 'bar', 'string': 'Bar'},
@@ -202,7 +202,7 @@ class TestPreview(TransactionCase):
         })
         return import_wizard
 
-    @mute_logger('openerp.addons.base_import.models.base_import')
+    @mute_logger('odoo.addons.base_import.models.base_import')
     def test_encoding(self):
         import_wizard = self.make_import()
         result = import_wizard.parse_preview({
@@ -211,7 +211,7 @@ class TestPreview(TransactionCase):
         })
         self.assertTrue('error' in result)
 
-    @mute_logger('openerp.addons.base_import.models.base_import')
+    @mute_logger('odoo.addons.base_import.models.base_import')
     def test_csv_errors(self):
         import_wizard = self.make_import()
 

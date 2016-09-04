@@ -23,7 +23,7 @@ class sale_quote(http.Controller):
             if Order and request.session.get('view_quote') != now:
                 request.session['view_quote'] = now
                 body = _('Quotation viewed by customer')
-                _message_post_helper(res_model='sale.order', res_id=Order.id, message=body, token=token, token_field="access_token", message_type='notification')
+                _message_post_helper(res_model='sale.order', res_id=Order.id, message=body, token=token, token_field="access_token", message_type='notification', subtype="mail.mt_note", partner_ids=Order.user_id.partner_id.ids)
         else:
             Order = request.env['sale.order'].search([('id', '=', order_id)])
 
@@ -34,7 +34,7 @@ class sale_quote(http.Controller):
         if Order.validity_date:
             days = (fields.Date.from_string(Order.validity_date) - fields.Date.from_string(fields.Date.today())).days + 1
         if pdf:
-            pdf = request.env['report'].sudo().with_context(set_viewport_size=True).get_pdf(Order.id, 'website_quote.report_quote')
+            pdf = request.env['report'].sudo().with_context(set_viewport_size=True).get_pdf([Order.id], 'website_quote.report_quote')
             pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
             return request.make_response(pdf, headers=pdfhttpheaders)
         transaction_id = request.session.get('quote_%s_transaction_id' % Order.id)

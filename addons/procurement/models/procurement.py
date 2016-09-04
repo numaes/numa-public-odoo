@@ -4,8 +4,9 @@
 from psycopg2 import OperationalError
 
 from odoo import api, fields, models, registry, _
-import openerp.addons.decimal_precision as dp
-from openerp.exceptions import UserError
+from odoo.exceptions import UserError
+
+import odoo.addons.decimal_precision as dp
 
 PROCUREMENT_PRIORITIES = [('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')]
 
@@ -71,7 +72,8 @@ class ProcurementRule(models.Model):
     sequence = fields.Integer('Sequence', default=20)
     company_id = fields.Many2one('res.company', 'Company')
 
-    def _get_action(self, cr, uid, context=None):
+    @api.model
+    def _get_action(self):
         return []
 
 
@@ -93,10 +95,10 @@ class ProcurementOrder(models.Model):
     # These two fields are used for scheduling
     priority = fields.Selection(
         PROCUREMENT_PRIORITIES, string='Priority', default='1',
-        required=True, select=True, track_visibility='onchange')
+        required=True, index=True, track_visibility='onchange')
     date_planned = fields.Datetime(
         'Scheduled Date', default=fields.Datetime.now,
-        required=True, select=True, track_visibility='onchange')
+        required=True, index=True, track_visibility='onchange')
 
     group_id = fields.Many2one('procurement.group', 'Procurement Group')
     rule_id = fields.Many2one(
@@ -110,7 +112,7 @@ class ProcurementOrder(models.Model):
         states={'confirmed': [('readonly', False)]})
     product_qty = fields.Float(
         'Quantity',
-        digits_compute=dp.get_precision('Product Unit of Measure'),
+        digits=dp.get_precision('Product Unit of Measure'),
         readonly=True, required=True,
         states={'confirmed': [('readonly', False)]})
     product_uom = fields.Many2one(

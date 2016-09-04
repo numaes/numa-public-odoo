@@ -66,12 +66,12 @@ class HrTimesheetSheet(models.Model):
         }
 
     @api.multi
-    def button_confirm(self):
+    def action_timesheet_confirm(self):
         for sheet in self:
             sheet.check_employee_attendance_state()
             di = sheet.user_id.company_id.timesheet_max_difference
             if (abs(sheet.total_difference) <= di) or not di:
-                return super(HrTimesheetSheet, self).button_confirm()
+                return super(HrTimesheetSheet, self).action_timesheet_confirm()
             else:
                 raise UserError(_('Please verify that the total difference of the sheet is lower than %.2f.') % (di,))
 
@@ -104,8 +104,9 @@ class hr_timesheet_sheet_sheet_day(models.Model):
         'hr_timesheet_sheet.sheet': ['attendances_ids', 'timesheet_ids'],
     }
 
-    def init(self, cr):
-        cr.execute("""create or replace view %s as
+    @api.model_cr
+    def init(self):
+        self._cr.execute("""create or replace view %s as
             SELECT
                 id,
                 name,

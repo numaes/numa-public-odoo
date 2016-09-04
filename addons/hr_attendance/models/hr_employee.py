@@ -20,21 +20,21 @@ class HrEmployee(models.Model):
             barcode = "".join(choice(digits) for i in range(8))
         return barcode
 
-    barcode = fields.Char(string="Badge ID", help="ID used for employee identification.", default=_default_random_barcode, copy=False, groups='base.group_hr_user')
-    pin = fields.Char(string="PIN", default=_default_random_pin, help="PIN used for Check In/Out in Attendance.", copy=False, groups='base.group_hr_user')
+    barcode = fields.Char(string="Badge ID", help="ID used for employee identification.", default=_default_random_barcode, copy=False, groups='hr.group_hr_user')
+    pin = fields.Char(string="PIN", default=_default_random_pin, help="PIN used for Check In/Out in Attendance.", copy=False, groups='hr.group_hr_user')
 
     attendance_ids = fields.One2many('hr.attendance', 'employee_id', help='list of attendances for the employee')
     last_attendance_id = fields.Many2one('hr.attendance', compute='_compute_last_attendance_id')
     attendance_state = fields.Selection(string="Attendance", compute='_compute_attendance_state', selection=[('checked_out', "Checked out"), ('checked_in', "Checked in")])
     manual_attendance = fields.Boolean(string='Manual Attendance', compute='_compute_manual_attendance', inverse='_inverse_manual_attendance',
-                                       help='The employee will have access to the "My Attendances" menu to perform his check in and out from his session', default=False)
+                                       help='The employee will have access to the "My Attendances" menu to perform his check in and out from his session')
 
     _sql_constraints = [('barcode_uniq', 'unique (barcode)', "The Badge ID must be unique, this one is already assigned to another employee.")]
 
     @api.multi
     def _compute_manual_attendance(self):
         for employee in self:
-            employee.manual_attendance = employee.user_id.has_group('base.group_hr_attendance') if employee.user_id else False
+            employee.manual_attendance = employee.user_id.has_group('hr.group_hr_attendance') if employee.user_id else False
 
     @api.multi
     def _inverse_manual_attendance(self):
@@ -76,7 +76,7 @@ class HrEmployee(models.Model):
     @api.multi
     def attendance_manual(self, next_action, entered_pin=None):
         self.ensure_one()
-        if self.env['res.users'].browse(SUPERUSER_ID).has_group('base.group_hr_attendance_use_pin') and (self.user_id and self.user_id.id != self._uid or not self.user_id):
+        if self.env['res.users'].browse(SUPERUSER_ID).has_group('hr_attenance.group_hr_attendance_use_pin') and (self.user_id and self.user_id.id != self._uid or not self.user_id):
             if entered_pin != self.pin:
                 return {'warning': _('Wrong PIN')}
         return self.attendance_action(next_action)
@@ -128,28 +128,29 @@ class HrEmployee(models.Model):
             if attendance:
                 attendance.check_out = action_date
             else:
-                raise exceptions.UserError(_('Cannot perform check out on %(empl_name)s, could not find corresponding check in. \
-                    Your attendances have probably been modified manually by human resources.') % {'empl_name': self.name, })
+                raise exceptions.UserError(_('Cannot perform check out on %(empl_name)s, could not find corresponding check in. '
+                    'Your attendances have probably been modified manually by human resources.') % {'empl_name': self.name, })
             return attendance
 
-    def _init_column(self, cr, column_name, context=None):
+    @api.model_cr_context
+    def _init_column(self, column_name):
         """ Initialize the value of the given column for existing rows.
             Overridden here because we need to have different default values
             for barcode and pin for every employee.
         """
         if column_name not in ["barcode", "pin"]:
-            super(HrEmployee, self)._init_column(cr, column_name, context=context)
+            super(HrEmployee, self)._init_column(column_name)
         else:
-            default_compute = self._defaults.get(column_name)
+            default_compute = self._fields[column_name].default
 
             query = 'SELECT id FROM "%s" WHERE "%s" is NULL' % (
                 self._table, column_name)
-            cr.execute(query)
-            employee_ids = cr.fetchall()
+            self.env.cr.execute(query)
+            employee_ids = self.env.cr.fetchall()
 
             for employee_id in employee_ids:
-                default_value = default_compute(self, cr, SUPERUSER_ID, context)
+                default_value = default_compute(self)
 
                 query = 'UPDATE "%s" SET "%s"=%%s WHERE id = %s' % (
                     self._table, column_name, employee_id[0])
-                cr.execute(query, (default_value,))
+                self.env.cr.execute(query, (default_value,))

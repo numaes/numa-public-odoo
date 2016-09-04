@@ -318,6 +318,7 @@ odoo.define('web_editor.snippets.options', function (require) {
             var res = this._super.apply(this, arguments);
             this.$target.off(".background-option")
                         .on("background-color-event.background-option", (function (e, type) {
+                            e.stopPropagation();
                             this.$el.find("li:first > a").trigger(type);
                         }).bind(this));
             return res;
@@ -402,7 +403,7 @@ odoo.define('web_editor.snippets.options', function (require) {
             this.bg_siz = self.$target.css('background-size').split(' ');
 
             this.modal = new Dialog(null, {
-                title: _t("Background Image Options"),
+                title: _t("Background Image Sizing"),
                 $content: $(qweb.render('web_editor.dialog.background_position')),
                 buttons: [
                     {text: _t("Ok"), classes: "btn-primary", close: true, click: _.bind(this.save, this)},

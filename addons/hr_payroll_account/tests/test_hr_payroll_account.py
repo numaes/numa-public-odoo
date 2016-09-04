@@ -5,9 +5,8 @@ import time
 
 from datetime import datetime, timedelta
 from dateutil import relativedelta
-from odoo import fields, tools
 
-from openerp.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo import fields, tools
 from odoo.modules.module import get_module_resource
 from odoo.tests import common
 
@@ -15,7 +14,8 @@ from odoo.tests import common
 class TestHrPayrollAccount(common.TransactionCase):
 
     def _load(self, module, *args):
-        tools.convert_file(self.cr, 'hr_payroll_account',
+        tools.convert_file(
+            self.cr, 'hr_payroll_account',
             get_module_resource(module, *args), {}, 'init', False, 'test', self.registry._assertion_report)
 
     def setUp(self):
@@ -107,12 +107,12 @@ class TestHrPayrollAccount(common.TransactionCase):
         self.hr_payslip.with_context(context).compute_sheet()
 
         # I want to check cancel button. So I first cancel the sheet then make it set to draft.
-        self.hr_payslip.cancel_sheet()
+        self.hr_payslip.action_payslip_cancel()
         self.assertEqual(self.hr_payslip.state, 'cancel', "Payslip is rejected.")
-        self.hr_payslip.signal_workflow('draft')
+        self.hr_payslip.action_payslip_draft()
 
         # Confirm Payslip
-        self.hr_payslip.signal_workflow('hr_verify_sheet')
+        self.hr_payslip.action_payslip_done()
 
         # I verify that the Accounting Entries are created.
         self.assertTrue(self.hr_payslip.move_id, 'Accounting Entries has not been created')

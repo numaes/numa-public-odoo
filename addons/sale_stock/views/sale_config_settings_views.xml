@@ -5,6 +5,9 @@
         <field name="model">sale.config.settings</field>
         <field name="inherit_id" ref="sale.view_sales_config"/>
         <field name="arch" type="xml">
+            <group name="customers" position="inside">
+                <field name="security_lead"/>
+            </group>
             <xpath expr="//div[@id='main']" position="inside">
                 <group string="Shipping">
                     <field name="module_delivery" widget="radio"/>
@@ -18,6 +21,12 @@
             <field name="group_sale_delivery_address" position="after">
                 <field name="group_display_incoterm" widget="radio"/>
             </field>
+            <group name="quotations_sales" position="inside">
+                <label for="module_sale_order_dates"/>
+                <div>
+                    <field name="module_sale_order_dates" class="oe_inline" widget="radio"/>
+                </div>
+            </group>
         </field>
     </record>
 </odoo>

@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import openerp
-from openerp import SUPERUSER_ID
-from openerp import http
-from openerp.addons.website.models.website import unslug
-from openerp.tools.translate import _
-from openerp.http import request
 import werkzeug.urls
+
+from odoo import http
+from odoo.addons.website.models.website import unslug
+from odoo.tools.translate import _
+from odoo.http import request
 
 
 class WebsiteCustomer(http.Controller):
@@ -80,6 +79,7 @@ class WebsiteCustomer(http.Controller):
 
         partners = Partner.sudo().search(domain, offset=pager['offset'], limit=self._references_per_page)
         google_map_partner_ids = ','.join(map(str, partners.ids))
+        google_maps_api_key = request.env['ir.config_parameter'].sudo().get_param('google_maps_api_key')
 
         tags = Tag.search([('website_published', '=', True), ('partner_ids', 'in', partners.ids)], order='classname, name ASC')
         tag = tag_id and Tag.browse(tag_id) or False
@@ -95,6 +95,7 @@ class WebsiteCustomer(http.Controller):
             'search_path': "?%s" % werkzeug.url_encode(post),
             'tag': tag,
             'tags': tags,
+            'google_maps_api_key': google_maps_api_key,
         }
         return request.render("website_customer.index", values)
 

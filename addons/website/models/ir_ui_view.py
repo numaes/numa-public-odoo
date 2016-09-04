@@ -145,7 +145,7 @@ class View(models.Model):
             if not qcontext.get('translatable') and not qcontext.get('rendering_bundle'):
                 if qcontext.get('editable'):
                     new_context = dict(self._context, inherit_branding=True)
-                elif request.env.user.has_group('base.group_website_publisher'):
+                elif request.env.user.has_group('website.group_website_publisher'):
                     new_context = dict(self._context, inherit_branding_auto=True)
 
             if 'main_object' not in qcontext:
@@ -153,7 +153,9 @@ class View(models.Model):
 
             values = qcontext
 
-        return super(View, self.with_context(new_context)).render(values, engine=engine)
+        if self._context != new_context:
+            self = self.with_context(new_context)
+        return super(View, self).render(values, engine=engine)
 
     @api.model
     def _prepare_qcontext(self):

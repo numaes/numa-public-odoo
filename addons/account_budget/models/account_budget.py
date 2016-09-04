@@ -43,23 +43,23 @@ class CrossoveredBudget(models.Model):
         default=lambda self: self.env['res.company']._company_default_get('account.budget.post'))
 
     @api.multi
-    def budget_confirm(self):
+    def action_budget_confirm(self):
         self.write({'state': 'confirm'})
 
     @api.multi
-    def budget_draft(self):
+    def action_budget_draft(self):
         self.write({'state': 'draft'})
 
     @api.multi
-    def budget_validate(self):
+    def action_budget_validate(self):
         self.write({'state': 'validate'})
 
     @api.multi
-    def budget_cancel(self):
+    def action_budget_cancel(self):
         self.write({'state': 'cancel'})
 
     @api.multi
-    def budget_done(self):
+    def action_budget_done(self):
         self.write({'state': 'done'})
 
 
@@ -67,7 +67,7 @@ class CrossoveredBudgetLines(models.Model):
     _name = "crossovered.budget.lines"
     _description = "Budget Line"
 
-    crossovered_budget_id = fields.Many2one('crossovered.budget', 'Budget', ondelete='cascade', select=True, required=True)
+    crossovered_budget_id = fields.Many2one('crossovered.budget', 'Budget', ondelete='cascade', index=True, required=True)
     analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account')
     general_budget_id = fields.Many2one('account.budget.post', 'Budgetary Position', required=True)
     date_from = fields.Date('Start Date', required=True)
@@ -132,7 +132,6 @@ class CrossoveredBudgetLines(models.Model):
                     else:
                         theo_amt = line.planned_amount
                 else:
-                    print type(today)
                     line_timedelta = fields.Datetime.from_string(line.date_to) - fields.Datetime.from_string(line.date_from)
                     elapsed_timedelta = fields.Datetime.from_string(today) - (fields.Datetime.from_string(line.date_from))
 

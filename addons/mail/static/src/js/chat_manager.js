@@ -132,6 +132,8 @@ function make_message (data) {
         attachment_ids: data.attachment_ids || [],
         subject: data.subject,
         email_from: data.email_from,
+        customer_email_status: data.customer_email_status,
+        customer_email_data: data.customer_email_data,
         record_name: data.record_name,
         tracking_value_ids: data.tracking_value_ids,
         channel_ids: data.channel_ids,
@@ -213,6 +215,22 @@ function make_message (data) {
     _.each(msg.attachment_ids, function(a) {
         a.url = '/web/content/' + a.id + '?download=true';
     });
+
+    // format date to the local only once by message
+    // can not be done in preprocess, since it alter the original value
+    if (msg.tracking_value_ids && msg.tracking_value_ids.length) {
+        _.each(msg.tracking_value_ids, function(f) {
+            if (_.contains(['date', 'datetime'], f.field_type)) {
+                var format = (f.field_type === 'date') ? 'LL' : 'LLL';
+                if (f.old_value) {
+                    f.old_value = moment.utc(f.old_value).local().format(format);
+                }
+                if (f.new_value) {
+                    f.new_value = moment.utc(f.new_value).local().format(format);
+                }
+            }
+        });
+    }
 
     return msg;
 }
@@ -654,7 +672,7 @@ var chat_manager = {
             // post a message in a channel or execute a command
             return ChannelModel.call(data.command ? 'execute_command' : 'message_post', [options.channel_id], _.extend(msg, {
                 message_type: 'comment',
-                content_subtype: 'html',
+                content_subtype: 'plaintext',
                 subtype: 'mail.mt_comment',
                 command: data.command,
             }));

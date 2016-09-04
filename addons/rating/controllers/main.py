@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import werkzeug
-from openerp import http
-from openerp.http import request
 
-from openerp.tools.translate import _
+from odoo import http
+from odoo.http import request
+from odoo.tools.translate import _
+
 
 class Rating(http.Controller):
 
@@ -24,7 +26,6 @@ class Rating(http.Controller):
             'rating': rating, 'token': token,
             'rate_name': rate_names[rate], 'rate': rate
         })
-        return request.not_found()
 
     @http.route(['/rating/<string:token>/<int:rate>/submit_feedback'], type="http", auth="public", method=['post'])
     def submit_rating(self, token, rate, **kwargs):

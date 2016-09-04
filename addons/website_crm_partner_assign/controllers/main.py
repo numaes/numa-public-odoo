@@ -175,7 +175,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
         search = post.get('search', '')
 
         base_partner_domain = [('is_company', '=', True), ('grade_id', '!=', False), ('website_published', '=', True)]
-        if not request.env['res.users'].has_group('base.group_website_publisher'):
+        if not request.env['res.users'].has_group('website.group_website_publisher'):
             base_partner_domain += [('grade_id.website_published', '=', True)]
         if search:
             base_partner_domain += ['|', ('name', 'ilike', search), ('website_description', 'ilike', search)]
@@ -255,6 +255,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
         partners = partners[pager['offset']:pager['offset'] + self._references_per_page]
 
         google_map_partner_ids = ','.join(map(str, [p.id for p in partners]))
+        google_maps_api_key = request.env['ir.config_parameter'].sudo().get_param('google_maps_api_key')
 
         values = {
             'countries': countries,
@@ -266,6 +267,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
             'pager': pager,
             'searches': post,
             'search_path': "%s" % werkzeug.url_encode(post),
+            'google_maps_api_key': google_maps_api_key,
         }
         return request.render("website_crm_partner_assign.index", values, status=partners and 200 or 404)
 
@@ -277,14 +279,13 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
         current_grade, current_country = None, None
         grade_id = post.get('grade_id')
         country_id = post.get('country_id')
-        print post
         if grade_id:
             current_grade = request.env['res.partner.grade'].browse(int(grade_id)).exists()
         if country_id:
             current_country = request.env['res.country'].browse(int(country_id)).exists()
         if partner_id:
             partner = request.env['res.partner'].sudo().browse(partner_id)
-            is_website_publisher = request.env['res.users'].has_group('base.group_website_publisher')
+            is_website_publisher = request.env['res.users'].has_group('website.group_website_publisher')
             if partner.exists() and (partner.website_published or is_website_publisher):
                 values = {
                     'main_object': partner,

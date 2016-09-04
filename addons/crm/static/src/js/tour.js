@@ -33,7 +33,7 @@ tour.register('crm_tour', {
     trigger: ".o_opportunity_kanban .o_kanban_group:first-child .o_kanban_record:last-child",
     content: _t("<b>Drag &amp; drop opportunities</b> between columns as you progress in your sales cycle."),
     position: "right",
-    run: "drag_and_drop .o_opportunity_kanban .o_kanban_group:nth-child(2)",
+    run: "drag_and_drop .o_opportunity_kanban .o_kanban_group:eq(2) ",
 }, {
     trigger: ".o_kanban_record:not(.o_updating) .oe_kanban_status_red",
     extra_trigger: ".o_opportunity_kanban",
@@ -72,8 +72,17 @@ tour.STEPS.MENU_MORE, {
     position: "bottom"
 }, {
     trigger: ".o_web_settings_dashboard textarea#user_emails",
-    content: _t("<b>Invite collegues</b> via email.<br/><i>Enter one email per line.</i>"),
+    content: _t("<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"),
     position: "right"
+}, tour.STEPS.TOGGLE_APPSWITCHER,
+tour.STEPS.MENU_MORE, {
+    trigger: '.o_app[data-menu-xmlid="sales_team.menu_base_partner"], .oe_menu_toggler[data-menu-xmlid="sales_team.menu_base_partner"]',
+    content: _t("Good job! Your completed the tour of the CRM. You can continue with the <b>implementation guide</b> to help you setup the CRM in your company."),
+    position: 'bottom',
+}, {
+    trigger: '.o_planner_systray div.progress',
+    content: _t("Use the <b>implementation guide</b> to setup the CRM in your company."),
+    position: 'bottom',
 }]);
 
 });

@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
-from odoo.exceptions import AccessError
+from odoo import api, fields, models
 
 
 class SaleConfiguration(models.TransientModel):
     _inherit = 'sale.config.settings'
 
+    security_lead = fields.Float(related='company_id.security_lead', string="Sales Safety Days *")
     module_delivery = fields.Selection([
         (0, 'No shipping costs on sales orders'),
         (1, 'Allow adding shipping costs')
@@ -27,6 +27,10 @@ class SaleConfiguration(models.TransientModel):
         (1, 'Choose specific routes on sales order lines (advanced)')
         ], "Order Routing",
         implied_group='sale_stock.group_route_so_lines')
+    module_sale_order_dates = fields.Selection([
+        (0, 'Procurements and deliveries dates are based on the sales order dates'),
+        (1, 'Allow to modify the sales order dates to postpone deliveries and procurements')
+        ], "Date")
 
     @api.model
     def get_default_sale_config(self, fields):
@@ -37,10 +41,6 @@ class SaleConfiguration(models.TransientModel):
 
     @api.multi
     def set_sale_defaults(self):
-        self.ensure_one()
-        if not self.env.user._is_admin():
-            raise AccessError(_("Only administrators can change the settings"))
-
         default_picking_policy = 'one' if self.default_picking_policy else 'direct'
         self.env['ir.values'].sudo().set_default('sale.order', 'picking_policy', default_picking_policy)
         return super(SaleConfiguration, self).set_sale_defaults()

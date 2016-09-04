@@ -178,8 +178,6 @@ class WebsiteEventController(http.Controller):
         return request.redirect("/event/%s/register?enable_editor=1" % slug(event))
 
     def _add_event(self, event_name=None, context=None, **kwargs):
-        if context is None:
-            context = {}
         if not event_name:
             event_name = _("New Event")
         date_begin = datetime.today() + timedelta(days=(14))
@@ -189,13 +187,13 @@ class WebsiteEventController(http.Controller):
             'date_end': fields.Date.to_string((date_begin + timedelta(days=(1)))),
             'seats_available': 1000,
         }
-        return request.env['event.event'].with_context(context).create(vals)
+        return request.env['event.event'].with_context(context or {}).create(vals)
 
     def get_formated_date(self, event):
         start_date = fields.Datetime.from_string(event.date_begin).date()
         end_date = fields.Datetime.from_string(event.date_end).date()
-        month = babel.dates.get_month_names('abbreviated', locale=self.env.context.get('lang', 'en_US'))[start_date.month]
-        return ('%s %s%s') % (month, start_date.strftime("%e"), (end_date != start_date and ("-"+end_date.strftime("%e")) or ""))
+        month = babel.dates.get_month_names('abbreviated', locale=event.env.context.get('lang', 'en_US'))[start_date.month]
+        return ('%s %s%s') % (month, start_date.strftime("%e"), (end_date != start_date and ("-" + end_date.strftime("%e")) or ""))
 
     @http.route('/event/get_country_event_list', type='http', auth='public', website=True)
     def get_country_events(self, **post):

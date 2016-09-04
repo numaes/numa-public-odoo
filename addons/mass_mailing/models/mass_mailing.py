@@ -6,7 +6,8 @@ import random
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.tools.safe_eval import safe_eval
+from openerp.tools.translate import html_translate
 
 
 class MassMailingTag(models.Model):
@@ -29,23 +30,10 @@ class MassMailingList(models.Model):
     _order = 'name'
     _description = 'Mailing List'
 
-    def _default_popup_content(self):
-        return """<div class="modal-header text-center">
-    <h3 class="modal-title mt8">Odoo Presents</h3>
-</div>
-<div class="o_popup_message">
-    <font>7</font>
-    <strong>Business Hacks</strong>
-    <span> to<br/>boost your marketing</span>
-</div>
-<p class="o_message_paragraph">Join our Marketing newsletter and get <strong>this white paper instantly</strong></p>"""
-
     name = fields.Char(string='Mailing List', required=True)
     active = fields.Boolean(default=True)
     create_date = fields.Datetime(string='Creation Date')
     contact_nbr = fields.Integer(compute="_compute_contact_nbr", string='Number of Contacts')
-    popup_content = fields.Html(string="Website Popup Content", translate=True, sanitize=False, default=_default_popup_content)
-    popup_redirect_url = fields.Char(string="Website Popup Redirect URL", default='/')
 
     def _compute_contact_nbr(self):
         contacts_data = self.env['mail.mass_mailing.contact'].read_group([('list_id', 'in', self.ids), ('opt_out', '!=', True)], ['list_id'], ['list_id'])
@@ -109,14 +97,6 @@ class MassMailingContact(models.Model):
     @api.multi
     def message_get_default_recipients(self):
         return dict((record.id, {'partner_ids': [], 'email_to': record.email, 'email_cc': False}) for record in self)
-
-    def message_receive_bounce(self, mail_id=None):
-        """Called by ``message_process`` when a bounce email (such as Undelivered
-        Mail Returned to Sender) is received for an existing thread. As contacts
-        do not inherit form mail.thread, we have to define this method to be able
-        to track bounces (see mail.thread for more details). """
-        for contact in self:
-            contact.message_bounce = contact.message_bounce + 1
 
 
 class MassMailingStage(models.Model):
@@ -312,7 +292,7 @@ class MassMailing(models.Model):
     create_date = fields.Datetime(string='Creation Date')
     sent_date = fields.Datetime(string='Sent Date', oldname='date', copy=False)
     schedule_date = fields.Datetime(string='Schedule in the Future')
-    body_html = fields.Html(string='Body', translate=True, sanitize=False)
+    body_html = fields.Html(string='Body', translate=html_translate, sanitize_attributes=False)
     attachment_ids = fields.Many2many('ir.attachment', 'mass_mailing_ir_attachments_rel',
         'mass_mailing_id', 'attachment_id', string='Attachments')
     keep_archives = fields.Boolean(string='Keep Archives')
@@ -456,7 +436,6 @@ class MassMailing(models.Model):
         """ Override read_group to always display all states. """
         if groupby and groupby[0] == "state":
             # Default result structure
-            # states = self._get_state_list(cr, uid, context=context)
             states = [('draft', _('Draft')), ('in_queue', _('In Queue')), ('sending', _('Sending')), ('done', _('Sent'))]
             read_group_all_states = [{
                 '__context': {'group_by': groupby[1:]},
@@ -541,7 +520,7 @@ class MassMailing(models.Model):
 
     def get_recipients(self):
         if self.mailing_domain:
-            domain = eval(self.mailing_domain)
+            domain = safe_eval(self.mailing_domain)
             res_ids = self.env[self.mailing_model].search(domain).ids
         else:
             res_ids = []

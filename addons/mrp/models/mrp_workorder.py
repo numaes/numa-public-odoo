@@ -53,11 +53,11 @@ class MrpWorkorder(models.Model):
     qty_produced = fields.Float(
         'Quantity', default=0.0,
         readonly=True,
-        digits_compute=dp.get_precision('Product Unit of Measure'),
+        digits=dp.get_precision('Product Unit of Measure'),
         help="The number of products already handled by this work order")
     qty_producing = fields.Float(
         'Currently Produced Quantity', default=1.0,
-        digits_compute=dp.get_precision('Product Unit of Measure'),
+        digits=dp.get_precision('Product Unit of Measure'),
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
     is_produced = fields.Boolean(compute='_compute_is_produced')
 
@@ -136,8 +136,8 @@ class MrpWorkorder(models.Model):
     def _compute_duration(self):
         self.duration = sum(self.time_ids.mapped('duration'))
         self.duration_unit = round(self.duration / max(self.qty_produced, 1), 2)  # rounding 2 because it is a time
-        if self.duration:
-            self.duration_percent = 100 * (self.duration_expected - self.duration) / self.duration
+        if self.duration_expected:
+            self.duration_percent = 100 * (self.duration_expected - self.duration) / self.duration_expected
         else:
             self.duration_percent = 0
 
@@ -189,25 +189,26 @@ class MrpWorkorder(models.Model):
             move_lots = self.active_move_lot_ids.filtered(lambda move_lot: move_lot.move_id == move)
             if not move_lots:
                 continue
-            new_qty = move.bom_line_id.product_qty * self.qty_producing / move.bom_line_id.bom_id.product_qty
+            new_qty = move.unit_factor * self.qty_producing
             if move.product_id.tracking == 'lot':
                 move_lots[0].quantity = new_qty
+                move_lots[0].quantity_done = new_qty
             elif move.product_id.tracking == 'serial':
                 # Create extra pseudo record
                 qty_todo = new_qty - sum(move_lots.mapped('quantity'))
-                if qty_todo > 0.0:  # TDE: float compare
-                    while qty_todo > 0:
+                if float_compare(qty_todo, 0.0, precision_rounding=move.product_uom.rounding) > 0:
+                    while float_compare(qty_todo, 0.0, precision_rounding=move.product_uom.rounding) > 0:
                         self.active_move_lot_ids += self.env['stock.move.lots'].new({
                             'move_id': move.id,
                             'product_id': move.product_id.id,
                             'lot_id': False,
                             'quantity': min(1.0, qty_todo),
-                            'quantity_done': 0,
+                            'quantity_done': min(1.0, qty_todo),
                             'workorder_id': self.id,
                             'done_wo': False
                         })
                         qty_todo -= 1
-                elif qty_todo < 0.0:
+                elif float_compare(qty_todo, 0.0, precision_rounding=move.product_uom.rounding) < 0:
                     qty_todo = abs(qty_todo)
                     for move_lot in move_lots:
                         if qty_todo <= 0:
@@ -232,13 +233,13 @@ class MrpWorkorder(models.Model):
         tracked_moves = self.move_raw_ids.filtered(
             lambda move: move.state not in ('done', 'cancel') and move.product_id.tracking != 'none' and move.product_id != self.production_id.product_id)
         for move in tracked_moves:
-            qty = self.qty_producing / move.bom_line_id.bom_id.product_qty * move.bom_line_id.product_qty
+            qty = move.unit_factor * self.qty_producing
             if move.product_id.tracking == 'serial':
                 while float_compare(qty, 0.0, precision_rounding=move.product_uom.rounding) > 0:
                     MoveLot.create({
                         'move_id': move.id,
                         'quantity': min(1, qty),
-                        'quantity_done': 0,
+                        'quantity_done': min(1, qty),
                         'production_id': self.production_id.id,
                         'workorder_id': self.id,
                         'product_id': move.product_id.id,
@@ -249,7 +250,7 @@ class MrpWorkorder(models.Model):
                 MoveLot.create({
                     'move_id': move.id,
                     'quantity': qty,
-                    'quantity_done': 0,
+                    'quantity_done': qty,
                     'product_id': move.product_id.id,
                     'production_id': self.production_id.id,
                     'workorder_id': self.id,

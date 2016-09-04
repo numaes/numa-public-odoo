@@ -56,15 +56,17 @@ class HrTimesheetSheet(models.Model):
         readonly=True, states={
             'draft': [('readonly', False)],
             'new': [('readonly', False)]})
+    # state is created in 'new', automatically goes to 'draft' when created. Then 'new' is never used again ...
+    # (=> 'new' is completely useless)
     state = fields.Selection([
         ('new', 'New'),
         ('draft', 'Open'),
         ('confirm', 'Waiting Approval'),
         ('done', 'Approved')], default='new', track_visibility='onchange',
         string='Status', required=True, readonly=True, index=True,
-        help=' * The \'Open\' status is used when a user is encoding a new and unconfirmed timesheet. \
-            \n* The \'Waiting Approval\' status is used to confirm the timesheet by user. \
-            \n* The \'Approved\' status is used when the users timesheet is accepted by his/her senior.')
+        help=' * The \'Open\' status is used when a user is encoding a new and unconfirmed timesheet. '
+             '\n* The \'Waiting Approval\' status is used to confirm the timesheet by user. '
+             '\n* The \'Approved\' status is used when the users timesheet is accepted by his/her senior.')
     account_ids = fields.One2many('hr_timesheet_sheet.sheet.account', 'sheet_id', string='Analytic accounts', readonly=True)
     company_id = fields.Many2one('res.company', string='Company')
     department_id = fields.Many2one('hr.department', string='Department',
@@ -75,11 +77,13 @@ class HrTimesheetSheet(models.Model):
         for sheet in self:
             new_user_id = forced_user_id or sheet.user_id and sheet.user_id.id
             if new_user_id:
-                self.env.cr.execute('SELECT id \
-                    FROM hr_timesheet_sheet_sheet \
-                    WHERE (date_from <= %s and %s <= date_to) \
-                        AND user_id=%s \
-                        AND id <> %s', (sheet.date_to, sheet.date_from, new_user_id, sheet.id))
+                self.env.cr.execute('''
+                    SELECT id
+                    FROM hr_timesheet_sheet_sheet
+                    WHERE (date_from <= %s and %s <= date_to)
+                        AND user_id=%s
+                        AND id <> %s''',
+                    (sheet.date_to, sheet.date_from, new_user_id, sheet.id))
                 if any(self.env.cr.fetchall()):
                     raise ValidationError('You cannot have 2 timesheets that overlap!\nPlease use the menu \'My Current Timesheet\' to avoid this problem.')
 
@@ -100,7 +104,9 @@ class HrTimesheetSheet(models.Model):
         if 'employee_id' in vals:
             if not self.env['hr.employee'].browse(vals['employee_id']).user_id:
                 raise UserError(_('In order to create a timesheet for this employee, you must link him/her to a user.'))
-        return super(HrTimesheetSheet, self).create(vals)
+        res = super(HrTimesheetSheet, self).create(vals)
+        res.write({'state': 'draft'})
+        return res
 
     @api.multi
     def write(self, vals):
@@ -112,18 +118,27 @@ class HrTimesheetSheet(models.Model):
         return super(HrTimesheetSheet, self).write(vals)
 
     @api.multi
-    def button_confirm(self):
-        for sheet in self:
-            if sheet.employee_id and sheet.employee_id.parent_id and sheet.employee_id.parent_id.user_id:
-                self.message_subscribe_users(user_ids=[sheet.employee_id.parent_id.user_id.id])
-            sheet.signal_workflow('confirm')
+    def action_timesheet_draft(self):
+        if not self.env.user.has_group('hr.group_hr_user'):
+            raise UserError(_('Only an HR Officer or Manager can refuse timesheets or reset them to draft.'))
+        self.write({'state': 'draft'})
         return True
 
     @api.multi
-    def action_set_to_draft(self):
-        self.write({'state': 'draft'})
-        self.create_workflow()
+    def action_timesheet_confirm(self):
+        for sheet in self:
+            if sheet.employee_id and sheet.employee_id.parent_id and sheet.employee_id.parent_id.user_id:
+                self.message_subscribe_users(user_ids=[sheet.employee_id.parent_id.user_id.id])
+        self.write({'state': 'confirm'})
         return True
+
+    @api.multi
+    def action_timesheet_done(self):
+        if not self.env.user.has_group('hr.group_hr_user'):
+            raise UserError(_('Only an HR Officer or Manager can approve timesheets.'))
+        if self.filtered(lambda sheet: sheet.state != 'confirm'):
+            raise UserError(_("Cannot approve a non-submitted timesheet."))
+        self.write({'state': 'done'})
 
     @api.multi
     def name_get(self):

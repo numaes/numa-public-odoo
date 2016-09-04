@@ -931,6 +931,8 @@ options.keyMap.mac['ESCAPE'] = 'cancel';
 options.keyMap.mac['UP'] = 'up';
 options.keyMap.mac['DOWN'] = 'down';
 
+options.styleTags = ['p', 'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote'];
+
 $.summernote.pluginEvents.insertTable = function (event, editor, layoutInfo, sDim) {
   var $editable = layoutInfo.editable();
   var dimension = sDim.split('x');
@@ -1160,8 +1162,6 @@ $.summernote.pluginEvents.visible = function (event, editor, layoutInfo) {
         if (dom.isCell(dom.node(r.sc)) || dom.isCell(dom.node(r.ec))) {
             remove_table_content(r);
             r = range.create(r.ec, 0).select();
-        } else {
-            r = r.deleteContents(true);
         }
         r.select();
     }

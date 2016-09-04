@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import uuid
-from odoo import api, fields, models
-from openerp import tools
 
+from odoo import api, fields, models, tools
 
 
 class Rating(models.Model):
@@ -47,6 +47,7 @@ class Rating(models.Model):
                 'consumed': False,
             })
 
+
 class RatingMixin(models.AbstractModel):
     _name = 'rating.mixin'
     _description = "Rating Mixin"
@@ -79,7 +80,7 @@ class RatingMixin(models.AbstractModel):
     def rating_get_access_token(self, partner=None):
         if not partner:
             partner = self.rating_get_partner_id()
-        ratings = self.rating_ids.filtered(lambda x: x.partner_id == partner.id and not x.consumed)
+        ratings = self.rating_ids.filtered(lambda x: x.partner_id.id == partner.id and not x.consumed)
         if not ratings:
             rating = self.env['rating.rating'].create({'partner_id': partner.id, 'res_model': self._name, 'res_id': self.id})
         else:

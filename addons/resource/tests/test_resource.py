@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta, date
-
 import babel.dates
+
+from datetime import datetime, timedelta, date
 from dateutil.relativedelta import relativedelta
 
 from odoo.fields import Datetime
 from odoo.tools import float_compare
 from odoo.addons.resource.tests.common import TestResourceCommon
-
-from openerp.tests import TransactionCase
+from odoo.tests import TransactionCase
 
 
 class TestResource(TestResourceCommon):
@@ -71,7 +70,7 @@ class TestResource(TestResourceCommon):
 
         # Test: schedule hours on intervals, backwards
         cleaned_intervals.reverse()
-        result = self.ResourceCalendar._model.interval_schedule_hours(cleaned_intervals, 5.5, remove_at_end=False)
+        result = self.ResourceCalendar.interval_schedule_hours(cleaned_intervals, 5.5, remove_at_end=False)
         self.assertEqual(len(result), 2, 'resource_calendar: wrong hours scheduling in interval')
         # First interval: 03, 8-10 untouches
         self.assertEqual(result[0][0], Datetime.from_string('2013-02-04 17:00:00'), 'resource_calendar: wrong leave removal from interval')

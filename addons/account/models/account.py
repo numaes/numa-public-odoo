@@ -3,11 +3,11 @@
 import time
 import math
 
-from openerp.osv import expression
-from openerp.tools.float_utils import float_round as round
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.exceptions import UserError, ValidationError
-from openerp import api, fields, models, _
+from odoo.osv import expression
+from odoo.tools.float_utils import float_round as round
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.exceptions import UserError, ValidationError
+from odoo import api, fields, models, _
 
 
 class AccountAccountType(models.Model):
@@ -231,7 +231,7 @@ class AccountJournal(models.Model):
 
     #groups_id = fields.Many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', string='Groups')
     currency_id = fields.Many2one('res.currency', help='The currency used to enter statement', string="Currency", oldname='currency')
-    company_id = fields.Many2one('res.company', string='Company', required=True, index=1, default=lambda self: self.env.user.company_id,
+    company_id = fields.Many2one('res.company', string='Company', required=True, index=True, default=lambda self: self.env.user.company_id,
         help="Company related to this journal")
 
     refund_sequence = fields.Boolean(string='Dedicated Refund Sequence', help="Check this box if you don't want to share the same sequence for invoices and refunds made from this journal", default=False)
@@ -634,7 +634,16 @@ class AccountTax(models.Model):
         if self.amount_type == 'fixed':
             # Use copysign to take into account the sign of the base amount which includes the sign
             # of the quantity and the sign of the price_unit
-            return math.copysign(quantity, base_amount) * self.amount
+            # Amount is the fixed price for the tax, it can be negative
+            # Base amount included the sign of the quantity and the sign of the unit price and when
+            # a product is returned, it can be done either by changing the sign of quantity or by changing the
+            # sign of the price unit.
+            # When the price unit is equal to 0, the sign of the quantity is absorbed in base_amount then
+            # a "else" case is needed.
+            if base_amount:
+                return math.copysign(quantity, base_amount) * self.amount
+            else:
+                return quantity * self.amount
         if (self.amount_type == 'percent' and not self.price_include) or (self.amount_type == 'division' and self.price_include):
             return base_amount * self.amount / 100
         if self.amount_type == 'percent' and self.price_include:
@@ -642,7 +651,18 @@ class AccountTax(models.Model):
         if self.amount_type == 'division' and not self.price_include:
             return base_amount / (1 - self.amount / 100) - base_amount
 
-    @api.v8
+    @api.multi
+    def json_friendly_compute_all(self, price_unit, currency_id=None, quantity=1.0, product_id=None, partner_id=None):
+        """ Just converts parameters in browse records and calls for compute_all, because js widgets can't serialize browse records """
+        if currency_id:
+            currency_id = self.env['res.currency'].browse(currency_id)
+        if product_id:
+            product_id = self.env['product.product'].browse(product_id)
+        if partner_id:
+            partner_id = self.env['res.partner'].browse(partner_id)
+        return self.compute_all(price_unit, currency=currency_id, quantity=quantity, product=product_id, partner=partner_id)
+
+    @api.multi
     def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None):
         """ Returns all information required to apply taxes (in self + their children in case of a tax goup).
             We consider the sequence of the parent for group of taxes.
@@ -729,15 +749,6 @@ class AccountTax(models.Model):
             'base': base,
         }
 
-    @api.v7
-    def compute_all(self, cr, uid, ids, price_unit, currency_id=None, quantity=1.0, product_id=None, partner_id=None, context=None):
-        currency = currency_id and self.pool.get('res.currency').browse(cr, uid, currency_id, context=context) or None
-        product = product_id and self.pool.get('product.product').browse(cr, uid, product_id, context=context) or None
-        partner = partner_id and self.pool.get('res.partner').browse(cr, uid, partner_id, context=context) or None
-        ids = isinstance(ids, (int, long)) and [ids] or ids
-        recs = self.browse(cr, uid, ids, context=context)
-        return AccountTax.compute_all(recs, price_unit, currency, quantity, product, partner)
-
     @api.model
     def _fix_tax_included_price(self, price, prod_taxes, line_taxes):
         """Subtract tax amount from price when corresponding "price included" taxes do not apply"""
@@ -747,8 +758,8 @@ class AccountTax(models.Model):
             return incl_tax.compute_all(price)['total_excluded']
         return price
 
-class AccountOperationTemplate(models.Model):
-    _name = "account.operation.template"
+class AccountReconcileModel(models.Model):
+    _name = "account.reconcile.model"
     _description = "Preset to create journal entries during a invoices and payments matching"
 
     name = fields.Char(string='Button Label', required=True)

@@ -9,7 +9,7 @@ var _t = core._t;
 tour.register('project_tour', {
     url: "/web",
 }, [tour.STEPS.MENU_MORE, {
-    trigger: '.o_app[data-menu-xmlid="base.menu_main_pm"], .oe_menu_toggler[data-menu-xmlid="base.menu_main_pm"]',
+    trigger: '.o_app[data-menu-xmlid="project.menu_main_pm"], .oe_menu_toggler[data-menu-xmlid="project.menu_main_pm"]',
     content: _t('Want a better way to <b>manage your projects</b>? <i>It starts here.</i>'),
     position: 'bottom',
 }, {
@@ -39,15 +39,15 @@ tour.register('project_tour', {
     position: "right"
 }, {
     trigger: ".o-kanban-button-new",
-    extra_trigger: '.o_kanban_project_tasks .o_kanban_group:nth-child(2)',
-    content: _t("Now that the project is setup, <b>create a few tasks</b>."),
+    extra_trigger: '.o_kanban_project_tasks .o_kanban_group:eq(2)',
+    content: _t("Now that the project is set up, <b>create a few tasks</b>."),
     position: "right"
 }, {
     trigger: ".o_kanban_group:first-child .o_kanban_record:last-child",
     extra_trigger: '.o_kanban_project_tasks',
     content: _t("<b>Drag &amp; drop tasks</b> between columns as you work on them."),
     position: "right",
-    run: "drag_and_drop .o_kanban_group:nth-child(2)",
+    run: "drag_and_drop .o_kanban_group:eq(2) ",
 }, {
     trigger: ".o_kanban_record .o_priority_star",
     extra_trigger: '.o_kanban_project_tasks',
@@ -94,7 +94,7 @@ tour.STEPS.MENU_MORE, {
     position: "bottom"
 }, {
     trigger: ".o_web_settings_dashboard textarea#user_emails",
-    content: _t("<b>Invite collegues</b> via email.<br/><i>Enter one email per line.</i>"),
+    content: _t("<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"),
     position: "right"
 }]);
 

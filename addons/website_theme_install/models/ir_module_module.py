@@ -1,5 +1,10 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import os
-from openerp import api, fields, models, _
+
+from odoo import api, fields, models
+
 
 class IrModuleModule(models.Model):
     _name = "ir.module.module"
@@ -40,7 +45,7 @@ class IrModuleModule(models.Model):
         theme_category_id = self.env.ref('base.module_category_theme').id
         self.search([ # Uninstall the theme(s) which is (are) installed
             ('state', '=', 'installed'),
-            '|', ('category_id', 'not in', [self.env.ref('base.module_category_hidden').id, self.env.ref('base.module_category_theme_hidden').id]), ('name', '=', 'theme_default'),
+            '|', ('category_id', 'not in', [self.env.ref('base.module_category_hidden').id, self.env.ref('website_theme_install.module_category_theme_hidden').id]), ('name', '=', 'theme_default'),
             '|', ('category_id', '=', theme_category_id), ('category_id.parent_id', '=', theme_category_id)
         ]).button_immediate_uninstall()
 
