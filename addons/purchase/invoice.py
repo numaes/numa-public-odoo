@@ -58,7 +58,7 @@ class AccountInvoice(models.Model):
                 'uom_id': line.product_uom.id,
                 'product_id': line.product_id.id,
                 'account_id': self.env['account.invoice.line'].with_context({'journal_id': self.journal_id.id, 'type': 'in_invoice'})._default_account(),
-                'price_unit': line.order_id.currency_id.compute(line.price_unit, self.currency_id, round=False),
+                'price_unit': line.order_id.currency_id.compute(line.price_unit, self.currency_id, round=False) if line.order_id.currency_id and self.currency_id else line.price_unit,
                 'quantity': qty,
                 'discount': 0.0,
                 'account_analytic_id': line.account_analytic_id.id,
