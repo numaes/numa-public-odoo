@@ -345,7 +345,7 @@ class AccountBankStatementLine(models.Model):
     _order = "statement_id desc, sequence"
     _inherit = ['ir.needaction_mixin']
 
-    name = fields.Char(string='Memo', required=True)
+    name = fields.Char(string='Label', required=True)
     date = fields.Date(required=True, default=lambda self: self._context.get('date', fields.Date.context_today(self)))
     amount = fields.Monetary(digits=0, currency_field='journal_currency_id')
     journal_currency_id = fields.Many2one('res.currency', related='statement_id.currency_id',
@@ -951,7 +951,7 @@ class AccountBankStatementLine(models.Model):
             # Create write-offs
             for aml_dict in new_aml_dicts:
                 aml_dict['payment_id'] = payment and payment.id or False
-                aml_obj.with_context(check_move_validity=False).create(aml_dict)
+                aml_obj.with_context(check_move_validity=False, apply_taxes=True).create(aml_dict)
 
             # Create counterpart move lines and reconcile them
             for aml_dict in counterpart_aml_dicts:

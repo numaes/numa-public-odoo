@@ -3,7 +3,7 @@
 
 from lxml import etree
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.safe_eval import safe_eval
 
@@ -42,7 +42,7 @@ class ProjectTaskType(models.Model):
         string='Email Template',
         domain=lambda self: self._get_mail_template_id_domain(),
         help="If set an email will be sent to the customer when the task or issue reaches this step.")
-    fold = fields.Boolean(string='Folded in Tasks Pipeline',
+    fold = fields.Boolean(string='Folded in Kanban',
         help='This stage is folded in the kanban view when there are no records in that stage to display.')
 
 
@@ -292,6 +292,14 @@ class Task(models.Model):
     _mail_post_access = 'read'
     _order = "priority desc, sequence, date_start, name, id"
 
+    @api.model
+    def default_get(self, field_list):
+        """ Set 'date_assign' if user_id is set. """
+        result = super(Task, self).default_get(field_list)
+        if 'user_id' in result:
+            result['date_assign'] = fields.Datetime.now()
+        return result
+
     def _get_default_partner(self):
         if 'default_project_id' in self.env.context:
             default_project_id = self.env['project.project'].browse(self.env.context['default_project_id'])
@@ -304,31 +312,17 @@ class Task(models.Model):
             return False
         return self.stage_find(project_id, [('fold', '=', False)])
 
-    @api.multi
-    def _read_group_stage_ids(self, domain, read_group_order=None, access_rights_uid=None):
-        TaskType = self.env['project.task.type']
-        order = TaskType._order
-        access_rights_uid = access_rights_uid or self.env.uid
-        if read_group_order == 'stage_id desc':
-            order = '%s desc' % order
+    @api.model
+    def _read_group_stage_ids(self, stages, domain, order):
+        search_domain = [('id', 'in', stages.ids)]
         if 'default_project_id' in self.env.context:
-            search_domain = ['|', ('project_ids', '=', self.env.context['default_project_id']), ('id', 'in', self.ids)]
-        else:
-            search_domain = [('id', 'in', self.ids)]
-        stage_ids = TaskType._search(search_domain, order=order, access_rights_uid=access_rights_uid)
-        stages = TaskType.sudo(access_rights_uid).browse(stage_ids)
-        result = stages.name_get()
-        # restore order of the search
-        result.sort(lambda x, y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
+            search_domain = ['|', ('project_ids', '=', self.env.context['default_project_id'])] + search_domain
 
-        return result, {stage.id: stage.fold for stage in stages}
-
-    _group_by_full = {
-        'stage_id': _read_group_stage_ids,
-    }
+        stage_ids = stages._search(search_domain, order=order, access_rights_uid=SUPERUSER_ID)
+        return stages.browse(stage_ids)
 
     active = fields.Boolean(default=True)
-    name = fields.Char(string='Task Title', track_visibility='onchange', required=True, index=True)
+    name = fields.Char(string='Task Title', track_visibility='always', required=True, index=True)
     description = fields.Html(string='Description')
     priority = fields.Selection([
             ('0','Normal'),
@@ -337,7 +331,7 @@ class Task(models.Model):
     sequence = fields.Integer(string='Sequence', index=True, default=10,
         help="Gives the sequence order when displaying a list of tasks.")
     stage_id = fields.Many2one('project.task.type', string='Stage', track_visibility='onchange', index=True,
-        default=_get_default_stage_id,
+        default=_get_default_stage_id, group_expand='_read_group_stage_ids',
         domain="[('project_ids', '=', project_id)]", copy=False)
     tag_ids = fields.Many2many('project.tags', string='Tags', oldname='categ_ids')
     kanban_state = fields.Selection([
@@ -377,7 +371,7 @@ class Task(models.Model):
     user_id = fields.Many2one('res.users',
         string='Assigned to',
         default=lambda self: self.env.uid,
-        index=True, track_visibility='onchange')
+        index=True, track_visibility='always')
     partner_id = fields.Many2one('res.partner',
         string='Customer',
         default=_get_default_partner)
@@ -562,36 +556,26 @@ class Task(models.Model):
         return super(Task, self)._track_subtype(init_values)
 
     @api.multi
-    def _notification_group_recipients(self, message, recipients, done_ids, group_data):
-        """ Override the mail.thread method to handle project users and officers
-        recipients. Indeed those will have specific action in their notification
-        emails: creating tasks, assigning it. """
-        group_project_user = self.env.ref('project.group_project_user')
-        for recipient in recipients.filtered(lambda recipient: recipient.id not in done_ids):
-            if recipient.user_ids and group_project_user in recipient.user_ids[0].groups_id:
-                group_data['group_project_user'] |= recipient
-                done_ids.add(recipient.id)
-        return super(Task, self)._notification_group_recipients(message, recipients, done_ids, group_data)
+    def _notification_recipients(self, message, groups):
+        """ Handle project users and managers recipients that can convert assign
+        tasks and create new one directly from notification emails. """
+        groups = super(Task, self)._notification_recipients(message, groups)
 
-    @api.multi
-    def _notification_get_recipient_groups(self, message, recipients):
         self.ensure_one()
-        res = super(Task, self)._notification_get_recipient_groups(message, recipients)
-
-        take_action = self._notification_link_helper('assign')
-        new_action_id = self.env.ref('project.action_view_task').id
-        new_action = self._notification_link_helper('new', action_id=new_action_id)
-
-        actions = []
         if not self.user_id:
-            actions.append({'url': take_action, 'title': _('I take it')})
+            take_action = self._notification_link_helper('assign')
+            project_actions = [{'url': take_action, 'title': _('I take it')}]
         else:
-            actions.append({'url': new_action, 'title': _('New Task')})
+            new_action_id = self.env.ref('project.action_view_task').id
+            new_action = self._notification_link_helper('new', action_id=new_action_id)
+            project_actions = [{'url': new_action, 'title': _('New Task')}]
 
-        res['group_project_user'] = {
-            'actions': actions
-        }
-        return res
+        new_group = (
+            'group_project_user', lambda partner: bool(partner.user_ids) and any(user.has_group('project.group_project_user') for user in partner.user_ids), {
+                'actions': project_actions,
+            })
+
+        return [new_group] + groups
 
     @api.model
     def message_get_reply_to(self, res_ids, default=None):

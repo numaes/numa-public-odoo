@@ -29,8 +29,7 @@ import logging
 import operator
 import pytz
 import re
-import time
-from collections import defaultdict, MutableMapping
+from collections import defaultdict, MutableMapping, OrderedDict
 from inspect import getmembers, currentframe
 from operator import attrgetter, itemgetter
 
@@ -64,20 +63,6 @@ regex_pg_name = re.compile(r'^[a-z_][a-z0-9_$]*$', re.I)
 onchange_v7 = re.compile(r"^(\w+)\((.*)\)$")
 
 AUTOINIT_RECALCULATE_STORED_FIELDS = 1000
-
-# base environment for doing a safe_eval
-SAFE_EVAL_BASE = {
-    'datetime': datetime,
-    'dateutil': dateutil,
-    'time': time,
-}
-
-def make_compute(text, deps):
-    """ Return a compute function from its code body and dependencies. """
-    func = lambda self: safe_eval(text, SAFE_EVAL_BASE, {'self': self}, mode="exec")
-    deps = [arg.strip() for arg in (deps or "").split(",")]
-    return api.depends(*deps)(func)
-
 
 def check_object_name(name):
     """ Check if the given name is a valid model name.
@@ -258,15 +243,13 @@ class BaseModel(object):
     _parent_store = False       # set to True to compute MPTT (parent_left, parent_right)
     _parent_order = False       # order to use for siblings in MPTT
     _date_name = 'date'         # field to use for default calendar view
+    _fold_name = 'fold'         # field to determine folded groups in kanban views
 
     _needaction = False         # whether the model supports "need actions" (see mail)
     _translate = True           # False disables translations export for this model
 
     _depends = {}               # dependencies of models backed up by sql views
                                 # {model_name: field_names, ...}
-
-    _group_by_full = {}         # {field: method}, where method returns (records
-                                # name_get, {id: fold}) used by read_group()
 
     # default values for _transient_vacuum()
     _transient_check_count = 0
@@ -306,7 +289,9 @@ class BaseModel(object):
             cr.execute(""" INSERT INTO ir_model (model, name, info, state, transient)
                            VALUES (%(model)s, %(name)s, %(info)s, %(state)s, %(transient)s)
                            RETURNING id """, params)
-        model_id = cr.fetchone()[0]
+        model = self.env['ir.model'].browse(cr.fetchone()[0])
+        self._context['todo'].append((10, model.modified, [list(params)]))
+
         if 'module' in self._context:
             xmlid = 'model_' + self._name.replace('.', '_')
             cr.execute("SELECT * FROM ir_model_data WHERE name=%s AND module=%s",
@@ -314,7 +299,7 @@ class BaseModel(object):
             if not cr.rowcount:
                 cr.execute(""" INSERT INTO ir_model_data (name, date_init, date_update, module, model, res_id)
                                VALUES (%s, (now() at time zone 'UTC'), (now() at time zone 'UTC'), %s, %s, %s) """,
-                           (xmlid, self._context['module'], 'ir.model', model_id))
+                           (xmlid, self._context['module'], 'ir.model', model.id))
 
         # create/update the entries in 'ir.model.fields' and 'ir.model.data'
         cr.execute("SELECT * FROM ir_model_fields WHERE model=%s", (self._name,))
@@ -326,7 +311,7 @@ class BaseModel(object):
         model_fields = sorted(self._fields.itervalues(), key=lambda field: field.type == 'sparse')
         for field in model_fields:
             vals = {
-                'model_id': model_id,
+                'model_id': model.id,
                 'model': self._name,
                 'name': field.name,
                 'field_description': field.string,
@@ -361,6 +346,8 @@ class BaseModel(object):
                 )
                 cr.execute(query, vals)
                 field_id = cr.fetchone()[0]
+                self._context['todo'].append((20, Fields.browse(field_id).modified, [list(vals)]))
+
                 module = field._module or self._context.get('module')
                 if module:
                     xmlid = 'field_%s_%s' % (self._table, field.name)
@@ -370,13 +357,16 @@ class BaseModel(object):
                     cr.execute(""" INSERT INTO ir_model_data (name, date_init, date_update, module, model, res_id)
                                    VALUES (%s, (now() at time zone 'UTC'), (now() at time zone 'UTC'), %s, %s, %s) """,
                                (xmlid, module, 'ir.model.fields', field_id))
-            else:
-                if not all(cols[field.name][key] == vals[key] for key in vals):
-                    names = set(vals) - {'model', 'name'}
-                    query = "UPDATE ir_model_fields SET %s WHERE model=%%(model)s and name=%%(name)s" % (
-                        ",".join("%s=%%(%s)s" % (name, name) for name in names),
-                    )
-                    cr.execute(query, vals)
+
+            elif not all(cols[field.name][key] == vals[key] for key in vals):
+                names = set(vals) - {'model', 'name'}
+                query = "UPDATE ir_model_fields SET %s WHERE model=%%(model)s AND name=%%(name)s RETURNING id" % (
+                    ",".join("%s=%%(%s)s" % (name, name) for name in names),
+                )
+                cr.execute(query, vals)
+                field_id = cr.fetchone()[0]
+                self._context['todo'].append((20, Fields.browse(field_id).modified, [names]))
+
         self.invalidate_cache()
 
     @api.model
@@ -538,6 +528,7 @@ class BaseModel(object):
                 '_register': False,
                 '_original_module': cls._module,
                 '_inherit_children': OrderedSet(),      # names of children models
+                '_inherits_children': set(),            # names of children models
                 '_fields': {},                          # populated in _setup_base()
             })
             check_parent = cls._build_model_check_parent
@@ -610,7 +601,6 @@ class BaseModel(object):
         cls._log_access = cls._auto
         cls._inherits = {}
         cls._depends = {}
-        cls._group_by_full = {}
         cls._constraints = {}
         cls._sql_constraints = []
 
@@ -627,9 +617,6 @@ class BaseModel(object):
             for mname, fnames in base._depends.iteritems():
                 cls._depends[mname] = cls._depends.get(mname, []) + fnames
 
-            for fname, func in base._group_by_full.iteritems():
-                cls._group_by_full[fname] = api.guess(func)
-
             for cons in base._constraints:
                 # cons may override a constraint with the same function name
                 cls._constraints[getattr(cons[0], '__name__', id(cons[0]))] = cons
@@ -639,64 +626,24 @@ class BaseModel(object):
         cls._sequence = cls._sequence or (cls._table + '_id_seq')
         cls._constraints = cls._constraints.values()
 
-        # recompute attributes of children models
+        # update _inherits_children of parent models
+        for parent_name in cls._inherits:
+            pool[parent_name]._inherits_children.add(cls._name)
+
+        # recompute attributes of _inherit_children models
         for child_name in cls._inherit_children:
             child_class = pool[child_name]
             child_class._build_model_attributes(pool)
 
     @api.model
     def _add_manual_fields(self, partial):
+        IrModelFields = self.env['ir.model.fields']
         manual_fields = self.pool.get_manual_fields(self._cr, self._name)
-
-        for name, field in manual_fields.iteritems():
-            if name in self._fields:
-                continue
-            attrs = {
-                'manual': True,
-                'string': field['field_description'],
-                'help': field['help'],
-                'index': bool(field['index']),
-                'copy': bool(field['copy']),
-                'related': field['related'],
-                'required': bool(field['required']),
-                'readonly': bool(field['readonly']),
-                'store': bool(field['store']),
-            }
-            # FIXME: ignore field['serialization_field_id']
-            if field['ttype'] in ('char', 'text', 'html'):
-                attrs['translate'] = bool(field['translate'])
-                attrs['size'] = field['size'] or None
-            elif field['ttype'] in ('selection', 'reference'):
-                attrs['selection'] = safe_eval(field['selection'])
-            elif field['ttype'] == 'many2one':
-                if partial and field['relation'] not in self.env:
-                    continue
-                attrs['comodel_name'] = field['relation']
-                attrs['ondelete'] = field['on_delete']
-                attrs['domain'] = safe_eval(field['domain']) if field['domain'] else None
-            elif field['ttype'] == 'one2many':
-                if partial and not (
-                    field['relation'] in self.env and (
-                        field['relation_field'] in self.env[field['relation']]._fields or
-                        field['relation_field'] in self.pool.get_manual_fields(self._cr, field['relation'])
-                )):
-                    continue
-                attrs['comodel_name'] = field['relation']
-                attrs['inverse_name'] = field['relation_field']
-                attrs['domain'] = safe_eval(field['domain']) if field['domain'] else None
-            elif field['ttype'] == 'many2many':
-                if partial and field['relation'] not in self.env:
-                    continue
-                attrs['comodel_name'] = field['relation']
-                rel, col1, col2 = self.env['ir.model.fields']._custom_many2many_names(field['model'], field['relation'])
-                attrs['relation'] = field['relation_table'] or rel
-                attrs['column1'] = field['column1'] or col1
-                attrs['column2'] = field['column2'] or col2
-                attrs['domain'] = safe_eval(field['domain']) if field['domain'] else None
-            # add compute function if given
-            if field['compute']:
-                attrs['compute'] = make_compute(field['compute'], field['depends'])
-            self._add_field(name, Field.by_type[field['ttype']](**attrs))
+        for name, field_data in manual_fields.iteritems():
+            if name not in self._fields:
+                field = IrModelFields._instanciate(field_data, partial)
+                if field:
+                    self._add_field(name, field)
 
     @classmethod
     def _init_constraints_onchanges(cls):
@@ -1281,6 +1228,30 @@ class BaseModel(object):
         return E.pivot(string=self._description)
 
     @api.model
+    def _get_default_kanban_view(self):
+        """ Generates a single-field kanban view, based on _rec_name.
+
+        :returns: a kanban view as an lxml document
+        :rtype: etree._Element
+        """
+
+        field = E.field(name=self._rec_name_fallback())
+        div = E.div(field, {'class': "oe_kanban_card oe_kanban_global_click"})
+        kanban_box = E.t(div, {'t-name': "kanban-box"})
+        templates = E.templates(kanban_box)
+        return E.kanban(templates, string=self._description)
+
+    @api.model
+    def _get_default_graph_view(self):
+        """ Generates a single-field graph view, based on _rec_name.
+
+        :returns: a graph view as an lxml document
+        :rtype: etree._Element
+        """
+        element = E.field(name=self._rec_name_fallback())
+        return E.graph(element, string=self._description)
+
+    @api.model
     def _get_default_calendar_view(self):
         """ Generates a default calendar view by trying to infer
         calendar fields from a number of pre-set attribute names
@@ -1674,72 +1645,59 @@ class BaseModel(object):
                                  read_group_result, read_group_order=None):
         """Helper method for filling in empty groups for all possible values of
            the field being grouped by"""
+        field = self._fields[groupby]
+        if not field.group_expand:
+            return read_group_result
 
-        # self._group_by_full should map groupable fields to a method that returns
-        # a list of all aggregated values that we want to display for this field,
-        # in the form of a m2o-like pair (key,label).
-        # This is useful to implement kanban views for instance, where all columns
-        # should be displayed even if they don't contain any record.
+        # field.group_expand is the name of a method that returns a list of all
+        # aggregated values that we want to display for this field, in the form
+        # of a m2o-like pair (key,label).
+        # This is useful to implement kanban views for instance, where all
+        # columns should be displayed even if they don't contain any record.
 
         # Grab the list of all groups that should be displayed, including all present groups
-        present_group_ids = [x[groupby][0] for x in read_group_result if x[groupby]]
-        all_groups, folded = self._group_by_full[groupby](
-            # Beware: present_group_ids do not belong to model self!
-            self.browse(present_group_ids),
-            domain,
-            read_group_order=read_group_order,
-            access_rights_uid=odoo.SUPERUSER_ID,
-        )
+        group_ids = [x[groupby][0] for x in read_group_result if x[groupby]]
+        groups = self.env[field.comodel_name].browse(group_ids)
+        # determine order on groups's model
+        order = groups._order
+        if read_group_order == groupby + ' desc':
+            order = tools.reverse_order(order)
+        groups = getattr(self, field.group_expand)(groups, domain, order)
+        groups = groups.sudo()
 
         result_template = dict.fromkeys(aggregated_fields, False)
         result_template[groupby + '_count'] = 0
         if remaining_groupbys:
             result_template['__context'] = {'group_by': remaining_groupbys}
 
-        # Merge the left_side (current results as dicts) with the right_side (all
-        # possible values as m2o pairs). Both lists are supposed to be using the
-        # same ordering, and can be merged in one pass.
-        result = []
-        known_values = {}
-        def append_left(left_side):
-            grouped_value = left_side[groupby] and left_side[groupby][0]
-            if not grouped_value in known_values:
-                result.append(left_side)
-                known_values[grouped_value] = left_side
+        # Merge the current results (list of dicts) with all groups (recordset).
+        # Determine the global order of results from all groups, which is
+        # supposed to be in the same order as read_group_result.
+        result = OrderedDict((group.id, {}) for group in groups)
+
+        # fill in results from read_group_result
+        for left_side in read_group_result:
+            left_id = (left_side[groupby] or (False,))[0]
+            if not result.get(left_id):
+                result[left_id] = left_side
             else:
-                known_values[grouped_value].update({count_field: left_side[count_field]})
-        def append_right(right_side):
-            grouped_value = right_side[0]
-            if not grouped_value in known_values:
+                result[left_id][count_field] = left_side[count_field]
+
+        # fill in missing results from all groups
+        for right_side in groups.name_get():
+            right_id = right_side[0]
+            if not result[right_id]:
                 line = dict(result_template)
                 line[groupby] = right_side
-                line['__domain'] = [(groupby,'=',grouped_value)] + domain
-                result.append(line)
-                known_values[grouped_value] = line
-        while read_group_result or all_groups:
-            left_side = read_group_result[0] if read_group_result else None
-            right_side = all_groups[0] if all_groups else None
-            assert left_side is None or left_side[groupby] is False \
-                 or isinstance(left_side[groupby], (tuple,list)), \
-                'M2O-like pair expected, got %r' % left_side[groupby]
-            assert right_side is None or isinstance(right_side, (tuple,list)), \
-                'M2O-like pair expected, got %r' % right_side
-            if left_side is None:
-                append_right(all_groups.pop(0))
-            elif right_side is None:
-                append_left(read_group_result.pop(0))
-            elif left_side[groupby] == right_side:
-                append_left(read_group_result.pop(0))
-                all_groups.pop(0) # discard right_side
-            elif not left_side[groupby] or not left_side[groupby][0]:
-                # left side == "Undefined" entry, not present on right_side
-                append_left(read_group_result.pop(0))
-            else:
-                append_right(all_groups.pop(0))
+                line['__domain'] = [(groupby, '=', right_id)] + domain
+                result[right_id] = line
 
-        if folded:
+        result = result.values()
+
+        if groups._fold_name in groups._fields:
             for r in result:
-                r['__fold'] = folded.get(r[groupby] and r[groupby][0], False)
+                group = groups.browse(r[groupby] and r[groupby][0])
+                r['__fold'] = group[groups._fold_name]
         return result
 
     @api.model
@@ -1952,7 +1910,7 @@ class BaseModel(object):
         """
         result = self._read_group_raw(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
-        groupby = [groupby] if isinstance(groupby, basestring) else groupby
+        groupby = [groupby] if isinstance(groupby, basestring) else list(OrderedSet(groupby))
         dt = [
             f for f in groupby
             if self._fields[f.split(':')[0]].type in ('date', 'datetime')
@@ -1976,7 +1934,7 @@ class BaseModel(object):
         query = self._where_calc(domain)
         fields = fields or [f.name for f in self._fields.itervalues() if f.store]
 
-        groupby = [groupby] if isinstance(groupby, basestring) else groupby
+        groupby = [groupby] if isinstance(groupby, basestring) else list(OrderedSet(groupby))
         groupby_list = groupby[:1] if lazy else groupby
         annotated_groupbys = [self._read_group_process_groupby(gb, query) for gb in groupby_list]
         groupby_fields = [g['field'] for g in annotated_groupbys]
@@ -2056,7 +2014,7 @@ class BaseModel(object):
 
         data = map(lambda r: {k: self._read_group_prepare_data(k,v, groupby_dict) for k,v in r.iteritems()}, fetched_data)
         result = [self._read_group_format_result(d, annotated_groupbys, groupby, domain) for d in data]
-        if lazy and groupby_fields[0] in self._group_by_full:
+        if lazy:
             # Right now, read_group only fill results in lazy mode (by default).
             # If you need to have the empty groups in 'eager' mode, then the
             # method _read_group_fill_results need to be completely reimplemented

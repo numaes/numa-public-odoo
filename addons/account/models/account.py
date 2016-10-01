@@ -80,6 +80,23 @@ class AccountAccount(models.Model):
     ]
 
     @api.model
+    def default_get(self, default_fields):
+        """If we're creating a new account through a many2one, there are chances that we typed the account code
+        instead of its name. In that case, switch both fields values.
+        """
+        default_name = self._context.get('default_name')
+        default_code = self._context.get('default_code')
+        if default_name and not default_code:
+            try:
+                default_code = int(default_name)
+            except ValueError:
+                pass
+            if default_code:
+                default_name = False
+        contextual_self = self.with_context(default_name=default_name, default_code=default_code)
+        return super(AccountAccount, contextual_self).default_get(default_fields)
+
+    @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
         args = args or []
         domain = []
@@ -105,6 +122,7 @@ class AccountAccount(models.Model):
         return result
 
     @api.one
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {})
         default.update(code=_("%s (copy)") % (self.code or ''))
@@ -137,8 +155,14 @@ class AccountAccount(models.Model):
 
     @api.multi
     def action_open_reconcile(self):
+        self.ensure_one()
         # Open reconciliation view for this account
-        action_context = {'show_mode_selector': False, 'account_ids': [self.id,]}
+        if self.internal_type == 'payable':
+            action_context = {'show_mode_selector': False, 'mode': 'suppliers'}
+        elif self.internal_type == 'receivable':
+            action_context = {'show_mode_selector': False, 'mode': 'customers'}
+        else:
+            action_context = {'show_mode_selector': False, 'account_ids': [self.id,]}
         return {
             'type': 'ir.actions.client',
             'tag': 'manual_reconciliation_view',
@@ -262,6 +286,7 @@ class AccountJournal(models.Model):
         return ret
 
     @api.one
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {})
         default.update(
@@ -531,6 +556,7 @@ class AccountTax(models.Model):
             raise ValidationError(_('The application scope of taxes in a group must be either the same as the group or "None".'))
 
     @api.one
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {}, name=_("%s (Copy)") % self.name)
         return super(AccountTax, self).copy(default=default)
@@ -657,7 +683,18 @@ class AccountTax(models.Model):
         # the 'Account' decimal precision + 5), and that way it's like
         # rounding after the sum of the tax amounts of each line
         prec = currency.decimal_places
-        if company_id.tax_calculation_rounding_method == 'round_globally' or not bool(self.env.context.get("round", True)):
+
+        # In some cases, it is necessary to force/prevent the rounding of the tax and the total
+        # amounts. For example, in SO/PO line, we don't want to round the price unit at the
+        # precision of the currency.
+        # The context key 'round' allows to force the standard behavior.
+        round_tax = False if company_id.tax_calculation_rounding_method == 'round_globally' else True
+        round_total = True
+        if 'round' in self.env.context:
+            round_tax = bool(self.env.context['round'])
+            round_total = bool(self.env.context['round'])
+
+        if not round_tax:
             prec += 5
         total_excluded = total_included = base = round(price_unit * quantity, prec)
 
@@ -676,7 +713,7 @@ class AccountTax(models.Model):
                 continue
 
             tax_amount = tax._compute_amount(base, price_unit, quantity, product, partner)
-            if company_id.tax_calculation_rounding_method == 'round_globally' or not bool(self.env.context.get("round", True)):
+            if not round_tax:
                 tax_amount = round(tax_amount, prec)
             else:
                 tax_amount = currency.round(tax_amount)
@@ -702,8 +739,8 @@ class AccountTax(models.Model):
 
         return {
             'taxes': sorted(taxes, key=lambda k: k['sequence']),
-            'total_excluded': currency.round(total_excluded) if bool(self.env.context.get("round", True)) else total_excluded,
-            'total_included': currency.round(total_included) if bool(self.env.context.get("round", True)) else total_included,
+            'total_excluded': currency.round(total_excluded) if round_total else total_excluded,
+            'total_included': currency.round(total_included) if round_total else total_included,
             'base': base,
         }
 

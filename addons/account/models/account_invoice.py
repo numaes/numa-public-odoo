@@ -39,7 +39,7 @@ class AccountInvoice(models.Model):
     _order = "date_invoice desc, number desc, id desc"
 
     @api.one
-    @api.depends('invoice_line_ids.price_subtotal', 'tax_line_ids.amount', 'currency_id', 'company_id')
+    @api.depends('invoice_line_ids.price_subtotal', 'tax_line_ids.amount', 'currency_id', 'company_id', 'date_invoice')
     def _compute_amount(self):
         self.amount_untaxed = sum(line.price_subtotal for line in self.invoice_line_ids)
         self.amount_tax = sum(line.amount for line in self.tax_line_ids)
@@ -47,8 +47,9 @@ class AccountInvoice(models.Model):
         amount_total_company_signed = self.amount_total
         amount_untaxed_signed = self.amount_untaxed
         if self.currency_id and self.currency_id != self.company_id.currency_id:
-            amount_total_company_signed = self.currency_id.compute(self.amount_total, self.company_id.currency_id)
-            amount_untaxed_signed = self.currency_id.compute(self.amount_untaxed, self.company_id.currency_id)
+            currency_id = self.currency_id.with_context(date=self.date_invoice)
+            amount_total_company_signed = currency_id.compute(self.amount_total, self.company_id.currency_id)
+            amount_untaxed_signed = currency_id.compute(self.amount_untaxed, self.company_id.currency_id)
         sign = self.type in ['in_refund', 'out_refund'] and -1 or 1
         self.amount_total_company_signed = amount_total_company_signed * sign
         self.amount_total_signed = self.amount_total * sign
@@ -353,7 +354,7 @@ class AccountInvoice(models.Model):
         reconciled = self.filtered(lambda invoice: invoice.reconciled)
         not_reconciled = self - reconciled
         (reconciled & pre_reconciled).filtered(lambda invoice: invoice.state == 'open').action_invoice_paid()
-        (not_reconciled & pre_not_reconciled).filtered(lambda invoice: invoice.state == 'paid').action_invoice_cancel()
+        (not_reconciled & pre_not_reconciled).filtered(lambda invoice: invoice.state == 'paid').action_invoice_re_open()
         return res
 
     @api.model
@@ -479,7 +480,9 @@ class AccountInvoice(models.Model):
             else:
                 account_id = pay_account.id
                 payment_term_id = p.property_supplier_payment_term_id.id
-            fiscal_position = p.property_account_position_id.id
+            addr = self.partner_id.address_get(['delivery'])
+            fiscal_position = self.env['account.fiscal.position'].get_fiscal_position(self.partner_id.id, delivery_id=addr['delivery'])
+
             bank_id = p.bank_ids and p.bank_ids.ids[0] or False
 
             # If partner has no warning, check its company
@@ -578,7 +581,7 @@ class AccountInvoice(models.Model):
     @api.multi
     def action_invoice_cancel(self):
         if self.filtered(lambda inv: inv.state not in ['proforma2', 'draft', 'open']):
-            raise UserError(_("Invoice must be in draft or Pro-forma state in order to validate it."))
+            raise UserError(_("Invoice must be in draft,Pro-forma or open state in order to be cancelled."))
         return self.action_cancel()
 
     @api.multi
@@ -863,7 +866,6 @@ class AccountInvoice(models.Model):
                 'narration': inv.comment,
             }
             ctx['company_id'] = inv.company_id.id
-            ctx['dont_create_taxes'] = True
             ctx['invoice'] = inv
             ctx_nolang = ctx.copy()
             ctx_nolang.pop('lang', None)
@@ -1063,11 +1065,15 @@ class AccountInvoice(models.Model):
         if payment_method not in journal_payment_methods:
             raise UserError(_('No appropriate payment method enabled on journal %s') % pay_journal.name)
 
+        communication = self.type in ('in_invoice', 'in_refund') and self.reference or self.number
+        if self.origin:
+            communication = '%s (%s)' % (communication, self.origin)
+
         payment = self.env['account.payment'].create({
             'invoice_ids': [(6, 0, self.ids)],
             'amount': pay_amount or self.residual,
             'payment_date': date or fields.Date.context_today(self),
-            'communication': self.type in ('in_invoice', 'in_refund') and self.reference or self.number,
+            'communication': communication,
             'partner_id': self.partner_id.id,
             'partner_type': self.type in ('out_invoice', 'out_refund') and 'customer' or 'supplier',
             'journal_id': pay_journal.id,
@@ -1101,19 +1107,6 @@ class AccountInvoice(models.Model):
         res = map(lambda l: (l[0].name, formatLang(self.env, l[1], currency_obj=currency)), res)
         return res
 
-    @api.multi
-    def _notification_group_recipients(self, message, recipients, done_ids, group_data):
-        for recipient in recipients:
-            if recipient.id in done_ids:
-                continue
-            if not recipient.user_ids:
-                group_data['partner'] |= recipient
-            elif all(recipient.user_ids.mapped('share')):
-                group_data['partner'] |= recipient
-            else:
-                group_data['user'] |= recipient
-            done_ids.add(recipient.id)
-        return super(AccountInvoice, self)._notification_group_recipients(message, recipients, done_ids, group_data)
 
 class AccountInvoiceLine(models.Model):
     _name = "account.invoice.line"

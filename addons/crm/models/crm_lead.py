@@ -5,7 +5,7 @@ import logging
 from datetime import datetime, timedelta, date
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models, tools, SUPERUSER_ID
 from odoo.tools.translate import _
 from odoo.tools import email_re, email_split
 from odoo.exceptions import UserError, AccessError
@@ -97,7 +97,7 @@ class Lead(FormatAddress, models.Model):
 
     stage_id = fields.Many2one('crm.stage', string='Stage', track_visibility='onchange', index=True,
         domain="['|', ('team_id', '=', False), ('team_id', '=', team_id)]",
-        default=lambda self: self._default_stage_id())
+        group_expand='_read_group_stage_ids', default=lambda self: self._default_stage_id())
     user_id = fields.Many2one('res.users', string='Salesperson', index=True, track_visibility='onchange', default=lambda self: self.env.user)
     referred = fields.Char('Referred By')
 
@@ -147,37 +147,21 @@ class Lead(FormatAddress, models.Model):
         ('check_probability', 'check(probability >= 0 and probability <= 100)', 'The probability of closing the deal should be between 0% and 100%!')
     ]
 
-    @api.multi
-    def _read_group_stage_ids(self, domain, read_group_order=None, access_rights_uid=None):
-        if access_rights_uid:
-            self = self.sudo(access_rights_uid)
-
-        Stage = self.env['crm.stage']
-        order = Stage._order
-        # lame hack to allow reverting search, should just work in the trivial case
-        if read_group_order == 'stage_id desc':
-            order = "%s desc" % order
+    @api.model
+    def _read_group_stage_ids(self, stages, domain, order):
         # retrieve team_id from the context and write the domain
-        # - ('id', 'in', 'ids'): add columns that should be present
+        # - ('id', 'in', stages.ids): add columns that should be present
         # - OR ('fold', '=', False): add default columns that are not folded
         # - OR ('team_ids', '=', team_id), ('fold', '=', False) if team_id: add team columns that are not folded
         team_id = self._context.get('default_team_id')
         if team_id:
-            search_domain = ['|', ('id', 'in', self.ids), '|', ('team_id', '=', False), ('team_id', '=', team_id)]
+            search_domain = ['|', ('id', 'in', stages.ids), '|', ('team_id', '=', False), ('team_id', '=', team_id)]
         else:
-            search_domain = ['|', ('id', 'in', self.ids), ('team_id', '=', False)]
+            search_domain = ['|', ('id', 'in', stages.ids), ('team_id', '=', False)]
 
         # perform search
-        stages = Stage.browse(Stage._search(search_domain, order=order, access_rights_uid=access_rights_uid))
-        fold = {
-            stage.id: stage.fold or False
-            for stage in stages
-        }
-        return stages.name_get(), fold
-
-    _group_by_full = {
-        'stage_id': _read_group_stage_ids
-    }
+        stage_ids = stages._search(search_domain, order=order, access_rights_uid=SUPERUSER_ID)
+        return stages.browse(stage_ids)
 
     @api.multi
     def _compute_kanban_state(self):
@@ -689,8 +673,8 @@ class Lead(FormatAddress, models.Model):
             'partner_id': customer.id if customer else False,
             'type': 'opportunity',
             'date_open': fields.Datetime.now(),
-            'email_from': customer.email if customer else self.email_from,
-            'phone': customer.phone if customer else self.phone,
+            'email_from': customer and customer.email or self.email_from,
+            'phone': customer and customer.phone or self.phone,
             'date_conversion': fields.Datetime.now(),
         }
         if not self.stage_id:
@@ -1043,40 +1027,28 @@ class Lead(FormatAddress, models.Model):
         return super(Lead, self)._track_subtype(init_values)
 
     @api.multi
-    def _notification_group_recipients(self, message, recipients, done_ids, group_data):
-        """ Override the mail.thread method to handle salesman recipients.
-            Indeed those will have specific action in their notification emails.
-        """
-        group_sale_salesman = self.env.ref('sales_team.group_sale_salesman')
-        for recipient in recipients:
-            if recipient.id in done_ids:
-                continue
-            # FIXME: why not recipient.user_ids[0].has_group(sales_team.group_sale_salesman)?
-            if recipient.user_ids and group_sale_salesman in recipient.user_ids[0].groups_id:
-                group_data['group_sale_salesman'] |= recipient
-                done_ids.add(recipient.id)
-        return super(Lead, self)._notification_group_recipients(message, recipients, done_ids, group_data)
+    def _notification_recipients(self, message, groups):
+        """ Handle salesman recipients that can convert leads into opportunities
+        and set opportunities as won / lost. """
+        groups = super(Lead, self)._notification_recipients(message, groups)
 
-    @api.multi
-    def _notification_get_recipient_groups(self, message, recipients):
-        result = super(Lead, self)._notification_get_recipient_groups(message, recipients)
-
-        lead = self[0]
-        won_action = self._notification_link_helper('method', method='action_set_won')
-        lost_action = self._notification_link_helper('method', method='action_set_lost')
-        convert_action = self._notification_link_helper('method', method='convert_opportunity', partner_id=lead.partner_id.id)
-
-        if lead.type == 'lead':
-            result['group_sale_salesman'] = {
-                'actions': [{'url': convert_action, 'title': 'Convert to opportunity'}]
-            }
+        self.ensure_one()
+        if self.type == 'lead':
+            convert_action = self._notification_link_helper('method', method='convert_opportunity', partner_id=self.partner_id.id)
+            salesman_actions = [{'url': convert_action, 'title': _('Convert to opportunity')}]
         else:
-            result['group_sale_salesman'] = {
-                'actions': [
-                    {'url': won_action, 'title': 'Won'},
-                    {'url': lost_action, 'title': 'Lost'}]
-            }
-        return result
+            won_action = self._notification_link_helper('method', method='action_set_won')
+            lost_action = self._notification_link_helper('method', method='action_set_lost')
+            salesman_actions = [
+                {'url': won_action, 'title': _('Won')},
+                {'url': lost_action, 'title': _('Lost')}]
+
+        new_group = (
+            'group_sale_salesman', lambda partner: bool(partner.user_ids) and any(user.has_group('sales_team.group_sale_salesman') for user in partner.user_ids), {
+                'actions': salesman_actions,
+            })
+
+        return [new_group] + groups
 
     @api.model
     def message_get_reply_to(self, res_ids, default=None):

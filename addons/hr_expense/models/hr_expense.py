@@ -35,7 +35,7 @@ class HrExpense(models.Model):
     payment_mode = fields.Selection([("own_account", "Employee (to reimburse)"), ("company_account", "Company")], default='own_account', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, string="Payment By")
     attachment_number = fields.Integer(compute='_compute_attachment_number', string='Number of Attachments')
     state = fields.Selection([
-        ('draft', 'To Report'),
+        ('draft', 'To Submit'),
         ('reported', 'Reported'),
         ('done', 'Posted'),
         ('refused', 'Refused')
@@ -254,7 +254,7 @@ class HrExpense(models.Model):
             # Calculate tax lines and adjust base line
             taxes = expense.tax_ids.compute_all(expense.unit_amount, expense.currency_id, expense.quantity, expense.product_id)
             account_move[-1]['price'] = taxes['total_excluded']
-            account_move[-1]['tax_ids'] = expense.tax_ids.id
+            account_move[-1]['tax_ids'] = expense.tax_ids.ids
             for tax in taxes['taxes']:
                 account_move.append({
                     'type': 'tax',

@@ -128,7 +128,9 @@ class WebsiteSale(http.Controller):
            (variant id, [visible attribute ids], variant price, variant sale price)
         """
         # product attributes with at least two choices
-        visible_attrs_ids = product.mapped('attribute_line_ids.attribute_id').filtered(lambda attr: len(attr.value_ids) > 1).ids
+        product = product.with_context(quantity=1)
+
+        visible_attrs_ids = product.attribute_line_ids.filtered(lambda l: len(l.value_ids) > 1).mapped('attribute_id').ids
         to_currency = request.website.get_current_pricelist().currency_id
         attribute_value_ids = []
         for variant in product.product_variant_ids:
@@ -584,11 +586,8 @@ class WebsiteSale(http.Controller):
                     order.onchange_partner_id()
                 elif mode[1] == 'shipping':
                     order.partner_shipping_id = partner_id
-                    order.onchange_partner_shipping_id()
 
-                order.order_line._compute_tax_id()
                 order.message_partner_ids = [(4, partner_id), (3, request.website.partner_id.id)]
-
                 if not errors:
                     return request.redirect(kw.get('callback') or '/shop/checkout')
 
@@ -636,6 +635,9 @@ class WebsiteSale(http.Controller):
         if redirection:
             return redirection
 
+
+        order.onchange_partner_shipping_id()
+        order.order_line._compute_tax_id()
         request.session['sale_last_order_id'] = order.id
         request.website.sale_get_order(update_pricelist=True)
         extra_step = request.env.ref('website_sale.extra_info_option')

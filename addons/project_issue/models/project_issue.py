@@ -46,6 +46,7 @@ class ProjectIssue(models.Model):
     priority = fields.Selection([('0', 'Low'), ('1', 'Normal'), ('2', 'High')], 'Priority', index=True, default='0')
     stage_id = fields.Many2one('project.task.type', string='Stage', track_visibility='onchange', index=True,
                                domain="[('project_ids', '=', project_id)]", copy=False,
+                               group_expand='_read_group_stage_ids',
                                default=_get_default_stage_id)
     project_id = fields.Many2one('project.project', string='Project', track_visibility='onchange', index=True)
     duration = fields.Float('Duration')
@@ -67,31 +68,14 @@ class ProjectIssue(models.Model):
     legend_done = fields.Char(related="stage_id.legend_done", string='Kanban Valid Explanation', readonly=True)
     legend_normal = fields.Char(related="stage_id.legend_normal", string='Kanban Ongoing Explanation', readonly=True)
 
-    @api.multi
-    def _read_group_stage_ids(self, domain, read_group_order=None, access_rights_uid=None):
-        access_rights_uid = access_rights_uid or self.env.uid
-        ProjectTaskType = self.env['project.task.type']
-        order = ProjectTaskType._order
-        # lame hack to allow reverting search, should just work in the trivial case
-        if read_group_order == 'stage_id desc':
-            order = "%s desc" % order
+    @api.model
+    def _read_group_stage_ids(self, stages, domain, order):
+        search_domain = [('id', 'in', stages.ids)]
         # retrieve project_id from the context, add them to already fetched columns (ids)
         if 'default_project_id' in self.env.context:
-            search_domain = ['|', ('project_ids', '=', self.env.context['default_project_id']), ('id', 'in', self.ids)]
-        else:
-            search_domain = [('id', 'in', self.ids)]
+            search_domain = ['|', ('project_ids', '=', self.env.context['default_project_id'])] + search_domain
         # perform search
-        project_task_types = ProjectTaskType.sudo(access_rights_uid).search(search_domain, order=order)
-        result = project_task_types.sudo(access_rights_uid).name_get()
-        # restore order of the search
-        project_task_type_ids = project_task_types.mapped('id')
-        result.sort(lambda x, y: cmp(project_task_type_ids.index(x[0]), project_task_type_ids.index(y[0])))
-        fold = {project_task_type.id: project_task_type.fold for project_task_type in project_task_types}
-        return result, fold
-
-    _group_by_full = {
-        'stage_id': _read_group_stage_ids
-    }
+        return stages.search(search_domain, order=order)
 
     @api.multi
     @api.depends('create_date', 'date_closed', 'date_open')
@@ -137,8 +121,9 @@ class ProjectIssue(models.Model):
     @api.onchange('project_id')
     def _onchange_project_id(self):
         if self.project_id:
-            self.partner_id = self.project_id.partner_id.id
-            self.email_from = self.project_id.partner_id.email
+            if not self.partner_id and not self.email_from:
+                self.partner_id = self.project_id.partner_id.id
+                self.email_from = self.project_id.partner_id.email
             self.stage_id = self.stage_find(self.project_id.id, [('fold', '=', False)])
         else:
             self.partner_id = False
@@ -149,7 +134,7 @@ class ProjectIssue(models.Model):
     def _onchange_task_id(self):
         self.user_id = self.task_id.user_id
 
-    @api.one
+    @api.multi
     def copy(self, default=None):
         if default is None:
             default = {}
@@ -241,43 +226,26 @@ class ProjectIssue(models.Model):
         return super(ProjectIssue, self)._track_subtype(init_values)
 
     @api.multi
-    def _notification_group_recipients(self, message, recipients, done_ids, group_data):
-        """ Override the mail.thread method to handle project users and officers
-        recipients. Indeed those will have specific action in their notification
-        emails: creating tasks, assigning it. """
-        group_project_user_id = self.env.ref('project.group_project_user').id
-        for recipient in recipients:
-            if recipient.id in done_ids:
-                continue
-            if recipient.user_ids and group_project_user_id in recipient.user_ids[0].groups_id.ids:
-                group_data['group_project_user'] |= recipient
-            elif not recipient.user_ids:
-                group_data['partner'] |= recipient
-            elif all(recipient.user_ids.mapped('share')):
-                group_data['partner'] |= recipient
-            else:
-                group_data['user'] |= recipient
-            done_ids.add(recipient.id)
-        return super(ProjectIssue, self)._notification_group_recipients(message, recipients, done_ids, group_data)
+    def _notification_recipients(self, message, groups):
+        """
+        """
+        groups = super(ProjectIssue, self)._notification_recipients(message, groups)
 
-    @api.multi
-    def _notification_get_recipient_groups(self, message, recipients):
         self.ensure_one()
-        res = super(ProjectIssue, self)._notification_get_recipient_groups(message, recipients)
-
-        actions = []
         if not self.user_id:
             take_action = self._notification_link_helper('assign')
-            actions.append({'url': take_action, 'title': _('I take it')})
+            project_actions = [{'url': take_action, 'title': _('I take it')}]
         else:
             new_action_id = self.env.ref('project_issue.project_issue_categ_act0').id
             new_action = self._notification_link_helper('new', action_id=new_action_id)
-            actions.append({'url': new_action, 'title': _('New Issue')})
+            project_actions = [{'url': new_action, 'title': _('New Issue')}]
 
-        res['group_project_user'] = {
-            'actions': actions
-        }
-        return res
+        new_group = (
+            'group_project_user', lambda partner: bool(partner.user_ids) and any(user.has_group('project.group_project_user') for user in partner.user_ids), {
+                'actions': project_actions,
+            })
+
+        return [new_group] + groups
 
     @api.model
     def message_get_reply_to(self, res_ids, default=None):

@@ -619,7 +619,7 @@ class JsonRequest(WebRequest):
             # If we use jsonp, that's mean we are called from another host
             # Some browser (IE and Safari) do no allow third party cookies
             # We need then to manage http sessions manually.
-            response['session_id'] = self.session_id
+            response['session_id'] = self.session.sid
             mime = 'application/javascript'
             body = "%s(%s);" % (self.jsonp, json.dumps(response),)
         else:
@@ -1450,8 +1450,8 @@ class Root(object):
             with request:
                 db = request.session.db
                 if db:
-                    odoo.registry(db).check_signaling()
                     try:
+                        odoo.registry(db).check_signaling()
                         with odoo.tools.mute_logger('odoo.sql_db'):
                             ir_http = request.registry['ir.http']
                     except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError):

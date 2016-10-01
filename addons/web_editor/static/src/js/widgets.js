@@ -34,11 +34,11 @@ Dialog = Dialog.extend({
             self.$('input:first').focus();
         });
         this.on("closed", this, function () {
-            this.trigger(this.destroyAction);
+            this.trigger(this.destroyAction, this.final_data || null);
         });
     },
     save: function () {
-        this.destroyAction = "saved";
+        this.destroyAction = "save";
         this.close();
     },
 });
@@ -164,8 +164,8 @@ var MediaDialog = Dialog.extend({
     },
     save: function () {
         if (this.options.select_images) {
-            this.trigger("saved", this.active.save());
-            this.close();
+            this.final_data = this.active.save();
+            this._super.apply(this, arguments);
             return;
         }
         if(this.rte) {
@@ -198,23 +198,16 @@ var MediaDialog = Dialog.extend({
         }
         var media = this.active.media;
 
-        $(document.body).trigger("media-saved", [media, self.old_media]);
-        self.trigger("saved", [media, self.old_media]);
-        setTimeout(function () {
-            if (!media.parentNode) {
-                return;
-            }
+        this.final_data = [media, self.old_media];
+        $(document.body).trigger("media-saved", this.final_data);
+
+        // Update editor bar after image edition (in case the image change to icon or other)
+        _.defer(function () {
+            if (!media.parentNode) return;
             range.createFromNode(media).select();
             click_event(media, "mousedown");
-            if (!this.only_images) {
-                setTimeout(function () {
-                    if($(media).parent().data("oe-field") !== "image") {
-                        click_event(media, "click");
-                    }
-                    click_event(media, "mouseup");
-                },0);
-            }
-        },0);
+            click_event(media, "mouseup");
+        });
 
         this._super.apply(this, arguments);
     },
@@ -319,10 +312,8 @@ var ImageDialog = Widget.extend({
     },
     save: function () {
         if (this.options.select_images) {
-            this.parent.trigger("save", this.images);
             return this.images;
         }
-        this.parent.trigger("save", this.media);
 
         var img = this.images[0];
         if (!img) {
@@ -675,7 +666,6 @@ var fontIconsDialog = Widget.extend({
      */
     save: function () {
         var self = this;
-        this.parent.trigger("save", this.media);
         var style = this.media.attributes.style ? this.media.attributes.style.value : '';
         var classes = (this.media.className||"").split(/\s+/);
         var custom_classes = /^fa(-[1-5]x|spin|rotate-(9|18|27)0|flip-(horizont|vertic)al|fw|border)?$/;
@@ -691,6 +681,8 @@ var fontIconsDialog = Widget.extend({
             style = style.replace(/\s*width:[^;]+/, '');
         }
         $(this.media).attr("class", _.compact(final_classes).join(' ')).attr("style", style);
+
+        return this.media;
     },
     /**
      * return the data font object (with base, parser and icons) or null
@@ -774,7 +766,9 @@ var fontIconsDialog = Widget.extend({
 });
 
 
-function createVideoNode(url) {
+function createVideoNode(url, options) {
+    options = options || {};
+
     // video url patterns(youtube, instagram, vimeo, dailymotion, youku)
     var ytRegExp = /^(?:(?:https?:)?\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
     var ytMatch = url.match(ytRegExp);
@@ -844,6 +838,10 @@ function createVideoNode(url) {
         });
     }
 
+    if (options.autoplay) {
+        $video.attr("src", $video.attr("src") + "?autoplay=1");
+    }
+
     $video.attr('frameborder', 0);
 
     return $video;
@@ -858,6 +856,7 @@ var VideoDialog = Widget.extend({
     events : _.extend({}, Dialog.prototype.events, {
         'click input#urlvideo ~ button': 'get_video',
         'click input#embedvideo ~ button': 'get_embed_video',
+        'change input#autoplay': 'get_video',
         'change input#urlvideo': 'change_input',
         'keyup input#urlvideo': 'change_input',
         'change input#embedvideo': 'change_input',
@@ -876,6 +875,7 @@ var VideoDialog = Widget.extend({
         if ($media.hasClass("media_iframe_video")) {
             var src = $media.data('src');
             this.$("input#urlvideo").val(src);
+            this.$("input#autoplay").prop("checked", (src || "").indexOf("autoplay") >= 0);
             this.get_video();
         }
         return this._super.apply(this, arguments);
@@ -900,13 +900,12 @@ var VideoDialog = Widget.extend({
     },
     get_video: function (event) {
         if (event) event.preventDefault();
-        var $video = createVideoNode(this.$("input#urlvideo").val());
+        var $video = createVideoNode(this.$("input#urlvideo").val(), {autoplay: this.$("input#autoplay").is(":checked")});
         this.$iframe.replaceWith($video);
         this.$iframe = $video;
         return false;
     },
     save: function () {
-        this.parent.trigger("save", this.media);
         var video_id = this.$("#video_id").val();
         if (!video_id) {
             this.$("button.btn-primary").click();
@@ -920,6 +919,8 @@ var VideoDialog = Widget.extend({
             '</div>');
         $(this.media).replaceWith($iframe);
         this.media = $iframe[0];
+
+        return this.media;
     },
     clear: function () {
         if (this.media.dataset.src) {
@@ -1091,8 +1092,10 @@ var LinkDialog = Dialog.extend({
             self.data.isNewWindow = new_window;
             self.data.text = label;
             self.data.className = classes.replace(/\s+/gi, ' ').replace(/^\s+|\s+$/gi, '');
-
-            self.trigger("save", self.data);
+                if (classes.replace(/(^|[ ])(btn-default|btn-success|btn-primary|btn-info|btn-warning|btn-danger)([ ]|$)/gi, ' ')) {
+                    self.data.style = {'background-color': '', 'color': ''};
+                }
+            self.final_data = self.data;
         }).then(_super);
     },
     bind_data: function () {

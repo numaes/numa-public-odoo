@@ -175,9 +175,10 @@ odoo.define('website.website', function (require) {
     });
 
     /* ----- PUBLISHING STUFF ---- */
-    $(document).on('click', '.js_publish_management .js_publish_btn', function () {
+    $(document).on('click', '.js_publish_management .js_publish_btn', function (e) {
+        e.preventDefault();
+
         var $data = $(this).parents(".js_publish_management:first");
-        var self=this;
         ajax.jsonRpc($data.data('controller') || '/website/publish', 'call', {'id': +$data.data('id'), 'object': $data.data('object')})
             .then(function (result) {
                 $data.toggleClass("css_unpublished css_published");
@@ -265,6 +266,9 @@ odoo.define('website.website', function (require) {
             return this._super.apply(this, arguments);
         }
     });
+
+    // enable magnify on zommable img
+    $('.zoomable img[data-zoom]').zoomOdoo();
 
     Dialog.include({
         init: function () {
