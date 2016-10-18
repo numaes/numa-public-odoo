@@ -14,7 +14,7 @@ class SaleOrder(models.Model):
         portal users that have access to a confirmed order. """
         # TDE note: read access on sale order to portal users granted to followed sale orders
         self.ensure_one()
-        if self.state in ['draft', 'cancel']:
+        if self.state == 'cancel' or (self.state == 'draft' and not self.env.context.get('mark_so_as_sent')):
             return super(SaleOrder, self).get_access_action()
         if self.env.user.share:
             try:
@@ -47,3 +47,11 @@ class SaleOrder(models.Model):
                 line.qty_to_invoice = line.product_uom_qty - line.qty_invoiced
             else:
                 line.qty_to_invoice = 0
+
+    @api.multi
+    def get_signup_url(self):
+        self.ensure_one()
+        return self.partner_id.with_context(signup_valid=True)._get_signup_url_for_action(
+            action='/mail/view',
+            model=self._name,
+            res_id=self.id)[self.partner_id.id]

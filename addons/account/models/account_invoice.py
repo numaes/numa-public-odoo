@@ -884,6 +884,9 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def invoice_validate(self):
+        for invoice in self.filtered(lambda invoice: invoice.partner_id not in invoice.message_partner_ids):
+            invoice.message_subscribe([invoice.partner_id.id])
+
         for invoice in self:
             #refuse to validate a vendor bill/refund if there already exists one with the same reference for the same partner,
             #because it's probably a double encoding of the same bill/refund
@@ -1331,6 +1334,7 @@ class AccountInvoiceTax(models.Model):
     _description = "Invoice Tax"
     _order = 'sequence'
 
+    @api.depends('invoice_id.invoice_line_ids')
     def _compute_base_amount(self):
         for tax in self:
             base = 0.0
@@ -1352,7 +1356,7 @@ class AccountInvoiceTax(models.Model):
     sequence = fields.Integer(help="Gives the sequence order when displaying a list of invoice tax.")
     company_id = fields.Many2one('res.company', string='Company', related='account_id.company_id', store=True, readonly=True)
     currency_id = fields.Many2one('res.currency', related='invoice_id.currency_id', store=True, readonly=True)
-    base = fields.Monetary(string='Base', compute='_compute_base_amount')
+    base = fields.Monetary(string='Base', compute='_compute_base_amount', store=True)
 
 
 
@@ -1422,7 +1426,7 @@ class AccountPaymentTerm(models.Model):
 class AccountPaymentTermLine(models.Model):
     _name = "account.payment.term.line"
     _description = "Payment Term Line"
-    _order = "sequence"
+    _order = "sequence, id"
 
     value = fields.Selection([
             ('balance', 'Balance'),
@@ -1430,7 +1434,7 @@ class AccountPaymentTermLine(models.Model):
             ('fixed', 'Fixed Amount')
         ], string='Type', required=True, default='balance',
         help="Select here the kind of valuation related to this payment term line.")
-    value_amount = fields.Float(string='Value', digits=dp.get_precision('Payment Term'), help="For percent enter a ratio between 0-100.")
+    value_amount = fields.Float(string='Value', digits=dp.get_precision('Payment Terms'), help="For percent enter a ratio between 0-100.")
     days = fields.Integer(string='Number of Days', required=True, default=0)
     option = fields.Selection([
             ('day_after_invoice_date', 'Day(s) after the invoice date'),

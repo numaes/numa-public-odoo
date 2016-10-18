@@ -264,6 +264,14 @@ class SaleOrder(models.Model):
         return result
 
     @api.multi
+    def copy_data(self, default=None):
+        if default is None:
+            default = {}
+        if 'order_line' not in default:
+            default['order_line'] = [(0, 0, line.copy_data()[0]) for line in self.order_line.filtered(lambda l: not l.is_downpayment)]
+        return super(SaleOrder, self).copy_data(default)
+
+    @api.multi
     def _prepare_invoice(self):
         """
         Prepare the dict of values to create the new invoice for a sales order. This method may be
@@ -453,6 +461,8 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_confirm(self):
+        for order in self.filtered(lambda order: order.partner_id not in order.message_partner_ids):
+            order.message_subscribe([order.partner_id.id])
         for order in self:
             order.state = 'sale'
             order.confirmation_date = fields.Datetime.now()
@@ -557,7 +567,7 @@ class SaleOrderLine(models.Model):
             price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
             taxes = line.tax_id.compute_all(price, line.order_id.currency_id, line.product_uom_qty, product=line.product_id, partner=line.order_id.partner_id)
             line.update({
-                'price_tax': taxes['total_included'] - taxes['total_excluded'],
+                'price_tax': sum(t.get('amount', 0.0) for t in taxes.get('taxes', [])),
                 'price_total': taxes['total_included'],
                 'price_subtotal': taxes['total_excluded'],
             })
@@ -710,7 +720,7 @@ class SaleOrderLine(models.Model):
     price_unit = fields.Float('Unit Price', required=True, digits=dp.get_precision('Product Price'), default=0.0)
 
     price_subtotal = fields.Monetary(compute='_compute_amount', string='Subtotal', readonly=True, store=True)
-    price_tax = fields.Monetary(compute='_compute_amount', string='Taxes', readonly=True, store=True)
+    price_tax = fields.Float(compute='_compute_amount', string='Taxes', readonly=True, store=True)
     price_total = fields.Monetary(compute='_compute_amount', string='Total', readonly=True, store=True)
 
     price_reduce = fields.Monetary(compute='_get_price_reduce', string='Price Reduce', readonly=True, store=True)
@@ -738,6 +748,9 @@ class SaleOrderLine(models.Model):
     company_id = fields.Many2one(related='order_id.company_id', string='Company', store=True, readonly=True)
     order_partner_id = fields.Many2one(related='order_id.partner_id', store=True, string='Customer')
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
+    is_downpayment = fields.Boolean(
+        string="Is a down payment", help="Down payments are made when creating invoices from a sale order."
+        " They are not copied when duplicating a sale order.")
 
     state = fields.Selection([
         ('draft', 'Quotation'),
