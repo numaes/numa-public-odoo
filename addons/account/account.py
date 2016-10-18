@@ -2304,8 +2304,7 @@ class account_model(osv.osv):
         pt_obj = self.pool.get('account.payment.term')
         period_obj = self.pool.get('account.period')
 
-        if context is None:
-            context = {}
+        context = dict(context or {})
 
         if data.get('date', False):
             context = dict(context)
