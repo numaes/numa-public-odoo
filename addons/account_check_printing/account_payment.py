@@ -91,12 +91,17 @@ class account_payment(models.Model):
     @api.multi
     def print_checks(self):
         """ Check that the recordset is valid, set the payments state to sent and call print_checks() """
+
+        if any(payment.payment_type != 'outbound' for payment in self):
+            raise UserError(_("ONLY outbound payments could be printed!"))
+
         # Since this method can be called via a client_action_multi, we need to make sure the received records are what we expect
         self = self.filtered(lambda r: r.payment_method_id.code == 'check_printing' and r.state != 'reconciled')
 
         if len(self) == 0:
             raise UserError(_("Payments to print as a checks must have 'Check' selected as payment method and "
                               "not have already been reconciled"))
+
         if any(payment.journal_id != self[0].journal_id for payment in self):
             raise UserError(_("In order to print multiple checks at once, they must belong to the same bank journal."))
 
