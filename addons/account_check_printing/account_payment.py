@@ -108,7 +108,7 @@ class account_payment(models.Model):
         self.filtered(lambda r: r.state == 'draft').post()
         self.write({'state': 'sent'})
 
-        if not self[0].journal_id.check_manual_sequencing:
+        if self[0].journal_id.check_manual_sequencing:
             # The wizard asks for the number printed on the first pre-printed check
             # so payments are attributed the number of the check the'll be printed on.
             last_printed_check = self.search([

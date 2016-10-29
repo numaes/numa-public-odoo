@@ -61,5 +61,18 @@
             </field>
         </record>
 
+        <record id="view_account_supplier_payment_tree" model="ir.ui.view">
+            <field name="name">Payment with cheque number</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_supplier_payment_tree"  />
+            <field name="arch" type="xml">
+                <data>
+                    <field name="payment_method_id" position="after">
+                        <field name="check_number"/>
+                    </field>
+                </data>
+            </field>
+        </record>
+
     </data>
 </openerp>
