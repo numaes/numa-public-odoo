@@ -162,7 +162,7 @@ class account_journal(models.Model):
             account_ids = tuple(filter(None, [self.default_debit_account_id.id, self.default_credit_account_id.id]))
             if account_ids:
                 amount_field = 'balance' if not self.currency_id else 'amount_currency'
-                query = """SELECT sum(%s) FROM account_move_line WHERE account_id in %%s;""" % (amount_field,)
+                query = """SELECT sum(%s) FROM account_move_line INNER JOIN account_move on account_move.id=account_move_line.move_id WHERE account_move.state = 'posted' and account_id in %%s;""" % (amount_field,)
                 self.env.cr.execute(query, (account_ids,))
                 query_results = self.env.cr.dictfetchall()
                 if query_results and query_results[0].get('sum') != None:
