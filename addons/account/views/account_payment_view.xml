@@ -207,7 +207,7 @@
                                 <field name="writeoff_account_id" string="Post Difference In"
                                     attrs="{'invisible': [('payment_difference_handling','=','open')], 'required': [('payment_difference_handling', '=', 'reconcile')]}"/>
                             </group>
-                        </group>
+                        </group>8.0.036762
                     </sheet>
                     <footer>
                         <button string='Validate' name="post" type="object" class="btn-primary"/>
