@@ -377,7 +377,6 @@ class Lead(FormatAddress, models.Model):
         if self.partner_id:
             partner_ids.append(self.partner_id.id)
         action['context'] = {
-            'search_default_opportunity_id': self.id if self.type == 'opportunity' else False,
             'default_opportunity_id': self.id if self.type == 'opportunity' else False,
             'default_partner_id': self.partner_id.id,
             'default_partner_ids': partner_ids,
@@ -659,6 +658,8 @@ class Lead(FormatAddress, models.Model):
         domain = partner_match_domain
         if not include_lost:
             domain += ['&', ('active', '=', True), ('probability', '<', 100)]
+        else:
+            domain += ['|', '&', ('type', '=', 'lead'), ('active', '=', True), ('type', '=', 'opportunity')]
         return self.search(domain)
 
     @api.multi

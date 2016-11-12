@@ -1178,7 +1178,7 @@
                                     <t t-if="mode[1] == 'billing'">
                                         <div t-attf-class="form-group #{error.get('email') and 'has-error' or ''} col-md-6" id="div_email">
                                             <label class="control-label" for="email">Email</label>
-                                            <input type="tel" name="email" class="form-control" t-att-value="'email' in checkout and checkout['email']" />
+                                            <input type="email" name="email" class="form-control" t-att-value="'email' in checkout and checkout['email']" />
                                         </div>
                                     </t>
                                     <div t-attf-class="form-group #{error.get('phone') and 'has-error' or ''} col-md-6" id="div_phone">
@@ -1200,6 +1200,10 @@
                                     <div t-attf-class="form-group #{error.get('street') and 'has-error' or ''} col-md-12 div_street">
                                         <label class="control-label" for="street">Street <span class="hidden-xs"> and Number</span></label>
                                         <input type="text" name="street" class="form-control" t-att-value="'street' in checkout and checkout['street']" />
+                                    </div>
+                                    <div t-attf-class="form-group #{error.get('street2') and 'has-error' or ''} col-md-12 div_street2">
+                                        <label class="control-label" for="street2">Street 2</label>
+                                        <input type="text" name="street2" class="form-control" t-att-value="'street2' in checkout and checkout['street2']" />
                                     </div>
                                     <div class="clearfix" />
                                     <t t-set='zip_city' t-value='country and [x for x in country.get_address_fields() if x in ["zip", "city"]] or ["city", "zip"]'/>
@@ -1341,17 +1345,25 @@
                                 <div class="col-lg-5 col-sm-6">
                                     <h4>Payment Method:</h4>
                                     <ul class="list-unstyled">
+                                        <t t-set="payment_methods_available" t-value="False"/>
+                                        <t t-set="partner_country" t-value="website_sale_order and website_sale_order.partner_invoice_id.country_id"/>
                                         <t t-foreach="acquirers or []" t-as="acquirer">
-                                          <li>
+                                          <li t-if="not acquirer.country_ids or partner_country in acquirer.country_ids">
                                             <label t-if="acquirer.button">
                                                 <input t-att-value="acquirer.id" type="radio" name="acquirer" t-att-checked="acquirers[0] == acquirer" />
                                                 <span t-field="acquirer.image_small" t-att-title="acquirer.name" t-field-options='{"widget": "image", "style":"max-width: 60px; display: inline-block"}'/>
                                                 <span t-field="acquirer.name" />
                                                 <span t-if="acquirer.fees_active">(processing fees apply)</span>
                                             </label>
+                                            <t t-set="payment_methods_available" t-value="True"/>
                                           </li>
                                         </t>
-                                        <li t-if="tokens">
+                                        <li t-if="not payment_methods_available">
+                                          <div class="alert alert-warning">
+                                            <span>No payment gateway is available for your country</span>
+                                          </div>
+                                        </li>
+                                        <li t-if="any(token for token in tokens if not token.acquirer_id.country_ids or partner_country in token.acquirer_id.country_ids)">
                                             <label>
                                                 <input type="radio" name="acquirer" />
                                                 <span class='fa fa-2x fa-credit-card'/>
@@ -1360,7 +1372,7 @@
 
                                             <div class="list-group">
                                                 <t t-foreach='tokens' t-as='token'>
-                                                    <a class="list-group-item btn_payment_token" t-att-data-acquirer="token.acquirer_id.id" t-att-data-token='token.id'>
+                                                    <a t-if="not token.acquirer_id.country_ids or partner_country in token.acquirer_id.country_ids" class="list-group-item btn_payment_token" t-att-data-acquirer="token.acquirer_id.id" t-att-data-token='token.id'>
                                                         <span class="js_radio fa fa-circle-o"></span>&amp;nbsp;
                                                         <t t-esc="token.name" />
                                                         <t t-if="len(set(tokens.mapped('acquirer_id')))>1">

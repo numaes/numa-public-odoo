@@ -579,9 +579,10 @@ class MailThread(models.AbstractModel):
 
     @api.multi
     def _notification_link_helper(self, link_type, **kwargs):
+        local_kwargs = dict(kwargs)  # do not modify in-place, modify copy instead
         if kwargs.get('message_id'):
             base_params = {
-                'message_id': kwargs.pop('message_id')
+                'message_id': kwargs['message_id']
             }
         else:
             base_params = {
@@ -589,21 +590,22 @@ class MailThread(models.AbstractModel):
                 'res_id': kwargs.get('res_id', self.ids and self.ids[0] or False),
             }
 
+        local_kwargs.pop('message_id', None)
+        local_kwargs.pop('model', None)
+        local_kwargs.pop('res_id', None)
+
         if link_type in ['view', 'assign', 'follow', 'unfollow']:
             params = dict(base_params)
             base_link = '/mail/%s' % link_type
-        elif link_type == 'new':
-            params = dict(base_params, action_id=kwargs.get('action_id', ''))
-            base_link = '/mail/new'
         elif link_type == 'controller':
-            controller = kwargs.pop('controller')
-            params = dict(base_params)
+            controller = local_kwargs.pop('controller')
+            params = dict(base_params, **local_kwargs)
             params.pop('model')
             base_link = '%s' % controller
         else:
             return ''
 
-        if link_type not in ['view', 'new']:
+        if link_type not in ['view']:
             token = self._generate_notification_token(base_link, params)
             params['token'] = token
 
@@ -1109,37 +1111,23 @@ class MailThread(models.AbstractModel):
                 reply_match = False
 
         if reply_match:
-            compat_mode = False
             msg_references = tools.mail_header_msgid_re.findall(thread_references)
             mail_messages = MailMessage.sudo().search([('message_id', 'in', msg_references)], limit=1)
-
-            # message is a reply to an existing thread (6.1 compatibility)
-            # do not match forwarded emails from another OpenERP system (thread_id collision!)
-            if not mail_messages and local_hostname == reply_hostname and reply_thread_id and reply_model in self.env:
-                mail_messages = MailMessage.search([
-                    ('message_id', '=', False),
-                    ('model', '=', reply_model),
-                    ('res_id', '=', reply_thread_id)])
-                compat_mode = True
 
             if mail_messages:
                 model, thread_id = mail_messages.model, mail_messages.res_id
                 if not reply_private:  # TDE note: not sure why private mode as no alias search, copying existing behavior
                     dest_aliases = Alias.search([('alias_name', 'in', rcpt_tos_localparts)], limit=1)
 
-                # TDE Note: compat mode = without context key, why ? because
                 route = self.message_route_verify(
                     message, message_dict,
                     (model, thread_id, custom_values, self._uid, dest_aliases),
                     update_author=True, assert_model=reply_private, create_fallback=True,
                     allow_private=reply_private, drop_alias=True)
                 if route:
-                    # TDE Note: compat mode: parent is invalid for a compat-reply
-                    # message_dict.pop('parent_id', None)
-                    # TDE note: add compat mode for compat mode in debug
                     _logger.info(
-                        'Routing mail from %s to %s with Message-Id %s%s: direct reply to msg: model: %s, thread_id: %s, custom_values: %s, uid: %s',
-                        email_from, email_to, message_id, compat_mode and ' (compat mode)' or '', model, thread_id, custom_values, self._uid)
+                        'Routing mail from %s to %s with Message-Id %s: direct reply to msg: model: %s, thread_id: %s, custom_values: %s, uid: %s',
+                        email_from, email_to, message_id, model, thread_id, custom_values, self._uid)
                     return [route]
                 elif route is False:
                     return []

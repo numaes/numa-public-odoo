@@ -157,7 +157,8 @@ class View(models.Model):
     inherit_id = fields.Many2one('ir.ui.view', string='Inherited View', ondelete='restrict', index=True)
     inherit_children_ids = fields.One2many('ir.ui.view', 'inherit_id', string='Views which inherit from this one')
     field_parent = fields.Char(string='Child Field')
-    model_data_id = fields.Many2one('ir.model.data', compute='_compute_model_data_id', string="Model Data", store=True)
+    model_data_id = fields.Many2one('ir.model.data', string="Model Data",
+                                    compute='_compute_model_data_id', search='_search_model_data_id')
     xml_id = fields.Char(string="External ID", compute='_compute_xml_id',
                          help="ID of the view defined in xml file")
     groups_id = fields.Many2many('res.groups', 'ir_ui_view_group_rel', 'view_id', 'group_id',
@@ -229,12 +230,19 @@ actual arch.
         for view, view_wo_lang in zip(self, self.with_context(lang=None)):
             view_wo_lang.arch = view.arch_base
 
+    @api.depends('write_date')
     def _compute_model_data_id(self):
-        # get the last ir_model_data record corresponding to self
+        # get the first ir_model_data record corresponding to self
         domain = [('model', '=', 'ir.ui.view'), ('res_id', 'in', self.ids)]
-        for data in self.env['ir.model.data'].search_read(domain, ['res_id']):
+        for data in self.env['ir.model.data'].search_read(domain, ['res_id'], order='id desc'):
             view = self.browse(data['res_id'])
             view.model_data_id = data['id']
+
+    def _search_model_data_id(self, operator, value):
+        name = 'name' if isinstance(value, basestring) else 'id'
+        domain = [('model', '=', 'ir.ui.view'), (name, operator, value)]
+        data = self.env['ir.model.data'].search(domain)
+        return [('id', 'in', data.mapped('res_id'))]
 
     def _compute_xml_id(self):
         xml_ids = collections.defaultdict(list)
@@ -1168,4 +1176,4 @@ actual arch.
             try:
                 self.browse(vid)._check_xml()
             except Exception as e:
-                self.raise_view_error("Can't validate view: %s" % e.message, vid)
+                self.raise_view_error("Can't validate view:\n%s" % (e.message or repr(e)), vid)
