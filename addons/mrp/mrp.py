@@ -1221,7 +1221,8 @@ class mrp_production(osv.osv):
         source_location_id = production.location_src_id.id
         prod_location_id = source_location_id
         prev_move= False
-        if production.bom_id.routing_id and production.bom_id.routing_id.location_id and production.bom_id.routing_id.location_id.id != source_location_id:
+        if production.bom_id.routing_id and production.bom_id.routing_id.location_id and \
+           production.bom_id.routing_id.location_id.id != source_location_id and production.bom_id.routing_id.location_id.id != prod_location_id:
             source_location_id = production.bom_id.routing_id.location_id.id
             prev_move = True
 
