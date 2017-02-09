@@ -9,15 +9,15 @@
 # Ignacio Garbizu <ig@landoo.es>, 2016
 # Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2016
 # nle_odoo, 2016
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2015
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2015,2017
 # Rick Hunter <rick_hunter_ec@yahoo.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2016-12-21 11:07+0000\n"
-"Last-Translator: nle_odoo\n"
+"PO-Revision-Date: 2017-02-02 17:57+0000\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -576,7 +576,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.res_partner_opt_out_search
 msgid "Available for mass mailing"
-msgstr "Disponible para envío masivo de correo"
+msgstr "Disponible para envío de correo masivo"
 
 #. module: mail
 #. openerp-web
@@ -741,7 +741,7 @@ msgstr ""
 #. module: mail
 #: model:ir.actions.act_window,help:mail.action_contacts
 msgid "Click to add a contact in your address book."
-msgstr ""
+msgstr "Clic para agregar un contacto en su directorio."
 
 #. module: mail
 #: model:ir.actions.act_window,help:mail.mail_shortcode_action
@@ -1493,7 +1493,7 @@ msgstr "Mensaje inicial del hilo"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_internal
 msgid "Internal Only"
-msgstr ""
+msgstr "Solo interno"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:99
@@ -1740,7 +1740,7 @@ msgstr "Registrar una nota interna"
 msgid ""
 "Log an internal note which will not be sent to followers, but which can be read\n"
 "                    by users accessing this document."
-msgstr ""
+msgstr "Registre una nota interna que no será enviada a los seguidores, pero podrá ser vista por los usuarios que accedan a este documento."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -3312,7 +3312,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You can mark any message as 'starred', and it shows up in this channel."
-msgstr ""
+msgstr "Puede marcar cualquier mensaje como «destacado», y se mostrará en este canal."
 
 #. module: mail
 #: code:addons/mail/models/res_users.py:47

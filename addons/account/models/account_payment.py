@@ -390,7 +390,10 @@ class account_payment(models.Model):
             # to avoid loss of precision during the currency rate computations. See revision 20935462a0cabeb45480ce70114ff2f4e91eaf79 for a detailed example.
             total_residual_company_signed = sum(invoice.residual_company_signed for invoice in self.invoice_ids)
             total_payment_company_signed = self.currency_id.with_context(date=self.payment_date).compute(self.amount, self.company_id.currency_id)
-            amount_wo = total_residual_company_signed - total_payment_company_signed
+            if self.invoice_ids[0].type in ['in_invoice', 'out_refund']:
+                amount_wo = total_payment_company_signed - total_residual_company_signed
+            else:
+                amount_wo = total_residual_company_signed - total_payment_company_signed
             debit_wo = amount_wo > 0 and amount_wo or 0.0
             credit_wo = amount_wo < 0 and -amount_wo or 0.0
             writeoff_line['name'] = _('Counterpart')

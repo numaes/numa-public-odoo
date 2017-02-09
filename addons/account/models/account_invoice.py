@@ -393,7 +393,7 @@ class AccountInvoice(models.Model):
             default_model='account.invoice',
             default_res_id=self.id,
             default_use_template=bool(template),
-            default_template_id=template.id,
+            default_template_id=template and template.id or False,
             default_composition_mode='comment',
             mark_invoice_as_sent=True,
         )
@@ -489,13 +489,17 @@ class AccountInvoice(models.Model):
                 account_id = pay_account.id
                 payment_term_id = p.property_supplier_payment_term_id.id
             fiscal_position = p.property_account_position_id.id
-            bank_id = p.bank_ids and p.bank_ids.ids[0] or False
+
         self.account_id = account_id
         self.payment_term_id = payment_term_id
         self.fiscal_position_id = fiscal_position
 
-        if type in ('in_invoice', 'in_refund'):
+        if type in ('in_invoice', 'out_refund'):
+            bank_ids = p.commercial_partner_id.bank_ids
+            bank_id = bank_ids[0].id if bank_ids else False
             self.partner_bank_id = bank_id
+            return {'domain': {'partner_bank_id': [('id', 'in', bank_ids.ids)]}}
+        return {}
 
     @api.onchange('journal_id')
     def _onchange_journal_id(self):
@@ -512,7 +516,7 @@ class AccountInvoice(models.Model):
             self.date_due = self.date_due or self.date_invoice
         else:
             pterm = self.payment_term_id
-            pterm_list = pterm.with_context(currency_id=self.currency_id.id).compute(value=1, date_ref=date_invoice)[0]
+            pterm_list = pterm.with_context(currency_id=self.company_id.currency_id.id).compute(value=1, date_ref=date_invoice)[0]
             self.date_due = max(line[0] for line in pterm_list)
 
     @api.multi
@@ -713,8 +717,9 @@ class AccountInvoice(models.Model):
         will be grouped together if the journal has the 'group line' option. Of course a module
         can add fields to invoice lines that would need to be tested too before merging lines
         or not."""
-        return "%s-%s-%s-%s-%s" % (
+        return "%s-%s-%s-%s-%s-%s" % (
             invoice_line['account_id'],
+            invoice_line.get('tax_ids', 'False'),
             invoice_line.get('tax_line_id', 'False'),
             invoice_line.get('product_id', 'False'),
             invoice_line.get('analytic_account_id', 'False'),
@@ -773,7 +778,7 @@ class AccountInvoice(models.Model):
 
             name = inv.name or '/'
             if inv.payment_term_id:
-                totlines = inv.with_context(ctx).payment_term_id.with_context(currency_id=inv.currency_id.id).compute(total, date_invoice)[0]
+                totlines = inv.with_context(ctx).payment_term_id.with_context(currency_id=company_currency.id).compute(total, date_invoice)[0]
                 res_amount_currency = total_currency
                 ctx['date'] = date_invoice
                 for i, t in enumerate(totlines):
