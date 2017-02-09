@@ -2637,8 +2637,6 @@ class stock_move(osv.osv):
     def action_done(self, cr, uid, ids, context=None):
         """ Process completely the moves given as ids and if all moves are done, it will finish the picking.
         """
-        import pdb; pdb.set_trace()
-        
         context = context or {}
         picking_obj = self.pool.get("stock.picking")
         quant_obj = self.pool.get("stock.quant")
