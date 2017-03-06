@@ -3,7 +3,7 @@
 -------------------------------------------------------------------------
 
 CREATE TABLE ir_actions (
-  id serial,
+  id integer,
   primary key(id)
 );
 CREATE TABLE ir_act_window (primary key(id)) INHERITS (ir_actions);
@@ -14,7 +14,7 @@ CREATE TABLE ir_act_client (primary key(id)) INHERITS (ir_actions);
 
 
 CREATE TABLE ir_model (
-  id serial,
+  id integer,
   model varchar NOT NULL,
   name varchar,
   state varchar,
@@ -24,7 +24,7 @@ CREATE TABLE ir_model (
 );
 
 CREATE TABLE ir_model_fields (
-  id serial,
+  id integer,
   model varchar NOT NULL,
   model_id integer references ir_model on delete cascade,
   name varchar NOT NULL,
@@ -50,14 +50,14 @@ CREATE TABLE ir_model_fields (
 );
 
 CREATE TABLE res_lang (
-    id serial,
+    id integer,
     name VARCHAR(64) NOT NULL UNIQUE,
     code VARCHAR(16) NOT NULL UNIQUE,
     primary key(id)
 );
 
 CREATE TABLE res_users (
-    id serial NOT NULL,
+    id integer NOT NULL,
     active boolean default True,
     login varchar(64) NOT NULL UNIQUE,
     password varchar(64) default null,
@@ -69,13 +69,13 @@ CREATE TABLE res_users (
 );
 
 CREATE TABLE res_groups (
-    id serial NOT NULL,
+    id integer NOT NULL,
     name varchar NOT NULL,
     primary key(id)
 );
 
 create table wkf (
-    id serial,
+    id integer,
     name varchar(64),
     osv varchar(64),
     on_create bool default false,
@@ -83,7 +83,7 @@ create table wkf (
 );
 
 CREATE TABLE ir_module_category (
-    id serial NOT NULL,
+    id integer NOT NULL,
     create_uid integer, -- references res_users on delete set null,
     create_date timestamp without time zone,
     write_date timestamp without time zone,
@@ -94,7 +94,7 @@ CREATE TABLE ir_module_category (
 );
 
 CREATE TABLE ir_module_module (
-    id serial NOT NULL,
+    id integer NOT NULL,
     create_uid integer, -- references res_users on delete set null,
     create_date timestamp without time zone,
     write_date timestamp without time zone,
@@ -120,7 +120,7 @@ CREATE TABLE ir_module_module (
 ALTER TABLE ir_module_module add constraint name_uniq unique (name);
 
 CREATE TABLE ir_module_module_dependency (
-    id serial NOT NULL,
+    id integer NOT NULL,
     create_uid integer, -- references res_users on delete set null,
     create_date timestamp without time zone,
     write_date timestamp without time zone,
@@ -131,7 +131,7 @@ CREATE TABLE ir_module_module_dependency (
 );
 
 CREATE TABLE ir_model_data (
-    id serial NOT NULL,
+    id integer NOT NULL,
     create_uid integer,
     create_date timestamp without time zone,
     write_date timestamp without time zone,
@@ -151,7 +151,7 @@ CREATE TABLE ir_model_data (
 --   - for a foreign key: type is 'f',
 --   - for a constraint: type is 'u' (this is the convention PostgreSQL uses).
 CREATE TABLE ir_model_constraint (
-    id serial NOT NULL,
+    id integer NOT NULL,
     date_init timestamp without time zone,
     date_update timestamp without time zone,
     module integer NOT NULL references ir_module_module on delete restrict,
@@ -165,7 +165,7 @@ CREATE TABLE ir_model_constraint (
 -- Records relation tables (i.e. implementing many2many) installed by a module
 -- (so they can be removed when the module is uninstalled).
 CREATE TABLE ir_model_relation (
-    id serial NOT NULL,
+    id integer NOT NULL,
     date_init timestamp without time zone,
     date_update timestamp without time zone,
     module integer NOT NULL references ir_module_module on delete restrict,
@@ -175,14 +175,14 @@ CREATE TABLE ir_model_relation (
 );  
 
 CREATE TABLE res_currency (
-    id serial,
+    id integer,
     name varchar NOT NULL,
     symbol varchar NOT NULL,
     primary key(id)
 );
 
 CREATE TABLE res_company (
-    id serial,
+    id integer,
     name varchar NOT NULL,
     partner_id integer,
     currency_id integer,
@@ -190,32 +190,68 @@ CREATE TABLE res_company (
 );
 
 CREATE TABLE res_partner (
-    id serial,
+    id integer,
     name varchar,
     company_id integer,
     primary key(id)
 );
 
+CREATE TABLE ir_object (
+    id integer,
+    model_id integer,
+    create_uid integer, -- references res_users on delete set null,
+    create_date timestamp without time zone,
+    write_date timestamp without time zone,
+    write_uid integer, -- references res_users on delete set null,
+    primary key(id)
+);
+
+---------------------------------
+-- Default objects
+---------------------------------
+insert into ir_model (id, name, state) VALUES (10, 'ir.model', 'active');
+insert into ir_object (id, model_id) VALUES (10, 10);
+insert into ir_model (id, name, state) VALUES (11, 'ir.object', 'active');
+insert into ir_object (id, model_id) VALUES (11, 10);
+insert into ir_model (id, name, state) VALUES (12, 'res.currency', 'active');
+insert into ir_object (id, model_id) VALUES (12, 10);
+insert into ir_model (id, name, state) VALUES (13, 'ir.model.data', 'active');
+insert into ir_object (id, model_id) VALUES (13, 10);
+insert into ir_model (id, name, state) VALUES (14, 'res.company', 'active');
+insert into ir_object (id, model_id) VALUES (14, 10);
+insert into ir_model (id, name, state) VALUES (15, 'res.partner', 'active');
+insert into ir_object (id, model_id) VALUES (15, 10);
+insert into ir_model (id, name, state) VALUES (16, 'res.users', 'active');
+insert into ir_object (id, model_id) VALUES (16, 10);
+insert into ir_model (id, name, state) VALUES (17, 'res.groups', 'active');
+insert into ir_object (id, model_id) VALUES (17, 10);
+insert into ir_model (id, name, state) VALUES (18, 'ir.model_field', 'active');
+insert into ir_object (id, model_id) VALUES (18, 10);
 
 ---------------------------------
 -- Default data
 ---------------------------------
-insert into res_currency (id, name, symbol) VALUES (1, 'EUR', '€');
-insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('EUR', 'base', 'res.currency', true, 1);
-select setval('res_currency_id_seq', 2);
+insert into res_currency (id, name, symbol) VALUES (100, 'EUR', '€');
+insert into ir_object (id, model_id) VALUES (100, 12);
+insert into ir_model_data (id, name, module, model, noupdate, res_id) VALUES (101, 'EUR', 'base', 'res.currency', true, 100);
+insert into ir_object (id, model_id) VALUES (101, 13);
 
-insert into res_company (id, name, partner_id, currency_id) VALUES (1, 'My Company', 1, 1);
-insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('main_company', 'base', 'res.company', true, 1);
-select setval('res_company_id_seq', 2);
+insert into res_company (id, name, partner_id, currency_id) VALUES (102, 'My Company', 1, 1);
+insert into ir_object (id, model_id) VALUES (102, 14);
+insert into ir_model_data (id, name, module, model, noupdate, res_id) VALUES (103, 'main_company', 'base', 'res.company', true, 102);
+insert into ir_object (id, model_id) VALUES (103, 13);
 
-insert into res_partner (id, name, company_id) VALUES (1, 'My Company', 1);
-insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('main_partner', 'base', 'res.partner', true, 1);
-select setval('res_partner_id_seq', 2);
+insert into res_partner (id, name, company_id) VALUES (104, 'My Company', 1);
+insert into ir_object (id, model_id) VALUES (104, 15);
+insert into ir_model_data (id, name, module, model, noupdate, res_id) VALUES (105, 'main_partner', 'base', 'res.partner', true, 104);
+insert into ir_object (id, model_id) VALUES (105, 13);
 
 insert into res_users (id, login, password, active, partner_id, company_id) VALUES (1, 'admin', 'admin', true, 1, 1);
-insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('user_root', 'base', 'res.users', true, 1);
-select setval('res_users_id_seq', 2);
+insert into ir_object (id, model_id) VALUES (1, 16);
+insert into ir_model_data (id, name, module, model, noupdate, res_id) VALUES (106, 'user_root', 'base', 'res.users', true, 1);
+insert into ir_object (id, model_id) VALUES (106, 13);
 
-insert into res_groups (id, name) VALUES (1, 'Employee');
-insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('group_user', 'base', 'res.groups', true, 1);
-select setval('res_groups_id_seq', 2);
+insert into res_groups (id, name) VALUES (106, 'Employee');
+insert into ir_object (id, model_id) VALUES (106, 17);
+insert into ir_model_data (id, name, module, model, noupdate, res_id) VALUES (107, 'group_user', 'base', 'res.groups', true, 106);
+insert into ir_object (id, model_id) VALUES (107, 13);

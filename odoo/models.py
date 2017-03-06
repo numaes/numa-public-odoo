@@ -39,10 +39,10 @@ import psycopg2
 from lxml import etree
 from lxml.builder import E
 
-import odoo
 from . import SUPERUSER_ID
 from . import api
 from . import tools
+from . import fields
 from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .osv.query import Query
 from .tools import frozendict, lazy_classproperty, lazy_property, ormcache, \
@@ -285,10 +285,20 @@ class BaseModel(object):
                        SET name=%(name)s, info=%(info)s, transient=%(transient)s
                        WHERE model=%(model)s
                        RETURNING id """, params)
-        if not cr.rowcount:
-            cr.execute(""" INSERT INTO ir_model (model, name, info, state, transient)
-                           VALUES (%(model)s, %(name)s, %(info)s, %(state)s, %(transient)s)
+        if cr.rowcount:
+            cr.execute(""" UPDATE ir_object
+                           SET write_user=%(user)s,
+                               write_date=now() at time zone 'UTC'""",
+                       {'user': self.env.user.id})
+        else:
+            params['id'] = self._get_new_id()
+            cr.execute(""" INSERT INTO ir_model (id, model_id, name, info, state, transient)
+                           VALUES (%(id)s, %(model)s, %(name)s, %(info)s, %(state)s, %(transient)s)
                            RETURNING id """, params)
+            cr.execute(""" INSERT INTO ir_object (id, model_id, create_uid, write_uid, create_date, write_date)
+                           VALUES (%(id)s, 10, %(user)s, %(user)s, (now() at time zone 'UTC'), (now() at time zone 'UTC'))""",
+                       {'id': params['id'],
+                        'user': self.env.user.id})
         model = self.env['ir.model'].browse(cr.fetchone()[0])
         self._context['todo'].append((10, model.modified, [['name', 'info', 'transient']]))
 
@@ -298,9 +308,14 @@ class BaseModel(object):
             cr.execute("SELECT * FROM ir_model_data WHERE name=%s AND module=%s",
                        (xmlid, self._context['module']))
             if not cr.rowcount:
-                cr.execute(""" INSERT INTO ir_model_data (name, date_init, date_update, module, model, res_id)
-                               VALUES (%s, (now() at time zone 'UTC'), (now() at time zone 'UTC'), %s, %s, %s) """,
-                           (xmlid, self._context['module'], 'ir.model', model.id))
+                new_id = self._get_new_id()
+                cr.execute(""" INSERT INTO ir_model_data (id, name, date_init, date_update, module, model, res_id)
+                               VALUES (%s, %s, (now() at time zone 'UTC'), (now() at time zone 'UTC'), %s, %s, %s) """,
+                           (new_id, xmlid, self._context['module'], 'ir.model', model.id))
+                cr.execute(""" INSERT INTO ir_object (id, model_id, create_uid, write_uid, create_date, write_date)
+                               VALUES (%(id)s, 13, %(user)s, %(user)s, (now() at time zone 'UTC'), (now() at time zone 'UTC'))""",
+                           {'id': new_id,
+                            'user': self.env.user.id})
 
         # create/update the entries in 'ir.model.fields' and 'ir.model.data'
         cr.execute("SELECT * FROM ir_model_fields WHERE model=%s", (self._name,))
@@ -341,12 +356,19 @@ class BaseModel(object):
                 vals['serialization_field_id'] = serialization_field.id
 
             if field.name not in cols:
-                query = "INSERT INTO ir_model_fields (%s) VALUES (%s) RETURNING id" % (
+                new_id = self._get_new_id()
+                query = "INSERT INTO ir_model_fields (id, %s) VALUES (%s, %s) RETURNING id" % (
                     ",".join(vals),
+                    new_id,
                     ",".join("%%(%s)s" % name for name in vals),
                 )
                 cr.execute(query, vals)
                 field_id = cr.fetchone()[0]
+                cr.execute(""" INSERT INTO ir_object (id, model_id, create_uid, write_uid, create_date, write_date)
+                               VALUES (%(id)s, 18, %(user)s, %(user)s, (now() at time zone 'UTC'), (now() at time zone 'UTC'))""",
+                           {'id': new_id,
+                            'user': self.env.user.id})
+
                 self._context['todo'].append((20, Fields.browse(field_id).modified, [list(vals)]))
 
                 module = field._module or self._context.get('module')
@@ -355,9 +377,14 @@ class BaseModel(object):
                     cr.execute("SELECT name FROM ir_model_data WHERE name=%s", (xmlid,))
                     if cr.fetchone():
                         xmlid = xmlid + "_" + str(field_id)
-                    cr.execute(""" INSERT INTO ir_model_data (name, date_init, date_update, module, model, res_id)
-                                   VALUES (%s, (now() at time zone 'UTC'), (now() at time zone 'UTC'), %s, %s, %s) """,
-                               (xmlid, module, 'ir.model.fields', field_id))
+                    new_id = self._get_new_id()
+                    cr.execute(""" INSERT INTO ir_model_data (id, name, date_init, date_update, module, model, res_id)
+                                   VALUES (%s, %s, (now() at time zone 'UTC'), (now() at time zone 'UTC'), %s, %s, %s) """,
+                               (new_id, xmlid, module, 'ir.model.fields', field_id))
+                    cr.execute(""" INSERT INTO ir_object (id, model_id, create_uid, write_uid, create_date, write_date)
+                                   VALUES (%(id)s, 13, %(user)s, %(user)s, (now() at time zone 'UTC'), (now() at time zone 'UTC'))""",
+                               {'id': new_id,
+                                'user': self.env.user.id})
 
             elif not all(cols[field.name][key] == vals[key] for key in vals):
                 names = set(vals) - {'model', 'name'}
@@ -400,7 +427,7 @@ class BaseModel(object):
 
         * id is a "normal" field (with a specific getter)
         * create_uid, create_date, write_uid and write_date have become
-          "normal" fields
+          part of ir_object
         * $CONCURRENCY_CHECK_FIELD is a computed field with its computing
           method defined dynamically. Uses ``str(datetime.datetime.utcnow())``
           to get the same structure as the previous
@@ -429,10 +456,10 @@ class BaseModel(object):
             compute='_compute_display_name'))
 
         if self._log_access:
-            add('create_uid', fields.Many2one('res.users', string='Created by', automatic=True))
-            add('create_date', fields.Datetime(string='Created on', automatic=True))
-            add('write_uid', fields.Many2one('res.users', string='Last Updated by', automatic=True))
-            add('write_date', fields.Datetime(string='Last Updated on', automatic=True))
+            #add('create_uid', fields.Many2one('res.users', string='Created by', automatic=True))
+            #add('create_date', fields.Datetime(string='Created on', automatic=True))
+            #add('write_uid', fields.Many2one('res.users', string='Last Updated by', automatic=True))
+            #add('write_date', fields.Datetime(string='Last Updated on', automatic=True))
             last_modified_name = 'compute_concurrency_field_with_access'
         else:
             last_modified_name = 'compute_concurrency_field'
@@ -443,13 +470,13 @@ class BaseModel(object):
 
     def compute_concurrency_field(self):
         for record in self:
-            record[self.CONCURRENCY_CHECK_FIELD] = odoo.fields.Datetime.now()
+            record[self.CONCURRENCY_CHECK_FIELD] = fields.Datetime.now()
 
     @api.depends('create_date', 'write_date')
     def compute_concurrency_field_with_access(self):
         for record in self:
             record[self.CONCURRENCY_CHECK_FIELD] = \
-                record.write_date or record.create_date or odoo.fields.Datetime.now()
+                record.write_date or record.create_date or fields.Datetime.now()
 
     #
     # Goal: try to apply inheritance at the instantiation level and
@@ -510,7 +537,10 @@ class BaseModel(object):
         parents = [parents] if isinstance(parents, basestring) else (parents or [])
 
         # determine the model's name
-        name = cls._name or (len(parents) == 1 and parents[0]) or cls.__name__
+        name = cls._name or (len(parents) >= 1 and parents[0]) or cls.__name__
+
+        if 'ir.object' not in parents:
+            parents = ['ir.object'] + parents
 
         # all models except 'base' implicitly inherit from 'base'
         if name != 'base':
@@ -536,6 +566,14 @@ class BaseModel(object):
 
         # determine all the classes the model should inherit from
         bases = LastOrderedSet([cls])
+        model_bases = LastOrderedSet([cls])
+
+        proper_fields = LastOrderedSet()
+        for name, field in getmembers(cls, Field.__instancecheck__):
+            # do not retrieve magic, custom and inherited fields
+            if not any(field.args.get(k) for k in ('automatic', 'manual', 'inherited')):
+                proper_fields.add(name)
+
         for parent in parents:
             if parent not in pool:
                 raise TypeError("Model %r inherits from non-existing model %r." % (name, parent))
@@ -543,11 +581,17 @@ class BaseModel(object):
             if parent == name:
                 for base in parent_class.__bases__:
                     bases.add(base)
+                    model_bases.add(base)
+                    for field_name, field_def in base.proper_fields:
+                        if field_name not in proper_fields:
+                            proper_fields.add(field_name)
             else:
                 check_parent(cls, parent_class)
                 bases.add(parent_class)
                 parent_class._inherit_children.add(name)
         ModelClass.__bases__ = tuple(bases)
+        ModelClass.__parents__ = parents
+        ModelClass._proper_fields = proper_fields
 
         # determine the attributes of the model's class
         ModelClass._build_model_attributes(pool)
@@ -902,7 +946,7 @@ class BaseModel(object):
         return {'ids': ids, 'messages': messages}
 
     def _add_fake_fields(self, fields):
-        from odoo.fields import Char, Integer
+        from .fields import Char, Integer
         fields[None] = Char('rec_name')
         fields['id'] = Char('External ID')
         fields['.id'] = Integer('Database ID')
@@ -1157,7 +1201,7 @@ class BaseModel(object):
             not preceded by ``!`` and is not member of any of the groups
             preceded by ``!``
         """
-        from odoo.http import request
+        from .http import request
         user = self.env.user
 
         has_groups = []
@@ -2062,16 +2106,34 @@ class BaseModel(object):
         """
         # INVARIANT: alias is the SQL alias of model._table in query
         model, field = self, self._fields[fname]
-        while field.inherited:
-            # retrieve the parent model where field is inherited from
-            parent_model = self.env[field.related_field.model_name]
-            parent_fname = field.related[0]
-            # JOIN parent_model._table AS parent_alias ON alias.parent_fname = parent_alias.id
+        if field.inherited:
+            while field.inherited:
+                # retrieve the parent model where field is inherited from
+                parent_model = self.env[field.related_field.model_name]
+                parent_fname = field.related[0]
+
+                # JOIN parent_model._table AS parent_alias ON alias.parent_fname = parent_alias.id
+                parent_alias, _ = query.add_join(
+                    (alias, parent_model._table, parent_fname, 'id', parent_fname),
+                    implicit=implicit, outer=outer,
+                )
+                full_alias = self._inherits_join_calc(parent_alias, parent_fname, query, implicit=implicit, outer=outer)
+                splited_full_alias = full_alias.split('.')
+                parent_alias = splited_full_alias[0]
+                parent_fname = splited_full_alias[1]
+                model, alias, field = parent_model, parent_alias, field.related_field
+        elif field.name not in model._proper_fields:
+            parent_model = self.env[model._inherit_fields[field.name]]
+            parent_fname = 'id'
             parent_alias, _ = query.add_join(
-                (alias, parent_model._table, parent_fname, 'id', parent_fname),
-                implicit=implicit, outer=outer,
-            )
-            model, alias, field = parent_model, parent_alias, field.related_field
+                    (alias, parent_model._table, parent_fname, 'id', parent_fname),
+                    implicit=implicit, outer=outer,
+                )
+            full_alias = self._inherits_join_calc(parent_alias, parent_fname, query, implicit=implicit, outer=outer)
+            splited_full_alias = full_alias.split('.')
+            alias = splited_full_alias[0]
+            fname = splited_full_alias[1]
+
         # handle the case where the field is translated
         if field.translate is True:
             return model._generate_translated_field(alias, fname, query)
@@ -2352,6 +2414,9 @@ class BaseModel(object):
                 if not field.store:
                     continue
 
+                if name not in self._proper_fields:
+                    continue
+
                 if field.manual and not update_custom_fields:
                     # Don't update custom (also called manual) fields
                     continue
@@ -2586,7 +2651,7 @@ class BaseModel(object):
 
     @api.model_cr
     def _create_table(self):
-        self._cr.execute('CREATE TABLE "%s" (id SERIAL NOT NULL, PRIMARY KEY(id))' % (self._table,))
+        self._cr.execute('CREATE TABLE "%s" (id integer NOT NULL, PRIMARY KEY(id))' % (self._table,))
         self._cr.execute("COMMENT ON TABLE \"%s\" IS %%s" % self._table, (self._description,))
         _schema.debug("Table '%s': created", self._table)
 
@@ -2790,7 +2855,6 @@ class BaseModel(object):
                     self._add_field(name, field)
                 else:
                     self._add_field(name, field.new(**field.args))
-            cls._proper_fields = set(cls._fields)
 
         else:
             # retrieve fields from parent classes, and duplicate them on cls to
@@ -2802,22 +2866,36 @@ class BaseModel(object):
                 # do not retrieve magic, custom and inherited fields
                 if not any(field.args.get(k) for k in ('automatic', 'manual', 'inherited')):
                     self._add_field(name, field.new())
+
             self._add_magic_fields()
-            cls._proper_fields = set(cls._fields)
 
             cls.pool.model_cache[cls._model_cache_key] = cls
 
-        # 2. add custom fields
+        # 2. set inherit, not own modelfields
+        self._inherit_fields = {}
+        for field_name, field in self._inherit_fields.items():
+            if field_name not in self._proper_fields:
+                source_model = None
+                for model_name in reversed(self._parents):
+                    model = self.pool.model_cache[model_name]
+                    if field_name in model._fields:
+                        source_model = model._name
+                        self._inherit_fields[field_name] = source_model
+                        break
+                if not source_model:
+                    raise ValueError(_('Field %s could not be found in parents chain of %s! Something is really wrong') % (field_name, cls._name))
+
+        # 3. add custom fields
         self._add_manual_fields(partial)
 
-        # 3. make sure that parent models determine their own fields, then add
+        # 4. make sure that parent models determine their own fields, then add
         # inherited fields to cls
         self._inherits_check()
         for parent in self._inherits:
             self.env[parent]._setup_base(partial)
         self._add_inherited_fields()
 
-        # 4. initialize more field metadata
+        # 5. initialize more field metadata
         cls._field_computed = {}            # fields computed with the same method
         cls._field_inverses = Collector()   # inverse fields for related fields
         cls._field_triggers = Collector()   # list of (field, path) to invalidate
@@ -3098,7 +3176,7 @@ class BaseModel(object):
         # the query may involve several tables: we need fully-qualified names
         def qualify(field):
             col = field.name
-            res = self._inherits_join_calc(self._table, field.name, query)
+            res = self._inherits_join_calc(self._table, field.name, query, outer=True)
             if field.type == 'binary' and (context.get('bin_size') or context.get('bin_size_' + col)):
                 # PG 9.2 introduces conflicting pg_size_pretty(numeric) -> need ::cast
                 res = 'pg_size_pretty(length(%s)::bigint)' % res
@@ -3310,7 +3388,7 @@ class BaseModel(object):
     @api.multi
     def create_workflow(self):
         """ Create a workflow instance for the given records. """
-        from odoo import workflow
+        from . import workflow
         for res_id in self.ids:
             workflow.trg_create(self._uid, self._name, res_id, self._cr)
         return True
@@ -3318,7 +3396,7 @@ class BaseModel(object):
     @api.multi
     def delete_workflow(self):
         """ Delete the workflow instances bound to the given records. """
-        from odoo import workflow
+        from . import workflow
         for res_id in self.ids:
             workflow.trg_delete(self._uid, self._name, res_id, self._cr)
         self.invalidate_cache()
@@ -3327,7 +3405,7 @@ class BaseModel(object):
     @api.multi
     def step_workflow(self):
         """ Reevaluate the workflow instances of the given records. """
-        from odoo import workflow
+        from . import workflow
         for res_id in self.ids:
             workflow.trg_write(self._uid, self._name, res_id, self._cr)
         return True
@@ -3335,7 +3413,7 @@ class BaseModel(object):
     @api.multi
     def signal_workflow(self, signal):
         """ Send the workflow signal, and return a dict mapping ids to workflow results. """
-        from odoo import workflow
+        from . import workflow
         result = {}
         for res_id in self.ids:
             result[res_id] = workflow.trg_validate(self._uid, self._name, res_id, signal, self._cr)
@@ -3346,7 +3424,7 @@ class BaseModel(object):
         """ Rebind the workflow instance bound to the given 'old' record IDs to
             the given 'new' IDs. (``old_new_ids`` is a list of pairs ``(old, new)``.
         """
-        from odoo import workflow
+        from . import workflow
         for old_id, new_id in old_new_ids:
             workflow.trg_redirect(self._uid, self._name, old_id, new_id, self._cr)
         self.invalidate_cache()
