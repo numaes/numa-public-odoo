@@ -285,6 +285,7 @@ var FieldTextHtml = widget.extend({
         return src;
     },
     initialize_content: function() {
+        var self = this;
         this.$el.closest('.modal-body').css('max-height', 'none');
         this.$iframe = this.$el.find('iframe');
         this.document = null;
@@ -293,6 +294,14 @@ var FieldTextHtml = widget.extend({
         this.editor = false;
         window.odoo[this.callback+"_updown"] = null;
         this.$iframe.attr("src", this.get_url());
+        this.view.on("load_record", this, function(r){
+            if (!self.$body.find('.o_dirty').length){
+                var url = self.get_url();
+                if(url !== self.$iframe.attr("src")){
+                    self.$iframe.attr("src", url);
+                }
+            }
+        });
     },
     on_content_loaded: function () {
         var self = this;
@@ -351,7 +360,12 @@ var FieldTextHtml = widget.extend({
         });
     },
     render_value: function() {
-        if (this.lang !== this.view.dataset.context.lang || this.$iframe.attr('src').match(/[?&]edit_translations=1/)) {
+        if (this.$iframe.attr('src').match(/[?&]edit_translations=1/)) {
+            return;
+        }
+        // ONLY HAVE THIS IN 9.0 AND SAAS-11
+        var is_editor_onchange = this.get('value') === '<p>on_change_model_and_list</p>';
+        if (this.lang !== this.view.dataset.context.lang && !is_editor_onchange) {
             return;
         }
         var value = (this.get('value') || "").replace(/^<p[^>]*>(\s*|<br\/?>)<\/p>$/, '');
