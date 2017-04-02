@@ -1221,12 +1221,13 @@ class mrp_production(osv.osv):
         # Take routing location as a Source Location.
         source_location_id = production.location_src_id.id
         prod_location_id = source_location_id
+        destination_location_id = production.product_id.property_stock_production.id
         prev_move= False
-        if production.bom_id.routing_id and production.bom_id.routing_id.location_id and production.bom_id.routing_id.location_id.id != source_location_id:
+        if production.bom_id.routing_id and production.bom_id.routing_id.location_id and \
+           production.bom_id.routing_id.location_id.id != source_location_id and production.bom_id.routing_id.location_id.id != destination_location_id:
             source_location_id = production.bom_id.routing_id.location_id.id
             prev_move = True
 
-        destination_location_id = production.product_id.property_stock_production.id
         move_id = stock_move.create(cr, uid, {
             'name': production.name,
             'date': production.date_planned,

@@ -229,6 +229,14 @@ class account_payment(models.Model):
         if self.partner_type:
             return {'domain': {'partner_id': [(self.partner_type, '=', True)]}}
 
+    @api.onchange('journal_id')
+    def onchange_journal_id(self):
+        res = {}
+        if self.journal_id:
+            self.currency_id = self.journal_id.currency_id or self.journal_id.company_id.currency_id
+            self.amount = self._compute_total_invoices_amount()
+        return res
+
     @api.onchange('payment_type')
     def _onchange_payment_type(self):
         if not self.invoice_ids:
