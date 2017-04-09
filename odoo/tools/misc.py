@@ -36,7 +36,6 @@ try:
 except ImportError:
     html2text = None
 
-from config import config
 from cache import *
 from .parse_version import parse_version 
 
@@ -60,8 +59,8 @@ etree.set_default_parser(etree.XMLParser(resolve_entities=False))
 
 def find_in_path(name):
     path = os.environ.get('PATH', os.defpath).split(os.pathsep)
-    if config.get('bin_path') and config['bin_path'] != 'None':
-        path.append(config['bin_path'])
+    if odoo.tools.config.get('bin_path') and odoo.tools.config['bin_path'] != 'None':
+        path.append(odoo.tools.config['bin_path'])
     return which(name, path=os.pathsep.join(path))
 
 def _exec_pipe(prog, args, env=None):
@@ -84,8 +83,8 @@ def exec_command_pipe(name, *args):
 
 def find_pg_tool(name):
     path = None
-    if config['pg_path'] and config['pg_path'] != 'None':
-        path = config['pg_path']
+    if odoo.tools.config['pg_path'] and codoo.tools.onfig['pg_path'] != 'None':
+        path = odoo.tools.config['pg_path']
     try:
         return which(name, path=path)
     except IOError:
@@ -152,7 +151,7 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
     """
     import odoo.modules as addons
     adps = addons.module.ad_paths
-    rtp = os.path.normcase(os.path.abspath(config['root_path']))
+    rtp = os.path.normcase(os.path.abspath(odoo.tools.config['root_path']))
 
     basename = name
 
@@ -950,8 +949,8 @@ class CountingStream(object):
 def stripped_sys_argv(*strip_args):
     """Return sys.argv with some arguments stripped, suitable for reexecution or subprocesses"""
     strip_args = sorted(set(strip_args) | set(['-s', '--save', '-u', '--update', '-i', '--init', '--i18n-overwrite']))
-    assert all(config.parser.has_option(s) for s in strip_args)
-    takes_value = dict((s, config.parser.get_option(s).takes_value()) for s in strip_args)
+    assert all(odoo.tools.config.parser.has_option(s) for s in strip_args)
+    takes_value = dict((s, odoo.tools.config.parser.get_option(s).takes_value()) for s in strip_args)
 
     longs, shorts = list(tuple(y) for _, y in groupby(strip_args, lambda x: x.startswith('--')))
     longs_eq = tuple(l + '=' for l in longs if takes_value[l])

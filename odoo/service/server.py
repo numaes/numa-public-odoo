@@ -892,13 +892,12 @@ def load_test_file_py(registry, test_file):
 def preload_registries(dbnames):
     """ Preload a registries, possibly run a test file."""
     # TODO: move all config checks to args dont check tools.config here
-    config = odoo.tools.config
-    test_file = config['test_file']
+    test_file = odoo.tools.config['test_file']
     dbnames = dbnames or []
     rc = 0
     for dbname in dbnames:
         try:
-            update_module = config['init'] or config['update']
+            update_module = odoo.tools.config['init'] or odoo.tools.config['update']
             registry = Registry.new(dbname, update_module=update_module)
             # run test_file if provided
             if test_file:
