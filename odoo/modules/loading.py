@@ -131,9 +131,11 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         model_names = registry.load(cr, package)
 
         loaded_modules.append(package.name)
-        if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
-            registry.setup_models(cr, partial=True)
-            registry.init_models(cr, model_names, {'module': package.name})
+        #if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
+        #    registry.setup_models(cr, partial=True)
+        #    registry.init_models(cr, model_names, {'module': package.name})
+        registry.setup_models(cr, partial=True)
+        registry.init_models(cr, model_names, {'module': package.name})
 
         idref = {}
 
@@ -429,5 +431,8 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             for module_name in cr.fetchall():
                 report.record_result(odoo.modules.module.run_unit_tests(module_name[0], cr.dbname, position=runs_post_install))
             _logger.log(25, "All post-tested in %.2fs, %s queries", time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
+    except Exception, e:
+        _logger.log(25, u"Exception on init %s", unicode(e))
+
     finally:
         cr.close()

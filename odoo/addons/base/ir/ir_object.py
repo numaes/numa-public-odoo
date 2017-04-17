@@ -16,20 +16,16 @@ _logger = logging.getLogger(__name__)
 
 
 class IrObject(models.Model):
-    _name = 'ir.model'
+    _name = 'ir.object'
 
     model_id = fields.Many2one('ir.model', 'Model', required=True, readonly=True)
-    create_user = fields.Many2one('res.users', 'Created by')
+    create_uid = fields.Many2one('res.users', 'Created by')
     create_date = fields.Datetime('Create date')
-    write_user = fields.Many2one('res.users', 'Last Written by')
+    write_uid = fields.Many2one('res.users', 'Last Written by')
     write_date = fields.Datetime('Last written date')
 
     @api.model
     def create(self, vals):
-        raise UserError(_('ir.object should not be manipulated via ORM'))
-
-    @api.multi
-    def write(self, vals):
         raise UserError(_('ir.object should not be manipulated via ORM'))
 
     @api.multi

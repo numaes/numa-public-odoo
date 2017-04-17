@@ -209,24 +209,36 @@ CREATE TABLE ir_object (
 ---------------------------------
 -- Default objects
 ---------------------------------
-insert into ir_model (id, name, state) VALUES (10, 'ir.model', 'active');
+insert into ir_model (id, model, state) VALUES (10, 'ir.model', 'active');
 insert into ir_object (id, model_id) VALUES (10, 10);
-insert into ir_model (id, name, state) VALUES (11, 'ir.object', 'active');
+insert into ir_model (id, model, state) VALUES (11, 'ir.object', 'active');
 insert into ir_object (id, model_id) VALUES (11, 10);
-insert into ir_model (id, name, state) VALUES (12, 'res.currency', 'active');
+insert into ir_model (id, model, state) VALUES (12, 'res.currency', 'active');
 insert into ir_object (id, model_id) VALUES (12, 10);
-insert into ir_model (id, name, state) VALUES (13, 'ir.model.data', 'active');
+insert into ir_model (id, model, state) VALUES (13, 'ir.model.data', 'active');
 insert into ir_object (id, model_id) VALUES (13, 10);
-insert into ir_model (id, name, state) VALUES (14, 'res.company', 'active');
+insert into ir_model (id, model, state) VALUES (14, 'res.company', 'active');
 insert into ir_object (id, model_id) VALUES (14, 10);
-insert into ir_model (id, name, state) VALUES (15, 'res.partner', 'active');
+insert into ir_model (id, model, state) VALUES (15, 'res.partner', 'active');
 insert into ir_object (id, model_id) VALUES (15, 10);
-insert into ir_model (id, name, state) VALUES (16, 'res.users', 'active');
+insert into ir_model (id, model, state) VALUES (16, 'res.users', 'active');
 insert into ir_object (id, model_id) VALUES (16, 10);
-insert into ir_model (id, name, state) VALUES (17, 'res.groups', 'active');
+insert into ir_model (id, model, state) VALUES (17, 'res.groups', 'active');
 insert into ir_object (id, model_id) VALUES (17, 10);
-insert into ir_model (id, name, state) VALUES (18, 'ir.model_field', 'active');
+insert into ir_model (id, model, state) VALUES (18, 'ir.model_field', 'active');
 insert into ir_object (id, model_id) VALUES (18, 10);
+-- ATENTION: keep in synch with models/dp.py!!!!
+insert into ir_model (id, model, state) VALUES (19, 'ir.module_category', 'active');
+insert into ir_object (id, model_id) VALUES (19, 10);
+insert into ir_model (id, model, state) VALUES (20, 'ir.module_module', 'active');
+insert into ir_object (id, model_id) VALUES (20, 10);
+insert into ir_model (id, model, state) VALUES (21, 'ir.module_module_dependency', 'active');
+insert into ir_object (id, model_id) VALUES (21, 10);
+insert into ir_model (id, model, state) VALUES (22, 'ir.model_constraint', 'active');
+insert into ir_object (id, model_id) VALUES (22, 10);
+insert into ir_model (id, model, state) VALUES (23, 'ir.model_relation', 'active');
+insert into ir_object (id, model_id) VALUES (23, 10);
+
 
 ---------------------------------
 -- Default data
@@ -251,7 +263,11 @@ insert into ir_object (id, model_id) VALUES (1, 16);
 insert into ir_model_data (id, name, module, model, noupdate, res_id) VALUES (106, 'user_root', 'base', 'res.users', true, 1);
 insert into ir_object (id, model_id) VALUES (106, 13);
 
-insert into res_groups (id, name) VALUES (106, 'Employee');
-insert into ir_object (id, model_id) VALUES (106, 17);
-insert into ir_model_data (id, name, module, model, noupdate, res_id) VALUES (107, 'group_user', 'base', 'res.groups', true, 106);
-insert into ir_object (id, model_id) VALUES (107, 13);
+insert into res_groups (id, name) VALUES (107, 'Employee');
+insert into ir_object (id, model_id) VALUES (107, 17);
+insert into ir_model_data (id, name, module, model, noupdate, res_id) VALUES (108, 'group_user', 'base', 'res.groups', true, 106);
+insert into ir_object (id, model_id) VALUES (108, 13);
+
+insert into ir_module_module (id, name) VALUES (109, 'base');
+insert into ir_object (id, model_id) VALUES (109, 20);
+

@@ -29,6 +29,8 @@ import logging
 import operator
 import pytz
 import re
+import random
+import sys
 from collections import defaultdict, MutableMapping, OrderedDict
 from inspect import getmembers, currentframe
 from operator import attrgetter, itemgetter
@@ -42,7 +44,6 @@ from lxml.builder import E
 from . import SUPERUSER_ID
 from . import api
 from . import tools
-from . import fields
 from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .osv.query import Query
 from .tools import frozendict, lazy_classproperty, lazy_property, ormcache, \
@@ -286,20 +287,21 @@ class BaseModel(object):
                        WHERE model=%(model)s
                        RETURNING id """, params)
         if cr.rowcount:
+            params['id'] = cr.fetchall()[0][0]
             cr.execute(""" UPDATE ir_object
-                           SET write_user=%(user)s,
+                           SET write_uid=%(user)s,
                                write_date=now() at time zone 'UTC'""",
                        {'user': self.env.user.id})
         else:
             params['id'] = self._get_new_id()
-            cr.execute(""" INSERT INTO ir_model (id, model_id, name, info, state, transient)
+            cr.execute(""" INSERT INTO ir_model (id, model, name, info, state, transient)
                            VALUES (%(id)s, %(model)s, %(name)s, %(info)s, %(state)s, %(transient)s)
                            RETURNING id """, params)
             cr.execute(""" INSERT INTO ir_object (id, model_id, create_uid, write_uid, create_date, write_date)
                            VALUES (%(id)s, 10, %(user)s, %(user)s, (now() at time zone 'UTC'), (now() at time zone 'UTC'))""",
                        {'id': params['id'],
                         'user': self.env.user.id})
-        model = self.env['ir.model'].browse(cr.fetchone()[0])
+        model = self.env['ir.model'].browse(params['id'])
         self._context['todo'].append((10, model.modified, [['name', 'info', 'transient']]))
 
         if self._module == self._context.get('module'):
@@ -539,11 +541,10 @@ class BaseModel(object):
         # determine the model's name
         name = cls._name or (len(parents) >= 1 and parents[0]) or cls.__name__
 
-        if 'ir.object' not in parents:
-            parents = ['ir.object'] + parents
-
         # all models except 'base' implicitly inherit from 'base'
-        if name != 'base':
+        if not cls._abstract and name not in ['ir.object', 'base']:
+            parents = list(parents) + ['ir.object']
+        if name not in ['ir.object', 'base']:
             parents = list(parents) + ['base']
 
         # create or retrieve the model's class
@@ -568,11 +569,13 @@ class BaseModel(object):
         bases = LastOrderedSet([cls])
         model_bases = LastOrderedSet([cls])
 
+        own_fields = LastOrderedSet()
+        for fname, field in getmembers(cls, Field.__instancecheck__):
+            own_fields.add(fname)
+
         proper_fields = LastOrderedSet()
-        for name, field in getmembers(cls, Field.__instancecheck__):
-            # do not retrieve magic, custom and inherited fields
-            if not any(field.args.get(k) for k in ('automatic', 'manual', 'inherited')):
-                proper_fields.add(name)
+        for fname, field in getmembers(cls, Field.__instancecheck__):
+            proper_fields.add(fname)
 
         for parent in parents:
             if parent not in pool:
@@ -582,7 +585,7 @@ class BaseModel(object):
                 for base in parent_class.__bases__:
                     bases.add(base)
                     model_bases.add(base)
-                    for field_name, field_def in base.proper_fields:
+                    for field_name in base._proper_fields:
                         if field_name not in proper_fields:
                             proper_fields.add(field_name)
             else:
@@ -591,7 +594,14 @@ class BaseModel(object):
                 parent_class._inherit_children.add(name)
         ModelClass.__bases__ = tuple(bases)
         ModelClass.__parents__ = parents
-        ModelClass._proper_fields = proper_fields
+        ModelClass.__bases__[0]._proper_fields = proper_fields
+
+        #POLI
+        if name in pool:
+            for ofn in ModelClass._own_fields:
+                own_fields.add(ofn)
+
+        ModelClass.__bases__[0]._own_fields = list(own_fields)
 
         # determine the attributes of the model's class
         ModelClass._build_model_attributes(pool)
@@ -648,8 +658,14 @@ class BaseModel(object):
         cls._depends = {}
         cls._constraints = {}
         cls._sql_constraints = []
+        # POLI
+        cls._inherit_models = {}
 
         for base in reversed(cls.__bases__):
+            # POLI
+            if not base._abstract and base._name != cls._name:
+                cls._inherit_models.update({f: base._name for f in base._own_fields})
+
             if not getattr(base, 'pool', None):
                 # the following attributes are not taken from model classes
                 cls._description = base._description or cls._description
@@ -2097,7 +2113,7 @@ class BaseModel(object):
     def _inherits_join_calc(self, alias, fname, query, implicit=True, outer=False):
         """
         Adds missing table select and join clause(s) to ``query`` for reaching
-        the field coming from an '_inherits' parent table (no duplicates).
+        the field coming from an '_inherits' or POLI inherit parent table (no duplicates).
 
         :param alias: name of the initial SQL alias
         :param fname: name of inherited field to reach
@@ -2133,6 +2149,17 @@ class BaseModel(object):
             splited_full_alias = full_alias.split('.')
             alias = splited_full_alias[0]
             fname = splited_full_alias[1]
+
+        # POLI
+        elif field.name not in model._own_fields and field.name in model._inherit_models:
+            parent_model = self.env[model._inherit_models[field.name]]
+            parent_fname = 'id'
+            alias, _ = query.add_join(
+                    (alias, parent_model._table, parent_fname, 'id', parent_fname),
+                    implicit=False, outer=True,
+                )
+            fname = field.name
+
 
         # handle the case where the field is translated
         if field.translate is True:
@@ -2223,13 +2250,20 @@ class BaseModel(object):
             """, (constraint_name, module))
         constraints = cr.dictfetchone()
         if not constraints:
+            newId = self._get_new_id()
             cr.execute("""
                 INSERT INTO ir_model_constraint
-                    (name, date_init, date_update, module, model, type, definition)
-                VALUES (%s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC',
+                    (id, name, date_init, date_update, module, model, type, definition)
+                VALUES (%s, %s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC',
                     (SELECT id FROM ir_module_module WHERE name=%s),
                     (SELECT id FROM ir_model WHERE model=%s), %s, %s)""",
-                    (constraint_name, module, self._name, type, definition))
+                    (newId, constraint_name, module, self._name, type, definition))
+            cr.execute("""
+                INSERT INTO ir_object (id, model_id, create_uid, write_uid, create_date, write_date)
+                VALUES (%(id)s, 22, %(user)s, %(user)s, (now() at time zone 'UTC'), (now() at time zone 'UTC'))""",
+                       {'id': newId,
+                        'user': self.env.user.id})
+
         elif constraints['type'] != type or (definition and constraints['definition'] != definition):
             cr.execute("""
                 UPDATE ir_model_constraint
@@ -2255,11 +2289,18 @@ class BaseModel(object):
                 AND ir_module_module.name=%s
             """, (relation_table, module))
         if not cr.rowcount:
-            cr.execute("""INSERT INTO ir_model_relation (name, date_init, date_update, module, model)
-                                 VALUES (%s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC',
+            newId = self._get_new_id()
+            cr.execute("""INSERT INTO ir_model_relation (id, name, date_init, date_update, module, model)
+                                 VALUES (%s, %s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC',
                     (SELECT id FROM ir_module_module WHERE name=%s),
                     (SELECT id FROM ir_model WHERE model=%s))""",
-                       (relation_table, module, self._name))
+                       (newId, relation_table, module, self._name))
+            cr.execute("""
+                INSERT INTO ir_object (id, model_id, create_uid, write_uid, create_date, write_date)
+                VALUES (%(id)s, 23, %(user)s, %(user)s, (now() at time zone 'UTC'), (now() at time zone 'UTC'))""",
+                       {'id': newId,
+                        'user': self.env.user.id})
+
             self.invalidate_cache()
 
     # checked version: for direct m2o starting from ``self``
@@ -2414,7 +2455,8 @@ class BaseModel(object):
                 if not field.store:
                     continue
 
-                if name not in self._proper_fields:
+                # POLI
+                if name not in self._own_fields:
                     continue
 
                 if field.manual and not update_custom_fields:
@@ -3469,8 +3511,11 @@ class BaseModel(object):
         Attachment = self.env['ir.attachment']
 
         for sub_ids in cr.split_for_in_conditions(self.ids):
-            query = "DELETE FROM %s WHERE id IN %%s" % self._table
-            cr.execute(query, (sub_ids,))
+            unlinkTables = set([(base._name, base._table) for base in self.__bases__])
+            unlinkTables.add((self._name, self._table))
+            for name, table in unlinkTables:
+                query = "DELETE FROM %s WHERE id IN %%s" % table
+                cr.execute(query, (sub_ids,))
 
             # Removing the ir_model_data reference if the record being deleted
             # is a record created by xml/csv file, as these are not connected
@@ -3479,27 +3524,27 @@ class BaseModel(object):
             # Note: the following steps are performed as superuser to avoid
             # access rights restrictions, and with no context to avoid possible
             # side-effects during admin calls.
-            data = Data.search([('model', '=', self._name), ('res_id', 'in', sub_ids)])
-            if data:
-                data.unlink()
+                data = Data.search([('model', '=', name), ('res_id', 'in', sub_ids)])
+                if data:
+                    data.unlink()
 
             # For the same reason, remove the relevant records in ir_values
-            refs = ['%s,%s' % (self._name, i) for i in sub_ids]
-            values = Values.search(['|', ('value', 'in', refs),
-                                         '&', ('model', '=', self._name),
-                                              ('res_id', 'in', sub_ids)])
-            if values:
-                values.unlink()
+                refs = ['%s,%s' % (name, i) for i in sub_ids]
+                values = Values.search(['|', ('value', 'in', refs),
+                                             '&', ('model', '=', name),
+                                                  ('res_id', 'in', sub_ids)])
+                if values:
+                    values.unlink()
 
             # For the same reason, remove the relevant records in ir_attachment
             # (the search is performed with sql as the search method of
             # ir_attachment is overridden to hide attachments of deleted
             # records)
-            query = 'SELECT id FROM ir_attachment WHERE res_model=%s AND res_id IN %s'
-            cr.execute(query, (self._name, sub_ids))
-            attachments = Attachment.browse([row[0] for row in cr.fetchall()])
-            if attachments:
-                attachments.unlink()
+                query = 'SELECT id FROM ir_attachment WHERE res_model=%s AND res_id IN %s'
+                cr.execute(query, (name, sub_ids))
+                attachments = Attachment.browse([row[0] for row in cr.fetchall()])
+                if attachments:
+                    attachments.unlink()
 
         # invalidate the *whole* cache, since the orm does not handle all
         # changes made in the database, like cascading delete!
@@ -3693,22 +3738,37 @@ class BaseModel(object):
             else:
                 updend.append(name)
 
-        if self._log_access:
-            updates.append(('write_uid', '%s', self._uid))
-            updates.append(('write_date', "(now() at time zone 'UTC')"))
-            direct.append('write_uid')
-            direct.append('write_date')
+        # POLI
+        #if self._log_access:
+        #    updates.append(('write_uid', '%s', self._uid))
+        #    updates.append(('write_date', "(now() at time zone 'UTC')"))
+        #    direct.append('write_uid')
+        #    direct.append('write_date')
 
         if updates:
             self.check_access_rule('write')
-            query = 'UPDATE "%s" SET %s WHERE id IN %%s' % (
-                self._table, ','.join('"%s"=%s' % (u[0], u[1]) for u in updates),
-            )
-            params = tuple(u[2] for u in updates if len(u) > 2)
-            for sub_ids in cr.split_for_in_conditions(set(self.ids)):
-                cr.execute(query, params + (sub_ids,))
-                if cr.rowcount != len(sub_ids):
-                    raise MissingError(_('One of the records you are trying to modify has already been deleted (Document type: %s).') % self._description)
+
+            writeValues = {}
+            for field_name, field_value in updates:
+                if field_name in self._own_fields:
+                    tableName = self._table
+                elif field_name in self._inherit_models:
+                    tableName = self._inherit_models[field_name]
+                else:
+                    raise TypeError("Model %s does not have a field named %s." % (self._name, field_name))
+                if tableName not in writeValues:
+                    writeValues[tableName] = []
+                writeValues[tableName].append((field_name, field_value))
+
+            for tableName, valuesToUpdate in writeValues.items():
+                query = 'UPDATE "%s" SET %s WHERE id IN %%s' % (
+                    tableName, ','.join('"%s"=%s' % (u[0], u[1]) for u in valuesToUpdate),
+                )
+                params = tuple(u[2] for u in updates if len(u) > 2)
+                for sub_ids in cr.split_for_in_conditions(set(self.ids)):
+                    cr.execute(query, params + (sub_ids,))
+                    if cr.rowcount != len(sub_ids):
+                        raise MissingError(_('One of the records you are trying to modify has already been deleted (Document type: %s).') % self._description)
 
             # TODO: optimize
             for name in direct:
@@ -3900,6 +3960,16 @@ class BaseModel(object):
         return record
 
     @api.model
+    def _get_new_id(self):
+        newId = None
+        while not newId:
+            newId = random.randint(1000, 20000000)
+            self.env.cr.execute("""SELECT id from ir_object WHERE id=%s""" % newId)
+            if self.env.cr.rowcount:
+                newId = None
+        return newId
+
+    @api.model
     def _create(self, vals):
         # low-level implementation of create()
         if self.is_transient():
@@ -3963,23 +4033,42 @@ class BaseModel(object):
             if hasattr(field, 'selection') and val:
                 self._check_selection_field_value(name, val)
 
-        if self._log_access:
-            updates.append(('create_uid', '%s', self._uid))
-            updates.append(('write_uid', '%s', self._uid))
-            updates.append(('create_date', "(now() at time zone 'UTC')"))
-            updates.append(('write_date', "(now() at time zone 'UTC')"))
+        # POLI
+        #if self._log_access:
+        #    updates.append(('create_uid', '%s', self._uid))
+        #    updates.append(('write_uid', '%s', self._uid))
+        #    updates.append(('create_date', "(now() at time zone 'UTC')"))
+        #    updates.append(('write_date', "(now() at time zone 'UTC')"))
 
         # insert a row for this record
         cr = self._cr
-        query = """INSERT INTO "%s" (%s) VALUES(%s) RETURNING id""" % (
-                self._table,
-                ', '.join('"%s"' % u[0] for u in updates),
-                ', '.join(u[1] for u in updates),
-            )
-        cr.execute(query, tuple(u[2] for u in updates if len(u) > 2))
+        id_new = self._get_new_id()
+
+        createValues = {}
+
+        for base in self.__bases__:
+            if base._name not in createValues:
+                createValues[base._name] = []
+
+        for field_name, field_value in updates:
+            if field_name in self._own_fields:
+                tableName = self._table
+            elif field_name in self._inherit_models:
+                tableName = self._inherit_models[field_name]
+            else:
+                raise TypeError("Model %s does not have a field named %s." % (self._name, field_name))
+            createValues[tableName].append((field_name, field_value))
+
+        for tableName, valuesToUpdate in createValues.items():
+            query = """INSERT INTO "%s" (id %s) VALUES(%s, %s)""" % (
+                    tableName,
+                    valuesToUpdate and ',' + ', '.join('"%s"' % u[0] for u in valuesToUpdate) or '',
+                    str(id_new),
+                    ', '.join(u[1] for u in valuesToUpdate),
+                )
+            cr.execute(query, tuple(u[2] for u in valuesToUpdate if len(u) > 2))
 
         # from now on, self is the new record
-        id_new, = cr.fetchone()
         self = self.browse(id_new)
 
         if self.env.lang and self.env.lang != 'en_US':

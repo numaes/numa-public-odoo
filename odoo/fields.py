@@ -2258,6 +2258,8 @@ class Many2many(_RelationalMulti):
         )
 
     def _setup_regular_base(self, model):
+        from .models import check_pg_name
+
         super(Many2many, self)._setup_regular_base(model)
         if self.store:
             if not (self.relation and self.column1 and self.column2):
@@ -2440,4 +2442,4 @@ class Id(Field):
 # imported here to avoid dependency cycle issues
 from odoo import SUPERUSER_ID
 from .exceptions import AccessError, MissingError, UserError
-from .models import check_pg_name, BaseModel, IdType
+from .models import BaseModel, IdType

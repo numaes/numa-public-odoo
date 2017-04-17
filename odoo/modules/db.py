@@ -6,6 +6,12 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
+# ATENTION: Keep in synch with base.sql
+MODEL_DATA_MODEL_ID = 13
+MODULE_CATEGORY_MODEL_ID = 19
+MODULE_MODULE_MODEL_ID = 20
+MODULE_MODULE_DEPENDENCY_MODEL_ID = 21
+
 def is_initialized(cr):
     """ Check if a database has been initialized for the ORM.
 
@@ -35,6 +41,8 @@ def initialize(cr):
     finally:
         base_sql_file.close()
 
+    initializeId = 500
+
     for i in odoo.modules.get_modules():
         mod_path = odoo.modules.get_module_path(i)
         if not mod_path:
@@ -54,9 +62,10 @@ def initialize(cr):
             state = 'uninstallable'
 
         cr.execute('INSERT INTO ir_module_module \
-                (author, website, name, shortdesc, description, \
+                (id, author, website, name, shortdesc, description, \
                     category_id, auto_install, state, web, license, application, icon, sequence, summary) \
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id', (
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id', (
+            initializeId,
             info['author'],
             info['website'], i, info['name'],
             info['description'], category_id,
@@ -66,13 +75,22 @@ def initialize(cr):
             info['application'], info['icon'],
             info['sequence'], info['summary']))
         id = cr.fetchone()[0]
+        cr.execute('INSERT INTO ir_object (id, model_id) VALUES (%s, %s)',
+                   (initializeId, MODULE_MODULE_MODEL_ID))
+        initializeId += 1
         cr.execute('INSERT INTO ir_model_data \
-            (name,model,module, res_id, noupdate) VALUES (%s,%s,%s,%s,%s)', (
-                'module_'+i, 'ir.module.module', 'base', id, True))
+            (id, name,model,module, res_id, noupdate) VALUES (%s, %s,%s,%s,%s,%s)', (
+                initializeId, 'module_'+i, 'ir.module.module', 'base', id, True))
+        cr.execute('INSERT INTO ir_object (id, model_id) VALUES (%s, %s)',
+                   (initializeId, MODEL_DATA_MODEL_ID))
+        initializeId += 1
         dependencies = info['depends']
         for d in dependencies:
             cr.execute('INSERT INTO ir_module_module_dependency \
-                    (module_id,name) VALUES (%s, %s)', (id, d))
+                    (id, module_id,name) VALUES (%s, %s, %s)', (initializeId, id, d))
+            cr.execute('INSERT INTO ir_object (id, model_id) VALUES (%s, %s)',
+                       (initializeId, MODULE_MODULE_DEPENDENCY_MODEL_ID))
+            initializeId += 1
 
     # Install recursively all auto-installing modules
     while True:
@@ -98,6 +116,9 @@ def create_categories(cr, categories):
     """
     p_id = None
     category = []
+
+    categoryId = 200
+
     while categories:
         category.append(categories[0])
         xml_id = 'module_category_' + ('_'.join(map(lambda x: x.lower(), category))).replace('&', 'and').replace(' ', '_')
@@ -108,11 +129,17 @@ def create_categories(cr, categories):
         c_id = cr.fetchone()
         if not c_id:
             cr.execute('INSERT INTO ir_module_category \
-                    (name, parent_id) \
-                    VALUES (%s, %s) RETURNING id', (categories[0], p_id))
-            c_id = cr.fetchone()[0]
-            cr.execute('INSERT INTO ir_model_data (module, name, res_id, model) \
-                       VALUES (%s, %s, %s, %s)', ('base', xml_id, c_id, 'ir.module.category'))
+                    (id, name, parent_id) \
+                    VALUES (%s, %s, %s) RETURNING id', (categoryId, categories[0], p_id))
+            cr.execute('INSERT INTO ir_object (id, model_id) VALUES (%s, %s)',
+                       (categoryId, MODULE_CATEGORY_MODEL_ID))
+            c_id = categoryId
+            categoryId += 1
+            cr.execute('INSERT INTO ir_model_data (id, module, name, res_id, model) \
+                       VALUES (%s, %s, %s, %s, %s)', (categoryId, 'base', xml_id, c_id, 'ir.module.category'))
+            cr.execute('INSERT INTO ir_object (id, model_id) VALUES (%s, %s)',
+                       (categoryId, MODEL_DATA_MODEL_ID))
+            categoryId += 1
         else:
             c_id = c_id[0]
         p_id = c_id
