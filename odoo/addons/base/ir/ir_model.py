@@ -457,6 +457,10 @@ class IrModelFields(models.Model):
             This method prevents the modification/deletion of many2one fields
             that have an inverse one2many, for instance.
         """
+        self = self.filtered(lambda record: record.state == 'manual')
+        if not self:
+            return
+
         for record in self:
             model = self.env[record.model]
             field = model._fields[record.name]
@@ -472,14 +476,16 @@ class IrModelFields(models.Model):
 
         # remove fields from registry, and check that views are not broken
         fields = [self.env[record.model]._pop_field(record.name) for record in self]
+        domain = expression.OR([('arch_db', 'like', record.name)] for record in self)
+        views = self.env['ir.ui.view'].search(domain)
         try:
-            domain = expression.OR([('arch_db', 'like', record.name)] for record in self)
-            views = self.env['ir.ui.view'].search(domain)
-            views._check_xml()
+            for view in views:
+                view._check_xml()
         except Exception:
             raise UserError("\n".join([
                 _("Cannot rename/delete fields that are still present in views:"),
-                ", ".join(map(str, fields)),
+                _("Fields:") + " " + ", ".join(map(str, fields)),
+                _("View:") + " " + view.name,
             ]))
         finally:
             # the registry has been modified, restore it
@@ -1221,16 +1227,22 @@ class IrModelData(models.Model):
 
             record = record.create(values)
             if xml_id:
-                for parent_model, parent_field in record._inherits.iteritems():
-                    if parent_model in existing_parents:
-                        continue
-                    self.sudo().create({
-                        'name': xml_id + '_' + parent_model.replace('.', '_'),
-                        'model': parent_model,
-                        'module': module,
-                        'res_id': record[parent_field].id,
-                        'noupdate': noupdate,
-                    })
+                #To add an external identifiers to all inherits model
+                inherit_models = [record]
+                while inherit_models:
+                    current_model = inherit_models.pop()
+                    for parent_model_name, parent_field in current_model._inherits.iteritems():
+                        inherit_models.append(self.env[parent_model_name])
+                        if parent_model_name in existing_parents:
+                            continue
+                        self.sudo().create({
+                            'name': xml_id + '_' + parent_model_name.replace('.', '_'),
+                            'model': parent_model_name,
+                            'module': module,
+                            'res_id': record[parent_field].id,
+                            'noupdate': noupdate,
+                        })
+                        existing_parents.add(parent_model_name)
                 self.sudo().create({
                     'name': xml_id,
                     'model': model,

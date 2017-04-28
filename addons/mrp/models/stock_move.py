@@ -59,6 +59,15 @@ class StockMoveLots(models.Model):
         self.quantity_done = self.quantity_done - 1
         return self.move_id.split_move_lot()
 
+    @api.multi
+    def write(self, vals):
+        if 'lot_id' in vals:
+            for movelot in self:
+                movelot.move_id.production_id.move_raw_ids.mapped('move_lot_ids')\
+                    .filtered(lambda r: r.done_wo and not r.done_move and r.lot_produced_id == movelot.lot_id)\
+                    .write({'lot_produced_id': vals['lot_id']})
+        return super(StockMoveLots, self).write(vals)
+
 
 class StockMove(models.Model):
     _inherit = 'stock.move'
@@ -377,3 +386,12 @@ class StockMove(models.Model):
                 'split_from': self.id,  # Needed in order to keep sale connection, but will be removed by unlink
             })
         return self.env['stock.move']
+
+class PushedFlow(models.Model):
+    _inherit = "stock.location.path"
+
+    def _prepare_move_copy_values(self, move_to_copy, new_date):
+        new_move_vals = super(PushedFlow, self)._prepare_move_copy_values(move_to_copy, new_date)
+        new_move_vals['production_id'] = False
+
+        return new_move_vals
