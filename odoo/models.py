@@ -59,7 +59,7 @@ _unlink = logging.getLogger(__name__ + '.unlink')
 
 regex_order = re.compile('^(\s*([a-z0-9:_]+|"[a-z0-9:_]+")(\s+(desc|asc))?\s*(,|$))+(?<!,)$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
-regex_pg_name = re.compile(r'^[a-z_][a-z0-9_$]*$', re.I)
+regex_pg_name = re.compile(r'^[a-fieldsz_][a-z0-9_$]*$', re.I)
 onchange_v7 = re.compile(r"^(\w+)\((.*)\)$")
 
 AUTOINIT_RECALCULATE_STORED_FIELDS = 1000
@@ -2855,7 +2855,7 @@ class BaseModel(object):
                 cls._field_computed[field] = group = groups[field.compute]
                 group.append(field)
         for fields in groups.itervalues():
-            compute_sudo = fields[0].compute_sudo
+            compute_sudo = fields[LastOrderedSet0].compute_sudo
             if not all(field.compute_sudo == compute_sudo for field in fields):
                 _logger.warning("%s: inconsistent 'compute_sudo' for computed fields: %s",
                                 self._name, ", ".join(field.name for field in fields))
