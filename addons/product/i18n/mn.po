@@ -4,17 +4,18 @@
 # 
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2017
-# Nasan-Ochir L <nasaaskii@gmail.com>, 2017
+# nasaaskii <nasaaskii@gmail.com>, 2017
 # Otgonbayar.A <gobi.mn@gmail.com>, 2017
 # Javhlantugs Bazarsad <javhlantugs@gmail.com>, 2017
 # odmunkh enkh-ochir <odmunkh0609@gmail.com>, 2017
+# Batzul B <batzul.active@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-29 14:00+0000\n"
-"PO-Revision-Date: 2016-09-29 14:00+0000\n"
-"Last-Translator: odmunkh enkh-ochir <odmunkh0609@gmail.com>, 2017\n"
+"POT-Creation-Date: 2017-04-26 13:35+0000\n"
+"PO-Revision-Date: 2017-04-26 13:35+0000\n"
+"Last-Translator: Batzul B <batzul.active@gmail.com>, 2017\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -612,7 +613,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:product.product_template_action_all
 #: model:ir.actions.act_window,help:product.product_variant_action
 msgid "Click to define a new product."
-msgstr ""
+msgstr "Барааны шинэ богино код тодорхойлохдоо дарна уу."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -650,18 +651,14 @@ msgid "Companies"
 msgstr "Компаниуд"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_price_history_company_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_company_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_company_id
 #: model:ir.model.fields,field_description:product.field_product_product_company_id
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_company_id
 #: model:ir.model.fields,field_description:product.field_product_template_company_id
 msgid "Company"
-msgstr "Байгууллага"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_price_history_company_id
-msgid "Company id"
-msgstr ""
+msgstr "Компани"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -1647,7 +1644,7 @@ msgstr "Шинэ үнэ ="
 #. module: product
 #: selection:base.config.settings,group_product_variant:0
 msgid "No variants on products"
-msgstr ""
+msgstr "Бараан дээр хувилбар байхгүй"
 
 #. module: product
 #: selection:product.category,type:0
@@ -2029,6 +2026,8 @@ msgid ""
 "Products can have several attributes, defining variants (Example: size, "
 "color,...)"
 msgstr ""
+"Бараа нь хувилбар тодорхойлох хэд хэдэн шинж тэмдэгтэй байж болно (Жишээ нь:"
+" хэмжээ, өнгө,...)"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_search_view
@@ -2194,7 +2193,7 @@ msgstr "Борлуулж болох"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Sales"
-msgstr "Захиалагчид"
+msgstr "Борлуулалт"
 
 #. module: product
 #: model:res.groups,name:product.group_sale_pricelist
@@ -3008,6 +3007,8 @@ msgid ""
 "Work with product variant allows you to define some variant of the same "
 "products, an ease the product management in the ecommerce for example"
 msgstr ""
+"Барааны хувилбартай ажиллах нь ижил барааны зарим хувилбарыг тодорхойлох "
+"замаар цахим худалдаа зэрэгт барааны удирдлагыг хөнгөвчлөх бололцоо өгдөг"
 
 #. module: product
 #: model:product.uom.categ,name:product.uom_categ_wtime
@@ -3143,7 +3144,7 @@ msgstr ""
 #: model:product.product,name:product.product_product_6
 #: model:product.template,name:product.product_product_6_product_template
 msgid "iPad Mini"
-msgstr ""
+msgstr "iPad жижиг"
 
 #. module: product
 #: model:product.product,name:product.product_product_4
@@ -3163,7 +3164,7 @@ msgstr ""
 #: model:product.template,name:product.product_product_11_product_template
 #: model:product.template,name:product.product_product_11b_product_template
 msgid "iPod"
-msgstr ""
+msgstr "iPod"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11

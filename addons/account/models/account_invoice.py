@@ -1019,7 +1019,7 @@ class AccountInvoice(models.Model):
             :return: dict of value to create() the refund
         """
         values = {}
-        for field in ['name', 'reference', 'comment', 'date_due', 'partner_id', 'company_id',
+        for field in ['name', 'reference', 'comment', 'date_due', 'partner_id', 'company_id', 'team_id',
                 'account_id', 'currency_id', 'payment_term_id', 'user_id', 'fiscal_position_id']:
             if invoice._fields[field].type == 'many2one':
                 values[field] = invoice[field].id
@@ -1211,11 +1211,11 @@ class AccountInvoiceLine(models.Model):
         string='Analytic Account')
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
     company_id = fields.Many2one('res.company', string='Company',
-        related='invoice_id.company_id', store=True, readonly=True)
+        related='invoice_id.company_id', store=True, readonly=True, related_sudo=False)
     partner_id = fields.Many2one('res.partner', string='Partner',
-        related='invoice_id.partner_id', store=True, readonly=True)
-    currency_id = fields.Many2one('res.currency', related='invoice_id.currency_id', store=True)
-    company_currency_id = fields.Many2one('res.currency', related='invoice_id.company_currency_id', readonly=True)
+        related='invoice_id.partner_id', store=True, readonly=True, related_sudo=False)
+    currency_id = fields.Many2one('res.currency', related='invoice_id.currency_id', store=True, related_sudo=False)
+    company_currency_id = fields.Many2one('res.currency', related='invoice_id.company_currency_id', readonly=True, related_sudo=False)
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
@@ -1353,6 +1353,12 @@ class AccountInvoiceLine(models.Model):
             :rtype line : account.invoice.line record
         """
         pass
+
+    @api.multi
+    def unlink(self):
+        if self.filtered(lambda r: r.invoice_id and r.invoice_id.state != 'draft'):
+            raise UserError(_('You can only delete an invoice line if the invoice is in draft state.'))
+        return super(AccountInvoiceLine, self).unlink()
 
 class AccountInvoiceTax(models.Model):
     _name = "account.invoice.tax"

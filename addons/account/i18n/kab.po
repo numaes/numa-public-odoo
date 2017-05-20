@@ -906,6 +906,12 @@ msgid "A selected move line was already reconciled."
 msgstr "A selected move line was already reconciled."
 
 #. module: account
+#: code:addons/account/models/account_bank_statement.py:883
+#, python-format
+msgid "A selected statement line was already reconciled with an account move."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_bank_statement.py:218
 #, python-format
 msgid "A statement cannot be canceled when its lines are reconciled."
@@ -1186,7 +1192,7 @@ msgstr "Tiwsatin n umiḍan"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_type_control_ids
 msgid "Account Types Allowed"
-msgstr ""
+msgstr "Anawen n umiḍan ttwasirgen"
 
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
@@ -1320,7 +1326,7 @@ msgstr "imiḍanen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_account_control_ids
 msgid "Accounts Allowed"
-msgstr ""
+msgstr "Imiḍanen ttwasirgen"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account

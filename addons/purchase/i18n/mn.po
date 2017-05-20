@@ -4,18 +4,18 @@
 # 
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2017
-# Nasan-Ochir L <nasaaskii@gmail.com>, 2017
+# nasaaskii <nasaaskii@gmail.com>, 2017
 # Jacara <baskhuujacara@gmail.com>, 2017
 # Otgonbayar.A <gobi.mn@gmail.com>, 2017
-# odmunkh enkh-ochir <odmunkh0609@gmail.com>, 2017
 # Erdenebold Ts <erdenebold10@gmail.com>, 2017
+# Batzul B <batzul.active@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-29 13:59+0000\n"
 "PO-Revision-Date: 2016-09-29 13:59+0000\n"
-"Last-Translator: Erdenebold Ts <erdenebold10@gmail.com>, 2017\n"
+"Last-Translator: Batzul B <batzul.active@gmail.com>, 2017\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -438,7 +438,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
 #: model:ir.actions.act_window,help:purchase.product_product_action
 msgid "Click to define a new product."
-msgstr ""
+msgstr "Барааны шинэ богино код тодорхойлохдоо дарна уу."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_open_invoice
@@ -462,7 +462,7 @@ msgstr "Компаниуд"
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_company_id
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Company"
-msgstr "Байгууллага"
+msgstr "Компани"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:294
@@ -863,7 +863,7 @@ msgstr "Мессеж байхгүй"
 #. module: purchase
 #: selection:purchase.config.settings,group_product_variant:0
 msgid "No variants on products"
-msgstr ""
+msgstr "Бараан дээр хувилбар байхгүй"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:945
@@ -1077,6 +1077,8 @@ msgid ""
 "Products can have several attributes, defining variants (Example: size, "
 "color,...)"
 msgstr ""
+"Бараа нь хувилбар тодорхойлох хэд хэдэн шинж тэмдэгтэй байж болно (Жишээ нь:"
+" хэмжээ, өнгө,...)"
 
 #. module: purchase
 #: selection:purchase.config.settings,group_uom:0
@@ -1239,7 +1241,7 @@ msgstr "Худалдан авалтын стандарт үнэ"
 #: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
 #: model:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
 msgid "Purchases"
-msgstr "Нийлүүлэгч"
+msgstr "Худалдан авалт"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
@@ -1753,7 +1755,7 @@ msgstr "Нийлүүлэгч"
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_account_buttons
 msgid "Vendor Bills"
-msgstr "Нийлүүлэгчийн нэхэмжлэл"
+msgstr "Нийлүүлэгчийн тооцоо"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_account_buttons
@@ -1842,6 +1844,8 @@ msgid ""
 "Work with product variant allows you to define some variant of the same "
 "products, an ease the product management in the ecommerce for example"
 msgstr ""
+"Барааны хувилбартай ажиллах нь ижил барааны зарим хувилбарыг тодорхойлох "
+"замаар цахим худалдаа зэрэгт барааны удирдлагыг хөнгөвчлөх бололцоо өгдөг"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:770

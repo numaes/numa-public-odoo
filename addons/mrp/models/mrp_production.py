@@ -307,6 +307,7 @@ class MrpProduction(models.Model):
             'production_id': self.id,
             'origin': self.name,
             'group_id': self.procurement_group_id.id,
+            'propagate': self.propagate,
         })
         move.action_confirm()
         return move
@@ -498,11 +499,14 @@ class MrpProduction(models.Model):
     @api.multi
     def post_inventory(self):
         for order in self:
+            moves_not_to_do = order.move_raw_ids.filtered(lambda x: x.state == 'done')
             moves_to_do = order.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             moves_to_do.action_done()
+            moves_to_do = order.move_raw_ids.filtered(lambda x: x.state == 'done') - moves_not_to_do
             order._cal_price(moves_to_do)
             moves_to_finish = order.move_finished_ids.filtered(lambda x: x.state not in ('done','cancel'))
             moves_to_finish.action_done()
+            
             for move in moves_to_finish:
                 #Group quants by lots
                 lot_quants = {}
