@@ -18,13 +18,15 @@
 # Haojun Zou <apollo_zhj@msn.com>, 2016
 # Daniel Forslund <daniel.forslund@gmail.com>, 2016
 # Zou Haojun <haojunzou84@gmail.com>, 2016
+# Frida E <frida.eddestal@gmail.com>, 2017
+# Lord Cobol <mattias@invaliddesign.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-02-14 10:20+0000\n"
 "PO-Revision-Date: 2017-02-14 10:20+0000\n"
-"Last-Translator: Zou Haojun <haojunzou84@gmail.com>, 2016\n"
+"Last-Translator: Lord Cobol <mattias@invaliddesign.com>, 2017\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -82,6 +84,11 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+" * Statusen 'Utkast' används när en användare kodar en ny och obekräftad faktura.\n"
+" * Statusen 'Proforma' används när fakturan inte har något fakturanummer.\n"
+" * Statusen 'Öppen' används när användaren skapar en faktura och ett fakturanummer är genererad. Den förblir öppen tills användaren betalar fakturan.\n"
+" * Statusen 'Betald' sker automatiskt när fakturan är betald. Dess relaterade dagboksinlägg må eller må inte bli förlikad.\n"
+" * Statusen 'Makulerad' används när användaren makulerar en faktura."
 
 #. module: account
 #. openerp-web
@@ -114,7 +121,7 @@ msgstr "# Transaktioner"
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
-msgstr "${object.company_id.name} Faktura (Ref ${object.number eller 'n/a'})"
+msgstr "${object.company_id.name} Faktura (Ref ${object.number or 'n/a'})"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_notification_email_account_invoice
@@ -471,6 +478,16 @@ msgstr "<span> Till </span>"
 msgid ""
 "<span>(*) This configuration is related to the company you're logged "
 "into.</span>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
+msgid "<span>invoice</span>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
+msgid "<span>refund</span>"
 msgstr ""
 
 #. module: account
@@ -951,6 +968,12 @@ msgstr ""
 #, python-format
 msgid "A selected move line was already reconciled."
 msgstr "Vald transaktionsrad var redan avstämd."
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:883
+#, python-format
+msgid "A selected statement line was already reconciled with an account move."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:218
@@ -1668,7 +1691,7 @@ msgstr "Summa"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_analytic_amount_currency
 msgid "Amount Currency"
-msgstr ""
+msgstr "Valutabelopp"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual
@@ -2635,7 +2658,7 @@ msgstr "Klicka för att lägga till en journal."
 #. module: account
 #: model:ir.actions.act_window,help:account.account_tag_action
 msgid "Click to add a new tag."
-msgstr ""
+msgstr "Klicka för att lägga till en ny tagg"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_form
@@ -2697,10 +2720,17 @@ msgstr "Stäng"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:227
+#: code:addons/account/static/src/xml/account_reconciliation.xml:229
 #, python-format
 msgid "Close the statement"
 msgstr "Stäng ner utdraget."
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:228
+#, python-format
+msgid "Close the statements"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_date_done
@@ -10012,6 +10042,12 @@ msgid "You can not delete a payment that is already posted"
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/account_invoice.py:1360
+#, python-format
+msgid "You can only delete an invoice line if the invoice is in draft state."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_payment.py:128
 #, python-format
 msgid "You can only register payments for open invoices"
@@ -10354,13 +10390,6 @@ msgstr "aktivera den här funktionen"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:298
-#, python-format
-msgid "all"
-msgstr "alla"
-
-#. module: account
-#. openerp-web
 #: code:addons/account/static/src/xml/account_payment.xml:17
 #, python-format
 msgid "assign to invoice"
@@ -10385,13 +10414,6 @@ msgstr "kod"
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "create a journal entry"
 msgstr ""
-
-#. module: account
-#. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:295
-#, python-format
-msgid "customers"
-msgstr "kunder"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_payment_term_line_form
@@ -10433,13 +10455,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.tax_adjustments_wizard
 msgid "or"
 msgstr "eller"
-
-#. module: account
-#. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:297
-#, python-format
-msgid "others"
-msgstr "andra"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -10527,13 +10542,6 @@ msgstr "ställ in företagets logotyp"
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "setup your bank accounts."
 msgstr "ställ in dina bank-konton."
-
-#. module: account
-#. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:296
-#, python-format
-msgid "suppliers"
-msgstr "leverantörer"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner

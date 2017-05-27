@@ -975,12 +975,12 @@ msgstr "Contingut complet"
 #. module: stock
 #: selection:product.template,tracking:0
 msgid "By Lots"
-msgstr ""
+msgstr "Per Lots"
 
 #. module: stock
 #: selection:product.template,tracking:0
 msgid "By Unique Serial Number"
-msgstr ""
+msgstr "Amb un únic Número de Sèrie"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:397
@@ -1583,7 +1583,7 @@ msgstr "Clients"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_dhl
 msgid "DHL integration"
-msgstr ""
+msgstr "Integració amb DHL"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2126,7 +2126,7 @@ msgstr "FIFO, LIFO..."
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_fedex
 msgid "Fedex integration"
-msgstr ""
+msgstr "Integració amb Fedex"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.quant_search_view
@@ -5191,7 +5191,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Reserve"
-msgstr ""
+msgstr "Reserva "
 
 #. module: stock
 #: selection:stock.config.settings,module_procurement_jit:0
@@ -5594,7 +5594,7 @@ msgstr "Enviar directament des de l'existència (Només enviar)"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_config_settings
 msgid "Shipping Connectors"
-msgstr ""
+msgstr "Connectors d'enviament"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_code
@@ -5623,6 +5623,8 @@ msgstr "Petit refrigerador"
 msgid ""
 "Some products may be sold/purchased in different units of measure (advanced)"
 msgstr ""
+"Alguns productes poden ser venuts/comprats en diferents unitats de mesura "
+"(avançat)"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:787
@@ -5973,7 +5975,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_temando
 msgid "Temando integration"
-msgstr ""
+msgstr "Integració \"Temando\""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_product_tmpl_id
@@ -6592,12 +6594,12 @@ msgstr "Tipus d'empaquetatge"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_ups
 msgid "UPS integration"
-msgstr ""
+msgstr "Integració UPS"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_usps
 msgid "USPS integration"
-msgstr ""
+msgstr "Integració USPS"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:98

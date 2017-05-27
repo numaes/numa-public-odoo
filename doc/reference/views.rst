@@ -97,7 +97,7 @@ how the matched node should be altered:
     the content of the inheritance spec is appended to the matched node
 ``replace``
     the content of the inheritance spec replaces the matched node.
-    Any text node containing only `$0` within the contents of the spec will
+    Any text node containing only ``$0`` within the contents of the spec will
     be replaced  by a complete copy of the matched node, effectively wrapping
     the matched node.
 ``after``
@@ -934,11 +934,8 @@ Javascript API
                            caching entirely
       :returns: an image URL
 
-   .. js:function:: kanban_text_ellipsis(string[, size=160])
-
-      clips text beyond the specified size and appends an ellipsis to it. Can
-      be used to display the initial part of potentially very long fields
-      (e.g. descriptions) without the risk of unwieldy cards
+   .. warning::
+   ``kanban_text_ellipsis`` has been removed in Odoo 9. CSS ``text-overflow`` should be used instead.
 
 .. _reference/views/calendar:
 
