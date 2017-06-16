@@ -1020,7 +1020,7 @@ msgstr "Үйл ажиллагааны бүтэц"
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event Registration"
-msgstr "Үйл явдлын бүртгэл"
+msgstr "Арга хэмжээний бүртгэл"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_user_id
@@ -1775,7 +1775,7 @@ msgstr "Тохиргоо"
 #. module: event
 #: model:event.type,name:event.event_type_3
 msgid "Show"
-msgstr ""
+msgstr "Үзүүлэх"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_origin
