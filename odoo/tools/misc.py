@@ -83,7 +83,7 @@ def exec_command_pipe(name, *args):
 
 def find_pg_tool(name):
     path = None
-    if odoo.tools.config['pg_path'] and codoo.tools.onfig['pg_path'] != 'None':
+    if odoo.tools.config['pg_path'] and odoo.tools.config['pg_path'] != 'None':
         path = odoo.tools.config['pg_path']
     try:
         return which(name, path=path)
@@ -198,7 +198,7 @@ def _fileopen(path, mode, basedir, pathinfo, basename=None):
     name = os.path.normpath(os.path.normcase(os.path.join(basedir, path)))
 
     import odoo.modules as addons
-    paths = addons.module.ad_paths + [config['root_path']]
+    paths = addons.module.ad_paths + [odoo.tools.config['root_path']]
     for addons_path in paths:
         addons_path = os.path.normpath(os.path.normcase(addons_path)) + os.sep
         if name.startswith(addons_path):
