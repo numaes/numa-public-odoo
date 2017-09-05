@@ -36,7 +36,6 @@ try:
 except ImportError:
     html2text = None
 
-from config import config
 from cache import *
 from .parse_version import parse_version 
 
@@ -60,8 +59,8 @@ etree.set_default_parser(etree.XMLParser(resolve_entities=False))
 
 def find_in_path(name):
     path = os.environ.get('PATH', os.defpath).split(os.pathsep)
-    if config.get('bin_path') and config['bin_path'] != 'None':
-        path.append(config['bin_path'])
+    if odoo.tools.config.get('bin_path') and odoo.tools.config['bin_path'] != 'None':
+        path.append(odoo.tools.config['bin_path'])
     return which(name, path=os.pathsep.join(path))
 
 def _exec_pipe(prog, args, env=None):
@@ -84,8 +83,8 @@ def exec_command_pipe(name, *args):
 
 def find_pg_tool(name):
     path = None
-    if config['pg_path'] and config['pg_path'] != 'None':
-        path = config['pg_path']
+    if odoo.tools.config['pg_path'] and odoo.tools.config['pg_path'] != 'None':
+        path = odoo.tools.config['pg_path']
     try:
         return which(name, path=path)
     except IOError:
@@ -152,7 +151,7 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
     """
     import odoo.modules as addons
     adps = addons.module.ad_paths
-    rtp = os.path.normcase(os.path.abspath(config['root_path']))
+    rtp = os.path.normcase(os.path.abspath(odoo.tools.config['root_path']))
 
     basename = name
 
@@ -199,7 +198,7 @@ def _fileopen(path, mode, basedir, pathinfo, basename=None):
     name = os.path.normpath(os.path.normcase(os.path.join(basedir, path)))
 
     import odoo.modules as addons
-    paths = addons.module.ad_paths + [config['root_path']]
+    paths = addons.module.ad_paths + [odoo.tools.config['root_path']]
     for addons_path in paths:
         addons_path = os.path.normpath(os.path.normcase(addons_path)) + os.sep
         if name.startswith(addons_path):
@@ -372,11 +371,12 @@ try:
 
         # TODO when xlsxwriter bump to 0.9.8, add worksheet_class=None parameter instead of kw
         def add_worksheet(self, name=None, **kw):
-            # invalid Excel character: []:*?/\
-            name = re.sub(r'[\[\]:*?/\\]', '', name)
+            if name:
+                # invalid Excel character: []:*?/\
+                name = re.sub(r'[\[\]:*?/\\]', '', name)
 
-            # maximum size is 31 characters
-            name = name[:31]
+                # maximum size is 31 characters
+                name = name[:31]
             return super(PatchedXlsxWorkbook, self).add_worksheet(name, **kw)
 
     xlsxwriter.Workbook = PatchedXlsxWorkbook
@@ -981,8 +981,8 @@ class CountingStream(object):
 def stripped_sys_argv(*strip_args):
     """Return sys.argv with some arguments stripped, suitable for reexecution or subprocesses"""
     strip_args = sorted(set(strip_args) | set(['-s', '--save', '-u', '--update', '-i', '--init', '--i18n-overwrite']))
-    assert all(config.parser.has_option(s) for s in strip_args)
-    takes_value = dict((s, config.parser.get_option(s).takes_value()) for s in strip_args)
+    assert all(odoo.tools.config.parser.has_option(s) for s in strip_args)
+    takes_value = dict((s, odoo.tools.config.parser.get_option(s).takes_value()) for s in strip_args)
 
     longs, shorts = list(tuple(y) for _, y in groupby(strip_args, lambda x: x.startswith('--')))
     longs_eq = tuple(l + '=' for l in longs if takes_value[l])
@@ -1038,15 +1038,17 @@ def dumpstacks(sig=None, frame=None):
     # modified for python 2.5 compatibility
     threads_info = {th.ident: {'name': th.name,
                                'uid': getattr(th, 'uid', 'n/a'),
-                               'dbname': getattr(th, 'dbname', 'n/a')}
+                               'dbname': getattr(th, 'dbname', 'n/a'),
+                               'url': getattr(th, 'url', 'n/a')}
                     for th in threading.enumerate()}
     for threadId, stack in sys._current_frames().items():
         thread_info = threads_info.get(threadId, {})
-        code.append("\n# Thread: %s (id:%s) (db:%s) (uid:%s)" %
+        code.append("\n# Thread: %s (id:%s) (db:%s) (uid:%s) (url:%s)" %
                     (thread_info.get('name', 'n/a'),
                      threadId,
                      thread_info.get('dbname', 'n/a'),
-                     thread_info.get('uid', 'n/a')))
+                     thread_info.get('uid', 'n/a'),
+                     thread_info.get('url', 'n/a')))
         for line in extract_stack(stack):
             code.append(line)
 

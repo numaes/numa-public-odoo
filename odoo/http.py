@@ -1312,6 +1312,7 @@ class Root(object):
         controllers and configure them.  """
         # TODO should we move this to ir.http so that only configured modules are served ?
         statics = {}
+
         for addons_path in odoo.modules.module.ad_paths:
             for module in sorted(os.listdir(str(addons_path))):
                 if module not in addons_module:
@@ -1440,6 +1441,7 @@ class Root(object):
             httprequest = werkzeug.wrappers.Request(environ)
             httprequest.app = self
             httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableOrderedMultiDict
+            threading.current_thread().url = httprequest.url
 
             explicit_session = self.setup_session(httprequest)
             self.setup_db(httprequest)

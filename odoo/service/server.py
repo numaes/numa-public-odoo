@@ -74,12 +74,11 @@ class BaseWSGIServerNoBind(LoggingBaseWSGIServerMixIn, werkzeug.serving.BaseWSGI
     use this class, sets the socket and calls the process_request() manually
     """
     def __init__(self, app):
-        werkzeug.serving.BaseWSGIServer.__init__(self, "1", "1", app)
-    def server_bind(self):
-        # we dont bind beause we use the listen socket of PreforkServer#socket
-        # instead we close the socket
+        werkzeug.serving.BaseWSGIServer.__init__(self, "127.0.0.1", 0, app)
+        # Directly close the socket. It will be replaced by WorkerHTTP when processing requests
         if self.socket:
             self.socket.close()
+
     def server_activate(self):
         # dont listen as we use PreforkServer#socket
         pass
@@ -581,6 +580,7 @@ class PreforkServer(CommonServer):
 
         if self.address:
             # listen to socket
+            _logger.info('HTTP service (werkzeug) running on %s:%s', *self.address)
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             self.socket.setblocking(0)
@@ -904,13 +904,12 @@ def load_test_file_py(registry, test_file):
 def preload_registries(dbnames):
     """ Preload a registries, possibly run a test file."""
     # TODO: move all config checks to args dont check tools.config here
-    config = odoo.tools.config
-    test_file = config['test_file']
+    test_file = odoo.tools.config['test_file']
     dbnames = dbnames or []
     rc = 0
     for dbname in dbnames:
         try:
-            update_module = config['init'] or config['update']
+            update_module = odoo.tools.config['init'] or odoo.tools.config['update']
             registry = Registry.new(dbname, update_module=update_module)
             # run test_file if provided
             if test_file:

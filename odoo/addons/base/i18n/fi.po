@@ -7156,7 +7156,7 @@ msgstr "Määritellyt raportit"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint_definition
 msgid "Definition"
-msgstr "Definición"
+msgstr "Määritelmä"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_access_perm_unlink
@@ -14538,7 +14538,7 @@ msgstr ""
 #. module: base
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr "¡El nombre de la compañía debe ser único!"
+msgstr "Yrityksen nimi täytyy olla yksilöllinen!"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users_company_id
@@ -16025,7 +16025,7 @@ msgstr "Web-kalenteri"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_editor
 msgid "Web Editor"
-msgstr ""
+msgstr "Web-editori"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu_web_icon
@@ -16076,7 +16076,7 @@ msgstr "Verkkosivuston Google-kartta"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_links
 msgid "Website Link Tracker"
-msgstr ""
+msgstr "Verkkosivun klikkausten seuranta"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_im_livechat
@@ -16116,22 +16116,22 @@ msgstr "Kumppanit verkkosivuilla"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_portal
 msgid "Website Portal"
-msgstr ""
+msgstr "Portaali verkkosivuilla"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_portal_sale
 msgid "Website Portal for Sales"
-msgstr ""
+msgstr "Myyntiportaali verkkosivuilla"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_project
 msgid "Website Project"
-msgstr ""
+msgstr "Projektit verkkosivuilla"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_project_issue
 msgid "Website Project Issue"
-msgstr ""
+msgstr "Projektien tapaukset verkkosivuilla"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_rating_project_issue
@@ -17078,12 +17078,12 @@ msgstr "pos_cache"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "record.partner_id"
-msgstr ""
+msgstr "record.partner_id"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "record.partner_id.currency_id"
-msgstr ""
+msgstr "record.partner_id.currency_id"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
