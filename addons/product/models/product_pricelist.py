@@ -208,7 +208,7 @@ class Pricelist(models.Model):
                 else:
                     # if base option is public price take sale price else cost price of product
                     # price_compute returns the price in the context UoM, i.e. qty_uom_id
-                    price = product.price_compute(rule.base)[product.id]
+                    price = product.with_context(currency=self.currency_id.id).price_compute(rule.base)[product.id]
 
                 convert_to_price_uom = (lambda price: product.uom_id._compute_price(price, price_uom))
 
