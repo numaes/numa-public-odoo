@@ -75,6 +75,9 @@ class PublisherWarrantyContract(AbstractModel):
 
         url = config.get("publisher_warranty_url")
 
+        #NUMA DO NOT CALL HOME
+        raise UserError(_("No call HOME!"))
+
         uo = urllib2.urlopen(url, arguments_raw, timeout=30)
         try:
             submit_result = uo.read()
