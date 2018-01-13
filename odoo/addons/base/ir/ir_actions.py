@@ -7,6 +7,7 @@ import logging
 import os
 import time
 from pytz import timezone
+import base64
 
 import odoo
 from odoo import api, fields, models, tools, workflow, _
@@ -133,7 +134,7 @@ class IrActionsReportXml(models.Model):
         if not data and self[name]:
             try:
                 with tools.file_open(self[name], mode='rb') as fp:
-                    data = fp.read()
+                    data = base64.b64encode(fp.read())
             except Exception:
                 data = False
         return data
