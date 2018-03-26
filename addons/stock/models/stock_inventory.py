@@ -377,6 +377,7 @@ class InventoryLine(models.Model):
     def write(self, values):
         values.pop('product_name', False)
         res = super(InventoryLine, self).write(values)
+        return res
 
     @api.model
     def create(self, values):
@@ -394,7 +395,8 @@ class InventoryLine(models.Model):
         if existings:
             raise UserError(_("You cannot have two inventory adjustements in state 'in Progess' with the same product"
                               "(%s), same location(%s), same package, same owner and same lot. Please first validate"
-                              "the first inventory adjustement with this product before creating another one.") % (res.product_id.name, res.location_id.name))
+                              "the first inventory adjustement with this product before creating another one.") %
+                            (res.product_id.display_name, res.location_id.display_name))
         return res
 
     def _get_quants(self):
