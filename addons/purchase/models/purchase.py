@@ -324,8 +324,8 @@ class PurchaseOrder(models.Model):
     def button_approve(self, force=False):
         self.write({'state': 'purchase', 'date_approve': fields.Date.context_today(self)})
         self._create_picking()
-        if self.company_id.po_lock == 'lock':
-            self.write({'state': 'done'})
+        self.filtered(
+            lambda p: p.company_id.po_lock == 'lock').write({'state': 'done'})
         return {}
 
     @api.multi
@@ -985,7 +985,7 @@ class ProcurementOrder(models.Model):
         self.ensure_one()
         schedule_date = self._get_purchase_schedule_date()
         purchase_date = self._get_purchase_order_date(schedule_date)
-        fpos = self.env['account.fiscal.position'].with_context(company_id=self.company_id.id).get_fiscal_position(partner.id)
+        fpos = self.env['account.fiscal.position'].with_context(force_company=self.company_id.id).get_fiscal_position(partner.id)
 
         gpo = self.rule_id.group_propagation_option
         group = (gpo == 'fixed' and self.rule_id.group_id.id) or \

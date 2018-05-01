@@ -6177,7 +6177,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_hr_appraisal
 msgid "Appraisals"
-msgstr ""
+msgstr "Оцінки"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_module_open_categ
@@ -7887,6 +7887,11 @@ msgid ""
 "not connect to the system. You can assign them groups in order to give them "
 "specific access to the applications they need to use in the system."
 msgstr ""
+"Створюйте та керуйте користувачами, які підключаються до системи. "
+"Користувачі можуть бути деактивовані, якщо повинен бути період часу, "
+"протягом якого вони повинні/не повинні підключатися до системи. Ви можете "
+"призначити їм групи, щоб надати їм конкретний доступ до програм, які їм "
+"потрібно використовувати в системі."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -9589,6 +9594,7 @@ msgid ""
 "Final placeholder expression, to be copy-pasted in the desired template "
 "field."
 msgstr ""
+"Остаточний вираз заповнювача, який буде копіювати у потрібному полі шаблону."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_accountant
@@ -12332,6 +12338,18 @@ msgstr "Керування членством"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_note_pad
 msgid "Memos pad"
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:382
+#, python-format
+msgid "Model %s does not exist"
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:383
+#, python-format
+msgid "Please specify a valid model for the object relation"
 msgstr ""
 
 #. module: base
