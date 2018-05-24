@@ -22,7 +22,7 @@
 import time
 from datetime import datetime
 
-from openerp import workflow
+from openerp import api, workflow
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
@@ -607,6 +607,27 @@ class account_move_line(osv.osv):
             cr.execute('CREATE INDEX account_move_line_date_id_index ON account_move_line (date DESC, id desc)')
         return res
 
+    @api.constrains('reconcile_id', 'reconcile_partial_id')
+    def _check_reconcile_same_partner(self):
+        """ Ensure the partner is the same or empty on all lines and a reconcile mark.
+            We allow that only for opening/closing period"""
+        for line in self:
+            rec = False
+            move_lines = []
+            if line.reconcile_id:
+                rec = line.reconcile_id
+                move_lines = rec.line_id
+            elif line.reconcile_partial_id:
+                rec = line.reconcile_partial_id
+                move_lines = rec.line_partial_ids
+            if rec and not rec.opening_reconciliation:
+                first_partner = line.partner_id
+                for rline in move_lines:
+                    if (rline.partner_id != first_partner and
+                            rline.account_id.type in ('receivable', 'payable')):
+                        raise osv.except_osv(
+                                _('Error!'), _("You can only reconcile journal items with the same partner."))
+
     def _check_no_view(self, cr, uid, ids, context=None):
         lines = self.browse(cr, uid, ids, context=context)
         for l in lines:
@@ -1004,6 +1025,12 @@ class account_move_line(osv.osv):
 
         if (not currency_obj.is_zero(cr, uid, account.company_id.currency_id, writeoff)) or \
            (account.currency_id and (not currency_obj.is_zero(cr, uid, account.currency_id, currency))):
+            # DO NOT FORWARD PORT
+            if not writeoff_acc_id:
+                if writeoff > 0:
+                    writeoff_acc_id = account.company_id.expense_currency_exchange_account_id.id
+                else:
+                    writeoff_acc_id = account.company_id.income_currency_exchange_account_id.id
             if not writeoff_acc_id:
                 raise osv.except_osv(_('Warning!'), _('You have to provide an account for the write off/exchange difference entry.'))
             if writeoff > 0:
@@ -1057,14 +1084,24 @@ class account_move_line(osv.osv):
                     'amount_currency': amount_currency_writeoff and amount_currency_writeoff or (account.currency_id.id and currency or 0.0)
                 })
             ]
-
-            writeoff_move_id = move_obj.create(cr, uid, {
-                'period_id': writeoff_period_id,
-                'journal_id': writeoff_journal_id,
-                'date':date,
-                'state': 'draft',
-                'line_id': writeoff_lines
-            })
+            # DO NOT FORWARD PORT
+            # In some exceptional situations (partial payment from a bank statement in foreign
+            # currency), a write-off can be introduced at the very last moment due to currency
+            # conversion. We record it on the bank statement account move.
+            if context.get('bs_move_id'):
+                writeoff_move_id = context['bs_move_id']
+                for l in writeoff_lines:
+                    self.create(cr, uid, dict(l[2], move_id=writeoff_move_id), dict(context, novalidate=True))
+                if not move_obj.validate(cr, uid, writeoff_move_id, context=context):
+                    raise osv.except_osv(_('Error!'), _('You cannot validate a non-balanced entry.'))
+            else:
+                writeoff_move_id = move_obj.create(cr, uid, {
+                    'period_id': writeoff_period_id,
+                    'journal_id': writeoff_journal_id,
+                    'date':date,
+                    'state': 'draft',
+                    'line_id': writeoff_lines
+                })
 
             writeoff_line_ids = self.search(cr, uid, [('move_id', '=', writeoff_move_id), ('account_id', '=', account_id)])
             if account_id == writeoff_acc_id:
@@ -1418,6 +1455,9 @@ class account_move_line(osv.osv):
                 #create the Tax movement
                 if not tax['amount'] and not tax[tax_code]:
                     continue
+                #FORWARD-PORT UPTO SAAS-6
+                tax_analytic = (tax_code == 'tax_code_id' and tax.get('account_analytic_collected_id')) or (tax_code == 'ref_tax_code_id' and tax.get('account_analytic_paid_id'))
+
                 data = {
                     'move_id': vals['move_id'],
                     'name': tools.ustr(vals['name'] or '') + ' ' + tools.ustr(tax['name'] or ''),
@@ -1431,6 +1471,7 @@ class account_move_line(osv.osv):
                     'account_id': tax[account_id] or vals['account_id'],
                     'credit': tax['amount']<0 and -tax['amount'] or 0.0,
                     'debit': tax['amount']>0 and tax['amount'] or 0.0,
+                    'analytic_account_id': tax_analytic,
                 }
                 self.create(cr, uid, data, context)
             del vals['account_tax_id']
