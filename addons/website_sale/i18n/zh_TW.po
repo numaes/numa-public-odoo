@@ -99,7 +99,7 @@ msgid ""
 "                    My cart"
 msgstr ""
 "<i class=\"fa fa-shopping-cart\"/>\n"
-"                     我的購物車"
+"                    我的購物車"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.terms
@@ -2895,7 +2895,7 @@ msgid ""
 "                                        <small> or </small>"
 msgstr ""
 "地址\n"
-"                                        <small>或/small>"
+"                                        <small>或</small>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
