@@ -513,7 +513,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Assigned to</strong>"
-msgstr ""
+msgstr "<strong>محول شده به</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -556,12 +556,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_project
 msgid "<strong>Customer</strong>"
-msgstr ""
+msgstr "<strong>مشتری</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Date:</strong>"
-msgstr ""
+msgstr "<strong>تاریخ:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
@@ -578,7 +578,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Description</strong>"
-msgstr ""
+msgstr "<strong>توضیحات</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -711,12 +711,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_project
 msgid "<strong>Project Manager</strong>"
-msgstr ""
+msgstr "<strong>مدیر پروژه</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Project:</strong>"
-msgstr ""
+msgstr "<strong>پروژه:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -733,7 +733,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Reported by</strong>"
-msgstr ""
+msgstr "<strong>گزارش شده توسط</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -880,7 +880,7 @@ msgstr "فعالیت‌ها"
 #: model:ir.actions.act_window,name:project.mail_activity_type_action_config_project_types
 #: model:ir.ui.menu,name:project.project_menu_config_activity_type
 msgid "Activity Types"
-msgstr ""
+msgstr "انواع فعالیت"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -1341,7 +1341,7 @@ msgstr "ایجاد"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Create & Edit"
-msgstr ""
+msgstr "ایجاد و ویرایش"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_create_date
@@ -1851,7 +1851,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Future Activities"
-msgstr ""
+msgstr "فعالیتهای آینده"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_tasks_config
@@ -2312,7 +2312,7 @@ msgstr "آخرین به روز رسانی در"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Late Activities"
-msgstr ""
+msgstr "فعالیتهای اخیر"
 
 #. module: project
 #: model:web.planner,tooltip_planner:project.planner_project
@@ -2426,7 +2426,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "My Activities"
-msgstr ""
+msgstr "فعالیتها من"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -2511,7 +2511,7 @@ msgstr ""
 #: model:ir.ui.menu,name:project.project_task_menu_activity
 #: model:ir.ui.view,arch_db:project.project_task_view_tree_activity
 msgid "Next Activities"
-msgstr ""
+msgstr "فعایتهای بعدی"
 
 #. module: project
 #: code:addons/project/models/project.py:775
@@ -3692,7 +3692,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Today Activities"
-msgstr ""
+msgstr "فعالیتها امروز"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_remaining_hours
