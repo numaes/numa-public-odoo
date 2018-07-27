@@ -2935,9 +2935,9 @@ msgid ""
 " ask the Administrator if you need to merge several contacts linked to "
 "existing Journal Items."
 msgstr ""
-"Ainoastaan kohteena oleva kontakti voidaan kytkeä olemassaoleviin "
-"päiväkirjavienteihin. Jos useita olemassaoleviin päiväkirjavienteihin "
-"kytkettyjä kontatkeja pitää yhdistää, ota yhteyttä ylläpitäjään."
+"Ainoastaan jäljelle jäävä kontakti (vastaanottaja) voi liittyä "
+"päiväkirjavienteihin. Jos haluat yhdistää useita kontakteja, jotka liittyvät"
+" päiväkirjavienteihin, ota yhteyttä ylläpitäjään."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban

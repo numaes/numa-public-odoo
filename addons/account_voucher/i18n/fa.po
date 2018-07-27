@@ -3,16 +3,16 @@
 # * account_voucher
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Sahar Daraye <sahar.daraye.1369@gmail.com>, 2017
-# Hamid Darabi, 2017
+# Sahar Daraye <sahar.daraye.1369@gmail.com>, 2016
+# Martin Trigaux, 2016
+# Hamid Darabi, 2016
 # Hamed Mohammadi <hamed@dehongi.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:42+0000\n"
-"PO-Revision-Date: 2018-02-19 13:42+0000\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
 "Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2017\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
@@ -72,7 +72,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Bill Date"
-msgstr ""
+msgstr "تازیخ قبض"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -166,7 +166,7 @@ msgstr "توصیف"
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_display_name
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_display_name
 msgid "Display Name"
-msgstr "نام نشان داده شده"
+msgstr "نام نمایشی"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -433,12 +433,12 @@ msgstr "مالیات"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_amount
-msgid "Tax Amount"
-msgstr "مبلغ مالیات"
+msgid "Tax amount"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_correction
-msgid "Tax Correction"
+msgid "Tax correction"
 msgstr ""
 
 #. module: account_voucher
@@ -552,7 +552,7 @@ msgid ""
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:377
+#: code:addons/account_voucher/models/account_voucher.py:361
 #, python-format
 msgid "You must first select a partner!"
 msgstr "شما ابتدا باید یک شریک تجاری انتخاب کنید!"

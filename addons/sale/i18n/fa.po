@@ -526,7 +526,7 @@ msgstr "سطرتحلیلی"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_analytic_tag_ids
 msgid "Analytic Tags"
-msgstr ""
+msgstr "برچسبهای تحلیلی"
 
 #. module: sale
 #: selection:product.template,expense_policy:0

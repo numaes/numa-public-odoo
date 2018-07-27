@@ -170,7 +170,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_nbr
 msgid "# of Tasks"
-msgstr ""
+msgstr "تعداد کارها"
 
 #. module: project
 #: code:addons/project/models/project.py:244
@@ -243,7 +243,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<i class=\"fa fa-user\"/> Person Responsible"
-msgstr ""
+msgstr "<i class=\"fa fa-user\"/> شخص مسئول"
 
 #. module: project
 #: code:addons/project/models/project.py:116
@@ -265,12 +265,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install now"
-msgstr ""
+msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> اکنون نصب شود"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<span class=\"fa fa-comment-o\"/> Website Live Chat"
-msgstr ""
+msgstr "<span class=\"fa fa-comment-o\"/> چت زنده وبسایت"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -304,6 +304,10 @@ msgid ""
 "                                            <strong> Screen Customization</strong>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-laptop\"/>\n"
+"                                            <strong> سفارشی سازی صفحه نمایش</strong>\n"
+"                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -322,6 +326,10 @@ msgid ""
 "                                            <strong> Create Custom Reports</strong>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-pencil-square-o\"/>\n"
+"                                            <strong> ایجاد گزارشهای سفارشی</strong>\n"
+"                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -474,7 +482,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>About Employees:</strong>"
-msgstr ""
+msgstr "<strong>درباره کارکنان:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -493,7 +501,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Analyze reports</strong> (every a year)"
-msgstr ""
+msgstr "<strong>تحلیل گزارشات</strong> (هر یک سال)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -536,7 +544,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Contact us now:</strong><br/>"
-msgstr ""
+msgstr "<strong>اکنون با ما تماس بگیرید:</strong><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -580,7 +588,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Example: </strong>"
-msgstr ""
+msgstr "<strong>نمونه: </strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -691,7 +699,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Notes</strong>"
-msgstr ""
+msgstr "<strong>یاددشتها</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -713,7 +721,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Recommended actions:</strong>"
-msgstr ""
+msgstr "<strong>اقدامات توصیه شده:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -962,7 +970,7 @@ msgstr "حساب تحلیلی"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_line_ids
 msgid "Analytic Lines"
-msgstr ""
+msgstr "سطرهای تحلیلی"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1220,7 +1228,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,help:project.project_tags_action
 msgid "Click to add a new tag."
-msgstr ""
+msgstr "برای افزودن برچسب جدید کلیک کنید."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_task_type_form
@@ -1562,7 +1570,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:20
 #, python-format
 msgid "Deployment"
-msgstr ""
+msgstr "توزیع"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_description
@@ -1620,7 +1628,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:51
 #, python-format
 msgid "Documentation"
-msgstr ""
+msgstr "مستندات"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -2662,7 +2670,7 @@ msgstr "مالک‌"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_parent_model_id
 msgid "Parent Model"
-msgstr ""
+msgstr "مدل والد"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_parent_thread_id
@@ -3268,7 +3276,7 @@ msgstr ""
 #. module: project
 #: sql_constraint:project.tags:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "برچسب نام از قبل وجود دارد!"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_tags_action
@@ -3667,7 +3675,7 @@ msgstr "عنوان"
 #: model:project.task.type,name:project.project_stage_0
 #, python-format
 msgid "To Do"
-msgstr ""
+msgstr "در دست اقدام"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
