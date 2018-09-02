@@ -65,7 +65,7 @@ _unlink = logging.getLogger(__name__ + '.unlink')
 regex_order = re.compile('^(\s*([a-z0-9:_]+|"[a-z0-9:_]+")(\s+(desc|asc))?\s*(,|$))+(?<!,)$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 regex_pg_name = re.compile(r'^[a-z_][a-z0-9_$]*$', re.I)
-onchange_v7 = re.compile(r"^(\w+)\((.*)\)$")
+onchange_v7 = re.compile(r"^([a-zA-Z]\w+)\((.*)\)$")
 
 AUTOINIT_RECALCULATE_STORED_FIELDS = 1000
 
@@ -2922,9 +2922,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # Delete the records' properties.
         with self.env.norecompute():
-            self.env['ir.property'].search([('res_id', 'in', refs)]).unlink()
-
             self.check_access_rule('unlink')
+            self.env['ir.property'].search([('res_id', 'in', refs)]).sudo().unlink()
 
             cr = self._cr
             Data = self.env['ir.model.data'].sudo().with_context({})
@@ -3611,6 +3610,15 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     if table not in query.tables:
                         query.tables.append(table)
 
+        if self._transient:
+            # One single implicit access rule for transient models: owner only!
+            # This is ok because we assert that TransientModels always have
+            # log_access enabled, so that 'create_uid' is always there.
+            domain = [('create_uid', '=', self._uid)]
+            tquery = self._where_calc(domain, active_test=False)
+            apply_rule(tquery.where_clause, tquery.where_clause_params, tquery.tables)
+            return
+
         # apply main rules on the object
         Rule = self.env['ir.rule']
         where_clause, where_params, tables = Rule.domain_get(self._name, mode)
@@ -3757,10 +3765,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         :return: a list of record ids or an integer (if count is True)
         """
         self.sudo(access_rights_uid or self._uid).check_access_rights('read')
-
-        # For transient models, restrict access to the current user, except for the super-user
-        if self.is_transient() and self._log_access and self._uid != SUPERUSER_ID:
-            args = expression.AND(([('create_uid', '=', self._uid)], args or []))
 
         if expression.is_false(self, args):
             # optimization: no need to query, as no record satisfies the domain
@@ -5040,114 +5044,28 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if not all(name in self._fields for name in names):
             return {}
 
-        class PrefixTree(OrderedDict):
-            """ A prefix tree for sequences of field names. The tree is a
-                dictionary that associates each given field name to its
-                corresponding subtree (in fields order)::
-
-                    # tree corresponding to dotnames
-                    # ['name', 'line_ids.product_id', 'line_ids.tags_ids.name']
-                    {
-                        'name': {},
-                        'line_ids': {
-                            'product_id': {},
-                            'tags_ids': {
-                                'name': {},
-                            },
-                        },
-                    }
-            """
-            def __init__(self, model, dotnames):
-                super(PrefixTree, self).__init__()
-                if not dotnames:
-                    return
-                # group dotnames by prefix
-                suffixes = defaultdict(list)
-                for dotname in dotnames:
-                    names = dotname.split('.', 1)
-                    name_suffixes = suffixes[names[0]]
-                    if len(names) > 1:
-                        name_suffixes.append(names[1])
-                # fill in self in fields order
-                for name in model._fields:
-                    if name in suffixes:
-                        self[name] = PrefixTree(model[name], suffixes[name])
-
-            def dotnames(self):
-                """ Iterate over the sequences of field names. """
-                for name, subnames in self.items():
-                    yield name
-                    for dotname in subnames.dotnames():
-                        yield "%s.%s" % (name, dotname)
-
-        nametree = PrefixTree(self.browse(), field_onchange)
-        dotnames = list(nametree.dotnames())
-
-        def snapshot(record, tree=nametree):
-            """ Return a dict with the values of record, following nametree. """
-            vals = {}
-            for name, subnames in tree.items():
-                if subnames:
-                    # x2many fields as {line: snapshot(line), ...}
-                    vals[name] = OrderedDict(
-                        (line, snapshot(line, subnames))
-                        for line in record[name]
-                    )
-                else:
-                    vals[name] = record[name]
-            return vals
-
-        def diff(record, old, new, tree=nametree):
-            """ Return the values that differ between snapshots.
-                The snapshot ``old`` may be empty (for new records).
-            """
-            result = {}
-            for name, subnames in tree.items():
-                if name == 'id':
-                    continue
-                if old and old[name] == new[name]:
-                    continue
-                field = record._fields[name]
-                if not subnames:
-                    result[name] = field.convert_to_onchange(new[name], record, {})
-                    continue
-                # x2many fields: serialize value as commands
-                result[name] = commands = [(5,)]
-                old_val = old.get(name) or {}
-                for line, vals in new[name].items():
-                    vals0 = (old_val.get(line) or snapshot(line, subnames)) if line.id else {}
-                    line_diff = diff(line, vals0, vals, subnames)
-                    if not line.id:
-                        commands.append((0, line.id.ref or 0, line_diff))
-                    elif line_diff:
-                        commands.append((1, line.id, line_diff))
-                    else:
-                        commands.append((4, line.id))
-            return result
-
-        # prefetch x2many lines without data (for the initial snapshot)
-        for name, subnames in nametree.items():
-            if subnames and values.get(name):
-                # retrieve all ids in commands, and read the expected fields
-                line_ids = []
-                for cmd in values[name]:
-                    if cmd[0] in (1, 4):
-                        line_ids.append(cmd[1])
-                    elif cmd[0] == 6:
-                        line_ids.extend(cmd[2])
-                lines = self.browse()[name].browse(line_ids)
-                lines.read(list(subnames), load='_classic_write')
+        # filter out keys in field_onchange that do not refer to actual fields
+        dotnames = []
+        for dotname in field_onchange:
+            try:
+                model = self.browse()
+                for name in dotname.split('.'):
+                    model = model[name]
+                dotnames.append(dotname)
+            except Exception:
+                pass
 
         # create a new record with values, and attach ``self`` to it
         with env.do_in_onchange():
             record = self.new(values)
-            values = {name: record[name] for name in nametree}
+            values = {name: record[name] for name in record._cache}
             # attach ``self`` with a different context (for cache consistency)
             record._origin = self.with_context(__onchange=True)
 
-        # make a snapshot based on the initial values of record
+        # load fields on secondary records, to avoid false changes
         with env.do_in_onchange():
-            before = snapshot(record)
+            for dotname in dotnames:
+                record.mapped(dotname)
 
         # determine which field(s) should be triggered an onchange
         todo = list(names) or list(values)
@@ -5166,6 +5084,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 record[name] = value
 
         result = {}
+        dirty = set()
 
         # process names in order (or the keys of values if no name given)
         while todo:
@@ -5191,14 +5110,22 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                         field.type in ('one2many', 'many2many') and newval._is_dirty()
                     ):
                         todo.append(name)
+                        dirty.add(name)
 
-        # make a snapshot based on the final values of record
+        # determine subfields for field.convert_to_onchange() below
+        Tree = lambda: defaultdict(Tree)
+        subnames = Tree()
+        for dotname in dotnames:
+            subtree = subnames
+            for name in dotname.split('.'):
+                subtree = subtree[name]
+
+        # collect values from dirty fields
         with env.do_in_onchange():
-            after = snapshot(record)
-
-        # determine values that have changed by comparing snapshots
-        self.invalidate_cache()
-        result['value'] = diff(record, before, after)
+            result['value'] = {
+                name: self._fields[name].convert_to_onchange(record[name], record, subnames[name])
+                for name in dirty
+            }
 
         return result
 
