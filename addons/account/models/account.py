@@ -744,6 +744,7 @@ class AccountTax(models.Model):
         if not currency:
             currency = company_id.currency_id
         taxes = []
+        quantity = quantity or 1.0
         # By default, for each tax, tax amount will first be computed
         # and rounded at the 'Account' decimal precision for each
         # PO/SO/invoice line and then these rounded amounts will be
