@@ -879,18 +879,18 @@ class expression(object):
                 leaf.add_join_context(comodel, path[0], 'id', path[0])
                 push(create_substitution_leaf(leaf, (path[1], operator, right), comodel))
 
-            elif len(path) > 1 and field.store and field.type == 'one2many' and field.auto_join:
-                # res_partner.id = res_partner__bank_ids.partner_id
-                leaf.add_join_context(comodel, 'id', field.inverse_name, path[0])
-                domain = field.domain(model) if callable(field.domain) else field.domain
-                push(create_substitution_leaf(leaf, (path[1], operator, right), comodel))
-                if domain:
-                    domain = normalize_domain(domain)
-                    for elem in reversed(domain):
-                        push(create_substitution_leaf(leaf, elem, comodel))
-                    push(create_substitution_leaf(leaf, AND_OPERATOR, comodel))
+            #elif len(path) > 1 and field.store and field.type == 'one2many' and field.auto_join:
+            #    # res_partner.id = res_partner__bank_ids.partner_id
+            #    leaf.add_join_context(comodel, 'id', field.inverse_name, path[0])
+            #    domain = field.domain(model) if callable(field.domain) else field.domain
+            #    push(create_substitution_leaf(leaf, (path[1], operator, right), comodel))
+            #    if domain:
+            #        domain = normalize_domain(domain)
+            #        for elem in reversed(domain):
+            #            push(create_substitution_leaf(leaf, elem, comodel))
+            #        push(create_substitution_leaf(leaf, AND_OPERATOR, comodel))
 
-            elif len(path) > 1 and field.store and field.auto_join:
+            elif len(path) > 1 and field.store and field.auto_join and field.type not in ('many2one', 'one2many'):
                 raise NotImplementedError('auto_join attribute not supported on field %s' % field)
 
             elif len(path) > 1 and field.store and field.type == 'many2one':
