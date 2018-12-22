@@ -42,6 +42,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
         var defs = [this._super.apply(this, arguments)];
         this.time = Date.now();
         this.$progress = this.$('.progress');
+        this.clickStatementName = this._initialState.bank_statement_id ? true : false;
 
         if (this._initialState.bank_statement_id) {
             var def = this.model.makeRecord("account.bank.statement", [{
@@ -172,7 +173,9 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
      * @private
      */
     _onClickStatementName: function () {
-        this.$('.statement_name, .statement_name_edition').toggle();
+        if (this.clickStatementName) {
+            this.$('.statement_name, .statement_name_edition').toggle();
+        }
     },
     /**
      * @private
@@ -386,9 +389,9 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                     .attr("data-content", qweb.render('reconciliation.line.mv_line.details', {'line': line}));
             }
             if (line.already_paid === false &&
-                ((state.balance.amount_currency < 0 || line.partial_reconcile)
+                (((state.balance.amount_currency < 0 || line.partial_reconcile)
                     && line.amount > 0 && state.st_line.amount > 0 && targetLineAmount < line.amount && partialDebitProps <= 1) ||
-                ((state.balance.amount_currency > 0 || line.partial_reconcile)
+                ((state.balance.amount_currency > 0 || line.partial_reconcile))
                     && line.amount < 0 && state.st_line.amount < 0 && targetLineAmount > line.amount && partialCreditProps <= 1)) {
                 var $cell = $line.find(line.amount > 0 ? '.cell_right' : '.cell_left');
                 var text;
