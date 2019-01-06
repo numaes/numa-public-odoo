@@ -12,6 +12,21 @@ CREATE TABLE ir_act_url (primary key(id)) INHERITS (ir_actions);
 CREATE TABLE ir_act_server (primary key(id)) INHERITS (ir_actions);
 CREATE TABLE ir_act_client (primary key(id)) INHERITS (ir_actions);
 
+CREATE TABLE ir_object (
+    id serial NOT NULL,
+    object_model_id integer,
+    object_state_id integer,
+    create_uid integer,
+    create_date timestamp without time zone,
+    write_uid integer,
+    write_date timestamp without time zone,
+);
+
+CREATE TABLE ir_model (
+    id serial NOT NULL,
+    name varchar NOT NULL,
+);
+
 CREATE TABLE res_users (
     id serial NOT NULL,
     active boolean default True,
@@ -125,22 +140,53 @@ CREATE TABLE res_partner (
 ---------------------------------
 -- Default data
 ---------------------------------
-insert into res_currency (id, name, symbol) VALUES (1, 'EUR', '€');
-insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('EUR', 'base', 'res.currency', true, 1);
-select setval('res_currency_id_seq', 1);
+insert into ir_model (id, name) VALUES (1, 'ir.object');
+insert into ir_model (id, name) VALUES (2, 'ir.model');
+insert into ir_model (id, name) VALUES (3, 'ir.state.definition');
+insert into ir_model (id, name) VALUES (4, 'res.currency');
+insert into ir_model (id, name) VALUES (5, 'res.company');
+insert into ir_model (id, name) VALUES (6, 'ir.model_data');
+insert into ir_model (id, name) VALUES (7, 'res.groups');
+insert into ir_model (id, name) VALUES (8, 'res.users');
+insert into ir_model (id, name) VALUES (9, 'ir.module.module_dependency');
+insert into ir_model (id, name) VALUES (10, 'ir.module.module');
+insert into ir_model (id, name) VALUES (11, 'res.partner');
 
-insert into res_company (id, name, partner_id, currency_id, create_date) VALUES (1, 'My Company', 1, 1, now() at time zone 'UTC');
-insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('main_company', 'base', 'res.company', true, 1);
-select setval('res_company_id_seq', 1);
+insert into ir_object(id, object_model_id) VALUES (1, 2);
+insert into ir_object(id, object_model_id) VALUES (2, 2);
+insert into ir_object(id, object_model_id) VALUES (3, 2);
+insert into ir_object(id, object_model_id) VALUES (4, 2);
+insert into ir_object(id, object_model_id) VALUES (5, 2);
+insert into ir_object(id, object_model_id) VALUES (6, 2);
+insert into ir_object(id, object_model_id) VALUES (7, 2);
+insert into ir_object(id, object_model_id) VALUES (8, 2);
+insert into ir_object(id, object_model_id) VALUES (9, 2);
+insert into ir_object(id, object_model_id) VALUES (10, 2);
+insert into ir_object(id, object_model_id) VALUES (11, 2);
 
-insert into res_partner (id, name, company_id, create_date) VALUES (1, 'My Company', 1, now() at time zone 'UTC');
-insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('main_partner', 'base', 'res.partner', true, 1);
-select setval('res_partner_id_seq', 1);
+insert into res_currency (id, name, symbol) VALUES (100, 'EUR', '€');
+insert into ir_object(id, object_model_id) VALUES (100, 4);
+insert into ir_model_data (id, name, module, model, noupdate, res_id) VALUES (101, 'EUR', 'base', 'res.currency', true, 100);
+insert into ir_object(id, object_model_id) VALUES (101, 6);
 
-insert into res_users (id, login, password, active, partner_id, company_id, create_date) VALUES (1, '__system__', NULL, false, 1, 1, now() at time zone 'UTC');
-insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('user_root', 'base', 'res.users', true, 1);
-select setval('res_users_id_seq', 1);
+insert into res_company (id, name, partner_id, currency_id, create_date) VALUES (102, 'My Company', 1, 1, now() at time zone 'UTC');
+insert into ir_object(id, object_model_id) VALUES (102, 5);
+insert into ir_model_data (id, name, module, model, noupdate, res_id) VALUES (103, 'main_company', 'base', 'res.company', true, 102);
+insert into ir_object(id, object_model_id) VALUES (103, 6);
 
-insert into res_groups (id, name) VALUES (1, 'Employee');
-insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('group_user', 'base', 'res.groups', true, 1);
-select setval('res_groups_id_seq', 1);
+insert into res_partner (id, name, company_id, create_date) VALUES (104, 'My Company', 1, now() at time zone 'UTC');
+insert into ir_object(id, object_model_id) VALUES (104, 11);
+insert into ir_model_data (id, name, module, model, noupdate, res_id) VALUES (105, 'main_partner', 'base', 'res.partner', true, 104);
+insert into ir_object(id, object_model_id) VALUES (105, 6);
+
+insert into res_users (id, login, password, active, partner_id, company_id, create_date) VALUES (106, '__system__', NULL, false, 1, 1, now() at time zone 'UTC');
+insert into ir_object(id, object_model_id) VALUES (106, 8);
+insert into ir_model_data (id, name, module, model, noupdate, res_id) VALUES (107, 'user_root', 'base', 'res.users', true, 106);
+insert into ir_object(id, object_model_id) VALUES (107, 6);
+
+insert into res_groups (id, name) VALUES (108, 'Employee');
+insert into ir_object(id, object_model_id) VALUES (108, 7);
+insert into ir_model_data (id, name, module, model, noupdate, res_id) VALUES (109, 'group_user', 'base', 'res.groups', true, 108);
+insert into ir_object(id, object_model_id) VALUES (109, 6);
+
+select setval('ir_object_id_seq', 1000);

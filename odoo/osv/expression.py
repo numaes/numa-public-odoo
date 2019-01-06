@@ -859,6 +859,15 @@ class expression(object):
                 leaf.add_join_context(parent_model, parent_fname, 'id', parent_fname)
                 push(leaf)
 
+            elif field.model_name != model._name:
+                # comments about inherit'd fields
+                #  { 'field_name': ('parent_model', 'm2o_field_to_reach_parent',
+                #                    field_column_obj, origina_parent_model), ... }
+                parent_model = model.env[field.model_name]
+                parent_fname = field.name
+                leaf.add_join_context(parent_model, 'id', 'id', parent_fname)
+                push(leaf)
+
             elif left == 'id' and operator in HIERARCHY_FUNCS:
                 ids2 = to_ids(right, model, leaf.leaf)
                 dom = HIERARCHY_FUNCS[operator](left, ids2, model)

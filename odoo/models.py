@@ -335,18 +335,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         add('display_name', fields.Char(string='Display Name', automatic=True,
             compute='_compute_display_name'))
 
-        if self._log_access:
-            add('create_uid', fields.Many2one(
-                'res.users', string='Created by', automatic=True, readonly=True))
-            add('create_date', fields.Datetime(
-                string='Created on', automatic=True, readonly=True))
-            add('write_uid', fields.Many2one(
-                'res.users', string='Last Updated by', automatic=True, readonly=True))
-            add('write_date', fields.Datetime(
-                string='Last Updated on', automatic=True, readonly=True))
-            last_modified_name = 'compute_concurrency_field_with_access'
-        else:
-            last_modified_name = 'compute_concurrency_field'
+        last_modified_name = 'compute_concurrency_field_with_access'
 
         # this field must override any other column or field
         self._add_field(self.CONCURRENCY_CHECK_FIELD, fields.Datetime(
@@ -423,9 +412,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # determine the model's name
         name = cls._name or (len(parents) == 1 and parents[0]) or cls.__name__
 
-        # all models except 'base' implicitly inherit from 'base'
+        # all models except 'base' implicitly inherit from 'ir.object' and 'base'
         if name != 'base':
-            parents = list(parents) + ['base']
+            parents = list(parents) + ['ir.object', 'base']
 
         # create or retrieve the model's class
         if name in parents:
@@ -442,8 +431,23 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 '_inherit_children': OrderedSet(),      # names of children models
                 '_inherits_children': set(),            # names of children models
                 '_fields': OrderedDict(),               # populated in _setup_base()
+                '_own_fields': OrderedSet(),            # fields that belongs to own table
+                '_inherit_list': [],                    # list of inherit (without itself) in order
             })
             check_parent = cls._build_model_check_parent
+
+        # Keep the own fields set updated
+        ownFields = OrderedSet()
+        for name, field in getmembers(cls, Field.__instancecheck__):
+            # it should not happen, but check if field is not magic, custom and inherited fields
+            if not any(field.args.get(k) for k in ('automatic', 'manual', 'inherited')):
+                ownFields.add(name)
+        for name in ownFields:
+            ModelClass._own_fields.add(name)
+
+        # Update list of inherit
+        ModelClass._inherit_list = [parentName for parentName in parents if parentName != name] + \
+                                   ModelClass._inherit_list
 
         # determine all the classes the model should inherit from
         bases = LastOrderedSet([cls])
@@ -2401,6 +2405,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 if field.manual and not update_custom_fields:
                     continue            # don't update custom fields
 
+                if field.model_name != self._name:
+                    continue            # update only own fields
+
                 new = field.update_db(self, columns)
                 if new and field.compute:
                     self.pool.post_init(recompute, field)
@@ -2856,10 +2863,25 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             if not (field.inherited and callable(field.base_field.translate))
         ]
 
+        table = {mname: self.env[mname]._table
+                 for mname in set([f.model_name for f in [self._fields['id']] + fields_pre])}
+        join_clause = ''
+        for tname in table.values():
+            if tname != self._table:
+                join_clause += 'LEFT JOIN %s ON %s.id = %s.id ' % (
+                    tname,
+                    tname,
+                    self._table,
+                )
+
         # the query may involve several tables: we need fully-qualified names
         def qualify(field):
             col = field.name
-            res = self._inherits_join_calc(self._table, field.name, query)
+            res = self._inherits_join_calc(
+                table[field.model_name],
+                field.name,
+                query
+            )
             if field.type == 'binary' and (context.get('bin_size') or context.get('bin_size_' + col)):
                 # PG 9.2 introduces conflicting pg_size_pretty(numeric) -> need ::cast
                 res = 'pg_size_pretty(length(%s)::bigint)' % res
@@ -2869,7 +2891,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # determine the actual query to execute
         from_clause, where_clause, params = query.get_sql()
-        query_str = "SELECT %s FROM %s WHERE %s" % (",".join(qual_names), from_clause, where_clause)
+        query_str = "SELECT %s FROM %s %s WHERE %s" % (",".join(qual_names), from_clause, join_clause, where_clause)
 
         result = []
         param_pos = params.index(param_ids)
@@ -3094,8 +3116,14 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             Attachment = self.env['ir.attachment']
 
             for sub_ids in cr.split_for_in_conditions(self.ids):
+
                 query = "DELETE FROM %s WHERE id IN %%s" % self._table
                 cr.execute(query, (sub_ids,))
+
+                for inheritedModel in self._inherit_list:
+                    table = self.env[inheritedModel]._table
+                    query = "DELETE FROM %s WHERE id IN %%s" % table
+                    cr.execute(query, (sub_ids,))
 
                 # Removing the ir_model_data reference if the record being deleted
                 # is a record created by xml/csv file, as these are not connected
@@ -3355,14 +3383,23 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # update columns
         if columns:
             self.check_access_rule('write')
-            query = 'UPDATE "%s" SET %s WHERE id IN %%s' % (
-                self._table, ','.join('"%s"=%s' % (column[0], column[1]) for column in columns),
-            )
-            params = [column[2] for column in columns]
-            for sub_ids in cr.split_for_in_conditions(set(self.ids)):
-                cr.execute(query, params + [sub_ids])
-                if cr.rowcount != len(sub_ids):
-                    raise MissingError(_('One of the records you are trying to modify has already been deleted (Document type: %s).') % self._description)
+
+            tables = {}
+            for columnName, columnFormat, columnValue in columns:
+                table = self.env[self._fields[columnName].model_name]
+                if table not in tables:
+                    tables[table] = []
+                tables[table].append((columnName, columnFormat, columnValue))
+
+            for tableName, tableColumns in tables.items():
+                query = 'UPDATE "%s" SET %s WHERE id IN %%s' % (
+                    self._table, ','.join('"%s"=%s' % (column[0], column[1]) for column in tableColumns),
+                )
+                params = [column[2] for column in tableColumns]
+                for sub_ids in cr.split_for_in_conditions(set(self.ids)):
+                    cr.execute(query, params + [sub_ids])
+                    if cr.rowcount != len(sub_ids):
+                        raise MissingError(_('One of the records you are trying to modify has already been deleted (Document type: %s).') % self._description)
 
             for name in updated:
                 field = self._fields[name]
@@ -3573,7 +3610,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         translated_fields = set()       # translated fields
 
         # column names, formats and values (for common fields)
-        columns0 = [('id', "nextval(%s)", self._sequence)]
+        cr.execute('SELECT nextval(ir_object)')
+        newId = cr.fetchone()[0]
+
+        columns0 = []
         if self._log_access:
             columns0.append(('create_uid', "%s", self._uid))
             columns0.append(('create_date', "%s", AsIs("(now() at time zone 'UTC')")))
@@ -3597,14 +3637,27 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     other_fields.add(field)
 
             # insert a row with the given columns
-            query = "INSERT INTO {} ({}) VALUES ({}) RETURNING id".format(
-                quote(self._table),
-                ", ".join(quote(name) for name, fmt, val in columns),
-                ", ".join(fmt for name, fmt, val in columns),
-            )
-            params = [val for name, fmt, val in columns]
-            cr.execute(query, params)
-            ids.append(cr.fetchone()[0])
+            tables = {self._table: []}
+            for modelName in self._inherit_list:
+                tables[self.env[modelName]._table] = []
+
+            for columnName, columnFormat, columnValue in columns:
+                table = self.env[self._fields[columnName].model_name]
+                if table not in tables:
+                    # it should never happen!
+                    tables[table] = []
+                tables[table].append((columnName, columnFormat, columnValue))
+
+            for tableName, tableColumns in tables.items():
+                query = "INSERT INTO {} (id, {}) VALUES ({}, {}) RETURNING id".format(
+                    quote(tableName),
+                    ", ".join(quote(name) for name, fmt, val in tableColumns),
+                    newId,
+                    ", ".join(fmt for name, fmt, val in tableColumns),
+                )
+                params = [val for name, fmt, val in tableColumns]
+                cr.execute(query, params)
+                ids.append(cr.fetchone()[0])
 
         # the new records
         records = self.browse(ids)
