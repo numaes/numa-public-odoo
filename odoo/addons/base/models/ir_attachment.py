@@ -344,7 +344,9 @@ class IrAttachment(models.Model):
         model_ids = defaultdict(set)            # {model_name: set(ids)}
         require_employee = False
         if self:
-            self._cr.execute('SELECT res_model, res_id, create_uid, public FROM ir_attachment WHERE id IN %s', [tuple(self.ids)])
+            self._cr.execute('SELECT res_model, res_id, create_uid, public '
+                             'FROM ir_attachment LEFT JOIN ir_object ON ir_object.id = ir_attachment.id '
+                             'WHERE ir_attachment.id IN %s', [tuple(self.ids)])
             for res_model, res_id, create_uid, public in self._cr.fetchall():
                 if public and mode == 'read':
                     continue

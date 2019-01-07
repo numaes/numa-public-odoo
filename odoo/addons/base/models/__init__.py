@@ -6,7 +6,6 @@ from . import qweb
 
 from . import ir_object
 from . import ir_state_definition
-
 from . import ir_model
 from . import ir_sequence
 from . import ir_ui_menu

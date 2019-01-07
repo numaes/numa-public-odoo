@@ -7,7 +7,24 @@ _logger = logging.getLogger(__name__)
 MODULE_UNINSTALL_FLAG = '_force_unlink'
 
 
-class IrObject(models.Model):
+#
+# IMPORTANT: this must be the first model declared in the module
+#
+class Base(models.AbstractModel):
+    """ The base model, which is implicitly inherited by all models. """
+    _name = 'base'
+    _description = 'Base'
+
+
+class Unknown(models.AbstractModel):
+    """
+    Abstract model used as a substitute for relational fields with an unknown
+    comodel.
+    """
+    _name = '_unknown'
+    _description = 'Unknown'
+
+class IrObject(models.AbstractModel):
     _name = 'ir.object'
     _description = '''
     Base of all objects

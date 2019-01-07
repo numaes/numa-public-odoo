@@ -31,6 +31,12 @@ def initialize(cr):
     with odoo.tools.misc.file_open(f) as base_sql_file:
         cr.execute(base_sql_file.read())
 
+    irModelRecords = {}
+    cr.execute('SELECT id,name FROM ir_model')
+    for modelId, modelName in cr.fetchall():
+        irModelRecords[modelName] = modelId
+
+    idCounter = 400
     for i in odoo.modules.get_modules():
         mod_path = odoo.modules.get_module_path(i)
         if not mod_path:
@@ -42,7 +48,7 @@ def initialize(cr):
         if not info:
             continue
         categories = info['category'].split('/')
-        category_id = create_categories(cr, categories)
+        category_id, idCounter = create_categories(cr, categories, idCounter)
 
         if info['installable']:
             state = 'uninstalled'
@@ -50,9 +56,10 @@ def initialize(cr):
             state = 'uninstallable'
 
         cr.execute('INSERT INTO ir_module_module \
-                (author, website, name, shortdesc, description, \
+                (id, author, website, name, shortdesc, description, \
                     category_id, auto_install, state, web, license, application, icon, sequence, summary) \
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id', (
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id', (
+            idCounter,
             info['author'],
             info['website'], i, info['name'],
             info['description'], category_id,
@@ -62,13 +69,22 @@ def initialize(cr):
             info['application'], info['icon'],
             info['sequence'], info['summary']))
         id = cr.fetchone()[0]
+        cr.execute('INSERT INTO ir_object (id, object_model_id) VALUES (%s, %s)' %
+                   (idCounter, irModelRecords['ir.module.module']))
+        idCounter += 1
         cr.execute('INSERT INTO ir_model_data \
-            (name,model,module, res_id, noupdate) VALUES (%s,%s,%s,%s,%s)', (
-                'module_'+i, 'ir.module.module', 'base', id, True))
+            (id, name,model,module, res_id, noupdate) VALUES (%s,%s,%s,%s,%s,%s)', (
+                idCounter,'module_'+i, 'ir.module.module', 'base', id, True))
+        cr.execute('INSERT INTO ir_object (id, object_model_id) VALUES (%s, %s)' %
+                   (idCounter, irModelRecords['ir.model.data']))
+        idCounter += 1
         dependencies = info['depends']
         for d in dependencies:
             cr.execute('INSERT INTO ir_module_module_dependency \
-                    (module_id,name) VALUES (%s, %s)', (id, d))
+                    (id,module_id,name) VALUES (%s, %s, %s)', (idCounter, id, d))
+            cr.execute('INSERT INTO ir_object (id, object_model_id) VALUES (%s, %s)' %
+                       (idCounter, irModelRecords['ir.module.module.dependency']))
+            idCounter += 1
 
     # Install recursively all auto-installing modules
     while True:
@@ -81,7 +97,7 @@ def initialize(cr):
         if not to_auto_install: break
         cr.execute("""UPDATE ir_module_module SET state='to install' WHERE name in %s""", (tuple(to_auto_install),))
 
-def create_categories(cr, categories):
+def create_categories(cr, categories, idCounter):
     """ Create the ir_module_category entries for some categories.
 
     categories is a list of strings forming a single category with its
@@ -92,6 +108,12 @@ def create_categories(cr, categories):
     """
     p_id = None
     category = []
+
+    irModelRecords = {}
+    cr.execute('SELECT id,name FROM ir_model')
+    for modelId, modelName in cr.fetchall():
+        irModelRecords[modelName] = modelId
+
     while categories:
         category.append(categories[0])
         xml_id = 'module_category_' + ('_'.join(x.lower() for x in category)).replace('&', 'and').replace(' ', '_')
@@ -102,16 +124,22 @@ def create_categories(cr, categories):
         c_id = cr.fetchone()
         if not c_id:
             cr.execute('INSERT INTO ir_module_category \
-                    (name, parent_id) \
-                    VALUES (%s, %s) RETURNING id', (categories[0], p_id))
+                    (id, name, parent_id) \
+                    VALUES (%s, %s, %s) RETURNING id', (idCounter, categories[0], p_id))
             c_id = cr.fetchone()[0]
-            cr.execute('INSERT INTO ir_model_data (module, name, res_id, model) \
-                       VALUES (%s, %s, %s, %s)', ('base', xml_id, c_id, 'ir.module.category'))
+            cr.execute('INSERT INTO ir_object (id, object_model_id) VALUES (%s, %s)' %
+                       (idCounter, irModelRecords['ir.module.category']))
+            idCounter += 1
+            cr.execute('INSERT INTO ir_model_data (id, module, name, res_id, model) \
+                       VALUES (%s, %s, %s, %s, %s)', (idCounter, 'base', xml_id, c_id, 'ir.module.category'))
+            cr.execute('INSERT INTO ir_object (id, object_model_id) VALUES (%s, %s)' %
+                       (idCounter, irModelRecords['ir.model.data']))
+            idCounter += 1
         else:
             c_id = c_id[0]
         p_id = c_id
         categories = categories[1:]
-    return p_id
+    return p_id,  idCounter
 
 def has_unaccent(cr):
     """ Test if the database has an unaccent function.

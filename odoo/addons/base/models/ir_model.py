@@ -12,6 +12,7 @@ from odoo.modules.registry import Registry
 from odoo.osv import expression
 from odoo.tools import pycompat
 from odoo.tools.safe_eval import safe_eval
+import random
 
 _logger = logging.getLogger(__name__)
 
@@ -36,7 +37,7 @@ def make_compute(text, deps):
 INSERT_QUERY = "INSERT INTO {table} ({cols}) VALUES {rows} RETURNING id"
 UPDATE_QUERY = "UPDATE {table} SET {assignment} WHERE {condition} RETURNING id"
 
-def query_insert(cr, table, rows):
+def query_insert(cr, table, rows, model_name):
     """ Insert rows in a table. ``rows`` is a list of dicts, all with the same
         set of keys. Return the ids of the new rows.
     """
@@ -45,12 +46,29 @@ def query_insert(cr, table, rows):
     cols = list(rows[0])
     query = INSERT_QUERY.format(
         table=table,
-        cols=",".join(cols),
-        rows=",".join("%s" for row in rows),
+        cols=",".join(['id'] + cols),
+        rows=",".join(["%s" for row in rows]),
     )
-    params = [tuple(row[col] for col in cols) for row in rows]
+    params = [tuple([random.randint(10000, 2147483647)] + [row[col] for col in cols]) for row in rows]
     cr.execute(query, params)
-    return [row[0] for row in cr.fetchall()]
+    newIds = [row[0] for row in cr.fetchall()]
+
+    cr.execute('SELECT id FROM ir_model WHERE model = %s', (model_name,))
+    rec = cr.fetchall()
+    if rec:
+        model_id = rec[0][0]
+    else:
+        print('ACA')
+
+    query = INSERT_QUERY.format(
+        table='ir_object',
+        cols="id,object_model_id",
+        rows=",".join(["%s" for row in newIds]),
+    )
+    params = [tuple([id, model_id]) for id in newIds]
+    cr.execute(query, params)
+
+    return newIds
 
 def query_update(cr, table, values, selectors):
     """ Update the table with the given values (dict), and use the columns in
@@ -64,24 +82,6 @@ def query_update(cr, table, values, selectors):
     )
     cr.execute(query, values)
     return [row[0] for row in cr.fetchall()]
-
-
-#
-# IMPORTANT: this must be the first model declared in the module
-#
-class Base(models.AbstractModel):
-    """ The base model, which is implicitly inherited by all models. """
-    _name = 'base'
-    _description = 'Base'
-
-
-class Unknown(models.AbstractModel):
-    """
-    Abstract model used as a substitute for relational fields with an unknown
-    comodel.
-    """
-    _name = '_unknown'
-    _description = 'Unknown'
 
 
 class IrModel(models.Model):
@@ -265,7 +265,7 @@ class IrModel(models.Model):
         params = self._reflect_model_params(model)
         ids = query_update(cr, self._table, params, ['model'])
         if not ids:
-            ids = query_insert(cr, self._table, params)
+            ids = query_insert(cr, self._table, params, self._name)
 
         record = self.browse(ids)
         self.pool.post_init(record.modified, set(params) - {'model', 'state'})
@@ -276,9 +276,19 @@ class IrModel(models.Model):
             cr.execute("SELECT * FROM ir_model_data WHERE name=%s AND module=%s",
                        (xmlid, self._context['module']))
             if not cr.rowcount:
-                cr.execute(""" INSERT INTO ir_model_data (module, name, model, res_id, date_init, date_update)
-                               VALUES (%s, %s, %s, %s, (now() at time zone 'UTC'), (now() at time zone 'UTC')) """,
-                           (self._context['module'], xmlid, record._name, record.id))
+                newId = random.randint(10000, 2147483647)
+                cr.execute(""" INSERT INTO ir_model_data (id, module, name, model, res_id, date_init, date_update)
+                               VALUES (%s, %s, %s, %s, %s, (now() at time zone 'UTC'), (now() at time zone 'UTC')) """,
+                           (newId, self._context['module'], xmlid, record._name, record.id))
+                query = """ INSERT INTO ir_object
+                                (id, object_model_id, create_uid, create_date, write_uid, write_date)
+                            VALUES (%s, 
+                                (SELECT id FROM ir_model WHERE model=%s),
+                                %s,
+                                now() AT TIME ZONE 'UTC', 
+                                %s,
+                                now() AT TIME ZONE 'UTC') """
+                cr.execute(query, (newId, 'ir.model.data', self.env.user.id, self.env.user.id))
 
         return record
 
@@ -804,6 +814,9 @@ class IrModelFields(models.Model):
 
     def _reflect_model(self, model):
         """ Reflect the given model's fields. """
+        if model._name in ('base', '_unknown'):
+            return
+
         self.clear_caches()
         by_label = {}
         for field in model._fields.values():
@@ -819,6 +832,8 @@ class IrModelFields(models.Model):
         to_insert = []
         to_xmlids = []
         for name, field in model._fields.items():
+            if field.model_name != model._name:
+                continue
             old_vals = fields_data.get(name)
             new_vals = self._reflect_field_params(field)
             if old_vals is None:
@@ -834,7 +849,7 @@ class IrModelFields(models.Model):
 
         if to_insert:
             # insert missing fields
-            ids = query_insert(cr, self._table, to_insert)
+            ids = query_insert(cr, self._table, to_insert, self._name)
             records = self.browse(ids)
             self.pool.post_init(records.modified, to_insert[0])
             self.clear_caches()
@@ -1028,12 +1043,23 @@ class IrModelConstraint(models.Model):
         cr.execute(query, (conname, module))
         cons = cr.dictfetchone()
         if not cons:
+            newId = random.randint(10000, 2147483647)
             query = """ INSERT INTO ir_model_constraint
-                            (name, date_init, date_update, module, model, type, definition)
-                        VALUES (%s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC',
+                            (id, name, date_init, date_update, module, model, type, definition)
+                        VALUES (%s, %s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC',
                             (SELECT id FROM ir_module_module WHERE name=%s),
                             (SELECT id FROM ir_model WHERE model=%s), %s, %s) """
-            cr.execute(query, (conname, module, model._name, type, definition))
+            cr.execute(query, (newId, conname, module, model._name, type, definition))
+            query = """ INSERT INTO ir_object
+                            (id, object_model_id, create_uid, create_date, write_uid, write_date)
+                        VALUES (%s, 
+                            (SELECT id FROM ir_model WHERE model=%s),
+                            %s,
+                            now() AT TIME ZONE 'UTC',
+                            %s,
+                            now() AT TIME ZONE 'UTC') """
+            cr.execute(query, (newId, 'ir.model.constraint', self.env.user.id, self.env.user.id))
+
         elif cons['type'] != type or (definition and cons['definition'] != definition):
             query = """ UPDATE ir_model_constraint
                         SET date_update=now() AT TIME ZONE 'UTC', type=%s, definition=%s
@@ -1113,11 +1139,22 @@ class IrModelRelation(models.Model):
                     WHERE r.module=m.id AND r.name=%s AND m.name=%s """
         cr.execute(query, (table, module))
         if not cr.rowcount:
-            query = """ INSERT INTO ir_model_relation (name, date_init, date_update, module, model)
-                        VALUES (%s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC',
+            newId = random.randint(10000, 2147483647)
+            query = """ INSERT INTO ir_model_relation (id, name, date_init, date_update, module, model)
+                        VALUES (%s, %s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC',
                                 (SELECT id FROM ir_module_module WHERE name=%s),
                                 (SELECT id FROM ir_model WHERE model=%s)) """
-            cr.execute(query, (table, module, model._name))
+            cr.execute(query, (newId, table, module, model._name))
+            query = """ INSERT INTO ir_object
+                            (id, object_model_id, create_uid, create_date, write_uid, write_date)
+                        VALUES (%s, 
+                            (SELECT id FROM ir_model WHERE model=%s),
+                            %s,
+                            now() AT TIME ZONE 'UTC',
+                            %s,
+                            now() AT TIME ZONE 'UTC') """
+            cr.execute(query, (newId, 'ir.model.relation', self.env.user.id, self.env.user.id))
+
             self.invalidate_cache()
 
 
@@ -1476,7 +1513,7 @@ class IrModelData(models.Model):
             return
 
         # rows to insert
-        rowf = "(%s, %s, %s, %s, %s, now() at time zone 'UTC', now() at time zone 'UTC')"
+        rowf = "(%s, %s, %s, %s, %s, %s, now() at time zone 'UTC', now() at time zone 'UTC')"
         rows = tools.OrderedSet()
         for data in data_list:
             prefix, suffix = data['xml_id'].split('.', 1)
@@ -1489,28 +1526,40 @@ class IrModelData(models.Model):
             for parent_model, parent_field in record._inherits.items():
                 parent = record[parent_field]
                 puffix = suffix + '_' + parent_model.replace('.', '_')
-                rows.add((prefix, puffix, parent._name, parent.id, noupdate))
-            rows.add((prefix, suffix, record._name, record.id, noupdate))
+                rows.add((random.randint(10000, 2147483647), prefix, puffix, parent._name, parent.id, noupdate))
+            rows.add((random.randint(10000, 2147483647), prefix, suffix, record._name, record.id, noupdate))
 
         for sub_rows in self.env.cr.split_for_in_conditions(rows):
             # insert rows or update them
+            newId = random.randint(10000, 2147483647)
             query = """
-                INSERT INTO ir_model_data (module, name, model, res_id, noupdate, date_init, date_update)
+                INSERT INTO ir_model_data (id, module, name, model, res_id, noupdate, date_init, date_update)
                 VALUES {rows}
                 ON CONFLICT (module, name)
-                DO UPDATE SET date_update=(now() at time zone 'UTC') {where}
+                DO UPDATE SET date_update=(now() at time zone 'UTC') {where} 
             """.format(
                 rows=", ".join([rowf] * len(sub_rows)),
                 where="WHERE NOT ir_model_data.noupdate" if update else "",
             )
             try:
                 self.env.cr.execute(query, [arg for row in sub_rows for arg in row])
+                query = """ INSERT INTO ir_object
+                                (id, object_model_id, create_uid, create_date, write_uid, write_date)
+                            VALUES (%s, 
+                                (SELECT id FROM ir_model WHERE model=%s),
+                                %s,
+                                now() AT TIME ZONE 'UTC',
+                                %s,
+                                now() AT TIME ZONE 'UTC') """
+                self.env.cr.execute(query, (newId, 'ir.model.data', self.env.user.id, self.env.user.id))
             except Exception:
                 _logger.error("Failed to insert ir_model_data\n%s", "\n".join(str(row) for row in sub_rows))
                 raise
 
+
+
         # update loaded_xmlids
-        self.pool.loaded_xmlids.update("%s.%s" % row[:2] for row in rows)
+        self.pool.loaded_xmlids.update("%s.%s" % row[1:3] for row in rows)
 
     @api.model
     def _load_xmlid(self, xml_id):

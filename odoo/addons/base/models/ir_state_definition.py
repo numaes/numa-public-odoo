@@ -25,7 +25,7 @@ class IrState(models.Model):
     '''
 
     model_id = fields.Many2one('ir.model', 'Model', required=True)
-    name = fields.Char('State name', required=True)
+    name = fields.Char('State name', translatable=True, required=True)
     code = fields.Char('State code', required=True,
                        help='Used to refer to this state at program level')
 

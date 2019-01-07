@@ -679,6 +679,8 @@ class Field(MetaField('DummyField', (object,), {})):
                 _logger.warning("Field %s depends on itself; please fix its decorator @api.depends().", self)
             model, path = model0, path0
             for fname in dotnames.split('.'):
+                if fname not in model._fields:
+                    print('ACA')
                 field = model._fields[fname]
                 result.append((model, field, path))
                 model = model0.env.get(field.comodel_name)
@@ -2374,6 +2376,12 @@ class One2many(_RelationalMulti):
         if self.inverse_name:
             # link self to its inverse field and vice-versa
             comodel = model.env[self.comodel_name]
+            if self.inverse_name not in comodel._fields:
+                print('self: %s, comodel: %s, inverse_name: %s' % (
+                    str(self),
+                    str(comodel),
+                    self.inverse_name,
+                ))
             invf = comodel._fields[self.inverse_name]
             # In some rare cases, a ``One2many`` field can link to ``Int`` field
             # (res_model/res_id pattern). Only inverse the field if this is

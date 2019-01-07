@@ -37,6 +37,8 @@ from collections import defaultdict, MutableMapping, OrderedDict
 from contextlib import closing
 from inspect import getmembers, currentframe
 from operator import attrgetter, itemgetter
+import random
+import sys
 
 import babel.dates
 import dateutil.relativedelta
@@ -412,12 +414,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # determine the model's name
         name = cls._name or (len(parents) == 1 and parents[0]) or cls.__name__
 
-        # all models except 'base' implicitly inherit from 'ir.object' and 'base'
+        # all models except 'base' implicitly inherit from  'ir.object' and 'base'
         if name != 'base':
             parents = list(parents) + ['ir.object', 'base']
 
         # create or retrieve the model's class
-        if name in parents:
+        if name != 'ir.object' and name in parents:
             if name not in pool:
                 raise TypeError("Model %r does not exist in registry." % name)
             ModelClass = pool[name]
@@ -432,27 +434,30 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 '_inherits_children': set(),            # names of children models
                 '_fields': OrderedDict(),               # populated in _setup_base()
                 '_own_fields': OrderedSet(),            # fields that belongs to own table
-                '_inherit_list': [],                    # list of inherit (without itself) in order
+                '_inherit_list': ['ir.object'],         # list of inherit (without itself) in order
             })
             check_parent = cls._build_model_check_parent
 
         # Keep the own fields set updated
         ownFields = OrderedSet()
-        for name, field in getmembers(cls, Field.__instancecheck__):
+        for fname, field in getmembers(cls, Field.__instancecheck__):
             # it should not happen, but check if field is not magic, custom and inherited fields
             if not any(field.args.get(k) for k in ('automatic', 'manual', 'inherited')):
-                ownFields.add(name)
-        for name in ownFields:
-            ModelClass._own_fields.add(name)
+                ownFields.add(fname)
+        for fname in ownFields:
+            ModelClass._own_fields.add(fname)
 
         # Update list of inherit
-        ModelClass._inherit_list = [parentName for parentName in parents if parentName != name] + \
+        ModelClass._inherit_list = [parentName for parentName in parents
+                                    if parentName != name and parentName != 'base'] + \
                                    ModelClass._inherit_list
 
         # determine all the classes the model should inherit from
         bases = LastOrderedSet([cls])
         for parent in parents:
             if parent not in pool:
+                if parent == 'ir.object':
+                    continue
                 raise TypeError("Model %r inherits from non-existing model %r." % (name, parent))
             parent_class = pool[parent]
             if parent == name:
@@ -462,6 +467,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 check_parent(cls, parent_class)
                 bases.add(parent_class)
                 parent_class._inherit_children.add(name)
+
         ModelClass.__bases__ = tuple(bases)
 
         # determine the attributes of the model's class
@@ -2569,7 +2575,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             for name, field in sorted(getmembers(cls, Field.__instancecheck__), key=lambda f: f[1]._sequence):
                 # do not retrieve magic, custom and inherited fields
                 if not any(field.args.get(k) for k in ('automatic', 'manual', 'inherited')):
-                    self._add_field(name, field.new())
+                    #self._add_field(name, field.new())
+                    self._add_field(name, field)
             self._add_magic_fields()
             cls._proper_fields = OrderedSet(cls._fields)
 
@@ -3386,14 +3393,14 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
             tables = {}
             for columnName, columnFormat, columnValue in columns:
-                table = self.env[self._fields[columnName].model_name]
+                table = self.env[self._fields[columnName].model_name]._table
                 if table not in tables:
                     tables[table] = []
                 tables[table].append((columnName, columnFormat, columnValue))
 
             for tableName, tableColumns in tables.items():
                 query = 'UPDATE "%s" SET %s WHERE id IN %%s' % (
-                    self._table, ','.join('"%s"=%s' % (column[0], column[1]) for column in tableColumns),
+                    tableName, ','.join('"%s"=%s' % (column[0], column[1]) for column in tableColumns),
                 )
                 params = [column[2] for column in tableColumns]
                 for sub_ids in cr.split_for_in_conditions(set(self.ids)):
@@ -3609,11 +3616,15 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         other_fields = set()            # non-column fields
         translated_fields = set()       # translated fields
 
+        # Get a new ID
+        newId = random.randint(10000, 2147483647)
+
         # column names, formats and values (for common fields)
-        cr.execute('SELECT nextval(ir_object)')
-        newId = cr.fetchone()[0]
 
         columns0 = []
+
+        columns0.append(('object_model_id', "%s", AsIs("(SELECT id FROM ir_model WHERE model='%s')" % self._name)))
+
         if self._log_access:
             columns0.append(('create_uid', "%s", self._uid))
             columns0.append(('create_date', "%s", AsIs("(now() at time zone 'UTC')")))
@@ -3642,19 +3653,25 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 tables[self.env[modelName]._table] = []
 
             for columnName, columnFormat, columnValue in columns:
-                table = self.env[self._fields[columnName].model_name]
-                if table not in tables:
+                tableName = self.env[self._fields[columnName].model_name]._table
+                if tableName not in tables:
                     # it should never happen!
-                    tables[table] = []
-                tables[table].append((columnName, columnFormat, columnValue))
+                    tables[tableName] = []
+                tables[tableName].append((columnName, columnFormat, columnValue))
 
             for tableName, tableColumns in tables.items():
-                query = "INSERT INTO {} (id, {}) VALUES ({}, {}) RETURNING id".format(
-                    quote(tableName),
-                    ", ".join(quote(name) for name, fmt, val in tableColumns),
-                    newId,
-                    ", ".join(fmt for name, fmt, val in tableColumns),
-                )
+                if not tableColumns:
+                    query = "INSERT INTO {} (id) VALUES ({}) RETURNING id".format(
+                        quote(tableName),
+                        newId,
+                    )
+                else:
+                    query = "INSERT INTO {} (id, {}) VALUES ({}, {}) RETURNING id".format(
+                        quote(tableName),
+                        ", ".join(quote(name) for name, fmt, val in tableColumns),
+                        newId,
+                        ", ".join(fmt for name, fmt, val in tableColumns),
+                    )
                 params = [val for name, fmt, val in tableColumns]
                 cr.execute(query, params)
                 ids.append(cr.fetchone()[0])
@@ -5568,6 +5585,7 @@ class RecordCache(MutableMapping):
 
 
 AbstractModel = BaseModel
+AbstractModel._auto = True
 
 class Model(AbstractModel):
     """ Main super-class for regular database-persisted Odoo models.

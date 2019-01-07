@@ -20,11 +20,15 @@ CREATE TABLE ir_object (
     create_date timestamp without time zone,
     write_uid integer,
     write_date timestamp without time zone,
+    primary key(id)
 );
 
 CREATE TABLE ir_model (
     id serial NOT NULL,
     name varchar NOT NULL,
+    model varchar ,
+    state varchar,
+    primary key(id)
 );
 
 CREATE TABLE res_users (
@@ -95,6 +99,25 @@ CREATE TABLE ir_module_module_dependency (
     primary key(id)
 );
 
+CREATE TABLE ir_model_fields (
+    id serial NOT NULL,
+    name varchar,
+    model varchar,
+    state varchar,
+    model_id integer,
+    primary key(id)
+);
+
+CREATE TABLE ir_default (
+    id serial NOT NULL,
+    field_id integer,
+    user_id integer,
+    company_id integer,
+    condition varchar,
+    json_value varchar,
+    primary key(id)
+);
+
 CREATE TABLE ir_model_data (
     id serial NOT NULL,
     create_uid integer,
@@ -136,23 +159,98 @@ CREATE TABLE res_partner (
     primary key(id)
 );
 
+CREATE TABLE res_lang (
+    id serial,
+    name varchar,
+    code varchar,
+    active boolean,
+    primary key(id)
+);
+
+CREATE TABLE ir_config_parameter (
+    id serial,
+    key varchar,
+    value varchar,
+    primary key(id)
+);
+
+CREATE TABLE ir_translation (
+    id serial,
+    name varchar,
+    lang varchar,
+    type varchar,
+    res_id integer,
+    value varchar,
+    primary key(id)
+);
+
+CREATE TABLE ir_model_constraint (
+    id serial,
+    name varchar,
+    definition varchar,
+    model integer,
+    module integer,
+    type varchar,
+    date_update timestamp without time zone,
+    date_init timestamp without time zone,
+    primary key(id)
+);
+
+CREATE TABLE ir_model_relation (
+    id serial,
+    name varchar,
+    model integer,
+    module integer,
+    date_update timestamp without time zone,
+    date_init timestamp without time zone,
+    primary key(id)
+);
+
+CREATE TABLE ir_model_access (
+    id serial,
+    name varchar,
+    active boolean,
+    model_id integer,
+    group_id integer,
+    perm_read boolean,
+    perm_write boolean,
+    perm_create boolean,
+    perm_unlink boolean,
+    primary key(id)
+);
+
+CREATE TABLE ir_attachment (
+    id serial,
+    name varchar,
+    primary key(id)
+);
+
 
 ---------------------------------
 -- Default data
 ---------------------------------
-insert into ir_model (id, name) VALUES (1, 'ir.object');
-insert into ir_model (id, name) VALUES (2, 'ir.model');
-insert into ir_model (id, name) VALUES (3, 'ir.state.definition');
-insert into ir_model (id, name) VALUES (4, 'res.currency');
-insert into ir_model (id, name) VALUES (5, 'res.company');
-insert into ir_model (id, name) VALUES (6, 'ir.model_data');
-insert into ir_model (id, name) VALUES (7, 'res.groups');
-insert into ir_model (id, name) VALUES (8, 'res.users');
-insert into ir_model (id, name) VALUES (9, 'ir.module.module_dependency');
-insert into ir_model (id, name) VALUES (10, 'ir.module.module');
-insert into ir_model (id, name) VALUES (11, 'res.partner');
+insert into ir_model (id, model, name) VALUES (2, 'ir.model', 'ir.model');
+insert into ir_model (id, model, name) VALUES (3, 'ir.state.definition', 'ir.state.definition');
+insert into ir_model (id, model, name) VALUES (4, 'res.currency', 'res.currency');
+insert into ir_model (id, model, name) VALUES (5, 'res.company', 'res.company');
+insert into ir_model (id, model, name) VALUES (6, 'ir.model.data', 'ir.model.data');
+insert into ir_model (id, model, name) VALUES (7, 'res.groups', 'res.groups');
+insert into ir_model (id, model, name) VALUES (8, 'res.users', 'res.users');
+insert into ir_model (id, model, name) VALUES (9, 'ir.module.module.dependency', 'ir.module.module.dependency');
+insert into ir_model (id, model, name) VALUES (10, 'ir.module.module', 'ir.module.module');
+insert into ir_model (id, model, name) VALUES (11, 'res.partner', 'res.partner');
+insert into ir_model (id, model, name) VALUES (12, 'ir.module.category', 'ir.module.category');
+insert into ir_model (id, model, name) VALUES (13, 'ir.default', 'ir.default');
+insert into ir_model (id, model, name) VALUES (14, 'ir.object', 'ir.object');
+insert into ir_model (id, model, name) VALUES (15, 'res.lang', 'res.lang');
+insert into ir_model (id, model, name) VALUES (16, 'ir.config_parameter', 'ir.config_parameter');
+insert into ir_model (id, model, name) VALUES (17, 'ir.model.fields', 'ir.model.fields');
+insert into ir_model (id, model, name) VALUES (18, 'ir.translation', 'ir.translation');
+insert into ir_model (id, model, name) VALUES (19, 'ir.model.constraint', 'ir.model.constraint');
+insert into ir_model (id, model, name) VALUES (20, 'ir.model.relation', 'ir.model.relation');
+insert into ir_model (id, model, name) VALUES (21, 'ir.model.access', 'ir.model.access');
+insert into ir_model (id, model, name) VALUES (22, 'ir.attachment', 'ir.attachment');
 
-insert into ir_object(id, object_model_id) VALUES (1, 2);
 insert into ir_object(id, object_model_id) VALUES (2, 2);
 insert into ir_object(id, object_model_id) VALUES (3, 2);
 insert into ir_object(id, object_model_id) VALUES (4, 2);
@@ -163,25 +261,36 @@ insert into ir_object(id, object_model_id) VALUES (8, 2);
 insert into ir_object(id, object_model_id) VALUES (9, 2);
 insert into ir_object(id, object_model_id) VALUES (10, 2);
 insert into ir_object(id, object_model_id) VALUES (11, 2);
+insert into ir_object(id, object_model_id) VALUES (12, 2);
+insert into ir_object(id, object_model_id) VALUES (13, 2);
+insert into ir_object(id, object_model_id) VALUES (14, 2);
+insert into ir_object(id, object_model_id) VALUES (15, 2);
+insert into ir_object(id, object_model_id) VALUES (16, 2);
+insert into ir_object(id, object_model_id) VALUES (17, 2);
+insert into ir_object(id, object_model_id) VALUES (18, 2);
+insert into ir_object(id, object_model_id) VALUES (19, 2);
+insert into ir_object(id, object_model_id) VALUES (20, 2);
+insert into ir_object(id, object_model_id) VALUES (21, 2);
+insert into ir_object(id, object_model_id) VALUES (22, 2);
 
 insert into res_currency (id, name, symbol) VALUES (100, 'EUR', '€');
 insert into ir_object(id, object_model_id) VALUES (100, 4);
 insert into ir_model_data (id, name, module, model, noupdate, res_id) VALUES (101, 'EUR', 'base', 'res.currency', true, 100);
 insert into ir_object(id, object_model_id) VALUES (101, 6);
 
-insert into res_company (id, name, partner_id, currency_id, create_date) VALUES (102, 'My Company', 1, 1, now() at time zone 'UTC');
+insert into res_company (id, name, partner_id, currency_id, create_date) VALUES (102, 'My Company', 104, 100, now() at time zone 'UTC');
 insert into ir_object(id, object_model_id) VALUES (102, 5);
 insert into ir_model_data (id, name, module, model, noupdate, res_id) VALUES (103, 'main_company', 'base', 'res.company', true, 102);
 insert into ir_object(id, object_model_id) VALUES (103, 6);
 
-insert into res_partner (id, name, company_id, create_date) VALUES (104, 'My Company', 1, now() at time zone 'UTC');
+insert into res_partner (id, name, company_id, create_date) VALUES (104, 'My Company', 102, now() at time zone 'UTC');
 insert into ir_object(id, object_model_id) VALUES (104, 11);
 insert into ir_model_data (id, name, module, model, noupdate, res_id) VALUES (105, 'main_partner', 'base', 'res.partner', true, 104);
 insert into ir_object(id, object_model_id) VALUES (105, 6);
 
-insert into res_users (id, login, password, active, partner_id, company_id, create_date) VALUES (106, '__system__', NULL, false, 1, 1, now() at time zone 'UTC');
-insert into ir_object(id, object_model_id) VALUES (106, 8);
-insert into ir_model_data (id, name, module, model, noupdate, res_id) VALUES (107, 'user_root', 'base', 'res.users', true, 106);
+insert into res_users (id, login, password, active, partner_id, company_id, create_date) VALUES (1, '__system__', NULL, false, 104, 102, now() at time zone 'UTC');
+insert into ir_object(id, object_model_id) VALUES (1, 8);
+insert into ir_model_data (id, name, module, model, noupdate, res_id) VALUES (107, 'user_root', 'base', 'res.users', true, 1);
 insert into ir_object(id, object_model_id) VALUES (107, 6);
 
 insert into res_groups (id, name) VALUES (108, 'Employee');
@@ -189,4 +298,4 @@ insert into ir_object(id, object_model_id) VALUES (108, 7);
 insert into ir_model_data (id, name, module, model, noupdate, res_id) VALUES (109, 'group_user', 'base', 'res.groups', true, 108);
 insert into ir_object(id, object_model_id) VALUES (109, 6);
 
-select setval('ir_object_id_seq', 1000);
+select setval('ir_object_id_seq', 10000);
