@@ -531,6 +531,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         cls._depends = {}
         cls._constraints = {}
         cls._sql_constraints = []
+        _defaults = {}
 
         for base in reversed(cls.__bases__):
             if not getattr(base, 'pool', None):
@@ -543,6 +544,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 cls._log_access = getattr(base, '_log_access', cls._log_access)
 
             cls._inherits.update(base._inherits)
+            _defaults.update(getattr(base, '_defaults', {}))
 
             for mname, fnames in base._depends.items():
                 cls._depends[mname] = cls._depends.get(mname, []) + fnames
@@ -551,10 +553,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 # cons may override a constraint with the same function name
                 cls._constraints[getattr(cons[0], '__name__', id(cons[0]))] = cons
 
-            cls._sql_constraints += base._sql_constraints
+            #cls._sql_constraints += base._sql_constraints
 
         cls._sequence = cls._sequence or (cls._table + '_id_seq')
         cls._constraints = list(cls._constraints.values())
+        _defaults.update(getattr(cls, '_defaults', {}))
+        cls._defaults = _defaults
 
         # update _inherits_children of parent models
         for parent_name in cls._inherits:
@@ -1154,6 +1158,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 continue
 
             field = self._fields.get(name)
+
+            # 2.5 look up _defaults
+            if name in self._defaults:
+                defaults[name] = self._defaults[name]
 
             # 3. look up field.default
             if field and field.default:
@@ -3622,9 +3630,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         other_fields = set()            # non-column fields
         translated_fields = set()       # translated fields
 
-        # Get a new ID
-        newId = random.randint(10000, 2147483647)
-
         # column names, formats and values (for common fields)
 
         columns0 = []
@@ -3657,6 +3662,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             tables = {self._table: []}
             for modelName in self._inherit_list:
                 tables[self.env[modelName]._table] = []
+
+            # Get a new ID
+            newId = random.randint(10000, 2147483647)
 
             for columnName, columnFormat, columnValue in columns:
                 tableName = self.env[self._fields[columnName].model_name]._table

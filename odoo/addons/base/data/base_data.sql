@@ -6,11 +6,11 @@ CREATE TABLE ir_actions (
   id serial,
   primary key(id)
 );
-CREATE TABLE ir_act_window (primary key(id)) INHERITS (ir_actions);
-CREATE TABLE ir_act_report_xml (primary key(id)) INHERITS (ir_actions);
-CREATE TABLE ir_act_url (primary key(id)) INHERITS (ir_actions);
-CREATE TABLE ir_act_server (primary key(id)) INHERITS (ir_actions);
-CREATE TABLE ir_act_client (primary key(id)) INHERITS (ir_actions);
+CREATE TABLE ir_act_window (id serial, primary key(id));
+CREATE TABLE ir_act_report_xml (id serial, primary key(id));
+CREATE TABLE ir_act_url (id serial, primary key(id));
+CREATE TABLE ir_act_server (id serial, primary key(id));
+CREATE TABLE ir_act_client (id serial, primary key(id));
 
 CREATE TABLE ir_object (
     id serial NOT NULL,

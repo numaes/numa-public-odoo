@@ -169,8 +169,6 @@ class IrActionsActWindow(models.Model):
             fvg = self.env[act.res_model].fields_view_get(act.search_view_id.id, 'search')
             act.search_view = str(fvg)
 
-    name = fields.Char(string='Action Name', translate=True)
-    type = fields.Char(default="ir.actions.act_window")
     view_id = fields.Many2one('ir.ui.view', string='View Ref.', ondelete='set null')
     domain = fields.Char(string='Domain Value',
                          help="Optional domain filtering of the destination data, as a Python expression")
@@ -201,6 +199,10 @@ class IrActionsActWindow(models.Model):
     auto_search = fields.Boolean(default=True)
     search_view = fields.Text(compute='_compute_search_view')
     multi = fields.Boolean(string='Restrict to lists', help="If checked and the action is bound to a model, it will only appear in the More menu on list views")
+
+    _defaults = {
+        'type': "ir.actions.act_window",
+    }
 
     @api.multi
     def read(self, fields=None, load='_classic_read'):
@@ -294,9 +296,10 @@ class IrActionsActWindowclose(models.Model):
     _name = 'ir.actions.act_window_close'
     _description = 'Action Window Close'
     _inherit = 'ir.actions.actions'
-    _table = 'ir_actions'
 
-    type = fields.Char(default='ir.actions.act_window_close')
+    _defaults = {
+        'type': 'ir.actions.act_window_close',
+    }
 
 
 class IrActionsActUrl(models.Model):
@@ -307,11 +310,14 @@ class IrActionsActUrl(models.Model):
     _sequence = 'ir_actions_id_seq'
     _order = 'name'
 
-    name = fields.Char(string='Action Name', translate=True)
-    type = fields.Char(default='ir.actions.act_url')
     url = fields.Text(string='Action URL', required=True)
     target = fields.Selection([('new', 'New Window'), ('self', 'This Window')],
                               string='Action Target', default='new', required=True)
+
+    _defaults = {
+        'type': 'ir.actions.act_url',
+    }
+
 
 
 class IrActionsServer(models.Model):
@@ -340,7 +346,7 @@ class IrActionsServer(models.Model):
     _table = 'ir_act_server'
     _inherit = 'ir.actions.actions'
     _sequence = 'ir_actions_id_seq'
-    _order = 'sequence,name'
+    _order = 'sequence'
 
     DEFAULT_PYTHON_CODE = """# Available variables:
 #  - env: Odoo Environment on which the action is triggered
@@ -357,8 +363,6 @@ class IrActionsServer(models.Model):
         records = self.env['ir.model'].search([])
         return [(record.model, record.name) for record in records] + [('', '')]
 
-    name = fields.Char(string='Action Name', translate=True)
-    type = fields.Char(default='ir.actions.server')
     usage = fields.Selection([
         ('ir_actions_server', 'Server Action'),
         ('ir_cron', 'Scheduled Action')], string='Usage',
@@ -399,6 +403,10 @@ class IrActionsServer(models.Model):
                                     help="Provide the field used to link the newly created record "
                                          "on the record on used by the server action.")
     fields_lines = fields.One2many('ir.server.object.lines', 'server_id', string='Value Mapping', copy=True)
+
+    _defaults = {
+        'type': 'ir.actions.server',
+    }
 
     @api.constrains('code')
     def _check_python_code(self):
@@ -665,7 +673,6 @@ class IrActionsTodo(models.Model):
     action_id = fields.Many2one('ir.actions.actions', string='Action', required=True, index=True)
     sequence = fields.Integer(default=10)
     state = fields.Selection([('open', 'To Do'), ('done', 'Done')], string='Status', default='open', required=True)
-    name = fields.Char()
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -756,9 +763,6 @@ class IrActionsActClient(models.Model):
     _sequence = 'ir_actions_id_seq'
     _order = 'name'
 
-    name = fields.Char(string='Action Name', translate=True)
-    type = fields.Char(default='ir.actions.client')
-
     tag = fields.Char(string='Client action tag', required=True,
                       help="An arbitrary string, interpreted by the client"
                            " according to its own needs and wishes. There "
@@ -770,6 +774,10 @@ class IrActionsActClient(models.Model):
                            help="Arguments sent to the client along with "
                                 "the view tag")
     params_store = fields.Binary(string='Params storage', readonly=True)
+
+    _defaults = {
+        'type': 'ir.actions.client',
+    }
 
     @api.depends('params_store')
     def _compute_params(self):
