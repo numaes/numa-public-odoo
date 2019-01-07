@@ -87,7 +87,7 @@ class Registry(Mapping):
                     except Exception:
                         odoo.modules.reset_modules_state(db_name)
                         raise
-                except Exception:
+                except Exception as e:
                     _logger.exception('Failed to load registry')
                     del cls.registries[db_name]
                     raise

@@ -4080,9 +4080,19 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     key = (field.model_name, field.comodel_name, order_field)
                     if key not in seen:
                         seen.add(key)
+                        m2oAlias = self.env[field.model_name]._table.replace('.', '_')
                         order_by_elements += self._generate_m2o_order_by(alias, order_field, query, do_reverse, seen)
                 elif field.store and field.column_type:
-                    qualifield_name = self._inherits_join_calc(alias, order_field, query, implicit=False, outer=True)
+                    if field.model_name == self._name:
+                        talias = alias
+                    else:
+                        join = (alias, self.env[field.model_name]._table, 'id', 'id', self.env[field.model_name]._table)
+                        dest_alias, _ = query.add_join(join, implicit=False, outer=True)
+                        talias = "%s__%s" % (
+                            alias,
+                            self.env[field.model_name]._table.replace('.', '_'),
+                        )
+                    qualifield_name = "%s.%s" % (talias, order_field)
                     if field.type == 'boolean':
                         qualifield_name = "COALESCE(%s, false)" % qualifield_name
                     order_by_elements.append("%s %s" % (qualifield_name, order_direction))
