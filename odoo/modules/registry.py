@@ -84,10 +84,18 @@ class Registry(Mapping):
                     # This should be a method on Registry
                     try:
                         odoo.modules.load_modules(registry._db, force_demo, status, update_module)
-                    except Exception:
+                    except Exception as e:
+                        import sys
+                        exc_type, exc_obj, exc_tb = sys.exc_info()
+                        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                        _logger.info(exc_type, fname, exc_tb.tb_lineno)
                         odoo.modules.reset_modules_state(db_name)
                         raise
                 except Exception as e:
+                    import sys
+                    exc_type, exc_obj, exc_tb = sys.exc_info()
+                    fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                    _logger.info(exc_type, fname, exc_tb.tb_lineno)
                     _logger.exception('Failed to load registry')
                     del cls.registries[db_name]
                     raise

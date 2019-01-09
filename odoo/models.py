@@ -2503,6 +2503,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 # following specific properties:
                 #  - reading inherited fields should not bypass access rights
                 #  - copy inherited fields iff their original field is copied
+                if name == 'binding_type':
+                    print('ACA')
                 fields[name] = field.new(
                     inherited=True,
                     inherited_field=field,
@@ -2866,6 +2868,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         """
         if not self:
             return
+
+        if self._name == 'res.users' and 104 in self.ids:
+            print('ACA')
 
         env = self.env
         cr, user, context = env.args
@@ -3703,7 +3708,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             # mark fields to recompute; do this before setting other fields,
             # because the latter can require the value of computed fields, e.g.,
             # a one2many checking constraints on records
-            records.modified(self._fields)
+            records.modified({fname: f for fname, f in self._fields.items() if fname in self._own_fields})
 
             if other_fields:
                 # discard default values from context for other fields
@@ -5231,7 +5236,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # process triggers, mark fields to be invalidated/recomputed
         for model_path, fields in triggers.items():
             model_name, path = model_path
-            stored = {field for field in fields if field.compute and field.store}
+            stored = {field for field in fields
+                      if field.compute and field.store and field.name in self._own_fields}
             # process stored fields
             if path and stored:
                 # determine records of model_name linked by path to self
@@ -5250,8 +5256,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                         target0 = target0.with_env(self.env)
                 # prepare recomputation for each field on linked records
                 for field in stored:
+                    if field.name not in self._own_fields:
+                        continue
                     # discard records to not recompute for field
-                    target = target0 - self.env.protected(field)
+                    target = self.browse([r.id for r in target0
+                                          if r.id not in self.env.protected(field).ids])
                     if not target:
                         continue
                     invalids.append((field, target._ids))

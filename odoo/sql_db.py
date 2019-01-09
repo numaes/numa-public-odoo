@@ -224,6 +224,11 @@ class Cursor(object):
             params = params or None
             res = self._obj.execute(query, params)
         except Exception as e:
+            import sys, os
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            _logger.info(exc_type, fname, exc_tb.tb_lineno)
+
             if self._default_log_exceptions if log_exceptions is None else log_exceptions:
                 _logger.error("bad query: %s\nERROR: %s", self._obj.query or query, e)
             raise

@@ -46,11 +46,9 @@ class ir_cron(models.Model):
     _name = "ir.cron"
     _order = 'cron_name'
     _description = 'Scheduled Actions'
+    _inherit = ['ir.actions.server']
 
-    ir_actions_server_id = fields.Many2one(
-        'ir.actions.server', 'Server action',
-        delegate=True, ondelete='restrict', required=True)
-    cron_name = fields.Char('Name', related='ir_actions_server_id.name', store=True, readonly=False)
+    cron_name = fields.Char('Name', related='name', store=True, readonly=False)
     user_id = fields.Many2one('res.users', string='Scheduler User', default=lambda self: self.env.user, required=True)
     active = fields.Boolean(default=True)
     interval_number = fields.Integer(default=1, help="Repeat every x.")
