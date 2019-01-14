@@ -953,10 +953,6 @@ class Environment(Mapping):
 
     def add_todo(self, field, records):
         """ Mark ``field`` to be recomputed on ``records``. """
-        for rid in records.ids:
-            if not isinstance(rid, int):
-                print('ACA')
-
         recs_list = self.all.todo.setdefault(field, [])
         for i, recs in enumerate(recs_list):
             if recs.env == records.env:
@@ -1040,8 +1036,6 @@ class Cache(object):
         """ Return the value of ``field`` for ``record``. """
         key = record.env.cache_key(field)
         try:
-            if key == 104 or record.id == 104:
-                print('ACA')
             if self._data[key][field]:
                 value = self._data[key][field][record.id]
             else:
@@ -1055,8 +1049,6 @@ class Cache(object):
 
     def set(self, record, field, value):
         """ Set the value of ``field`` for ``record``. """
-        if not isinstance(record.id, int):
-            print('ACA')
         key = record.env.cache_key(field)
         self._data[key][field][record.id] = value
 

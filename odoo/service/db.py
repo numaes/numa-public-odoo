@@ -88,6 +88,10 @@ def _initialize_db(id, db_name, demo, lang, user_password, login='admin', countr
             cr.execute('SELECT login, password FROM res_users ORDER BY login')
             cr.commit()
     except Exception as e:
+        import sys, os
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        _logger.info(exc_type, fname, exc_tb.tb_lineno)
         _logger.exception('CREATE DATABASE failed:')
 
 def _create_empty_database(name):

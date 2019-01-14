@@ -863,9 +863,9 @@ class expression(object):
                 # comments about inherit'd fields
                 #  { 'field_name': ('parent_model', 'm2o_field_to_reach_parent',
                 #                    field_column_obj, origina_parent_model), ... }
-                parent_model = model.env[field.model_name]._table
+                parent_model = model.env[field.model_name]
                 parent_fname = field.name
-                leaf.add_join_context(parent_model, parent_model, 'id', parent_model)
+                leaf.add_join_context(parent_model, 'id', 'id', field.name)
                 push(leaf)
 
             elif left == 'id' and operator in HIERARCHY_FUNCS:

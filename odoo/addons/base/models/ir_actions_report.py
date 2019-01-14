@@ -81,9 +81,11 @@ class IrActionsReport(models.Model):
     _sequence = 'ir_actions_id_seq'
     _order = 'name'
 
-    name = fields.Char(translate=True)
-    type = fields.Char(default='ir.actions.report')
-    binding_type = fields.Selection(default='report')
+    _defaults = {
+        'type': 'ir.actions.report',
+        'binding_type': 'report',
+    }
+
     model = fields.Char(required=True)
 
     report_type = fields.Selection([

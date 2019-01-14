@@ -13,6 +13,7 @@ import tempfile
 import zipfile
 
 import requests
+import random
 
 from odoo.tools import pycompat
 

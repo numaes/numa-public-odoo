@@ -721,6 +721,11 @@ class Database(http.Controller):
             request.session.authenticate(name, post['login'], password)
             return http.local_redirect('/web/')
         except Exception as e:
+            import sys, os
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            _logger.info(exc_type, fname, exc_tb.tb_lineno)
+
             error = "Database creation error: %s" % (str(e) or repr(e))
         return self._render_template(error=error)
 

@@ -263,9 +263,10 @@ class AssetsBundle(object):
             type='.%s' % type
         )
         self.env.cr.execute("""
-             SELECT max(id)
-               FROM ir_attachment
-              WHERE create_uid = %s
+             SELECT max(ir_attachment.id)
+               FROM ir_attachment, ir_object
+              WHERE ir_attachment.id = ir_object.id
+                AND ir_object.create_uid = %s
                 AND url like %s
            GROUP BY datas_fname
            ORDER BY datas_fname

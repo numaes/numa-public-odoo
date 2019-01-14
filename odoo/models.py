@@ -287,6 +287,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
     @api.model
     def _add_field(self, name, field):
+
+
         """ Add the given ``field`` under the given ``name`` in the class """
         cls = type(self)
         # add field as an attribute and in cls._fields (for reflection)
@@ -296,7 +298,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         cls._fields[name] = field
 
         # basic setup of field
-        field.setup_base(self, name)
+        if not field._setup_done:
+            field.setup_base(self, name)
 
     @api.model
     def _pop_field(self, name):
@@ -445,13 +448,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             check_parent = cls._build_model_check_parent
 
         # Keep the own fields set updated
-        ownFields = OrderedSet()
         for fname, field in getmembers(cls, Field.__instancecheck__):
             # it should not happen, but check if field is not magic, custom and inherited fields
             if not any(field.args.get(k) for k in ('automatic', 'manual', 'inherited')):
-                ownFields.add(fname)
-        for fname in ownFields:
-            ModelClass._own_fields.add(fname)
+                ModelClass._own_fields.add(fname)
 
         # Update list of inherit
         ModelClass._inherit_list = [parentName for parentName in parents
@@ -531,6 +531,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         cls._depends = {}
         cls._constraints = {}
         cls._sql_constraints = []
+        cls._setup_done = False
         _defaults = {}
 
         for base in reversed(cls.__bases__):
@@ -2558,6 +2559,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if cls._setup_done:
             return
 
+        for parent in self._inherit_list:
+            if parent != self._name:
+                self.env[parent]._setup_base()
+
         # 1. determine the proper fields of the model: the fields defined on the
         # class and magic fields, not the inherited or custom ones
         cls0 = cls.pool.model_cache.get(cls._model_cache_key)
@@ -2588,6 +2593,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             for name in cls._fields:
                 delattr(cls, name)
             cls._fields = OrderedDict()
+
             for name, field in sorted(getmembers(cls, Field.__instancecheck__), key=lambda f: f[1]._sequence):
                 # do not retrieve magic, custom and inherited fields
                 if not any(field.args.get(k) for k in ('automatic', 'manual', 'inherited')):
@@ -2604,6 +2610,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # 3. make sure that parent models determine their own fields, then add
         # inherited fields to cls
+
         self._inherits_check()
         for parent in self._inherits:
             self.env[parent]._setup_base()
@@ -2622,6 +2629,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         cls = type(self)
 
         # set up fields
+        for name, field in [(n, f) for n, f in cls._fields.items() if not f.related]:
+            field.setup_full(self)
+
         bad_fields = []
         for name, field in cls._fields.items():
             try:
@@ -2829,7 +2839,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             )
 
         # special case: discard records to recompute for field
-        records -= self.env.field_todo(field)
+        records -= records.browse(self.env.field_todo(field).ids)
 
         # in onchange mode, discard computed fields and fields in cache
         if self.env.in_onchange:
@@ -3615,7 +3625,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # recompute fields
         if self.env.recompute and self._context.get('recompute', True):
-            self.recompute()
+            records.recompute()
 
         return records
 
@@ -3633,7 +3643,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     data['stored'].setdefault(name, False)
 
         # insert rows
-        ids = []                        # ids of created records
+        ids = set()                     # ids of created records
         other_fields = set()            # non-column fields
         translated_fields = set()       # translated fields
 
@@ -3695,10 +3705,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     )
                 params = [val for name, fmt, val in tableColumns]
                 cr.execute(query, params)
-                ids.append(cr.fetchone()[0])
+                ids.add(cr.fetchone()[0])
 
         # the new records
-        records = self.browse(ids)
+        records = self.browse(list(ids))
         for data, record in pycompat.izip(data_list, records):
             data['record'] = record
 
