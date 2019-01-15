@@ -28,10 +28,13 @@ class AutoVacuum(models.AbstractModel):
     @api.model
     def _gc_user_logs(self):
         self._cr.execute("""
-            DELETE FROM res_users_log log1 WHERE EXISTS (
-                SELECT 1 FROM res_users_log log2
-                WHERE log1.create_uid = log2.create_uid
-                AND log1.create_date < log2.create_date
+            DELETE FROM res_users_log log1 USING ir_object iro1 WHERE
+            log1.id = iro1.id
+            AND EXISTS (
+                SELECT 1 FROM res_users_log log2, ir_object iro2
+                  WHERE log2.id = iro2.id 
+                    AND iro1.create_uid = iro2.create_uid
+                    AND iro1.create_date < iro2.create_date
             )
         """)
         _logger.info("GC'd %d user log entries", self._cr.rowcount)

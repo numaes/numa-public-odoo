@@ -1531,30 +1531,30 @@ class IrModelData(models.Model):
 
         for sub_rows in self.env.cr.split_for_in_conditions(rows):
             # insert rows or update them
-            newId = random.randint(10000, 2147483647)
-            query = """
-                INSERT INTO ir_model_data (id, module, name, model, res_id, noupdate, date_init, date_update)
-                VALUES {rows}
-                ON CONFLICT (module, name)
-                DO UPDATE SET date_update=(now() at time zone 'UTC') {where} 
-            """.format(
-                rows=", ".join([rowf] * len(sub_rows)),
-                where="WHERE NOT ir_model_data.noupdate" if update else "",
-            )
-            try:
-                self.env.cr.execute(query, [arg for row in sub_rows for arg in row])
-                query = """ INSERT INTO ir_object
-                                (id, object_model_id, create_uid, create_date, write_uid, write_date)
-                            VALUES (%s, 
-                                (SELECT id FROM ir_model WHERE model=%s),
-                                %s,
-                                now() AT TIME ZONE 'UTC',
-                                %s,
-                                now() AT TIME ZONE 'UTC') """
-                self.env.cr.execute(query, (newId, 'ir.model.data', self.env.user.id, self.env.user.id))
-            except Exception:
-                _logger.error("Failed to insert ir_model_data\n%s", "\n".join(str(row) for row in sub_rows))
-                raise
+            for row in sub_rows:
+                query = """
+                    INSERT INTO ir_model_data (id, module, name, model, res_id, noupdate, date_init, date_update)
+                    VALUES {rows}
+                    ON CONFLICT (module, name)
+                    DO UPDATE SET date_update=(now() at time zone 'UTC') {where} 
+                """.format(
+                    rows=", ".join([rowf]),
+                    where="WHERE NOT ir_model_data.noupdate" if update else "",
+                )
+                try:
+                    self.env.cr.execute(query, [arg for arg in row])
+                    query = """ INSERT INTO ir_object
+                                    (id, object_model_id, create_uid, create_date, write_uid, write_date)
+                                VALUES (%s, 
+                                    (SELECT id FROM ir_model WHERE model='ir.model.data'),
+                                    %s,
+                                    now() AT TIME ZONE 'UTC',
+                                    %s,
+                                    now() AT TIME ZONE 'UTC') """
+                    self.env.cr.execute(query, (row[0], self.env.user.id, self.env.user.id))
+                except Exception:
+                    _logger.error("Failed to insert ir_model_data\n%s", "\n".join(str(row) for row in sub_rows))
+                    raise
 
 
 

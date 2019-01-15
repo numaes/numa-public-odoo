@@ -2881,9 +2881,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if not self:
             return
 
-        if self._name == 'res.users' and 104 in self.ids:
-            print('ACA')
-
         env = self.env
         cr, user, context = env.args
 
@@ -2903,14 +2900,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         table = {mname: self.env[mname]._table
                  for mname in set([f.model_name for f in [self._fields['id']] + fields_pre])}
-        join_clause = ''
+        inherit_from = []
+        inherit_where = []
         for tname in table.values():
             if tname != self._table:
-                join_clause += 'LEFT JOIN %s ON %s.id = %s.id ' % (
-                    tname,
-                    tname,
-                    self._table,
-                )
+                inherit_from += [tname]
+                inherit_where += ['%s.id = %s.id' % (self._table, tname)]
 
         # the query may involve several tables: we need fully-qualified names
         def qualify(field):
@@ -2929,7 +2924,18 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # determine the actual query to execute
         from_clause, where_clause, params = query.get_sql()
-        query_str = "SELECT %s FROM %s %s WHERE %s" % (",".join(qual_names), from_clause, join_clause, where_clause)
+
+        if from_clause and inherit_from:
+            from_clause += ', ' + ', '.join(inherit_from)
+        elif inherit_from:
+            from_clause = ', '.join(inherit_from)
+
+        if where_clause and inherit_where:
+            where_clause += ' AND %s' % ' AND '.join(inherit_where)
+        elif inherit_from:
+            where_clause = ' AND '.join(inherit_where)
+
+        query_str = "SELECT %s FROM %s WHERE %s" % (",".join(qual_names), from_clause, where_clause)
 
         result = []
         param_pos = params.index(param_ids)

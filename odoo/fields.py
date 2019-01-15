@@ -682,8 +682,6 @@ class Field(MetaField('DummyField', (object,), {})):
                 _logger.warning("Field %s depends on itself; please fix its decorator @api.depends().", self)
             model, path = model0, path0
             for fname in dotnames.split('.'):
-                if fname not in model._fields:
-                    print('ACA')
                 field = model._fields[fname]
                 result.append((model, field, path))
                 model = model0.env.get(field.comodel_name)
@@ -1050,8 +1048,6 @@ class Field(MetaField('DummyField', (object,), {})):
             # this is a stored field or an old-style function field
             if self.compute:
                 # this is a stored computed field, check for recomputation
-                if record._name == 'res.partner' and len(record) == 1 and record.id ==104:
-                    print ('ACA')
                 recs = record._recompute_check(self)
                 if recs:
                     # recompute the value (only in cache)

@@ -133,7 +133,7 @@ class ir_cron(models.Model):
                     if numbercall > 0:
                         numbercall -= 1
                     if not ok or job['doall']:
-                        cron._callback(job['cron_name'], job['ir_actions_server_id'], job['id'])
+                        cron._callback(job['cron_name'], job['id'], job['id'])
                     if numbercall:
                         nextcall += _intervalTypes[job['interval_type']](job['interval_number'])
                     ok = True
