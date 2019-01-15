@@ -4504,7 +4504,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name
         # Never delete rows used in last 5 minutes
         seconds = max(seconds, 300)
-        query = ("SELECT id FROM " + self._table + " WHERE"
+        query = ("SELECT id FROM ir_object WHERE"
             " COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp"
             " < ((now() at time zone 'UTC') - interval %s)")
         self._cr.execute(query, ("%s seconds" % seconds,))
