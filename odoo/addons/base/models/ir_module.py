@@ -841,7 +841,10 @@ class Module(models.Model):
             self._cr.execute('INSERT INTO ir_module_module_dependency (id, module_id, name) values (%s, %s, %s)',
                              (newId, self.id, dep))
         for dep in (existing - needed):
-            self._cr.execute('DELETE FROM ir_module_module_dependency WHERE module_id = %s and name = %s', (self.id, dep))
+            self._cr.execute('SELECT id FROM ir_module_module_exclusion WHERE module_id=%s AND name=%s', (self.id, dep))
+            ids = [record[0] for record in self._cr.fetchall()]
+            self._cr.execute('DELETE FROM ir_object WHERE id in %s', [tuple(ids)])
+            self._cr.execute('DELETE FROM ir_module_module_exclusion WHERE id in %s', [tuple(ids)])
         self.invalidate_cache(['dependencies_id'], self.ids)
 
     def _update_exclusions(self, excludes=None):
@@ -854,7 +857,10 @@ class Module(models.Model):
             newId = self._cr.fetchone()[0]
             self._cr.execute('INSERT INTO ir_module_module_exclusion (id, module_id, name) VALUES (%s, %s)', (newId, self.id, name))
         for name in (existing - needed):
-            self._cr.execute('DELETE FROM ir_module_module_exclusion WHERE module_id=%s AND name=%s', (self.id, name))
+            self._cr.execute('SELECT id FROM ir_module_module_exclusion WHERE module_id=%s AND name=%s', (self.id, name))
+            ids = [record[0] for record in self._cr.fetchall()]
+            self._cr.execute('DELETE FROM ir_object WHERE id in %s', [tuple(ids)])
+            self._cr.execute('DELETE FROM ir_module_module_exclusion WHERE id in %s', [tuple(ids)])
         self.invalidate_cache(['exclusion_ids'], self.ids)
 
     def _update_category(self, category='Uncategorized'):
