@@ -37,8 +37,6 @@ from collections import defaultdict, MutableMapping, OrderedDict
 from contextlib import closing
 from inspect import getmembers, currentframe
 from operator import attrgetter, itemgetter
-import random
-import sys
 
 import babel.dates
 import dateutil.relativedelta
@@ -3657,14 +3655,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         columns0 = []
 
-        columns0.append(('object_model_id', "%s", AsIs("(SELECT id FROM ir_model WHERE model='%s')" % self._name)))
-
-        if self._log_access:
-            columns0.append(('create_uid', "%s", self._uid))
-            columns0.append(('create_date', "%s", AsIs("(now() at time zone 'UTC')")))
-            columns0.append(('write_uid', "%s", self._uid))
-            columns0.append(('write_date', "%s", AsIs("(now() at time zone 'UTC')")))
-
         for data in data_list:
             # determine column values
             stored = data['stored']
@@ -3686,9 +3676,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             for modelName in self._inherit_list:
                 tables[self.env[modelName]._table] = []
 
-            # Get a new ID
-            newId = random.randint(10000, 2147483647)
-
             for columnName, columnFormat, columnValue in columns:
                 tableName = self.env[self._fields[columnName].model_name]._table
                 if tableName not in tables:
@@ -3696,14 +3683,32 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     tables[tableName] = []
                 tables[tableName].append((columnName, columnFormat, columnValue))
 
+            query = "INSERT INTO ir_object (object_model_id, create_uid, create_date, write_uid, write_date) " \
+                    "VALUES (" \
+                    "    (SELECT id FROM ir_model WHERE model='%s')," \
+                    "    '%(uid)s'," \
+                    "    (now() at time zone 'UTC')," \
+                    "    '%(uid)s'," \
+                    "    (now() at time zone 'UTC')," \
+                    ") " \
+                    "RETURNING id" % {
+                        'model_id': self._name,
+                        'uid': self.env.uid,
+                    }
+            newId = cr.fetchone()[0]
+            ids.add(cr.fetchone()[0])
+
             for tableName, tableColumns in tables.items():
+                if tableName == 'ir_object':
+                    continue
+
                 if not tableColumns:
-                    query = "INSERT INTO {} (id) VALUES ({}) RETURNING id".format(
+                    query = "INSERT INTO {} (id) VALUES ({})".format(
                         quote(tableName),
                         newId,
                     )
                 else:
-                    query = "INSERT INTO {} (id, {}) VALUES ({}, {}) RETURNING id".format(
+                    query = "INSERT INTO {} (id, {}) VALUES ({}, {})".format(
                         quote(tableName),
                         ", ".join(quote(name) for name, fmt, val in tableColumns),
                         newId,
@@ -3711,7 +3716,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     )
                 params = [val for name, fmt, val in tableColumns]
                 cr.execute(query, params)
-                ids.add(cr.fetchone()[0])
 
         # the new records
         records = self.browse(list(ids))
