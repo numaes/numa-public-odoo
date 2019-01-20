@@ -3290,7 +3290,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         self._check_concurrency()
         self.check_access_rights('write')
 
-        bad_names = {'id', 'parent_path'}
+        bad_names = {'id', 'parent_path', 'object_model_id'}
+
         if self._log_access:
             # the superuser can set log_access fields while loading registry
             if not(self.env.uid == SUPERUSER_ID and not self.pool.ready):
