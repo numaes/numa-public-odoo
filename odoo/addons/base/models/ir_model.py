@@ -44,29 +44,26 @@ def query_insert(cr, table, rows, model_name):
     if isinstance(rows, Mapping):
         rows = [rows]
     cols = list(rows[0])
-    query = INSERT_QUERY.format(
-        table=table,
-        cols=",".join(['id'] + cols),
-        rows=",".join(["%s" for row in rows]),
-    )
-    params = [tuple([random.randint(10000, 2147483647)] + [row[col] for col in cols]) for row in rows]
-    cr.execute(query, params)
-    newIds = [row[0] for row in cr.fetchall()]
+    newIds = []
+    for row in rows:
+        query = INSERT_QUERY.format(
+            table='ir_object',
+            cols="id,object_model_id",
+            rows="(SELECT id FROM ir_model WHERE model='%s')",
+        )
+        params = [(model_name,)]
+        cr.execute(query, params)
+        newId = cr.fetchall()[0]
 
-    cr.execute('SELECT id FROM ir_model WHERE model = %s', (model_name,))
-    rec = cr.fetchall()
-    if rec:
-        model_id = rec[0][0]
-    else:
-        print('ACA')
+        query = INSERT_QUERY.format(
+            table=table,
+            cols=",".join(['id'] + cols),
+            rows="%s",
+        )
+        params = [tuple([newId] + [row[col] for col in cols])]
+        cr.execute(query, params)
 
-    query = INSERT_QUERY.format(
-        table='ir_object',
-        cols="id,object_model_id",
-        rows=",".join(["%s" for row in newIds]),
-    )
-    params = [tuple([id, model_id]) for id in newIds]
-    cr.execute(query, params)
+        newIds.append(newId)
 
     return newIds
 
@@ -276,19 +273,20 @@ class IrModel(models.Model):
             cr.execute("SELECT * FROM ir_model_data WHERE name=%s AND module=%s",
                        (xmlid, self._context['module']))
             if not cr.rowcount:
-                newId = random.randint(10000, 2147483647)
-                cr.execute(""" INSERT INTO ir_model_data (id, module, name, model, res_id, date_init, date_update)
-                               VALUES (%s, %s, %s, %s, %s, (now() at time zone 'UTC'), (now() at time zone 'UTC')) """,
-                           (newId, self._context['module'], xmlid, record._name, record.id))
                 query = """ INSERT INTO ir_object
-                                (id, object_model_id, create_uid, create_date, write_uid, write_date)
+                                (object_model_id, create_uid, create_date, write_uid, write_date)
                             VALUES (%s, 
-                                (SELECT id FROM ir_model WHERE model=%s),
+                                (SELECT id FROM ir_model WHERE model='ir.model.data'),
                                 %s,
                                 now() AT TIME ZONE 'UTC', 
                                 %s,
-                                now() AT TIME ZONE 'UTC') """
-                cr.execute(query, (newId, 'ir.model.data', self.env.user.id, self.env.user.id))
+                                now() AT TIME ZONE 'UTC') 
+                            RETURNING id"""
+                cr.execute(query, (self.env.user.id, self.env.user.id))
+                newId = cr.fetchone()[0]
+                cr.execute(""" INSERT INTO ir_model_data (id, module, name, model, res_id, date_init, date_update)
+                               VALUES (%s, %s, %s, %s, %s, (now() at time zone 'UTC'), (now() at time zone 'UTC')) """,
+                           (newId, self._context['module'], xmlid, record._name, record.id))
 
         return record
 
@@ -1043,22 +1041,23 @@ class IrModelConstraint(models.Model):
         cr.execute(query, (conname, module))
         cons = cr.dictfetchone()
         if not cons:
-            newId = random.randint(10000, 2147483647)
+            query = """ INSERT INTO ir_object
+                            (id, object_model_id, create_uid, create_date, write_uid, write_date)
+                        VALUES (%s, 
+                            (SELECT id FROM ir_model WHERE model='ir.model.constraint'),
+                            %s,
+                            now() AT TIME ZONE 'UTC',
+                            %s,
+                            now() AT TIME ZONE 'UTC')
+                        RETURNING id"""
+            cr.execute(query, (newId, 'ir.model.constraint', self.env.user.id, self.env.user.id))
+            newId = cr.fetchone()[0]
             query = """ INSERT INTO ir_model_constraint
                             (id, name, date_init, date_update, module, model, type, definition)
                         VALUES (%s, %s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC',
                             (SELECT id FROM ir_module_module WHERE name=%s),
                             (SELECT id FROM ir_model WHERE model=%s), %s, %s) """
             cr.execute(query, (newId, conname, module, model._name, type, definition))
-            query = """ INSERT INTO ir_object
-                            (id, object_model_id, create_uid, create_date, write_uid, write_date)
-                        VALUES (%s, 
-                            (SELECT id FROM ir_model WHERE model=%s),
-                            %s,
-                            now() AT TIME ZONE 'UTC',
-                            %s,
-                            now() AT TIME ZONE 'UTC') """
-            cr.execute(query, (newId, 'ir.model.constraint', self.env.user.id, self.env.user.id))
 
         elif cons['type'] != type or (definition and cons['definition'] != definition):
             query = """ UPDATE ir_model_constraint
@@ -1139,22 +1138,22 @@ class IrModelRelation(models.Model):
                     WHERE r.module=m.id AND r.name=%s AND m.name=%s """
         cr.execute(query, (table, module))
         if not cr.rowcount:
-            newId = random.randint(10000, 2147483647)
+            query = """ INSERT INTO ir_object
+                            (id, object_model_id, create_uid, create_date, write_uid, write_date)
+                        VALUES (%s, 
+                            (SELECT id FROM ir_model WHERE model='ir.model.relation'),
+                            %s,
+                            now() AT TIME ZONE 'UTC',
+                            %s,
+                            now() AT TIME ZONE 'UTC')
+                        RETURNING id"""
+            cr.execute(query, (self.env.user.id, self.env.user.id))
+            newId = cr.fetchone()[0]
             query = """ INSERT INTO ir_model_relation (id, name, date_init, date_update, module, model)
                         VALUES (%s, %s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC',
                                 (SELECT id FROM ir_module_module WHERE name=%s),
                                 (SELECT id FROM ir_model WHERE model=%s)) """
             cr.execute(query, (newId, table, module, model._name))
-            query = """ INSERT INTO ir_object
-                            (id, object_model_id, create_uid, create_date, write_uid, write_date)
-                        VALUES (%s, 
-                            (SELECT id FROM ir_model WHERE model=%s),
-                            %s,
-                            now() AT TIME ZONE 'UTC',
-                            %s,
-                            now() AT TIME ZONE 'UTC') """
-            cr.execute(query, (newId, 'ir.model.relation', self.env.user.id, self.env.user.id))
-
             self.invalidate_cache()
 
 
@@ -1526,37 +1525,37 @@ class IrModelData(models.Model):
             for parent_model, parent_field in record._inherits.items():
                 parent = record[parent_field]
                 puffix = suffix + '_' + parent_model.replace('.', '_')
-                rows.add((random.randint(10000, 2147483647), prefix, puffix, parent._name, parent.id, noupdate))
-            rows.add((random.randint(10000, 2147483647), prefix, suffix, record._name, record.id, noupdate))
+                rows.add((prefix, puffix, parent._name, parent.id, noupdate))
+            rows.add((prefix, suffix, record._name, record.id, noupdate))
 
         for sub_rows in self.env.cr.split_for_in_conditions(rows):
             # insert rows or update them
             for row in sub_rows:
-                query = """
-                    INSERT INTO ir_model_data (id, module, name, model, res_id, noupdate, date_init, date_update)
-                    VALUES {rows}
-                    ON CONFLICT (module, name)
-                    DO UPDATE SET date_update=(now() at time zone 'UTC') {where} 
-                """.format(
-                    rows=", ".join([rowf]),
-                    where="WHERE NOT ir_model_data.noupdate" if update else "",
-                )
                 try:
-                    self.env.cr.execute(query, [arg for arg in row])
                     query = """ INSERT INTO ir_object
-                                    (id, object_model_id, create_uid, create_date, write_uid, write_date)
-                                VALUES (%s, 
+                                    (object_model_id, create_uid, create_date, write_uid, write_date)
+                                VALUES ( 
                                     (SELECT id FROM ir_model WHERE model='ir.model.data'),
                                     %s,
                                     now() AT TIME ZONE 'UTC',
                                     %s,
-                                    now() AT TIME ZONE 'UTC') """
+                                    now() AT TIME ZONE 'UTC')
+                                RETURNING id"""
                     self.env.cr.execute(query, (row[0], self.env.user.id, self.env.user.id))
+                    newId = self.env.cr.fetchone()[0]
+                    query = """
+                        INSERT INTO ir_model_data (id, module, name, model, res_id, noupdate, date_init, date_update)
+                        VALUES {rows}
+                        ON CONFLICT (module, name)
+                        DO UPDATE SET date_update=(now() at time zone 'UTC') {where} 
+                    """.format(
+                        rows=", ".join([rowf]),
+                        where="WHERE NOT ir_model_data.noupdate" if update else "",
+                    )
+                    self.env.cr.execute(query, [newId] + [arg for arg in row])
                 except Exception:
                     _logger.error("Failed to insert ir_model_data\n%s", "\n".join(str(row) for row in sub_rows))
                     raise
-
-
 
         # update loaded_xmlids
         self.pool.loaded_xmlids.update("%s.%s" % row[1:3] for row in rows)

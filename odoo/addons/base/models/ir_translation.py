@@ -175,13 +175,23 @@ class IrTranslationImport(object):
                             WHERE EXCLUDED.value IS NOT NULL AND EXCLUDED.value != '';
                        """ % (self._model_table, self._table))
             count += cr.rowcount
-        cr.execute(""" INSERT INTO %s(name, lang, res_id, src, type, value, module, state, comments)
-                       SELECT name, lang, res_id, src, type, value, module, state, comments
+
+        cr.execute(""" SELECT name, lang, res_id, src, type, value, module, state, comments
                        FROM %s
                        WHERE %s
-                       ON CONFLICT DO NOTHING;
-                   """ % (self._model_table, self._table, 'noupdate IS TRUE' if self._overwrite else 'TRUE'))
-        count += cr.rowcount
+                   """ % (self._table, 'noupdate IS TRUE' if self._overwrite else 'TRUE'))
+        for name, lang, res_id, src, type, value, module, state, comments in cr.fetchall():
+            cr.execute("""
+                       INSERT INTO ir_object (object_model_id) 
+                              VALUES ((SELECT id FROM ir_module WHERE model='ir.translation'))
+                              RETURNING id
+            """)
+            newId = cr.fetchone()[0]
+            cr.execute(""" INSERT INTO %s (id, name, lang, res_id, src, type, value, module, state, comments)
+                           VALUES ('%s', '%s', %s, '%s', '%s', '%s', '%s', '%s', '%s')
+                           ON CONFLICT DO NOTHING;
+                       """ % (self._model_table, newId, name, lang, res_id, src, type, value, module, state, comments))
+            count += 1
 
         if self._debug:
             cr.execute("SELECT COUNT(*) FROM ONLY %s" % self._model_table)

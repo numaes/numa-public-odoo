@@ -834,7 +834,12 @@ class Module(models.Model):
         existing = set(dep.name for dep in self.dependencies_id)
         needed = set(depends or [])
         for dep in (needed - existing):
-            self._cr.execute('INSERT INTO ir_module_module_dependency (module_id, name) values (%s, %s)', (self.id, dep))
+            self._cr.execute(
+                "INSERT INTO ir_object (object_model_id) "
+                "VALUES (SELECT id FROM ir_model WHERE model='ir.module.module.dependency') RETURNING id")
+            newId = self._cr.fetchone()[0]
+            self._cr.execute('INSERT INTO ir_module_module_dependency (id, module_id, name) values (%s, %s, %s)',
+                             (newId, self.id, dep))
         for dep in (existing - needed):
             self._cr.execute('DELETE FROM ir_module_module_dependency WHERE module_id = %s and name = %s', (self.id, dep))
         self.invalidate_cache(['dependencies_id'], self.ids)
@@ -843,7 +848,11 @@ class Module(models.Model):
         existing = set(excl.name for excl in self.exclusion_ids)
         needed = set(excludes or [])
         for name in (needed - existing):
-            self._cr.execute('INSERT INTO ir_module_module_exclusion (module_id, name) VALUES (%s, %s)', (self.id, name))
+            self._cr.execute(
+                "INSERT INTO ir_object (object_model_id) "
+                "VALUES (SELECT id FROM ir_model WHERE model='ir.module.module.exclusion') RETURNING id")
+            newId = self._cr.fetchone()[0]
+            self._cr.execute('INSERT INTO ir_module_module_exclusion (id, module_id, name) VALUES (%s, %s)', (newId, self.id, name))
         for name in (existing - needed):
             self._cr.execute('DELETE FROM ir_module_module_exclusion WHERE module_id=%s AND name=%s', (self.id, name))
         self.invalidate_cache(['exclusion_ids'], self.ids)

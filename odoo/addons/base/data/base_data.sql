@@ -251,51 +251,64 @@ insert into ir_model (id, model, name) VALUES (20, 'ir.model.relation', 'ir.mode
 insert into ir_model (id, model, name) VALUES (21, 'ir.model.access', 'ir.model.access');
 insert into ir_model (id, model, name) VALUES (22, 'ir.attachment', 'ir.attachment');
 
-insert into ir_object(id, object_model_id) VALUES (2, 2);
-insert into ir_object(id, object_model_id) VALUES (3, 2);
-insert into ir_object(id, object_model_id) VALUES (4, 2);
-insert into ir_object(id, object_model_id) VALUES (5, 2);
-insert into ir_object(id, object_model_id) VALUES (6, 2);
-insert into ir_object(id, object_model_id) VALUES (7, 2);
-insert into ir_object(id, object_model_id) VALUES (8, 2);
-insert into ir_object(id, object_model_id) VALUES (9, 2);
-insert into ir_object(id, object_model_id) VALUES (10, 2);
-insert into ir_object(id, object_model_id) VALUES (11, 2);
-insert into ir_object(id, object_model_id) VALUES (12, 2);
-insert into ir_object(id, object_model_id) VALUES (13, 2);
-insert into ir_object(id, object_model_id) VALUES (14, 2);
-insert into ir_object(id, object_model_id) VALUES (15, 2);
-insert into ir_object(id, object_model_id) VALUES (16, 2);
-insert into ir_object(id, object_model_id) VALUES (17, 2);
-insert into ir_object(id, object_model_id) VALUES (18, 2);
-insert into ir_object(id, object_model_id) VALUES (19, 2);
-insert into ir_object(id, object_model_id) VALUES (20, 2);
-insert into ir_object(id, object_model_id) VALUES (21, 2);
-insert into ir_object(id, object_model_id) VALUES (22, 2);
+insert into ir_object(id, object_model_id) VALUES (2, (SELECT id FROM ir_module_module WHERE name='ir.model'));
+insert into ir_object(id, object_model_id) VALUES (3, (SELECT id FROM ir_module_module WHERE name='ir.model'));
+insert into ir_object(id, object_model_id) VALUES (4, (SELECT id FROM ir_module_module WHERE name='ir.model'));
+insert into ir_object(id, object_model_id) VALUES (5, (SELECT id FROM ir_module_module WHERE name='ir.model'));
+insert into ir_object(id, object_model_id) VALUES (6, (SELECT id FROM ir_module_module WHERE name='ir.model'));
+insert into ir_object(id, object_model_id) VALUES (7, (SELECT id FROM ir_module_module WHERE name='ir.model'));
+insert into ir_object(id, object_model_id) VALUES (8, (SELECT id FROM ir_module_module WHERE name='ir.model'));
+insert into ir_object(id, object_model_id) VALUES (9, (SELECT id FROM ir_module_module WHERE name='ir.model'));
+insert into ir_object(id, object_model_id) VALUES (10, (SELECT id FROM ir_module_module WHERE name='ir.model'));
+insert into ir_object(id, object_model_id) VALUES (11, (SELECT id FROM ir_module_module WHERE name='ir.model'));
+insert into ir_object(id, object_model_id) VALUES (12, (SELECT id FROM ir_module_module WHERE name='ir.model'));
+insert into ir_object(id, object_model_id) VALUES (13, (SELECT id FROM ir_module_module WHERE name='ir.model'));
+insert into ir_object(id, object_model_id) VALUES (14, (SELECT id FROM ir_module_module WHERE name='ir.model'));
+insert into ir_object(id, object_model_id) VALUES (15, (SELECT id FROM ir_module_module WHERE name='ir.model'));
+insert into ir_object(id, object_model_id) VALUES (16, (SELECT id FROM ir_module_module WHERE name='ir.model'));
+insert into ir_object(id, object_model_id) VALUES (17, (SELECT id FROM ir_module_module WHERE name='ir.model'));
+insert into ir_object(id, object_model_id) VALUES (18, (SELECT id FROM ir_module_module WHERE name='ir.model'));
+insert into ir_object(id, object_model_id) VALUES (19, (SELECT id FROM ir_module_module WHERE name='ir.model'));
+insert into ir_object(id, object_model_id) VALUES (20, (SELECT id FROM ir_module_module WHERE name='ir.model'));
+insert into ir_object(id, object_model_id) VALUES (21, (SELECT id FROM ir_module_module WHERE name='ir.model'));
+insert into ir_object(id, object_model_id) VALUES (22, (SELECT id FROM ir_module_module WHERE name='ir.model'));
 
+insert into ir_object(id, object_model_id) VALUES (100, (SELECT id FROM ir_module_module WHERE name='res.currency'));
 insert into res_currency (id, name, symbol) VALUES (100, 'EUR', '€');
-insert into ir_object(id, object_model_id) VALUES (100, 4);
-insert into ir_model_data (id, name, module, model, noupdate, res_id) VALUES (101, 'EUR', 'base', 'res.currency', true, 100);
-insert into ir_object(id, object_model_id) VALUES (101, 6);
 
-insert into res_company (id, name, partner_id, currency_id, create_date) VALUES (102, 'My Company', 104, 100, now() at time zone 'UTC');
-insert into ir_object(id, object_model_id) VALUES (102, 5);
-insert into ir_model_data (id, name, module, model, noupdate, res_id) VALUES (103, 'main_company', 'base', 'res.company', true, 102);
-insert into ir_object(id, object_model_id) VALUES (103, 6);
+insert into ir_object(id, object_model_id) VALUES (101, (SELECT id FROM ir_module_module WHERE name='ir.model.data'));
+insert into ir_model_data (id, name, module, model, noupdate, res_id)
+       VALUES (101, 'EUR', 'base', 'res.currency', true, 100);
 
-insert into res_partner (id, name, company_id, create_date) VALUES (104, 'My Company', 102, now() at time zone 'UTC');
-insert into ir_object(id, object_model_id) VALUES (104, 11);
-insert into ir_model_data (id, name, module, model, noupdate, res_id) VALUES (105, 'main_partner', 'base', 'res.partner', true, 104);
-insert into ir_object(id, object_model_id) VALUES (105, 6);
+insert into ir_object(id, object_model_id) VALUES (102, (SELECT id FROM ir_module_module WHERE name='res.company'));
+insert into res_company (id, name, partner_id, currency_id, create_date)
+       VALUES (102, 'My Company', 104, 100, now() at time zone 'UTC');
 
-insert into res_users (id, login, password, active, partner_id, company_id, create_date) VALUES (1, '__system__', NULL, false, 104, 102, now() at time zone 'UTC');
-insert into ir_object(id, object_model_id) VALUES (1, 8);
-insert into ir_model_data (id, name, module, model, noupdate, res_id) VALUES (107, 'user_root', 'base', 'res.users', true, 1);
-insert into ir_object(id, object_model_id) VALUES (107, 6);
+insert into ir_object(id, object_model_id) VALUES (103, (SELECT id FROM ir_module_module WHERE name='ir.model.data'));
+insert into ir_model_data (id, name, module, model, noupdate, res_id)
+       VALUES (103, 'main_company', 'base', 'res.company', true, 102);
 
+insert into ir_object(id, object_model_id) VALUES (104, (SELECT id FROM ir_module_module WHERE name='res.partner'));
+insert into res_partner (id, name, company_id, create_date)
+       VALUES (104, 'My Company', 102, now() at time zone 'UTC');
+
+insert into ir_object(id, object_model_id) VALUES (105, (SELECT id FROM ir_module_module WHERE name='ir.model.data'));
+insert into ir_model_data (id, name, module, model, noupdate, res_id)
+       VALUES (105, 'main_partner', 'base', 'res.partner', true, 104);
+
+insert into ir_object(id, object_model_id) VALUES (1, (SELECT id FROM ir_module_module WHERE name='res.users'));
+insert into res_users (id, login, password, active, partner_id, company_id, create_date)
+       VALUES (1, '__system__', NULL, false, 104, 102, now() at time zone 'UTC');
+
+insert into ir_object(id, object_model_id) VALUES (107, (SELECT id FROM ir_module_module WHERE name='ir.model.data'));
+insert into ir_model_data (id, name, module, model, noupdate, res_id)
+       VALUES (107, 'user_root', 'base', 'res.users', true, 1);
+
+insert into ir_object(id, object_model_id) VALUES (108, (SELECT id FROM ir_module_module WHERE name='res.groups'));
 insert into res_groups (id, name) VALUES (108, 'Employee');
-insert into ir_object(id, object_model_id) VALUES (108, 7);
-insert into ir_model_data (id, name, module, model, noupdate, res_id) VALUES (109, 'group_user', 'base', 'res.groups', true, 108);
-insert into ir_object(id, object_model_id) VALUES (109, 6);
+
+insert into ir_object(id, object_model_id) VALUES (109, (SELECT id FROM ir_module_module WHERE name='ir.model.data'));
+insert into ir_model_data (id, name, module, model, noupdate, res_id)
+       VALUES (109, 'group_user', 'base', 'res.groups', true, 108);
 
 select setval('ir_object_id_seq', 10000);

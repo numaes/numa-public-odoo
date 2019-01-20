@@ -515,9 +515,21 @@ class IrActionsServer(models.Model):
         def log(message, level="info"):
             with self.pool.cursor() as cr:
                 cr.execute("""
-                    INSERT INTO ir_logging(create_date, create_uid, type, dbname, name, level, message, path, line, func)
-                    VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                """, (self.env.uid, 'server', self._cr.dbname, __name__, level, message, "action", action.id, action.name))
+                    INSERT INTO ir_object (object_model_id, create_date, create_uid, write_date, write_uid)
+                           VALUES (
+                                (SELECT id FROM ir_model WHERE model='ir.logging'),
+                                NOW() at time zone 'UTC',
+                                %s,
+                                NOW() at time zone 'UTC',
+                                %s
+                           )
+                           RETURNING id
+                """ % (self.env.uid, self.env.uid))
+                newId = cr.fetchone()[0]
+                cr.execute("""
+                    INSERT INTO ir_logging(id, create_date, create_uid, type, dbname, name, level, message, path, line, func)
+                    VALUES (%s, NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """, (newId, self.env.uid, 'server', self._cr.dbname, __name__, level, message, "action", action.id, action.name))
 
         eval_context = super(IrActionsServer, self)._get_eval_context(action=action)
         model_name = action.model_id.sudo().model
