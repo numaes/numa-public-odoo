@@ -840,7 +840,7 @@ class IrModelFields(models.Model):
 
         cr = self._cr
         module = self._context.get('module')
-        fields_data = self._existing_field_data(model._table)
+        fields_data = self._existing_field_data(model._name)
         to_insert = []
         to_xmlids = []
         for name, field in model._fields.items():
