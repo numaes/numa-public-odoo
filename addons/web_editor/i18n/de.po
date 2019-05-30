@@ -1059,47 +1059,47 @@ msgstr "Zitat"
 #. module: web_editor
 #: model:ir.model,name:web_editor.model_ir_qweb
 msgid "Qweb"
-msgstr ""
+msgstr "Qweb"
 
 #. module: web_editor
 #: model:ir.model,name:web_editor.model_ir_qweb_field
 msgid "Qweb Field"
-msgstr ""
+msgstr "Qweb Feld"
 
 #. module: web_editor
 #: model:ir.model,name:web_editor.model_ir_qweb_field_contact
 msgid "Qweb Field Contact"
-msgstr ""
+msgstr "Qweb Kontakt feld"
 
 #. module: web_editor
 #: model:ir.model,name:web_editor.model_ir_qweb_field_date
 msgid "Qweb Field Date"
-msgstr ""
+msgstr "Qweb Datumsfeld"
 
 #. module: web_editor
 #: model:ir.model,name:web_editor.model_ir_qweb_field_datetime
 msgid "Qweb Field Datetime"
-msgstr ""
+msgstr "Qweb Uhrzeit feld"
 
 #. module: web_editor
 #: model:ir.model,name:web_editor.model_ir_qweb_field_duration
 msgid "Qweb Field Duration"
-msgstr ""
+msgstr "Qweb Dauer feld"
 
 #. module: web_editor
 #: model:ir.model,name:web_editor.model_ir_qweb_field_float
 msgid "Qweb Field Float"
-msgstr ""
+msgstr "Qweb Feld Float"
 
 #. module: web_editor
 #: model:ir.model,name:web_editor.model_ir_qweb_field_html
 msgid "Qweb Field HTML"
-msgstr ""
+msgstr "Qweb Feld HTML"
 
 #. module: web_editor
 #: model:ir.model,name:web_editor.model_ir_qweb_field_image
 msgid "Qweb Field Image"
-msgstr ""
+msgstr "Qweb Bild Feld"
 
 #. module: web_editor
 #: model:ir.model,name:web_editor.model_ir_qweb_field_integer
@@ -1134,7 +1134,7 @@ msgstr ""
 #. module: web_editor
 #: model:ir.model,name:web_editor.model_ir_qweb_field_qweb
 msgid "Qweb Field qweb"
-msgstr ""
+msgstr "Qweb Feld qweb"
 
 #. module: web_editor
 #. openerp-web
@@ -1267,7 +1267,7 @@ msgstr ""
 #: code:addons/web_editor/static/src/xml/editor.xml:271
 #, python-format
 msgid "Rounded"
-msgstr ""
+msgstr "gerundet"
 
 #. module: web_editor
 #. openerp-web
@@ -1507,7 +1507,7 @@ msgstr "Diese Datei ist dem aktuellen Datensatz zugeordnet"
 #: code:addons/web_editor/static/src/xml/editor.xml:320
 #, python-format
 msgid "This image is an external image"
-msgstr ""
+msgstr "Dieses Bild ist ein externes Bild"
 
 #. module: web_editor
 #. openerp-web
