@@ -9,7 +9,7 @@
 # Martin Trigaux, 2016
 # Bohdan Lisnenko, 2016
 # rontif <oleksandr.basenko@gmail.com>, 2017
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2016-09-07 09:25+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -482,7 +482,7 @@ msgstr "Штрих-коди"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_sale_config_settings_form_pos
 msgid "Beverages"
-msgstr "Пиво"
+msgstr "Холодні напої"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.raisins_noir
@@ -610,7 +610,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:511
 #, python-format
 msgid "Change"
-msgstr "Здача"
+msgstr "Решта"
 
 #. module: point_of_sale
 #. openerp-web
@@ -631,7 +631,7 @@ msgstr "Змінити клієнта"
 #: code:addons/point_of_sale/static/src/js/screens.js:1753
 #, python-format
 msgid "Change Tip"
-msgstr "Змінити чайові"
+msgstr "Чайові з решти"
 
 #. module: point_of_sale
 #. openerp-web
@@ -639,7 +639,7 @@ msgstr "Змінити чайові"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1484
 #, python-format
 msgid "Change:"
-msgstr "Здача:"
+msgstr "Решта:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_product_to_weight
@@ -1346,6 +1346,13 @@ msgstr "Згрупувати проведення"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/models.js:135
+#, python-format
+msgid "HTTPS connection to IoT Box failed"
+msgstr "З'єднання HTTPS з IoT Box невдалося"
+
+#. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1322
 #, python-format
 msgid "Hardware Events"
@@ -1673,6 +1680,17 @@ msgstr "Програма лояльності"
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_payment
 msgid "Make Payment"
 msgstr "Зробити платіж"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/models.js:137
+#, python-format
+msgid ""
+"Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept "
+"the certificate of your IoT Box."
+msgstr ""
+"Переконайтеся, що ви використовуєте IoT Box v18.12 або вище. Перейдіть до %s"
+" для підтвердження сертифікату вашого IoT Box."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_sale_config_settings_form_pos
@@ -2255,6 +2273,13 @@ msgstr "Будь ласка, підтвердіть велику суму "
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr "Будь ласка, визначте дохід для цього товару: \"%s\" (id:%d)."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:2017
+#, python-format
+msgid "Please print the invoice from the backend"
+msgstr "Будь ласка, надрукуйте рахунок з бекенду"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:446
@@ -3174,6 +3199,17 @@ msgstr "Замовлення не можна надіслати"
 #, python-format
 msgid "The order could not be sent to the server due to an unknown error"
 msgstr "Замовлення неможливо надіслати на сервер через невідому помилку"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:2018
+#, python-format
+msgid ""
+"The order has been synchronized earlier. Please make the invoice from the "
+"backend for the order: "
+msgstr ""
+"Замовлення було синхронізовано раніше. Будь ласка, зробіть рахунок-фактуру з"
+" бекенду для замовлення:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_precompute_cash

@@ -8,12 +8,12 @@
 # Zoriana Zaiats, 2016
 # ТАрас <tratatuta@i.ua>, 2016
 # Евгений Жердев <e.v.zherdev@gmail.com>, 2017
-# rontif <oleksandr.basenko@gmail.com>, 2017
 # Анатолій Пономаренко <aponomarenko020@gmail.com>, 2017
 # Анатолій Пономаренко <Ponomarenkoa@minfin.gov.ua>, 2017
-# Bohdan Lisnenko, 2018
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
+# rontif <oleksandr.basenko@gmail.com>, 2017
 # Martin Trigaux, 2018
+# Bohdan Lisnenko, 2019
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-26 08:44+0000\n"
 "PO-Revision-Date: 2016-09-07 09:15+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1407,7 +1407,7 @@ msgid ""
 msgstr ""
 "Тип облікового запису має інформаційне призначення, для створення звітів, "
 "відповідно до законодавства конкретних країн і встановлення правил для "
-"закриття фінансового року та створення відкритих записів."
+"закриття звітного періоду та створення відкритих записів."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_type_form
@@ -3004,7 +3004,7 @@ msgstr "Коментар"
 #: model:ir.model.fields,field_description:account.field_account_invoice_commercial_partner_id
 #: model:ir.model.fields,help:account.field_account_invoice_report_commercial_partner_id
 msgid "Commercial Entity"
-msgstr "Перспективний"
+msgstr "Юридична особа"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_common_menu
@@ -3597,7 +3597,7 @@ msgstr "Короткострокові зобов’язання"
 #. module: account
 #: model:account.account.type,name:account.data_unaffected_earnings
 msgid "Current Year Earnings"
-msgstr "доходи поточного року"
+msgstr "Доходи поточного періоду"
 
 #. module: account
 #: selection:account.abstract.payment,partner_type:0
@@ -4530,12 +4530,12 @@ msgstr "Схеми оподаткування"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "Fiscal Year"
-msgstr "Fiscal Year"
+msgstr "Звітний період"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "Fiscal Year Last Day"
-msgstr "Оостанній день фіскального року"
+msgstr "Останній день звітного періоду"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_fiscalyear_last_day
@@ -4567,7 +4567,7 @@ msgstr "Фіксована сума"
 #. module: account
 #: model:account.account.type,name:account.data_account_type_fixed_assets
 msgid "Fixed Assets"
-msgstr "Необоротні активи"
+msgstr "Основні засоби"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model_amount
@@ -4675,7 +4675,7 @@ msgstr "Повне узглдження"
 msgid ""
 "Full accounting features: journals, legal statements, chart of accounts, "
 "etc."
-msgstr "Повні функції обліку: журнали, юридичні заяви, схема рахунків і т. Д."
+msgstr "Повні функції обліку: журнали, офіційні звіти, план рахунків і т. д."
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:103
@@ -8322,7 +8322,7 @@ msgstr "Округляти в кожному рядку"
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_search
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Sale"
-msgstr "Знижка"
+msgstr "Продаж"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_wizard_multi_chart
@@ -10342,9 +10342,9 @@ msgid ""
 "                                have issued. The credit note will be created, validated and reconciled\n"
 "                                with the invoice. You will not be able to modify the credit note."
 msgstr ""
-"Використовуйте цю опцію, якщо ви хочете скасувати рахунок-фактуру, яку ви не повинні робити\n"
-"Застосували. Кредитна заява буде створена, підтверджена та узгоджена\n"
-"з рахунком-фактурою. Ви не зможете змінити кредитну заяву."
+"Використовуйте цю опцію, якщо ви хочете скасувати рахунок-фактуру, який ви не повинні\n"
+"застосовувати. Сторно буде створене, підтверджене та узгоджене\n"
+"з рахунком-фактурою. Ви не зможете змінити сторно."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_type_include_initial_balance
