@@ -925,7 +925,7 @@ class IrModelAccess(models.Model):
                               FROM ir_model_access a
                               JOIN ir_model m ON (m.id = a.model_id)
                               JOIN res_groups_users_rel gu ON (gu.gid = a.group_id)
-                             WHERE m.model = %s
+                             WHERE m.model ilike %s
                                AND gu.uid = %s
                                AND a.active IS TRUE""".format(mode=mode),
                          (model_name, self._uid,))
@@ -937,7 +937,7 @@ class IrModelAccess(models.Model):
                                   FROM ir_model_access a
                                   JOIN ir_model m ON (m.id = a.model_id)
                                  WHERE a.group_id IS NULL
-                                   AND m.model = %s
+                                   AND m.model ilike %s
                                    AND a.active IS TRUE""".format(mode=mode),
                              (model_name,))
             r = self._cr.fetchone()[0]
