@@ -30,18 +30,18 @@
 # Mostafa Hanafy <mostafa.s.hanafy@gmail.com>, 2018
 # Yihya Hugirat <hugirat@gmail.com>, 2018
 # Firas Asad <firas101@gmail.com>, 2018
-# Ali Alrehawi <alrehawi@hotmail.com>, 2018
-# Osoul <baruni@osoul.ly>, 2018
 # Mustafa Rawi <mustafa@cubexco.com>, 2019
 # Martin Trigaux, 2019
+# Osoul <baruni@osoul.ly>, 2019
+# Ali Alrehawi <alrehawi@hotmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-29 10:09+0000\n"
+"POT-Creation-Date: 2019-06-21 11:06+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Ali Alrehawi <alrehawi@hotmail.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -491,6 +491,15 @@ msgstr ""
 " فقط</span>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid ""
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
+"                                    <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
+msgstr ""
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">القيمة</span>\n"
+"                                    <span groups=\"account.group_show_line_subtotals_tax_included\">السعر الإجمالي</span>"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span name=\"button_import_placeholder\"/> Statements"
 msgstr "<span name=\"button_import_placeholder\"/>الكشوفات البنكية"
@@ -875,6 +884,11 @@ msgid ""
 "either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
 "(or switch twice the mode if you are already in the desired one)."
 msgstr ""
+"المستخدم لايمكن أن يتحمل ضرائب B2B ,و ضرائب B2C \n"
+"المستخدم (ين) عليهم إشكالية:%s\n"
+" اذهب الى الإعدادات العامة، واختر لعرض  أسعار المنتج \n"
+"إما  وضع ’شامل الضرائب’ أو ’غير شامل الضرائب’ \n"
+"(أو حول الوضع مرتين إذا كنت في الوضع المطلوب )."
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -911,7 +925,7 @@ msgid "Account"
 msgstr "الحساب"
 
 #. module: account
-#: code:addons/account/models/account_move.py:914
+#: code:addons/account/models/account_move.py:948
 #, python-format
 msgid ""
 "Account %s (%s) does not allow reconciliation. First change the "
@@ -919,11 +933,6 @@ msgid ""
 msgstr ""
 "الحساب %s (%s) لا يسمح بالتسوية. قم بتغيير إعدادات الحساب أولًا ليسمح "
 "بالتسوية."
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
-msgid "Account Accountant"
-msgstr "المحاسب"
 
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
@@ -1237,6 +1246,7 @@ msgid "Account; Reverse entries"
 msgstr "الحسابات؛ القيود العكسية"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
 #: model:ir.ui.menu,name:account.account_account_menu
 #: model:ir.ui.menu,name:account.menu_finance_entries
 #: model_terms:ir.ui.view,arch_db:account.product_template_form_view
@@ -1637,7 +1647,6 @@ msgstr "يسمح لك باستخدام المحاسبة التحليلية."
 #: model:ir.model.fields,field_description:account.field_cash_box_out__amount
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__amount
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_tree
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_supplier_payment_tree
@@ -6839,7 +6848,7 @@ msgstr "اسم سجل الرسالة"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__description
 msgid "Message description: either the subject, or the beginning of the body"
-msgstr ""
+msgstr "وصف الرسالة : إما الموضوع ، أو بداية محتوى الرسالة"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_warn_msg
@@ -7967,7 +7976,7 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:444
 #, python-format
 msgid "Payments without a customer can't be matched"
-msgstr ""
+msgstr "المدفوعات بدون العميل لايمكن أن تتطابق"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree_pending_invoice
@@ -10378,6 +10387,16 @@ msgstr ""
 "يحدد الموقف الضريبي الضرائب/الحسابات المستخدمة لجهة الاتصال المُختارة."
 
 #. module: account
+#: code:addons/account/wizard/account_invoice_send.py:59
+#, python-format
+msgid ""
+"The following invoice(s) will not be sent by email, because the customers "
+"don't have email address."
+msgstr ""
+"الفواتير التالية لن ترسل عبر البريد الالكتروني ،بسبب أن العميل لا يملك عنوان"
+" بريد الكتروني."
+
+#. module: account
 #: code:addons/account/models/account.py:564
 #, python-format
 msgid "The holder of a journal's bank account must be the company (%s)."
@@ -11791,7 +11810,7 @@ msgstr "القيمة المشطوبة"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:217
 #, python-format
 msgid "Writeoff Date"
-msgstr ""
+msgstr "تاريخ غير صالح"
 
 #. module: account
 #: sql_constraint:account.move.line:0
@@ -12052,6 +12071,7 @@ msgid ""
 "You cannot register payments for customer invoices and credit notes at the "
 "same time."
 msgstr ""
+"لا تستطيع أن تسجل المدفوعات لفواتير العميل وملاحظات الائتمان في نفس الوقت"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:96
@@ -12060,6 +12080,8 @@ msgid ""
 "You cannot register payments for vendor bills and supplier refunds at the "
 "same time."
 msgstr ""
+"لا تستطيع تسجيل المدفوعات فيما يخص فواتير التاجر ومردودات المورد في نفس "
+"الوقت"
 
 #. module: account
 #: code:addons/account/models/account.py:644
@@ -12290,6 +12312,11 @@ msgstr ""
 #, python-format
 msgid "have been reconciled automatically."
 msgstr "تمت تسويتها تلقائيًا."
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__invoice_without_email
+msgid "number of invoice(s) that will not be sent"
+msgstr "رقم الفواتير(الفاتورة) التي لايمكن أن ترسل."
 
 #. module: account
 #. openerp-web

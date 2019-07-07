@@ -253,9 +253,10 @@ var ImageWidget = MediaWidget.extend({
         } else if (this.$media.is('a.o_image')) {
             o.url = this.$media.attr('href').replace(/[?].*/, '');
             o.id = +o.url.match(/\/web\/content\/(\d+)/, '')[1];
+            o.isDocument = true;
         }
         if (o.url) {
-            self._toggleImage(_.find(self.records, function (record) { return record.url === o.url;}) || o, true);
+            self._toggleImage(_.find(self.records, function (record) { return record.src === o.url;}) || o, true);
         }
 
         return def;
@@ -937,7 +938,7 @@ var VideoWidget = MediaWidget.extend({
             return {errorCode: 0};
         }
 
-        var autoplay = options.autoplay ? '?autoplay=1' : '?autoplay=0';
+        var autoplay = options.autoplay ? '?autoplay=1&mute=1' : '?autoplay=0';
 
         if (ytMatch && ytMatch[2].length === 11) {
             $video.attr('src', '//www.youtube' + (ytMatch[1] || '') + '.com/embed/' + ytMatch[2] + autoplay);
@@ -966,7 +967,8 @@ var VideoWidget = MediaWidget.extend({
             $video.attr('src', $video.attr('src') + '&rel=0');
         }
         if (options.loop && (ytMatch || vimMatch)) {
-            $video.attr('src', $video.attr('src') + '&loop=1');
+            var videoSrc = _.str.sprintf('%s&loop=1', $video.attr('src'));
+            $video.attr('src', ytMatch ? _.str.sprintf('%s&playlist=%s', videoSrc, ytMatch[2]) : videoSrc);
         }
         if (options.hide_controls && (ytMatch || dmMatch)) {
             $video.attr('src', $video.attr('src') + '&controls=0');

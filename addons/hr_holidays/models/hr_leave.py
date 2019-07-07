@@ -505,16 +505,25 @@ class HolidaysRequest(models.Model):
     @api.constrains('holiday_status_id', 'date_to', 'date_from')
     def _check_leave_type_validity(self):
         for leave in self:
+            vstart = leave.holiday_status_id.validity_start
+            vstop  = leave.holiday_status_id.validity_stop
+            dfrom  = leave.date_from
+            dto    = leave.date_to
             if leave.holiday_status_id.validity_start and leave.holiday_status_id.validity_stop:
-                vstart = leave.holiday_status_id.validity_start
-                vstop  = leave.holiday_status_id.validity_stop
-                dfrom  = leave.date_from
-                dto    = leave.date_to
-
                 if dfrom and dto and (dfrom.date() < vstart or dto.date() > vstop):
                     raise UserError(
                         _('You can take %s only between %s and %s') % (
                             leave.holiday_status_id.display_name, leave.holiday_status_id.validity_start, leave.holiday_status_id.validity_stop))
+            elif leave.holiday_status_id.validity_start:
+                if dfrom and (dfrom.date() < vstart):
+                    raise UserError(
+                        _('You can take %s from %s') % (
+                            leave.holiday_status_id.display_name, leave.holiday_status_id.validity_start))
+            elif leave.holiday_status_id.validity_stop:
+                if dto and (dto.date() > vstop):
+                    raise UserError(
+                        _('You can take %s until %s') % (
+                            leave.holiday_status_id.display_name, leave.holiday_status_id.validity_stop))
 
     @api.model
     def create(self, values):
@@ -540,7 +549,7 @@ class HolidaysRequest(models.Model):
                 return
             current_employee = self.env['hr.employee'].sudo().search([('user_id', '=', self.env.uid)], limit=1)
             for record in self:
-                emp_id = record._cache.get('employee_id', [False])[0]
+                emp_id = record._cache.get('employee_id', False) and record._cache.get('employee_id')[0]
                 if emp_id != current_employee.id:
                     try:
                         record._cache['name']
@@ -793,7 +802,7 @@ class HolidaysRequest(models.Model):
             return self.employee_id.parent_id.user_id
         elif self.department_id.manager_id.user_id:
             return self.department_id.manager_id.user_id
-        return self.env.user
+        return self.env['res.users']
 
     def activity_update(self):
         to_clean, to_do = self.env['hr.leave'], self.env['hr.leave']
@@ -803,12 +812,12 @@ class HolidaysRequest(models.Model):
             elif holiday.state == 'confirm':
                 holiday.activity_schedule(
                     'hr_holidays.mail_act_leave_approval',
-                    user_id=holiday.sudo()._get_responsible_for_approval().id)
+                    user_id=holiday.sudo()._get_responsible_for_approval().id or self.env.user.id)
             elif holiday.state == 'validate1':
                 holiday.activity_feedback(['hr_holidays.mail_act_leave_approval'])
                 holiday.activity_schedule(
                     'hr_holidays.mail_act_leave_second_approval',
-                    user_id=holiday.sudo()._get_responsible_for_approval().id)
+                    user_id=holiday.sudo()._get_responsible_for_approval().id or self.env.user.id)
             elif holiday.state == 'validate':
                 to_do |= holiday
             elif holiday.state == 'refuse':
