@@ -643,6 +643,7 @@ class PreforkServer(CommonServer):
             _logger.info('HTTP service (werkzeug) running on %s:%s', *self.address)
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
             self.socket.setblocking(0)
             self.socket.bind(self.address)
             self.socket.listen(8 * self.population)
