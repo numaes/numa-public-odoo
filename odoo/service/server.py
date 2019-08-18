@@ -685,8 +685,9 @@ class PreforkServer(CommonServer):
         # Empty the cursor pool, we dont want them to be shared among forked workers.
         odoo.sql_db.close_all()
 
-        _logger.info("LongPolling start")
-        self.long_polling_spawn()
+        if not odoo.evented:
+            _logger.info("LongPolling start")
+            self.long_polling_spawn()
 
         _logger.info("Multiprocess starting")
         rc = 0
