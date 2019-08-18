@@ -53,17 +53,18 @@ except ImportError:
 
 from ..tools import config
 
-from odoo import service
-from odoo import modules
-from odoo import addons
-from odoo import sql_db
-from odoo import conf
-from odoo import tools
-from odoo import api
+import odoo
+#from odoo import service
+#from odoo import modules
+#from odoo import addons
+#from odoo import sql_db
+#from odoo import conf
+#from odoo import tools
+#from odoo import api
 
-from odoo.modules import Registry
-from odoo.release import nt_service_name
-from odoo.tools import stripped_sys_argv, dumpstacks, log_ormcache_stats
+#from odoo.modules import Registry
+#from odoo.release import nt_service_name
+#from odoo.tools import stripped_sys_argv, dumpstacks, log_ormcache_stats
 
 _logger = logging.getLogger(__name__)
 
@@ -158,7 +159,7 @@ class FSWatcherBase(object):
 class FSWatcherWatchdog(FSWatcherBase):
     def __init__(self):
         self.observer = Observer()
-        for path in modules.module.ad_paths:
+        for path in odoo.modules.module.ad_paths:
             _logger.info('Watching addons folder %s', path)
             self.observer.schedule(self, path, recursive=True)
 
@@ -184,7 +185,7 @@ class FSWatcherInotify(FSWatcherBase):
         inotify.adapters._LOGGER.setLevel(logging.ERROR)
         # recreate a list as InotifyTrees' __init__ deletes the list's items
         paths_to_watch = []
-        for path in modules.module.ad_paths:
+        for path in odoo.modules.module.ad_paths:
             paths_to_watch.append(path)
             _logger.info('Watching addons folder %s', path)
         self.watcher = InotifyTrees(paths_to_watch, mask=INOTIFY_LISTEN_EVENTS, block_duration_s=.5)
@@ -283,12 +284,12 @@ class ThreadedServer(CommonServer):
     def cron_thread(self, number):
         while True:
             time.sleep(SLEEP_INTERVAL + number)     # Steve Reich timing style
-            registries = modules.registry.Registry.registries
+            registries = odoo.modules.registry.Registry.registries
             _logger.debug('cron%d polling for jobs', number)
             for db_name, registry in registries.iteritems():
                 if registry.ready:
                     try:
-                        addons.base.ir.ir_cron.ir_cron._acquire_job(db_name)
+                        odoo.addons.base.ir.ir_cron.ir_cron._acquire_job(db_name)
                     except Exception:
                         _logger.warning('cron%d encountered an Exception:', number, exc_info=True)
 
@@ -330,8 +331,8 @@ class ThreadedServer(CommonServer):
             signal.signal(signal.SIGTERM, self.signal_handler)
             signal.signal(signal.SIGCHLD, self.signal_handler)
             signal.signal(signal.SIGHUP, self.signal_handler)
-            signal.signal(signal.SIGQUIT, dumpstacks)
-            signal.signal(signal.SIGUSR1, log_ormcache_stats)
+            signal.signal(signal.SIGQUIT, odoo.tools.dumpstacks)
+            signal.signal(signal.SIGUSR1, odoo.tools.log_ormcache_stats)
         elif os.name == 'nt':
             import win32api
             win32api.SetConsoleCtrlHandler(lambda sig: self.signal_handler(sig, None), 1)
@@ -371,7 +372,7 @@ class ThreadedServer(CommonServer):
                     time.sleep(0.05)
 
         _logger.debug('--')
-        modules.registry.Registry.delete_all()
+        odoo.modules.registry.Registry.delete_all()
         logging.shutdown()
 
     def run(self, preload=None, stop=False):
@@ -439,8 +440,8 @@ class GeventServer(CommonServer):
             # Set process memory limit as an extra safeguard
             _, hard = resource.getrlimit(resource.RLIMIT_AS)
             resource.setrlimit(resource.RLIMIT_AS, (config['limit_memory_hard'], hard))
-            signal.signal(signal.SIGQUIT, dumpstacks)
-            signal.signal(signal.SIGUSR1, log_ormcache_stats)
+            signal.signal(signal.SIGQUIT, odoo.tools.dumpstacks)
+            signal.signal(signal.SIGUSR1, odoo.tools.log_ormcache_stats)
             gevent.spawn(self.watchdog)
         
         self.httpd = WSGIServer((self.interface, self.port), self.app)
@@ -527,7 +528,7 @@ class PreforkServer(CommonServer):
             sys.exit(0)
 
     def long_polling_spawn(self):
-        nargs = stripped_sys_argv()
+        nargs = odoo.tools.stripped_sys_argv()
         cmd = [sys.executable, sys.argv[0], 'gevent'] + nargs[1:]
         popen = subprocess.Popen(cmd)
         self.long_polling_pid = popen.pid
@@ -559,7 +560,6 @@ class PreforkServer(CommonServer):
                 raise KeyboardInterrupt
             elif sig == signal.SIGHUP:
                 # restart on kill -HUP
-                import odoo
                 odoo.phoenix = True
                 raise KeyboardInterrupt
             elif sig == signal.SIGQUIT:
@@ -567,7 +567,7 @@ class PreforkServer(CommonServer):
                 self.dumpstacks()
             elif sig == signal.SIGUSR1:
                 # log ormcache stats on kill -SIGUSR1
-                log_ormcache_stats()
+                odoo.tools.log_ormcache_stats()
             elif sig == signal.SIGTTIN:
                 # increase number of workers
                 self.population += 1
@@ -646,8 +646,8 @@ class PreforkServer(CommonServer):
         signal.signal(signal.SIGCHLD, self.signal_handler)
         signal.signal(signal.SIGTTIN, self.signal_handler)
         signal.signal(signal.SIGTTOU, self.signal_handler)
-        signal.signal(signal.SIGQUIT, dumpstacks)
-        signal.signal(signal.SIGUSR1, log_ormcache_stats)
+        signal.signal(signal.SIGQUIT, odoo.tools.dumpstacks)
+        signal.signal(signal.SIGUSR1, odoo.tools.log_ormcache_stats)
 
         if self.address:
             # listen to socket
@@ -694,7 +694,7 @@ class PreforkServer(CommonServer):
             return rc
 
         # Empty the cursor pool, we dont want them to be shared among forked workers.
-        sql_db.close_all()
+        odoo.sql_db.close_all()
 
         _logger.info("LongPolling start")
         self.long_polling_spawn()
@@ -818,7 +818,7 @@ class Worker(object):
                 self.process_work()
             _logger.info("Worker (%s) exiting. request_count: %s, registry count: %s.",
                          self.pid, self.request_count,
-                         len(modules.registry.Registry.registries))
+                         len(odoo.modules.registry.Registry.registries))
             self.stop()
         except Exception:
             _logger.exception("Worker (%s) Exception occured, exiting..." % self.pid)
@@ -878,7 +878,7 @@ class WorkerCron(Worker):
         if config['db_name']:
             db_names = config['db_name'].split(',')
         else:
-            db_names = service.db.list_dbs(True)
+            db_names = odoo.service.db.list_dbs(True)
         return db_names
 
     def process_work(self):
@@ -901,7 +901,7 @@ class WorkerCron(Worker):
 
             # dont keep cursors in multi database mode
             if len(db_names) > 1:
-                sql_db.close_db(db_name)
+                odoo.sql_db.close_db(db_name)
             if rpc_request_flag:
                 run_time = time.time() - start_time
                 end_rss, end_vms = memory_info(psutil.Process(os.getpid()))
@@ -931,9 +931,9 @@ class WorkerCron(Worker):
 server = None
 
 def load_server_wide_modules():
-    for m in conf.server_wide_modules:
+    for m in odoo.conf.server_wide_modules:
         try:
-            modules.module.load_openerp_module(m)
+            odoo.modules.module.load_openerp_module(m)
         except Exception:
             msg = ''
             if m == 'web':
@@ -944,10 +944,10 @@ Maybe you forgot to add those addons in your addons_path configuration."""
 
 def _reexec(updated_modules=None):
     """reexecute openerp-server process with (nearly) the same arguments"""
-    if tools.osutil.is_running_as_nt_service():
-        subprocess.call('net stop {0} && net start {0}'.format(nt_service_name), shell=True)
+    if odoo.tools.osutil.is_running_as_nt_service():
+        subprocess.call('net stop {0} && net start {0}'.format(odoo.release.nt_service_name), shell=True)
     exe = os.path.basename(sys.executable)
-    args = stripped_sys_argv()
+    args = odoo.tools.stripped_sys_argv()
     if updated_modules:
         args += ["-u", ','.join(updated_modules)]
     if not args or args[0] != exe:
@@ -957,7 +957,7 @@ def _reexec(updated_modules=None):
 
 def load_test_file_yml(registry, test_file):
     with registry.cursor() as cr:
-        tools.convert_yaml_import(cr, 'base', file(test_file), 'test', {}, 'init')
+        odoo.tools.convert_yaml_import(cr, 'base', file(test_file), 'test', {}, 'init')
         if config['test_commit']:
             _logger.info('test %s has been commited', test_file)
             cr.commit()
@@ -976,7 +976,7 @@ def load_test_file_py(registry, test_file):
                 for t in unittest.TestLoader().loadTestsFromModule(mod_mod):
                     suite.addTest(t)
                 _logger.log(logging.INFO, 'running tests %s.', mod_mod.__name__)
-                stream = modules.module.TestStream()
+                stream = odoo.modules.module.TestStream()
                 result = unittest.TextTestRunner(verbosity=2, stream=stream).run(suite)
                 success = result.wasSuccessful()
                 if hasattr(registry._assertion_report,'report_result'):
@@ -993,11 +993,11 @@ def preload_registries(dbnames):
     for dbname in dbnames:
         try:
             update_module = config['init'] or config['update']
-            registry = Registry.new(dbname, update_module=update_module)
+            registry = odoo.modules.Registry.new(dbname, update_module=update_module)
             # run test_file if provided
             if test_file:
                 _logger.info('loading test file %s', test_file)
-                with api.Environment.manage():
+                with odoo.api.Environment.manage():
                     if test_file.endswith('yml'):
                         load_test_file_yml(registry, test_file)
                     elif test_file.endswith('py'):
@@ -1010,20 +1010,19 @@ def preload_registries(dbnames):
             return -1
     return rc
 
-def start(preload=None, stop=False, evented=False):
+def start(preload=None, stop=False):
     """ Start the odoo http server and cron processor.
     """
     global server
     load_server_wide_modules()
-    if evented:
-        server = GeventServer(service.wsgi_server.application)
+    if odoo.evented:
+        server = GeventServer(odoo.service.wsgi_server.application)
     elif config['workers']:
-        server = PreforkServer(service.wsgi_server.application)
+        server = PreforkServer(odoo.service.wsgi_server.application)
     else:
-        server = ThreadedServer(service.wsgi_server.application)
+        server = ThreadedServer(odoo.service.wsgi_server.application)
 
     watcher = None
-    import odoo
     if 'reload' in config['dev_mode'] and not odoo.evented:
         if inotify:
             watcher = FSWatcherInotify()
@@ -1045,7 +1044,7 @@ def start(preload=None, stop=False, evented=False):
     if watcher:
         watcher.stop()
     # like the legend of the phoenix, all ends with beginnings
-    import odoo
+
     if getattr(odoo, 'phoenix', False):
         _reexec()
 
