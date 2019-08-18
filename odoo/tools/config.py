@@ -6,9 +6,9 @@ import optparse
 import os
 import sys
 # import odoo.conf
-# import odoo.loglevels as loglevels
+from .. import loglevels
 import logging
-# import odoo.release as release
+from .. import release
 import appdirs
 
 class MyOption (optparse.Option, object):
@@ -39,7 +39,7 @@ def _get_default_datadir():
         else:
             func = lambda **kwarg: "/var/lib/%s" % kwarg['appname'].lower()
     # No "version" kwarg as session and filestore paths are shared against series
-    return func(appname=odoo.release.product_name, appauthor=odoo.release.author)
+    return func(appname=release.product_name, appauthor=release.author)
 
 def _deduplicate_loggers(loggers):
     """ Avoid saving multiple logging levels for the same loggers to a save
@@ -86,11 +86,11 @@ class configmanager(object):
         self.config_file = fname
 
         self._LOGLEVELS = dict([
-            (getattr(odoo.loglevels, 'LOG_%s' % x), getattr(logging, x))
+            (getattr(loglevels, 'LOG_%s' % x), getattr(logging, x))
             for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', 'NOTSET')
         ])
 
-        version = "%s %s" % (odoo.release.description, odoo.release.version)
+        version = "%s %s" % (release.description, release.version)
         self.parser = parser = optparse.OptionParser(version=version, option_class=MyOption)
 
         # Server startup config
@@ -584,7 +584,7 @@ class configmanager(object):
     @property
     def addons_data_dir(self):
         add_dir = os.path.join(self['data_dir'], 'addons')
-        d = os.path.join(add_dir, odoo.release.series)
+        d = os.path.join(add_dir, release.series)
         if not os.path.exists(d):
             try:
                 # bootstrap parent dir +rwx
