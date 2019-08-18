@@ -1015,7 +1015,7 @@ def start(preload=None, stop=False):
     """
     global server
     load_server_wide_modules()
-    if odoo.evented:
+    if config['GEVENT']:
         server = GeventServer(odoo.service.wsgi_server.application)
     elif config['workers']:
         server = PreforkServer(odoo.service.wsgi_server.application)
