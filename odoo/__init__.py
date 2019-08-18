@@ -40,6 +40,7 @@ if hasattr(time, 'tzset'):
 # The hard-coded super-user id (a.k.a. administrator, or root user).
 SUPERUSER_ID = 1
 
+
 def registry(database_name=None):
     """
     Return the model registry for the given database, or the database mentioned
@@ -54,6 +55,10 @@ def registry(database_name=None):
 #----------------------------------------------------------
 # Imports
 #----------------------------------------------------------
+
+
+import tools
+
 import addons
 import conf
 import loglevels
@@ -64,7 +69,6 @@ import release
 import report
 import service
 import sql_db
-import tools
 import workflow
 
 #----------------------------------------------------------

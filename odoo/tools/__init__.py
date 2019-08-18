@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from config import config
+
 import copy
 import win32
 import appdirs
-from config import config
 from misc import *
 from convert import *
 from translate import *
