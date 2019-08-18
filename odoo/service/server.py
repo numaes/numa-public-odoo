@@ -596,8 +596,8 @@ class PreforkServer(CommonServer):
         if config['xmlrpc']:
             while len(self.workers_http) < self.population:
                 self.worker_spawn(WorkerHTTP, self.workers_http)
-            if not self.long_polling_pid:
-                self.long_polling_spawn()
+            # if not self.long_polling_pid:
+            #     self.long_polling_spawn()
         while len(self.workers_cron) < config['max_cron_threads']:
             self.worker_spawn(WorkerCron, self.workers_cron)
 
@@ -685,7 +685,11 @@ class PreforkServer(CommonServer):
         # Empty the cursor pool, we dont want them to be shared among forked workers.
         odoo.sql_db.close_all()
 
-        _logger.debug("Multiprocess starting")
+        _logger.info("LongPolling start")
+        self.long_polling_spawn()
+
+        _logger.info("Multiprocess starting")
+        rc = 0
         while 1:
             try:
                 #_logger.debug("Multiprocess beat (%s)",time.time())
@@ -701,7 +705,12 @@ class PreforkServer(CommonServer):
             except Exception, e:
                 _logger.exception(e)
                 self.stop(False)
-                return -1
+                rc = 1
+                break
+
+        _logger.info("Multiprocess starting, rc=%s" % rc)
+
+        return rc
 
 class Worker(object):
     """ Workers """
@@ -862,8 +871,10 @@ class WorkerCron(Worker):
         return db_names
 
     def process_work(self):
-        rpc_request = logging.getLogger('odoo.netsvc.rpc.request')
-        rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
+        # rpc_request = logging.getLogger('odoo.netsvc.rpc.request')
+        # rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
+        rpc_request_flag = True
+
         _logger.debug("WorkerCron (%s) polling for jobs", self.pid)
         db_names = self._db_list()
         if len(db_names):
