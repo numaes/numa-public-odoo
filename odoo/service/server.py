@@ -51,6 +51,8 @@ try:
 except ImportError:
     setproctitle = lambda x: None
 
+from ..tools import config
+
 # import odoo
 from .. import service
 from .. import modules
@@ -62,7 +64,6 @@ from .. import api
 
 from ..modules import Registry
 from ..release import nt_service_name
-from ..tools import config
 from ..tools import stripped_sys_argv, dumpstacks, log_ormcache_stats
 
 _logger = logging.getLogger(__name__)
@@ -1010,13 +1011,12 @@ def preload_registries(dbnames):
             return -1
     return rc
 
-def start(preload=None, stop=False):
+def start(preload=None, stop=False, evented=False):
     """ Start the odoo http server and cron processor.
     """
     global server
     load_server_wide_modules()
-    import odoo
-    if odoo.evented:
+    if evented:
         server = GeventServer(service.wsgi_server.application)
     elif config['workers']:
         server = PreforkServer(service.wsgi_server.application)
@@ -1024,6 +1024,7 @@ def start(preload=None, stop=False):
         server = ThreadedServer(service.wsgi_server.application)
 
     watcher = None
+    import odoo
     if 'reload' in config['dev_mode'] and not odoo.evented:
         if inotify:
             watcher = FSWatcherInotify()
@@ -1045,6 +1046,7 @@ def start(preload=None, stop=False):
     if watcher:
         watcher.stop()
     # like the legend of the phoenix, all ends with beginnings
+    import odoo
     if getattr(odoo, 'phoenix', False):
         _reexec()
 
