@@ -5,7 +5,7 @@ import ConfigParser
 import optparse
 import os
 import sys
-# import odoo.conf
+from .. import conf
 from .. import loglevels
 import logging
 from .. import release
@@ -469,9 +469,9 @@ class configmanager(object):
         if opt.save:
             self.save()
 
-        odoo.conf.addons_paths = self.options['addons_path'].split(',')
+        conf.addons_paths = self.options['addons_path'].split(',')
 
-        odoo.conf.server_wide_modules = [
+        conf.server_wide_modules = [
             m.strip() for m in self.options['server_wide_modules'].split(',') if m.strip()
         ]
 
