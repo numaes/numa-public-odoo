@@ -92,12 +92,12 @@ import http
 import sys
 evented = False
 if len(sys.argv) > 1 and sys.argv[1] == 'gevent':
-    sys.argv.remove('gevent')
+    # sys.argv.remove('gevent')
     import gevent.monkey
     gevent.monkey.patch_all()
     import psycogreen.gevent
     psycogreen.gevent.patch_psycopg()
     evented = True
 
-conf.config['GEVENT'] = evented
+tools.config['GEVENT'] = evented
 

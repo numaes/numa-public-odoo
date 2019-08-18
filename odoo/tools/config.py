@@ -426,6 +426,8 @@ class configmanager(object):
 
         # Copy the command-line arguments...
         for arg in keys:
+            if arg == 'gevent':
+                continue
             if getattr(opt, arg) is not None:
                 self.options[arg] = getattr(opt, arg)
             # ... or keep, but cast, the config file value.
