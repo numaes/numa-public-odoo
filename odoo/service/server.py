@@ -53,18 +53,17 @@ except ImportError:
 
 from ..tools import config
 
-# import odoo
-from .. import service
-from .. import modules
-from .. import addons
-from .. import sql_db
-from .. import conf
-from .. import tools
-from .. import api
+from odoo import service
+from odoo import modules
+from odoo import addons
+from odoo import sql_db
+from odoo import conf
+from odoo import tools
+from odoo import api
 
-from ..modules import Registry
-from ..release import nt_service_name
-from ..tools import stripped_sys_argv, dumpstacks, log_ormcache_stats
+from odoo.modules import Registry
+from odoo.release import nt_service_name
+from odoo.tools import stripped_sys_argv, dumpstacks, log_ormcache_stats
 
 _logger = logging.getLogger(__name__)
 
