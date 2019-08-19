@@ -719,7 +719,7 @@ class PreforkServer(CommonServer):
                 rc = 1
                 break
 
-        _logger.info("Multiprocess starting, rc=%s" % rc)
+        _logger.info("Multiprocess ending, rc=%s" % rc)
 
         return rc
 

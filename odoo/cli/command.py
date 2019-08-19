@@ -37,6 +37,8 @@ class Help(Command):
 
 def main():
     args = sys.argv[1:]
+    if args[0] == 'gevent':
+        args = args[1:]
 
     # The only shared option is '--addons-path=' needed to discover additional
     # commands from modules
