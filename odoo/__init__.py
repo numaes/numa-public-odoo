@@ -10,7 +10,7 @@
 import sys
 evented = False
 if len(sys.argv) > 1 and sys.argv[1] == 'gevent':
-    sys.argv.remove('gevent')
+    # sys.argv.remove('gevent')
     import gevent.monkey
     gevent.monkey.patch_all()
     import psycogreen.gevent
@@ -84,20 +84,4 @@ from odoo.tools.translate import _
 #----------------------------------------------------------
 import cli
 import http
-
-#----------------------------------------------------------
-# Running mode flags (gevent, prefork)
-#----------------------------------------------------------
-# Is the server running with gevent.
-import sys
-evented = False
-if len(sys.argv) > 1 and sys.argv[1] == 'gevent':
-    # sys.argv.remove('gevent')
-    import gevent.monkey
-    gevent.monkey.patch_all()
-    import psycogreen.gevent
-    psycogreen.gevent.patch_psycopg()
-    evented = True
-
-tools.config['GEVENT'] = evented
 
