@@ -175,7 +175,7 @@ class WebsiteSale(http.Controller):
             if attrib:
                 domain += [('attribute_line_ids.value_ids', 'in', ids)]
 
-        domain += [('active', '=', True)]
+        domain += [('active', '=', True), ('sale_ok', '=', True)]
 
         return domain
 
