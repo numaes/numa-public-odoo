@@ -153,6 +153,7 @@ class WebsiteSale(http.Controller):
         if search:
             for srch in search.split(" "):
                 domain += [
+                    ('active', '=', True),
                     '|', '|', '|', ('name', 'ilike', srch), ('description', 'ilike', srch),
                     ('description_sale', 'ilike', srch), ('product_variant_ids.default_code', 'ilike', srch)]
 
