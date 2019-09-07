@@ -236,8 +236,20 @@ class WebsiteSale(http.Controller):
                 current_category = current_category.parent_id
 
         product_count = Product.search_count(domain)
+
         pager = request.website.pager(url=url, total=product_count, page=page, step=ppg, scope=7, url_args=post)
         products = Product.search(domain, limit=ppg, offset=pager['offset'], order=self._get_search_order(post))
+
+        # Filter out non active products or products without active variants
+        for p in products:
+            not_active = True
+            for v in p.variant_ids:
+                if v.active:
+                    not_active = False
+                    break
+            if not_active:
+                products -= p
+                product_count -= 1
 
         ProductAttribute = request.env['product.attribute']
         if products:
