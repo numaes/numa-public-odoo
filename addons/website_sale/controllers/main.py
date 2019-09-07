@@ -243,7 +243,7 @@ class WebsiteSale(http.Controller):
         # Filter out non active products or products without active variants
         for p in products:
             not_active = True
-            for v in p.variant_ids:
+            for v in p.product_variant_ids:
                 if v.active:
                     not_active = False
                     break
