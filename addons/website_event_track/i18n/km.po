@@ -201,7 +201,7 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Application"
-msgstr ""
+msgstr "កម្មវិធី"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -247,7 +247,7 @@ msgstr "ការកំណត់ព័ណ៌"
 #. module: website_event_track
 #: model:event.type,name:website_event_track.event_type_data_tracks
 msgid "Conference"
-msgstr ""
+msgstr "សិក្ខាសាលា"
 
 #. module: website_event_track
 #: model:mail.template,subject:website_event_track.mail_template_data_track_confirmation
@@ -368,7 +368,7 @@ msgstr "ព្រិត្តិការណ៍"
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_type
 msgid "Event Category"
-msgstr ""
+msgstr "ប្រភេទព្រឹត្តិការណ៍"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_form
@@ -488,12 +488,12 @@ msgstr "អ្នកដើរតាម (ដៃគូរ)"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Future Activities"
-msgstr ""
+msgstr "សកម្មភាពទៅមុខ"
 
 #. module: website_event_track
 #: model:event.sponsor.type,name:website_event_track.event_sponsor_type3
 msgid "Gold"
-msgstr ""
+msgstr "មាស"
 
 #. module: website_event_track
 #: selection:event.track,kanban_state:0
@@ -513,7 +513,7 @@ msgstr "ជា​ក្រុម​តាម"
 #. module: website_event_track
 #: selection:event.track,priority:0
 msgid "High"
-msgstr ""
+msgstr "ខ្ពស់"
 
 #. module: website_event_track
 #: selection:event.track,priority:0
@@ -616,12 +616,12 @@ msgstr "ត្រូវតាមអ្នក"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_published
 msgid "Is published"
-msgstr ""
+msgstr "ត្រូវបានផ្សព្វផ្សាយ"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__kanban_state
 msgid "Kanban State"
-msgstr ""
+msgstr "រដ្ឋកាណាន"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track23
@@ -664,7 +664,7 @@ msgstr "ផ្លាស់ប្តូរចុងក្រោយ"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Late Activities"
-msgstr ""
+msgstr "សកម្មភាពចុងក្រោយ"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track12
@@ -674,7 +674,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.ui.menu,name:website_event_track.menu_event_track_location
 msgid "Locations"
-msgstr ""
+msgstr "ទីតាំង"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__image_medium
@@ -684,7 +684,7 @@ msgstr "រូបសញ្ញា"
 #. module: website_event_track
 #: selection:event.track,priority:0
 msgid "Low"
-msgstr ""
+msgstr "ខាត"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track31
@@ -713,7 +713,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__menu_id
 msgid "Menu"
-msgstr ""
+msgstr "មឺនុយ"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__menu_type
@@ -891,12 +891,12 @@ msgstr ""
 #. module: website_event_track
 #: selection:event.track,kanban_state:0
 msgid "Red"
-msgstr ""
+msgstr "ក្រហម"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage4
 msgid "Refused"
-msgstr ""
+msgstr "បដិសេធ"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__user_id
@@ -918,7 +918,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_seo_optimized
 msgid "SEO optimized"
-msgstr ""
+msgstr "SEO បានធ្វើឱ្យប្រសើរ"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__sequence
@@ -930,7 +930,7 @@ msgstr "លំដាប់"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Show all records which has next action date is before today"
-msgstr ""
+msgstr "បង្ហាញកំណត់ត្រាទាំងអស់ដែលមានកាលបរិច្ឆេទសកម្មភាពបន្ទាប់នៅមុនថ្ងៃនេះ"
 
 #. module: website_event_track
 #: model:event.sponsor.type,name:website_event_track.event_sponsor_type2
@@ -1022,7 +1022,7 @@ msgstr "ដំណាក់កាល"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__name
 msgid "Stage Name"
-msgstr ""
+msgstr "ឈ្មោះដំនាក់កាល"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track28
@@ -1103,7 +1103,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_url
 msgid "The full URL to access the document through the website."
-msgstr ""
+msgstr "URL ពេញលេញដើម្បីចូលប្រើឯកសារតាមរយៈគេហទំព័រ។"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track17
@@ -1127,6 +1127,7 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
+"ដំណាក់កាលនេះត្រូវបានបត់នៅក្នុងទិដ្ឋភាពKanbanនៅពេលដែលមិនមានកំណត់ត្រានៅក្នុងដំណាក់កាលនោះដើម្បីបង្ហាញ។"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -1268,7 +1269,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_published
 msgid "Visible on current website"
-msgstr ""
+msgstr "អាចមើលឃើញនៅលើគេហទំព័របច្ចុប្បន្ន។"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -1305,7 +1306,7 @@ msgstr "សារវែបសាយ"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_url
 msgid "Website URL"
-msgstr ""
+msgstr "គេហទំព័រ URL "
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_message_ids
@@ -1315,22 +1316,22 @@ msgstr "ប្រវត្តិទំនាក់ទំនងវែបសាយ
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_description
 msgid "Website meta description"
-msgstr ""
+msgstr "ការពិពណ៌នាមេតាគេហទំព័រ។"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_keywords
 msgid "Website meta keywords"
-msgstr ""
+msgstr "ពាក្យគន្លឹះnនៃគេហទំព័រមេតា។"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_title
 msgid "Website meta title"
-msgstr ""
+msgstr "ចំណងជើងមេតាគេហទំព័រ។"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_og_img
 msgid "Website opengraph image"
-msgstr ""
+msgstr "គេហទំព័រ opengraph រូបភាព។"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -1356,7 +1357,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
 msgid "hours"
-msgstr ""
+msgstr "ម៉ោង"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda

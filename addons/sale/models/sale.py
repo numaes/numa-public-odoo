@@ -220,7 +220,10 @@ class SaleOrder(models.Model):
             if not order.company_id:
                 order.currency_rate = order.currency_id.with_context(date=order.date_order).rate or 1.0
                 continue
-            order.currency_rate = self.env['res.currency']._get_conversion_rate(order.company_id.currency_id, order.currency_id, order.company_id, order.date_order)
+            elif order.company_id.currency_id and order.currency_id:  # the following crashes if any one is undefined
+                order.currency_rate = self.env['res.currency']._get_conversion_rate(order.company_id.currency_id, order.currency_id, order.company_id, order.date_order)
+            else:
+                order.currency_rate = 1.0
 
     def _compute_access_url(self):
         super(SaleOrder, self)._compute_access_url()
@@ -503,6 +506,37 @@ class SaleOrder(models.Model):
             action = {'type': 'ir.actions.act_window_close'}
         return action
 
+    def _finalize_invoices(self, invoices, references):
+        """
+        Invoked after creating invoices at the end of action_invoice_create.
+        :param invoices: {group_key: invoice}
+        :param references: {invoice: order}
+        """
+        for invoice in invoices.values():
+            invoice.compute_taxes()
+            if not invoice.invoice_line_ids:
+                raise UserError(_(
+                    'There is no invoiceable line. If a product has a Delivered quantities invoicing policy, please make sure that a quantity has been delivered.'))
+            # If invoice is negative, do a refund invoice instead
+            if invoice.amount_total < 0:
+                invoice.type = 'out_refund'
+                for line in invoice.invoice_line_ids:
+                    line.quantity = -line.quantity
+            # Use additional field helper function (for account extensions)
+            for line in invoice.invoice_line_ids:
+                line._set_additional_fields(invoice)
+            # Necessary to force computation of taxes. In account_invoice, they are triggered
+            # by onchanges, which are not triggered when doing a create.
+            invoice.compute_taxes()
+            # Idem for partner
+            so_payment_term_id = invoice.payment_term_id.id
+            invoice._onchange_partner_id()
+            # To keep the payment terms set on the SO
+            invoice.payment_term_id = so_payment_term_id
+            invoice.message_post_with_view('mail.message_origin_link',
+                values={'self': invoice, 'origin': references[invoice]},
+                subtype_id=self.env.ref('mail.mt_note').id)
+
     @api.multi
     def action_invoice_create(self, grouped=False, final=False):
         """
@@ -584,31 +618,7 @@ class SaleOrder(models.Model):
         if not invoices:
             raise UserError(_('There is no invoiceable line. If a product has a Delivered quantities invoicing policy, please make sure that a quantity has been delivered.'))
 
-        for invoice in invoices.values():
-            invoice.compute_taxes()
-            if not invoice.invoice_line_ids:
-                raise UserError(_('There is no invoiceable line. If a product has a Delivered quantities invoicing policy, please make sure that a quantity has been delivered.'))
-            # If invoice is negative, do a refund invoice instead
-            if invoice.amount_total < 0:
-                invoice.type = 'out_refund'
-                for line in invoice.invoice_line_ids:
-                    line.quantity = -line.quantity
-            # Use additional field helper function (for account extensions)
-            for line in invoice.invoice_line_ids:
-                line._set_additional_fields(invoice)
-            # Necessary to force computation of taxes. In account_invoice, they are triggered
-            # by onchanges, which are not triggered when doing a create.
-            invoice.compute_taxes()
-            # Idem for partner
-            so_payment_term_id = invoice.payment_term_id.id
-            fp_invoice = invoice.fiscal_position_id
-            invoice._onchange_partner_id()
-            invoice.fiscal_position_id = fp_invoice
-            # To keep the payment terms set on the SO
-            invoice.payment_term_id = so_payment_term_id
-            invoice.message_post_with_view('mail.message_origin_link',
-                values={'self': invoice, 'origin': references[invoice]},
-                subtype_id=self.env.ref('mail.mt_note').id)
+        self._finalize_invoices(invoices, references)
         return [inv.id for inv in invoices.values()]
 
     @api.multi
@@ -1043,7 +1053,8 @@ class SaleOrderLine(models.Model):
         for line in self:
             fpos = line.order_id.fiscal_position_id or line.order_id.partner_id.property_account_position_id
             # If company_id is set, always filter taxes by the company
-            taxes = line.product_id.taxes_id.filtered(lambda r: not line.company_id or r.company_id == line.company_id)
+            line_company_id = line.company_id or line.order_id.company_id
+            taxes = line.product_id.taxes_id.filtered(lambda r: not line_company_id or r.company_id == line_company_id)
             line.tax_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_shipping_id) if fpos else taxes
 
     @api.model
@@ -1108,7 +1119,7 @@ class SaleOrderLine(models.Model):
     @api.multi
     def write(self, values):
         if 'display_type' in values and self.filtered(lambda line: line.display_type != values.get('display_type')):
-            raise UserError("You cannot change the type of a sale order line. Instead you should delete the current line and create a new line of the proper type.")
+            raise UserError(_("You cannot change the type of a sale order line. Instead you should delete the current line and create a new line of the proper type."))
 
         if 'product_uom_qty' in values:
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')

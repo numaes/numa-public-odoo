@@ -42,7 +42,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:utm.utm_campaign_act
 #: model:ir.ui.menu,name:utm.menu_utm_campaign_act
 msgid "Campaigns"
-msgstr ""
+msgstr "យុទ្ធនាការ"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_form
@@ -100,7 +100,7 @@ msgstr ""
 #. module: utm
 #: model:utm.source,name:utm.utm_source_facebook
 msgid "Facebook"
-msgstr ""
+msgstr "ហ្វេសប៊ុក"
 
 #. module: utm
 #: model:ir.model,name:utm.model_ir_http
@@ -145,7 +145,7 @@ msgstr ""
 #. module: utm
 #: model:ir.ui.menu,name:utm.menu_link_tracker_root
 msgid "Link Tracker"
-msgstr ""
+msgstr "ភ្ជាប់កម្មវិធីតាមដាន"
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.utm_medium_action
@@ -160,7 +160,7 @@ msgstr "Medium"
 #: model:utm.campaign,name:utm.utm_campaign_email_campaign_products
 #: model:utm.source,name:utm.utm_source_newsletter
 msgid "Newsletter"
-msgstr ""
+msgstr "ព្រឹត្តិប័ត្រ "
 
 #. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_fall_drive
@@ -186,7 +186,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:utm.utm_source_action
 #: model:ir.ui.menu,name:utm.menu_utm_source
 msgid "Sources"
-msgstr ""
+msgstr "ប្រភព"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__campaign_id
@@ -194,11 +194,13 @@ msgid ""
 "This is a name that helps you keep track of your different campaign efforts,"
 " e.g. Fall_Drive, Christmas_Special"
 msgstr ""
+"នេះជាឈ្មោះដែលជួយអ្នកតាមដានការខិតខំយុទ្ធនាការផ្សេងៗរបស់អ្នកឧទាហរណ៍ៈធ្លាក់_បើកបរ,"
+" បុណ្យណូអែល_ពិសេស។"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
-msgstr ""
+msgstr "នេះគឺជាវិធីសាស្ត្រនៃការចែកចាយ, ឧទាហរណ៍ៈ​កាត,អ៊ីម៉ែល,ឬបដាផ្សព្វផ្សាយ។"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__source_id
@@ -206,11 +208,13 @@ msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
 msgstr ""
+"នេះគឺជាប្រភពនៃតំណភ្ជាប់ ឧទាហរណ៍ៈ "
+"ម៉ាស៊ីនស្វែងរក,ដែនផ្សេងទៀត,ឬឈ្មោះនៃបញ្ជីអ៊ីមែល។"
 
 #. module: utm
 #: model:utm.source,name:utm.utm_source_twitter
 msgid "Twitter"
-msgstr ""
+msgstr "ធ្វីតទឺ"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_campaign

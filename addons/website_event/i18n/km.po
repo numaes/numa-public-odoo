@@ -132,7 +132,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index
@@ -148,7 +148,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event.index
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "<i>to</i>"
-msgstr ""
+msgstr "<i>ទៅ</i>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_right_quotes
@@ -196,7 +196,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "<span>Unlimited</span>"
-msgstr ""
+msgstr "<span>គ្មានដែនកំណត់</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -243,7 +243,7 @@ msgstr ""
 #: code:addons/website_event/controllers/main.py:108
 #, python-format
 msgid "All Countries"
-msgstr ""
+msgstr "ប្រទេសទាំងអស់"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.layout
@@ -263,7 +263,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Cancel Registration"
-msgstr ""
+msgstr "លុបចោលការចុះឈ្មោះ"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_type_view_form_inherit_website
@@ -361,7 +361,7 @@ msgstr "ព្រិត្តិការណ៍"
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_type
 msgid "Event Category"
-msgstr ""
+msgstr "ប្រភេទព្រឹត្តិការណ៍"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
@@ -420,7 +420,7 @@ msgstr ""
 #. module: website_event
 #: model:website.menu,name:website_event.menu_events
 msgid "Events"
-msgstr ""
+msgstr "ព្រឹត្តិការណ៍"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.country_events
@@ -442,7 +442,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Google Maps"
-msgstr ""
+msgstr "ផែនទី​ហ្គូហ្គល"
 
 #. module: website_event
 #: code:addons/website_event/models/event.py:70
@@ -458,7 +458,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__is_published
 msgid "Is published"
-msgstr ""
+msgstr "ត្រូវបានផ្សព្វផ្សាយ"
 
 #. module: website_event
 #: code:addons/website_event/models/event.py:71
@@ -469,7 +469,7 @@ msgstr "តំបន់"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "N/A"
-msgstr ""
+msgstr "មិនមាន"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
@@ -516,7 +516,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.brand_promotion
 msgid "Odoo"
-msgstr ""
+msgstr "Odoo"
 
 #. module: website_event
 #. openerp-web
@@ -582,7 +582,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.brand_promotion
 msgid "Powered by"
-msgstr ""
+msgstr "ឧបត្ថម្ភដោយ"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
@@ -654,7 +654,7 @@ msgstr ""
 #: code:addons/website_event/controllers/main.py:44
 #, python-format
 msgid "This Week"
-msgstr ""
+msgstr "សប្តាហ៍នេះ"
 
 #. module: website_event
 #: code:addons/website_event/controllers/main.py:52
