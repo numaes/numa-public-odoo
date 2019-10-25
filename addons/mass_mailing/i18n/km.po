@@ -130,7 +130,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.snippet_options
 msgid "<i class=\"fa fa-eyedropper\"/>Background Color"
-msgstr ""
+msgstr "<i class=\"fa fa-eyedropper\"/>ពណ៌ផ្ទៃខាងក្រោយ"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -320,7 +320,7 @@ msgstr "យុទ្ធនាការ"
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_name
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
 msgid "Campaign Name"
-msgstr ""
+msgstr "ឈ្មោះយុទ្ធនាការ"
 
 #. module: mass_mailing
 #: model:ir.ui.menu,name:mass_mailing.menu_view_mass_mailing_stages
@@ -339,7 +339,7 @@ msgstr ""
 #: model:ir.ui.menu,name:mass_mailing.menu_email_campaigns
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_search
 msgid "Campaigns"
-msgstr ""
+msgstr "យុទ្ធនាការ"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -627,7 +627,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_thread
 msgid "Email Thread"
-msgstr ""
+msgstr "អ៊ីម៉ែលខ្សែស្រឡាយ"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_compose_message
@@ -759,7 +759,7 @@ msgstr ""
 #: selection:mail.mass_mailing,state:0
 #, python-format
 msgid "In Queue"
-msgstr ""
+msgstr "នៅក្នុងជួរ"
 
 #. module: mass_mailing
 #: model:mail.mass_mailing.list,popup_content:mass_mailing.mass_mail_list_1
@@ -847,7 +847,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_mail_mail_id
 msgid "Mail"
-msgstr ""
+msgstr "សំបុត្រ។"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -901,7 +901,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_search
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_tree
 msgid "Mailing Lists"
-msgstr ""
+msgstr "បញ្ជីសំបុត្ររួម "
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_graph
@@ -1119,7 +1119,7 @@ msgstr "ឈ្មោះ"
 #: model:mail.template,subject:mass_mailing.newsletter_template
 #: model:utm.campaign,name:mass_mailing.mass_mail_campaign_1_utm_campaign
 msgid "Newsletter"
-msgstr ""
+msgstr "ព្រឹត្តិប័ត្រ "
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_next_departure
@@ -1139,7 +1139,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_clicks_ratio
 msgid "Number of Clicks"
-msgstr ""
+msgstr "ចំនួននៃការចុច"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_contact_nbr
@@ -1209,7 +1209,7 @@ msgstr "ជម្រើស"
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_steps
 msgid "Order"
-msgstr ""
+msgstr "បញ្ជាទិញ"
 
 #. module: mass_mailing
 #: selection:mail.mail.statistics,state:0
@@ -1219,7 +1219,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mail
 msgid "Outgoing Mails"
-msgstr ""
+msgstr "សំបុត្រចេញ"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
@@ -1257,7 +1257,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Received"
-msgstr ""
+msgstr "ការទទួលបាន"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_received_ratio
@@ -1268,7 +1268,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_recipient
 msgid "Recipient"
-msgstr ""
+msgstr "ការទទួល"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_contacts_from_list
@@ -1361,7 +1361,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:mail.mass_mailing.stage,name:mass_mailing.campaign_stage_1
 msgid "Schedule"
-msgstr ""
+msgstr "ការវិភាគ"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_schedule_date
@@ -1502,7 +1502,7 @@ msgstr "ធនធាន"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_name
 msgid "Source Name"
-msgstr ""
+msgstr "ឈ្មោះប្រភព"
 
 #. module: mass_mailing
 #: selection:mail.mass_mailing,reply_to_mode:0
@@ -1530,13 +1530,13 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_ids
 msgid "Statistics"
-msgstr ""
+msgstr "ស្ថិតិ"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_links_statistics
 #: model:ir.actions.act_window,name:mass_mailing.dropdb snipp
 msgid "Statistics of Clicks"
-msgstr ""
+msgstr "ស្ថិតិនៃការចុច"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_state
@@ -1651,7 +1651,7 @@ msgstr "សរុប"
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_links_search
 msgid "Tracked Link"
-msgstr ""
+msgstr "តំណតាមដាន"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
@@ -1663,7 +1663,7 @@ msgstr "ការ​តាមដាន"
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social_left
 #: model:mail.mass_mailing,body_html:mass_mailing.mass_mail_1
 msgid "Unsubscribe"
-msgstr ""
+msgstr "ឈប់ជាវ"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_unsubscription_date
