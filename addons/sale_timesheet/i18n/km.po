@@ -552,7 +552,7 @@ msgstr "ហត្ថកម្ម"
 #. module: sale_timesheet
 #: selection:product.template,service_type:0
 msgid "Manually set quantities on order"
-msgstr ""
+msgstr "កំណត់បរិមាណដោយដៃតាមលំដាប់លំដោយ"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_template__service_type
@@ -561,6 +561,12 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
+"កំណត់បរិមាណដោយដៃ: "
+"វិក័យប័ត្រផ្អែកលើបរិមាណដែលបានបញ្ចូលដោយដៃដោយមិនចាំបាច់បង្កើតគណនីវិភាគ។ "
+"សន្លឹកកិច្ចការលើកិច្ចសន្យា៖ "
+"វិក្កយបត្រផ្អែកលើម៉ោងដែលបានតាមដាននៅលើសន្លឹកកិច្ចការដែលទាក់ទង។ "
+"បង្កើតការងារនិងម៉ោងតាមដាន៖ "
+"បង្កើតភារកិច្ចលើសុពលភាពនៃការបញ្ជាទិញនិងតាមដានម៉ោងធ្វើការ។"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__qty_delivered_method
@@ -656,7 +662,7 @@ msgstr ""
 #. module: sale_timesheet
 #: selection:product.template,service_policy:0
 msgid "Ordered quantities"
-msgstr ""
+msgstr "ការបញ្ជាគុណភាព"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_cost
@@ -873,7 +879,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task_assign_sale__sale_line_id
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
 msgid "Sales Order Item"
-msgstr ""
+msgstr "ក្រុមការបញ្ជាការទិញលក់"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order_line
@@ -968,7 +974,7 @@ msgstr ""
 #: code:addons/sale_timesheet/controllers/main.py:249
 #, python-format
 msgid "Sold"
-msgstr ""
+msgstr "ការលក់"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -1170,7 +1176,7 @@ msgstr ""
 #. module: sale_timesheet
 #: selection:product.template,service_type:0
 msgid "Timesheets on project (one fare per SO/Project)"
-msgstr ""
+msgstr "ខិត្តប័ណ្ណស្តីពីគម្រោង (តម្លៃមួយក្នុងមួយសូ / គម្រោង)"
 
 #. module: sale_timesheet
 #: selection:product.template,service_policy:0
@@ -1192,7 +1198,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template__service_type
 msgid "Track Service"
-msgstr ""
+msgstr "ការតាមដានសេវាកម្ម"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__price_unit

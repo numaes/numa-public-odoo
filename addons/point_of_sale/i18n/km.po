@@ -1055,7 +1055,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_product_action
 msgid "Create a new product variant"
-msgstr ""
+msgstr "បង្កើតរ៉ាដ្យង់ផលិតផលថ្មី"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__create_uid
@@ -1380,7 +1380,7 @@ msgstr "ការបញ្ចុះតម្លៃ"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1336
 #, python-format
 msgid "Dismiss"
-msgstr ""
+msgstr "បោះបង់ចោល។"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_display_categ_images
@@ -2126,7 +2126,7 @@ msgstr ""
 #. module: point_of_sale
 #: selection:res.config.settings,pos_pricelist_setting:0
 msgid "Multiple prices per product (e.g. customer segments, currencies)"
-msgstr ""
+msgstr "តម្លៃច្រើនក្នុងមួយផលិតផល (ឧទាហរណ៍ផ្នែកអតិថិជនរូបិយប័ណ្ណ)"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
@@ -2431,7 +2431,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__lines
 msgid "Order Lines"
-msgstr ""
+msgstr "បន្ទាត់បញ្ជាទិញ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__name
@@ -2545,7 +2545,7 @@ msgstr "បានទូទាត់"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__parent_id
 msgid "Parent Category"
-msgstr ""
+msgstr "ប្រភេទ"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2678,7 +2678,7 @@ msgstr "ទូរស័ព្ទ"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1453
 #, python-format
 msgid "Phone:"
-msgstr ""
+msgstr "ទូរស័ព្ទ:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__picking_id
@@ -2970,7 +2970,7 @@ msgstr ""
 #. module: point_of_sale
 #: selection:res.config.settings,pos_pricelist_setting:0
 msgid "Price computed from formulas (discounts, margins, roundings)"
-msgstr ""
+msgstr "តម្លៃគណនាពីរូបមន្ត (ការបញ្ចុះតម្លៃរឹមជុំ)"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3360,7 +3360,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/chrome.js:399
 #, python-format
 msgid "Scale"
-msgstr ""
+msgstr "ធ្វើមាត្រដ្ឋាន "
 
 #. module: point_of_sale
 #. openerp-web
@@ -3405,7 +3405,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 msgid "Search Sales Order"
-msgstr ""
+msgstr "ការស្រាវជ្រាវការបញ្ជាទិញការលក់"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users__pos_security_pin
@@ -3531,7 +3531,7 @@ msgstr ""
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_session_all
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Sessions"
-msgstr ""
+msgstr "សម័យ"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3567,7 +3567,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Set multiple prices per product, automated discounts, etc."
-msgstr ""
+msgstr "កំណត់តម្លៃច្រើនក្នុងមួយផលិតផលការបញ្ចុះតម្លៃដោយស្វ័យប្រវត្តិ។ ល។"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3914,6 +3914,8 @@ msgid ""
 "The hostname or ip address of the hardware proxy, Will be autodetected if "
 "left empty."
 msgstr ""
+"ឈ្មោះម៉ាស៊ីនឬអាសយដ្ឋាន ip "
+"របស់ប្រូកស៊ីផ្នែករឹងនឹងត្រូវបានរកឃើញប្រសិនបើទុកចោល។ "
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:232
@@ -4631,13 +4633,13 @@ msgstr ""
 #: code:addons/point_of_sale/wizard/pos_details.py:48
 #, python-format
 msgid "You have to set a logo or a layout for your company."
-msgstr ""
+msgstr "អ្នកត្រូវកំណត់ឡូហ្គោឬប្លង់សម្រាប់ក្រុមហ៊ុនរបស់អ្នក។"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_details.py:50
 #, python-format
 msgid "You have to set your reports's header and footer layout."
-msgstr ""
+msgstr "អ្នកត្រូវកំណត់បឋមកថានិងបាតកថារបស់របាយការណ៍។"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_product_action

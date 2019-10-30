@@ -433,7 +433,11 @@ class StockMove(models.Model):
                     #Note that, for pulled moves we intentionally don't propagate on the procurement.
                     if propagated_changes_dict:
                         move.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel')).write(propagated_changes_dict)
-        track_pickings = not self._context.get('mail_notrack') and any(field in vals for field in ['state', 'picking_id', 'partially_available'])
+        track_pickings = (
+            not self._context.get('mail_notrack')
+            and not self._context.get('tracking_disable')
+            and any(field in vals for field in ['state', 'picking_id', 'partially_available'])
+        )
         if track_pickings:
             to_track_picking_ids = set([move.picking_id.id for move in self if move.picking_id])
             if vals.get('picking_id'):
@@ -512,8 +516,10 @@ class StockMove(models.Model):
             domain = [('location_src_id', '=', move.location_dest_id.id), ('action', 'in', ('push', 'pull_push'))]
             # first priority goes to the preferred routes defined on the move itself (e.g. coming from a SO line)
             warehouse_id = move.warehouse_id or move.picking_id.picking_type_id.warehouse_id
-            rules = self.env['procurement.group']._search_rule(move.route_ids, move.product_id, warehouse_id, domain)
-
+            if not self.env.context.get('force_company', False) and move.location_dest_id.company_id == self.env.user.company_id:
+                rules = self.env['procurement.group']._search_rule(move.route_ids, move.product_id, warehouse_id, domain)
+            else:
+                rules = self.sudo().env['procurement.group']._search_rule(move.route_ids, move.product_id, warehouse_id, domain)
             # Make sure it is not returning the return
             if rules and (not move.origin_returned_move_id or move.origin_returned_move_id.location_dest_id.id != rules.location_id.id):
                 rules._run_push(move)

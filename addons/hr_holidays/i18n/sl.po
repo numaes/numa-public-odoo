@@ -7,9 +7,9 @@
 # laznikd <laznik@mentis.si>, 2019
 # jl2035 <jaka.luthar@gmail.com>, 2019
 # matjaz k <matjaz@mentis.si>, 2019
-# Matjaz Mozetic <m.mozetic@matmoz.si>, 2019
 # Martin Trigaux, 2019
 # Boris Kodelja <boris@hbs.si>, 2019
+# Matjaz Mozetic <m.mozetic@matmoz.si>, 2019
 # Jasmina Macur <jasmina@hbs.si>, 2019
 # 
 msgid ""
@@ -142,72 +142,72 @@ msgstr ""
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "10:00 AM"
-msgstr ""
+msgstr "10:00 AM"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "10:00 PM"
-msgstr ""
+msgstr "10:00 PM"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "10:30 AM"
-msgstr ""
+msgstr "10:30 AM"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "10:30 PM"
-msgstr ""
+msgstr "10:30 PM"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "11:00 AM"
-msgstr ""
+msgstr "11:00 AM"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "11:00 PM"
-msgstr ""
+msgstr "11:00 PM"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "11:30 AM"
-msgstr ""
+msgstr "11:30 AM"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "11:30 PM"
-msgstr ""
+msgstr "11:30 PM"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "12:00 AM"
-msgstr ""
+msgstr "12:00 AM"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "12:00 PM"
-msgstr ""
+msgstr "12:00 PM"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "1:00 AM"
-msgstr ""
+msgstr "1:00 AM"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "1:00 PM"
-msgstr ""
+msgstr "1:00 PM"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "1:30 AM"
-msgstr ""
+msgstr "1:30 AM"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "1:30 PM"
-msgstr ""
+msgstr "1:30 PM"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
@@ -389,12 +389,12 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "<span class=\"ml8\">Days</span>"
-msgstr ""
+msgstr "<span class=\"ml8\">Dnevi</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "<span class=\"ml8\">Hours</span>"
-msgstr ""
+msgstr "<span class=\"ml8\">Ure</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
@@ -454,12 +454,12 @@ msgstr "Lahko vidi preostali dopust"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
 msgid "Absence"
-msgstr ""
+msgstr "Odsotnost"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__absence_of_today
 msgid "Absence by Today"
-msgstr ""
+msgstr "Odsotnost do danes"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
@@ -1324,7 +1324,7 @@ msgstr "Je sledilec"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__unpaid
 msgid "Is Unpaid"
-msgstr ""
+msgstr "Je neplačan"
 
 #. module: hr_holidays
 #: selection:hr.leave.type,color_name:0
@@ -1638,7 +1638,7 @@ msgstr "Upravitelj"
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_approvals
 msgid "Managers"
-msgstr ""
+msgstr "Vodje"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
@@ -2146,7 +2146,7 @@ msgstr "Bolniški dopusti"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
 msgid "Start Date"
-msgstr "Začetni daum"
+msgstr "Datum začetka"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__state
@@ -2165,9 +2165,9 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Status na podlagi aktivnosti\n"
-"Zapadel: Datum zapadlosti je v preteklosti\n"
+"Zapadel: Rok je že prekoračen\n"
 "Danes: Datum aktivnosti je danes\n"
-"Planned: Bodoče aktivnosti."
+"Planirano: Bodoče aktivnosti."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -2554,6 +2554,7 @@ msgstr ""
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:222
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:330
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
@@ -2565,7 +2566,7 @@ msgstr "dni"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_manager
 msgid "e.g. Report to the next month..."
-msgstr ""
+msgstr "npr. Prijavi v naslednjem mesecu ..."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:398
@@ -2575,6 +2576,7 @@ msgstr ""
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:222
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:330
 #, python-format
 msgid "hours"
 msgstr "ure"
