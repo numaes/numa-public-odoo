@@ -183,20 +183,22 @@ class CompanyLDAP(models.Model):
         :return: res_users id
         :rtype: int
         """
-        login = tools.ustr(login.lower().strip())
-        self.env.cr.execute("SELECT id, active FROM res_users WHERE lower(login)=%s", (login,))
+        self.env.cr.execute("SELECT id, active FROM res_users WHERE lower(login)=%s",
+                            (tools.ustr(login.lower().strip()),))
         res = self.env.cr.fetchone()
         if res:
             if res[1]:
                 return res[0]
         elif conf['create_user']:
             _logger.debug("Creating new Odoo user \"%s\" from LDAP" % login)
-            values = self._map_ldap_attributes(conf, login, ldap_entry)
+            values = self._map_ldap_attributes(conf, login.strip(), ldap_entry)
             SudoUser = self.env['res.users'].sudo().with_context(no_reset_password=True)
             if conf['user']:
                 values['active'] = True
-                return SudoUser.browse(conf['user'][0]).copy(default=values).id
+                new_user = SudoUser.browse(conf['user'][0]).copy(default=values)
             else:
-                return SudoUser.create(values).id
+                new_user = SudoUser.create(values)
+            self.env['res.users.log'].with_user(new_user).create({})
+            return new_user.id
 
         raise AccessDenied(_("No local user found for LDAP login and not configured to create one"))

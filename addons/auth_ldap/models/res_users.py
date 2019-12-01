@@ -25,7 +25,9 @@ class Users(models.Model):
                 for conf in Ldap._get_ldap_dicts():
                     entry = Ldap._authenticate(conf, login, password)
                     if entry:
-                        return Ldap._get_or_create_user(conf, login, entry)
+                        user_id = Ldap._get_or_create_user(conf, login, entry)
+                        env.cr.commit()
+                        return user_id
                 raise e
 
     def _check_credentials(self, password):
