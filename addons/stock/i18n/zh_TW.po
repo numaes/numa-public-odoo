@@ -1761,7 +1761,7 @@ msgstr "交貨路線"
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_delivery
 msgid "Delivery Slip"
-msgstr "交貨單"
+msgstr "交貨/收貨單"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group__move_type
@@ -4162,6 +4162,12 @@ msgstr "揀貨早已處理"
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Planned Transfer"
 msgstr "計劃的調撥"
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Please add 'Done' qantitites to the picking to create a new pack."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0

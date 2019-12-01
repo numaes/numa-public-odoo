@@ -1179,7 +1179,7 @@ msgstr "שחור"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Blue"
-msgstr ""
+msgstr "כחול"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
@@ -4829,6 +4829,8 @@ msgid ""
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
+"לשליחת הזמנות במצב B2B, פתח איש קשר או בחר מספר כאלה בתצוגת רשימה ולחץ על "
+"האפשרות 'ניהול גישה לפורטל' בתפריט הנפתח * פעולה *."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
@@ -5616,7 +5618,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Yellow"
-msgstr ""
+msgstr "צהוב"
 
 #. module: website
 #. openerp-web
