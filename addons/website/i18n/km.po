@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-29 10:08+0000\n"
+"POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:33+0000\n"
 "Last-Translator: Lux Sok <sok.lux@gmail.com>, 2019\n"
 "Language-Team: Khmer (https://www.transifex.com/odoo/teams/41243/km/)\n"
@@ -1078,7 +1078,7 @@ msgstr "ថយក្រោយ"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
 msgid "Background"
-msgstr ""
+msgstr "ប្រវត្តិ"
 
 #. module: website
 #. openerp-web
@@ -1166,13 +1166,19 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/backend/dashboard.js:103
-#: code:addons/website/static/src/js/menu/new_content.js:271
+#: code:addons/website/static/src/js/backend/dashboard.js:106
+#: code:addons/website/static/src/js/menu/new_content.js:286
 #: code:addons/website/static/src/xml/website.xml:27
 #: model_terms:ir.ui.view,arch_db:website.500
 #, python-format
 msgid "Cancel"
 msgstr "លុបចោល"
+
+#. module: website
+#: code:addons/website/models/res_lang.py:15
+#, python-format
+msgid "Cannot deactivate a language that is currently used on a website."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
@@ -1314,7 +1320,7 @@ msgstr "បិទ"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
 msgid "Colors"
-msgstr ""
+msgstr "ពណ៌"
 
 #. module: website
 #: model:ir.model,name:website.model_res_company
@@ -1738,7 +1744,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.contentMenu.xml:47
 #, python-format
 msgid "Drag a menu to the right to create a sub-menu"
-msgstr ""
+msgstr "ទាញម៉ឺនុយនៅខាងស្តាំដើម្បីបង្កើតម៉ឺនុយរង"
 
 #. module: website
 #. openerp-web
@@ -1816,7 +1822,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.contentMenu.xml:16
 #, python-format
 msgid "Edit menu"
-msgstr ""
+msgstr "ការកែប្រែមីនុយ"
 
 #. module: website
 #. openerp-web
@@ -2574,6 +2580,7 @@ msgid "Keywords"
 msgstr ""
 
 #. module: website
+#: model:ir.model,name:website.model_res_lang
 #: model:ir.model.fields,field_description:website.field_res_config_settings__language_ids
 #: model:ir.model.fields,field_description:website.field_website__language_ids
 msgid "Languages"
