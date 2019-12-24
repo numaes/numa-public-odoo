@@ -2675,7 +2675,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             try:
                 field.setup_full(self)
             except Exception:
-                if not self.pool.loaded and field.base_field.manual:
+                if field.base_field.manual:
                     # Something goes wrong when setup a manual field.
                     # This can happen with related fields using another manual many2one field
                     # that hasn't been loaded because the comodel does not exist yet.
@@ -3297,19 +3297,13 @@ Record ids: %(records)s
         self.flush()
         self.modified(self._fields)
 
-        # Check if the records are used as default properties.
-        refs = ['%s,%s' % (self._name, i) for i in self.ids]
-        if self.env['ir.property'].search([('res_id', '=', False), ('value_reference', 'in', refs)]):
-            raise UserError(_('Unable to delete this document because it is used as a default property'))
-
-        # Delete the records' properties.
         with self.env.norecompute():
             self.check_access_rule('unlink')
-            self.env['ir.property'].search([('res_id', 'in', refs)]).sudo().unlink()
 
             cr = self._cr
             Data = self.env['ir.model.data'].sudo().with_context({})
             Defaults = self.env['ir.default'].sudo()
+            Property = self.env['ir.property'].sudo()
             Attachment = self.env['ir.attachment'].sudo()
             ir_model_data_unlink = Data
             ir_attachment_unlink = Attachment
@@ -3322,6 +3316,14 @@ Record ids: %(records)s
                 self.env.remove_to_compute(field, self)
 
             for sub_ids in cr.split_for_in_conditions(self.ids):
+                # Check if the records are used as default properties.
+                refs = ['%s,%s' % (self._name, i) for i in sub_ids]
+                if Property.search([('res_id', '=', False), ('value_reference', 'in', refs)], limit=1):
+                    raise UserError(_('Unable to delete this document because it is used as a default property'))
+
+                # Delete the records' properties.
+                Property.search([('res_id', 'in', refs)]).unlink()
+
                 query = "DELETE FROM %s WHERE id IN %%s" % self._table
                 cr.execute(query, (sub_ids,))
 
@@ -5746,7 +5748,8 @@ Record ids: %(records)s
                     # mark the field as computed on missing records, otherwise
                     # they remain forever in the todo list, and lead to an
                     # infinite loop...
-                    self.env.remove_to_compute(field, recs - existing)
+                    for f in recs._field_computed[field]:
+                        self.env.remove_to_compute(f, recs - existing)
             else:
                 self.env.cache.invalidate([(field, recs._ids)])
                 self.env.remove_to_compute(field, recs)
