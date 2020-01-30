@@ -5368,7 +5368,8 @@ Record ids: %(records)s
             self.recompute()
             while self.env.all.towrite:
                 model_name, id_vals = self.env.all.towrite.popitem()
-                process(self.env[model_name], id_vals)
+                if id_vals:
+                    process(self.env[model_name], id_vals)
         else:
             # flush self's model if any of the fields must be flushed
             self.recompute(fnames, records=records)

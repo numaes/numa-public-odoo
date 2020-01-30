@@ -25,14 +25,17 @@ class BusController(Controller):
             request.env['bus.presence'].update(options.get('bus_inactivity'))
         request.cr.close()
         request._cr = None
-        return dispatch.poll(dbname, channels, last, options)
+        if dispatch:
+            return dispatch.poll(dbname, channels, last, options)
+        else:
+            return []
 
     @route('/longpolling/poll', type="json", auth="public", cors="*")
     def poll(self, channels, last, options=None):
         if options is None:
             options = {}
-        if not dispatch:
-            raise Exception("bus.Bus unavailable")
+        #if not dispatch:
+        #    raise Exception("bus.Bus unavailable")
         if [c for c in channels if not isinstance(c, str)]:
             raise Exception("bus.Bus only string channels are allowed.")
         if request.registry.in_test_mode():

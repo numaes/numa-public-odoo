@@ -998,6 +998,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
                 REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
             )
             uid = odoo.registry(db)['res.users'].authenticate(db, login, password, env)
+            request.env.cr.commit()
         else:
             security.check(db, uid, password)
         self.rotate = True

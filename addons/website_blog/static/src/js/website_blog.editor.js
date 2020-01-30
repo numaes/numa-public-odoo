@@ -68,9 +68,9 @@ var WysiwygMultizone = require('web_editor.wysiwyg.multizone');
 
 var _t = core._t;
 
-if (!$('.website_blog').length) {
-    return Promise.reject("DOM doesn't contain '.website_blog'");
-}
+// if (!$('.website_blog').length) {
+//     return Promise.reject("DOM doesn't contain '.website_blog'");
+// }
 
 WysiwygMultizone.include({
     /**
