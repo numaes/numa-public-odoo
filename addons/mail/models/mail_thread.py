@@ -1037,8 +1037,11 @@ class MailThread(models.AbstractModel):
                 # if a new thread is created, parent is irrelevant
                 message_dict.pop('parent_id', None)
                 thread = ModelCtx.message_new(message_dict, custom_values)
-                thread_id = thread.id
-                subtype_id = thread._creation_subtype().id
+                if thread:
+                    thread_id = thread.id
+                    subtype_id = thread._creation_subtype().id
+                else:
+                    return None
 
             # replies to internal message are considered as notes, but parent message
             # author is added in recipients to ensure he is notified of a private answer
