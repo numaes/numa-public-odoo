@@ -317,7 +317,7 @@ class ProductProduct(models.Model):
             ('remaining_qty', '<', 0),
             ('stock_move_id', '!=', False),
             ('company_id', '=', company.id),
-        ])
+        ], order='create_date, id')
         for svl_to_vacuum in svls_to_vacuum:
             domain = [
                 ('company_id', '=', svl_to_vacuum.company_id.id),
@@ -331,7 +331,7 @@ class ProductProduct(models.Model):
             ]
             candidates = self.env['stock.valuation.layer'].sudo().search(domain)
             if not candidates:
-                continue
+                break
             qty_to_take_on_candidates = abs(svl_to_vacuum.remaining_qty)
             qty_taken_on_candidates = 0
             tmp_value = 0
@@ -470,6 +470,7 @@ class ProductProduct(models.Model):
                     'credit': abs(value),
                     'product_id': product.id,
                 })],
+                'type': 'entry',
             }
             move_vals_list.append(move_vals)
         return move_vals_list
@@ -505,6 +506,7 @@ class ProductProduct(models.Model):
                     'credit': abs(value),
                     'product_id': product.id,
                 })],
+                'type': 'entry',
             }
             move_vals_list.append(move_vals)
         return move_vals_list
@@ -548,8 +550,6 @@ class ProductProduct(models.Model):
                         'account_id': dacc,
                         'product_id': product.id,
                         'uom_id': uom.id,
-                        'account_analytic_id': account_analytic and account_analytic.id,
-                        'analytic_tag_ids': analytic_tags and analytic_tags.ids and [(6, 0, analytic_tags.ids)] or False,
                     },
 
                     {

@@ -2667,7 +2667,10 @@ class _RelationalMulti(_Relational):
         # use registry to avoid creating a recordset for the model
         prefetch_ids = IterableGenerator(prefetch_x2many_ids, record, self)
         corecords = record.pool[self.comodel_name]._browse(record.env, value, prefetch_ids)
-        if 'active' in corecords and record.env.context.get('active_test', True):
+        if (
+            'active' in corecords
+            and self.context.get('active_test', record.env.context.get('active_test', True))
+        ):
             corecords = corecords.filtered('active').with_prefetch(prefetch_ids)
         return corecords
 
@@ -3275,10 +3278,9 @@ class Many2many(_RelationalMulti):
             for ys1 in new_relation.values():
                 ys1 -= ys
 
-        to_create = []                  # line vals to create
-        to_delete = []                  # line ids to delete
-
         for recs, commands in records_commands_list:
+            to_create = []  # line vals to create
+            to_delete = []  # line ids to delete
             for command in (commands or ()):
                 if not isinstance(command, (list, tuple)) or not command:
                     continue

@@ -585,6 +585,14 @@ class MailThread(models.AbstractModel):
     def _message_track_post_template(self, changes):
         if not changes:
             return True
+        # Clean the context to get rid of residual default_* keys
+        # that could cause issues afterward during the mail.message
+        # generation. Example: 'default_parent_id' would refer to
+        # the parent_id of the current record that was used during
+        # its creation, but could refer to wrong parent message id,
+        # leading to a traceback in case the related message_id
+        # doesn't exist
+        self = self.with_context(clean_context(self._context))
         templates = self._track_template(changes)
         for field_name, (template, post_kwargs) in templates.items():
             if not template:
@@ -1029,8 +1037,11 @@ class MailThread(models.AbstractModel):
                 # if a new thread is created, parent is irrelevant
                 message_dict.pop('parent_id', None)
                 thread = ModelCtx.message_new(message_dict, custom_values)
-                thread_id = thread.id
-                subtype_id = thread._creation_subtype().id
+                if thread:
+                    thread_id = thread.id
+                    subtype_id = thread._creation_subtype().id
+                else:
+                    return None
 
             # replies to internal message are considered as notes, but parent message
             # author is added in recipients to ensure he is notified of a private answer
