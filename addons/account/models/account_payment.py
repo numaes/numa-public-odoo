@@ -557,7 +557,7 @@ class account_payment(models.Model):
                         'debit': balance + write_off_balance > 0.0 and balance + write_off_balance or 0.0,
                         'credit': balance + write_off_balance < 0.0 and -balance - write_off_balance or 0.0,
                         'date_maturity': payment.payment_date,
-                        'partner_id': payment.partner_id.id,
+                        'partner_id': payment.partner_id.commercial_partner_id.id,
                         'account_id': payment.destination_account_id.id,
                         'payment_id': payment.id,
                     }),
@@ -569,7 +569,7 @@ class account_payment(models.Model):
                         'debit': balance < 0.0 and -balance or 0.0,
                         'credit': balance > 0.0 and balance or 0.0,
                         'date_maturity': payment.payment_date,
-                        'partner_id': payment.partner_id.id,
+                        'partner_id': payment.partner_id.commercial_partner_id.id,
                         'account_id': liquidity_line_account.id,
                         'payment_id': payment.id,
                     }),
@@ -584,7 +584,7 @@ class account_payment(models.Model):
                     'debit': write_off_balance < 0.0 and -write_off_balance or 0.0,
                     'credit': write_off_balance > 0.0 and write_off_balance or 0.0,
                     'date_maturity': payment.payment_date,
-                    'partner_id': payment.partner_id.id,
+                    'partner_id': payment.partner_id.commercial_partner_id.id,
                     'account_id': payment.writeoff_account_id.id,
                     'payment_id': payment.id,
                 }))
@@ -622,7 +622,7 @@ class account_payment(models.Model):
                             'debit': balance < 0.0 and -balance or 0.0,
                             'credit': balance > 0.0 and balance or 0.0,
                             'date_maturity': payment.payment_date,
-                            'partner_id': payment.partner_id.id,
+                            'partner_id': payment.partner_id.commercial_partner_id.id,
                             'account_id': payment.company_id.transfer_account_id.id,
                             'payment_id': payment.id,
                         }),
@@ -634,7 +634,7 @@ class account_payment(models.Model):
                             'debit': balance > 0.0 and balance or 0.0,
                             'credit': balance < 0.0 and -balance or 0.0,
                             'date_maturity': payment.payment_date,
-                            'partner_id': payment.partner_id.id,
+                            'partner_id': payment.partner_id.commercial_partner_id.id,
                             'account_id': payment.destination_journal_id.default_credit_account_id.id,
                             'payment_id': payment.id,
                         }),
@@ -757,6 +757,10 @@ class payment_register(models.TransientModel):
             raise UserError(_("You can only register at the same time for payment that are all inbound or all outbound"))
         if any(inv.company_id != invoices[0].company_id for inv in invoices):
             raise UserError(_("You can only register at the same time for payment that are all from the same company"))
+        # Check the destination account is the same
+        destination_account = invoices.line_ids.filtered(lambda line: line.account_internal_type in ('receivable', 'payable')).mapped('account_id')
+        if len(destination_account) > 1:
+            raise UserError(_('There is more than one receivable/payable account in the concerned invoices. You cannot group payments in that case.'))
         if 'invoice_ids' not in rec:
             rec['invoice_ids'] = [(6, 0, invoices.ids)]
         if 'journal_id' not in rec:

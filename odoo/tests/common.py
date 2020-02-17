@@ -424,19 +424,16 @@ class TransactionCase(BaseCase):
     def setUp(self):
         super(TransactionCase, self).setUp()
         self.registry = odoo.registry(get_db_name())
+        self.addCleanup(self.registry.reset_changes)
+        self.addCleanup(self.registry.clear_caches)
+
         #: current transaction's cursor
         self.cr = self.cursor()
+        self.addCleanup(self.cr.close)
+
         #: :class:`~odoo.api.Environment` for the current test case
         self.env = api.Environment(self.cr, odoo.SUPERUSER_ID, {})
-
-        @self.addCleanup
-        def reset():
-            # rollback and close the cursor, and reset the environments
-            self.registry.clear_caches()
-            self.registry.reset_changes()
-            self.env.reset()
-            self.cr.rollback()
-            self.cr.close()
+        self.addCleanup(self.env.reset)
 
         self.patch(type(self.env['res.partner']), '_get_gravatar_image', lambda *a: False)
 
@@ -1008,7 +1005,7 @@ class ChromeBrowser():
 
     LINE_PATTERN = '\tat %(functionName)s (%(url)s:%(lineNumber)d:%(columnNumber)d)\n'
     def _format_stack(self, logrecord):
-        if logrecord['type'] not in ('error', 'trace', 'warning'):
+        if logrecord['type'] not in ['trace']:
             return
 
         trace = logrecord.get('stackTrace')
@@ -1159,13 +1156,8 @@ class HttpCase(TransactionCase):
         - wait for ready object to be available
         - eval(code) inside the page
 
-        To signal success test do:
-        console.log('test successful')
-
-        To signal failure do:
-        console.error('test failed')
-
-        If neither are done before timeout test fails.
+        To signal success test do: console.log('test successful')
+        To signal test failure raise an exception or call console.error
         """
         # increase timeout if coverage is running
         if any(f.filename.endswith('/coverage/execfile.py') for f in inspect.stack()  if f.filename):

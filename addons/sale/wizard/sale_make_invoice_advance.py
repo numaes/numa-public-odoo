@@ -66,7 +66,8 @@ class SaleAdvancePaymentInv(models.TransientModel):
     @api.onchange('advance_payment_method')
     def onchange_advance_payment_method(self):
         if self.advance_payment_method == 'percentage':
-            return {'value': {'amount': 0}}
+            amount = self.default_get(['amount']).get('amount')
+            return {'value': {'amount': amount}}
         return {}
 
     def _prepare_invoice_values(self, order, name, amount, so_line):
@@ -81,7 +82,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             'currency_id': order.pricelist_id.currency_id.id,
             'invoice_payment_ref': order.client_order_ref,
             'invoice_payment_term_id': order.payment_term_id.id,
-            'invoice_partner_bank_id': order.company_id.partner_id.bank_ids[:1],
+            'invoice_partner_bank_id': order.company_id.partner_id.bank_ids[:1].id,
             'team_id': order.team_id.id,
             'campaign_id': order.campaign_id.id,
             'medium_id': order.medium_id.id,
