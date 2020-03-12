@@ -747,7 +747,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
     @property
     def _description_sortable(self):
-        return self.store or (self.inherited and self.related_field._description_sortable)
+        return (self.column_type and self.store) or (self.inherited and self.related_field._description_sortable)
 
     def _description_string(self, env):
         if self.string and env.lang:
@@ -1015,7 +1015,7 @@ class Field(MetaField('DummyField', (object,), {})):
                     value = self.convert_to_cache(False, record, validate=False)
                     env.cache.set(record, self, value)
                 else:
-                    recs = record if self.recursive or not record.id else record._in_cache_without(self)
+                    recs = record if self.recursive else record._in_cache_without(self)
                     try:
                         self.compute_value(recs)
                     except AccessError:
@@ -2561,6 +2561,8 @@ class Many2oneReference(Integer):
 
     def _update_inverses(self, records, value):
         """ Add `records` to the cached values of the inverse fields of `self`. """
+        if not value:
+            return
         cache = records.env.cache
         model_ids = self._record_ids_per_res_model(records)
 
