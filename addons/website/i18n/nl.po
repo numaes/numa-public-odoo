@@ -7,8 +7,8 @@
 # Eric Geens <ericgeens@yahoo.com>, 2017
 # Cas Vissers <casvissers@brahoo.nl>, 2017
 # Martin Trigaux, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:06+0000\n"
 "PO-Revision-Date: 2017-09-20 10:25+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -423,6 +423,8 @@ msgid ""
 "<i title=\"Is the page included in the main menu?\" class=\"fa fa-thumb-"
 "tack\" aria-hidden=\"true\"/>"
 msgstr ""
+"<i title=\"Is the page included in the main menu?\" class=\"fa fa-thumb-"
+"tack\" aria-hidden=\"true\"/>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.edit_website_pages
@@ -430,11 +432,13 @@ msgid ""
 "<i title=\"Is the page indexed by search engines?\" class=\"fa fa-globe\" "
 "aria-hidden=\"true\"/>"
 msgstr ""
+"<i title=\"Is the page indexed by search engines?\" class=\"fa fa-globe\" "
+"aria-hidden=\"true\"/>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.edit_website_pages
 msgid "<i title=\"Is the page published?\" class=\"fa fa-eye\" aria-hidden=\"true\"/>"
-msgstr ""
+msgstr "<i title=\"Is the page published?\" class=\"fa fa-eye\" aria-hidden=\"true\"/>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -516,6 +520,8 @@ msgid ""
 "<small id=\"emailHelp\" class=\"help-block text-muted\">We'll never share "
 "your email with anyone else.</small>"
 msgstr ""
+"<small id=\"emailHelp\" class=\"help-block text-muted\">We zullen uw e-mail "
+"nooit met iemand anders delen.</small>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_parallax_slider
@@ -531,7 +537,7 @@ msgstr "<small>John Doe, CEO</small>"
 #: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model:website.page,arch_db:website.bs_debug_page
 msgid "<span class=\"badge mb4\">This is a badge</span>"
-msgstr ""
+msgstr "<span class=\"badge mb4\">Dit is een badge</span>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
@@ -610,11 +616,15 @@ msgid ""
 "                                                        <span class=\"icon-bar\"/>\n"
 "                                                        <span class=\"icon-bar\"/>"
 msgstr ""
+"<span class=\"sr-only\">Toggle navigatie</span>\n"
+"                                                        <span class=\"icon-bar\"/>\n"
+"                                                        <span class=\"icon-bar\"/>\n"
+"                                                        <span class=\"icon-bar\"/>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "<span title=\"Mobile preview\" class=\"fa fa-mobile\"/>"
-msgstr ""
+msgstr "<span title=\"Mobile preview\" class=\"fa fa-mobile\"/>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
@@ -1269,7 +1279,7 @@ msgstr "Groot"
 #: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model:website.page,arch_db:website.bs_debug_page
 msgid "Breadcrumb"
-msgstr "Breadcrumb"
+msgstr "Kruimelpad"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1932,6 +1942,11 @@ msgstr "E-mailadres"
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Email support"
 msgstr "E-mail ondersteuning"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Enable billing on your Google Project"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -3841,11 +3856,6 @@ msgid "Show in Top Menu"
 msgstr "Weergeven in topmenu"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid "Show your address on a map in the"
-msgstr "Geef uw adres in een kaart weer in de"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Simple and obvious"
 msgstr "Simpel en duidelijk"
@@ -4191,7 +4201,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model:website.page,arch_db:website.bs_debug_page
 msgid "Toggle <span class=\"caret\"/>"
-msgstr ""
+msgstr "Toggle <span class=\"caret\"/>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_company_team
@@ -4331,6 +4341,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.edit_website_pages
 msgid "Url"
 msgstr "Url"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Use Google Map on your website ("
+msgstr "Gebruik Google Maps op uw website ("
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
@@ -5128,8 +5143,8 @@ msgstr "of wijzig master"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid "page"
-msgstr "pagina"
+msgid "page, snippets, ...)"
+msgstr "pagina, snippets, ...)"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner

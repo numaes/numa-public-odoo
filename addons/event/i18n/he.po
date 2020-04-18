@@ -3,19 +3,22 @@
 # * event
 # 
 # Translators:
-# Yihya Hugirat <hugirat@gmail.com>, 2017
 # שהאב חוסיין <shhab89@gmail.com>, 2018
 # ilan kl <ilan@qaroads.co.il>, 2018
-# ExcaliberX <excaliberx@gmail.com>, 2018
+# Yihya Hugirat <hugirat@gmail.com>, 2018
 # Martin Trigaux, 2018
 # Fishfur A Banter <fishfurbanter@gmail.com>, 2018
+# ExcaliberX <excaliberx@gmail.com>, 2018
+# דודי מלכה <Dudimalka6@gmail.com>, 2019
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-27 11:56+0000\n"
-"PO-Revision-Date: 2018-07-27 11:56+0000\n"
-"Last-Translator: Fishfur A Banter <fishfurbanter@gmail.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:17+0000\n"
+"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1010,7 +1013,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:event.view_event_type_form
 #: model:ir.ui.view,arch_db:event.view_event_type_tree
 msgid "Event Category"
-msgstr ""
+msgstr "קטגוריית אירועים"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_confirm
@@ -1047,7 +1050,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event_name
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Event Name"
-msgstr ""
+msgstr "שם האירוע"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_calendar
@@ -1087,7 +1090,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_mail_event_type_id
 msgid "Event Type"
-msgstr ""
+msgstr "סוג אירוע"
 
 #. module: event
 #: model:ir.actions.server,name:event.event_mail_scheduler_ir_actions_server
@@ -1148,7 +1151,7 @@ msgstr ""
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Expected"
-msgstr ""
+msgstr "צפוי"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
@@ -1658,7 +1661,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:event.view_event_registration_pivot
 #: model:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Registration"
-msgstr ""
+msgstr "הרשמה"
 
 #. module: event
 #: model:ir.actions.report,name:event.report_event_registration_badge
@@ -1722,7 +1725,7 @@ msgstr "דיווח"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Requirements"
-msgstr ""
+msgstr "דרישות"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_reserved
@@ -1832,7 +1835,7 @@ msgstr "סטטוס"
 #. module: event
 #: model:ir.actions.act_window,name:event.act_register_event_partner
 msgid "Subscribe"
-msgstr ""
+msgstr "הירשם כמנוי"
 
 #. module: event
 #: model:event.event,name:event.event_3
@@ -1866,7 +1869,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings_module_event_sale
 msgid "Tickets"
-msgstr ""
+msgstr "כרטיסים"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_tz

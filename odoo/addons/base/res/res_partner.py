@@ -7,8 +7,6 @@ import hashlib
 import pytz
 import threading
 
-from email.utils import formataddr
-
 import requests
 from lxml import etree
 from werkzeug import urls
@@ -373,7 +371,7 @@ class Partner(models.Model):
     @api.depends('name', 'email')
     def _compute_email_formatted(self):
         for partner in self:
-            partner.email_formatted = formataddr((partner.name or u"False", partner.email or u"False"))
+            partner.email_formatted = tools.formataddr((partner.name or u"False", partner.email or u"False"))
 
     @api.depends('is_company')
     def _compute_company_type(self):
@@ -430,7 +428,7 @@ class Partner(models.Model):
         as if they were related fields """
         commercial_partner = self.commercial_partner_id
         if commercial_partner != self:
-            sync_vals = commercial_partner._update_fields_values(self._commercial_fields())
+            sync_vals = commercial_partner.with_prefetch()._update_fields_values(self._commercial_fields())
             self.write(sync_vals)
 
     @api.multi
@@ -441,8 +439,9 @@ class Partner(models.Model):
         sync_children = self.child_ids.filtered(lambda c: not c.is_company)
         for child in sync_children:
             child._commercial_sync_to_children()
+        res = sync_children.write(sync_vals)
         sync_children._compute_commercial_partner()
-        return sync_children.write(sync_vals)
+        return res
 
     @api.multi
     def _fields_sync(self, values):

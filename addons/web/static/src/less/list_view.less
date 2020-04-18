@@ -51,7 +51,6 @@
         }
         &:not(:empty)::after {
             margin-left: 6px;
-            position: absolute;
         }
         &.o-sort-up {
             cursor: n-resize;
@@ -177,6 +176,9 @@
                     white-space: normal;
                     max-width: 100%; // Fix a chrome bug where badge would not break on multiple lines
                 }
+            }
+            &.o_field_text {
+                resize: none; // Avoid resizing autoresized field
             }
         }
         > .o_field_translate {

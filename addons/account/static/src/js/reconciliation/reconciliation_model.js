@@ -866,11 +866,11 @@ var StatementModel = BasicModel.extend({
             });
             var company_currency = session.get_currency(line.st_line.currency_id);
             var company_precision = company_currency && company_currency.digits[1] || 2;
-            total = utils.round_precision(total*1000, company_precision)/1000 || 0;
+            total = utils.round_decimals(total, company_precision) || 0;
             if(isOtherCurrencyId){
                 var other_currency = session.get_currency(isOtherCurrencyId);
                 var other_precision = other_currency && other_currency.digits[1] || 2;
-                amount_currency = utils.round_precision(amount_currency, other_precision)
+                amount_currency = utils.round_decimals(amount_currency, other_precision);
             }
             line.balance = {
                 amount: total,
@@ -1220,7 +1220,7 @@ var ManualModel = StatementModel.extend({
                             self.manualLines = result;
                             self.valuenow = 0;
                             self.valuemax = Object.keys(self.manualLines).length;
-                            var lines = self.manualLines.splice(0, self.defaultDisplayQty);
+                            var lines = self.manualLines.slice(0, self.defaultDisplayQty);
                             self.pagerIndex = lines.length;
                             return self.loadData(lines);
                         });
@@ -1235,7 +1235,7 @@ var ManualModel = StatementModel.extend({
                             self.manualLines = result;
                             self.valuenow = 0;
                             self.valuemax = Object.keys(self.manualLines).length;
-                            var lines = self.manualLines.splice(0, self.defaultDisplayQty);
+                            var lines = self.manualLines.slice(0, self.defaultDisplayQty);
                             self.pagerIndex = lines.length;
                             return self.loadData(lines);
                         });
@@ -1257,7 +1257,7 @@ var ManualModel = StatementModel.extend({
                             self.manualLines = [].concat(result.accounts, result.customers, result.suppliers)
                             self.valuenow = 0;
                             self.valuemax = Object.keys(self.manualLines).length;
-                            var lines = self.manualLines.splice(0, self.defaultDisplayQty);
+                            var lines = self.manualLines.slice(0, self.defaultDisplayQty);
                             self.pagerIndex = lines.length;
                             return self.loadData(lines);
                         });
@@ -1274,7 +1274,7 @@ var ManualModel = StatementModel.extend({
         if (qty === undefined) {
             qty = this.defaultDisplayQty;
         }
-        var lines = this.manualLines.splice(this.pagerIndex, qty);
+        var lines = this.manualLines.slice(this.pagerIndex, this.pagerIndex + qty);
         this.pagerIndex += qty;
         return this.loadData(lines);
     },

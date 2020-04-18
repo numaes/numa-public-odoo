@@ -55,7 +55,7 @@ from weakref import WeakSet
 from decorator import decorator
 from werkzeug.local import Local, release_local
 
-from odoo.tools import frozendict, classproperty
+from odoo.tools import frozendict, classproperty, pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -188,6 +188,16 @@ def onchange(*args):
                 'warning': {'title': "Warning", 'message': "What is this?"},
             }
 
+        .. danger::
+
+            Since ``@onchange`` returns a recordset of pseudo-records,
+            calling any one of the CRUD methods
+            (:meth:`create`, :meth:`read`, :meth:`write`, :meth:`unlink`)
+            on the aforementioned recordset is undefined behaviour,
+            as they potentially do not exist in the database yet.
+
+            Instead, simply set the record's field like shown in the example
+            above or call the :meth:`update` method.
 
         .. warning::
 
@@ -964,13 +974,18 @@ class Cache(object):
     def get(self, record, field):
         """ Return the value of ``field`` for ``record``. """
         key = record.env.cache_key(field)
-        value = self._data[key][field][record.id]
+        value = self._data[key][field][record._ids[0]]
         return value.get() if isinstance(value, SpecialValue) else value
 
     def set(self, record, field, value):
         """ Set the value of ``field`` for ``record``. """
         key = record.env.cache_key(field)
-        self._data[key][field][record.id] = value
+        self._data[key][field][record._ids[0]] = value
+
+    def update(self, records, field, values):
+        """ Set the values of ``field`` for several ``records``. """
+        key = records.env.cache_key(field)
+        self._data[key][field].update(pycompat.izip(records._ids, values))
 
     def remove(self, record, field):
         """ Remove the value of ``field`` for ``record``. """
