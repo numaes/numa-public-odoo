@@ -197,17 +197,20 @@ class Product(models.Model):
         ret = self.env.user.has_group('sale.group_show_price_subtotal') and 'total_excluded' or 'total_included'
 
         for p, p2 in pycompat.izip(self, self2):
-            taxes = partner.property_account_position_id.map_tax(p.sudo().taxes_id.filtered(lambda x: x.company_id == company_id))
-            p.website_price = taxes.compute_all(p2.price, pricelist.currency_id, quantity=qty, product=p2, partner=partner)[ret]
+            taxes = partner.property_account_position_id.map_tax(
+                p.sudo().taxes_id.filtered(lambda x: x.company_id == company_id))
+            p.website_price = \
+                taxes.compute_all(p2.price, pricelist.currency_id, quantity=qty, product=p2, partner=partner)[ret]
             # We must convert the price_without_pricelist in the same currency than the
             # website_price, otherwise the comparison doesn't make sense. Moreover, we show a price
             # difference only if the website price is lower
-            price_without_pricelist = p.list_price
-            if company_id.currency_id != pricelist.currency_id:
-                price_without_pricelist = company_id.currency_id.compute(price_without_pricelist, pricelist.currency_id)
+            price_without_pricelist = p.price_compute('list_price', currency=pricelist.currency_id)[p.id]
             price_without_pricelist = taxes.compute_all(price_without_pricelist, pricelist.currency_id)[ret]
-            p.website_price_difference = True if float_compare(price_without_pricelist, p.website_price, precision_rounding=pricelist.currency_id.rounding) > 0 else False
-            p.website_public_price = taxes.compute_all(p2.lst_price, quantity=qty, product=p2, partner=partner)[ret]
+            p.website_price_difference = True \
+                if float_compare(price_without_pricelist,
+                                 p.website_price,
+                                 precision_rounding=pricelist.currency_id.rounding) > 0 else False
+            p.website_public_price = price_without_pricelist
 
     @api.multi
     def website_publish_button(self):
