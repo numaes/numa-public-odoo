@@ -561,6 +561,16 @@ class IrModelFields(models.Model):
                     'message': _("The table %r if used for other, possibly incompatible fields.") % self.relation_table,
                 }}
 
+    @api.onchange('required', 'ttype', 'on_delete')
+    def _onchange_required(self):
+        for rec in self:
+            if rec.ttype == 'many2one' and rec.required and rec.on_delete == 'set null':
+                return {'warning': {'title': _("Warning"), 'message': _(
+                    "The m2o field %s is required but declares its ondelete policy "
+                    "as being 'set null'. Only 'restrict' and 'cascade' make sense."
+                    % (rec.name)
+                )}}
+
     def _get(self, model_name, name):
         """ Return the (sudoed) `ir.model.fields` record with the given model and name.
         The result may be an empty recordset if the model is not found.
@@ -1188,7 +1198,8 @@ class IrModelSelection(models.Model):
                               'preferably through a custom addon!'))
 
         for selection in self:
-            if selection.field_id.store:
+            if selection.field_id.store and \
+                    not self.env[selection.field_id.model]._abstract:
                 # replace the value by NULL in the field's corresponding column
                 query = 'UPDATE "{table}" SET "{field}"=NULL WHERE "{field}"=%s'.format(
                     table=self.env[selection.field_id.model]._table,
