@@ -353,10 +353,11 @@ class Cursor(object):
             #       is remapped to serializable before being
             #       sent to the database, so it is in fact
             #       unavailable for use with pg 9.1.
-            isolation_level = \
-                ISOLATION_LEVEL_REPEATABLE_READ \
-                if self._serialized \
-                else ISOLATION_LEVEL_READ_COMMITTED
+            # isolation_level = \
+            #     ISOLATION_LEVEL_REPEATABLE_READ \
+            #     if self._serialized \
+            #     else ISOLATION_LEVEL_READ_COMMITTED
+            isolation_level = ISOLATION_LEVEL_READ_COMMITTED
         self._cnx.set_isolation_level(isolation_level)
 
     @check
