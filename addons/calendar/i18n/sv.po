@@ -3,13 +3,14 @@
 # * calendar
 # 
 # Translators:
-# Kristoffer Grundström <hamnisdude@gmail.com>, 2019
+# Kristoffer Grundström <lovaren@gmail.com>, 2019
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2019
 # Robert Frykelius <robert.frykelius@linserv.se>, 2019
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2019
-# Kim Asplund <kim.asplund@gmail.com>, 2020
+# Lisa <lisa.oskoma@vertel.se>, 2020
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2020
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-25 09:28+0000\n"
 "PO-Revision-Date: 2018-08-24 09:17+0000\n"
-"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2020\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2020\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -363,7 +364,7 @@ msgstr "Aktivitet"
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_type
 msgid "Activity Type"
-msgstr ""
+msgstr "Aktivitetstyp"
 
 #. module: calendar
 #. openerp-web
@@ -691,7 +692,7 @@ msgstr "Alla"
 #: code:addons/calendar/models/mail_activity.py:38
 #, python-format
 msgid "Feedback: "
-msgstr ""
+msgstr "Återkoppling:"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -764,7 +765,7 @@ msgstr "Gruppering efter datum stöds inte,  använd kalendervyn i stället."
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
 msgid "HTTP Routing"
-msgstr "HTTP Routing"
+msgstr "HTTP-rutt"
 
 #. module: calendar
 #: selection:calendar.alarm,interval:0
