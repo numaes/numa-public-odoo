@@ -25,9 +25,6 @@ class SaleOrder(models.Model):
     def _get_no_effect_on_threshold_lines(self):
         self.ensure_one()
         lines = self.env['sale.order.line']
-        # Do not count already applied promo_code discount; Do not substract itself
-        if self.code_promo_program_id and self.code_promo_program_id.reward_type == 'discount':
-            lines = self.order_line.filtered(lambda l: l.product_id == self.code_promo_program_id.discount_line_product_id)
         return lines
 
     def recompute_coupon_lines(self):
@@ -39,8 +36,10 @@ class SaleOrder(models.Model):
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         order = super(SaleOrder, self).copy(default)
-        order._get_reward_lines().unlink()
-        order._create_new_no_code_promo_reward_lines()
+        reward_line = order._get_reward_lines()
+        if reward_line:
+            reward_line.unlink()
+            order._create_new_no_code_promo_reward_lines()
         return order
 
     def action_confirm(self):
@@ -83,7 +82,10 @@ class SaleOrder(models.Model):
         max_product_qty = sum(order_lines.mapped('product_uom_qty')) or 1
         # Remove needed quantity from reward quantity if same reward and rule product
         if program._is_valid_product(program.reward_product_id):
-            reward_product_qty = max_product_qty // (program.rule_min_quantity + program.reward_product_quantity)
+            # number of times the program should be applied
+            program_in_order = max_product_qty // (program.rule_min_quantity + program.reward_product_quantity)
+            # multipled by the reward qty
+            reward_product_qty = program.reward_product_quantity * program_in_order
         else:
             reward_product_qty = min(max_product_qty, self.order_line.filtered(lambda x: x.product_id == program.reward_product_id).product_uom_qty)
 

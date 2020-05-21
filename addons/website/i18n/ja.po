@@ -9,16 +9,18 @@
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2019
 # Takahiro MURAKAMI <murakami@date-yakkyoku.com>, 2019
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2019
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2019
 # Tim Siu Lai <tl@roomsfor.hk>, 2019
+# 江口 和志 <k_eguchi@enzantrades.co.jp>, 2020
+# Hau Dao <hau@quartile.co>, 2020
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-18 09:46+0000\n"
+"POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Tim Siu Lai <tl@roomsfor.hk>, 2019\n"
+"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>, 2020\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -348,6 +350,13 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                                            Create a Google Project and Get a Key"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                                            Enable billing on your Google Project"
 msgstr ""
 
 #. module: website
@@ -1315,6 +1324,13 @@ msgid "Change Icons"
 msgstr "アイコンの変更"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/widgets/theme.js:0
+#, python-format
+msgid "Changing this color will regenerate the default theme color scheme"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__field_parent
 msgid "Child Field"
 msgstr "子項目"
@@ -1429,6 +1445,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/website/static/src/js/editor/wysiwyg_multizone_translate.js:0
 #: code:addons/website/static/src/xml/website.gallery.xml:0
+#: code:addons/website/static/src/xml/website.xml:0
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
 #, python-format
@@ -1792,7 +1809,7 @@ msgstr "自動再生を無効にする"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Disabled"
-msgstr ""
+msgstr "無効"
 
 #. module: website
 #. openerp-web
@@ -2275,7 +2292,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__website__auth_signup_uninvited__b2c
 msgid "Free sign up"
-msgstr "自由にアインアップ"
+msgstr "自由にサインアップ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
@@ -2344,7 +2361,7 @@ msgstr "リンクに行く"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_view_form_extend
 msgid "Go to Page Manager"
-msgstr ""
+msgstr "ページ管理画面に移動"
 
 #. module: website
 #. openerp-web
@@ -2732,6 +2749,7 @@ msgid ""
 "In this mode, you can only translate texts. To change the structure of the page, you must edit the master page.\n"
 "        Each modification on the master page is automatically applied to all translated versions."
 msgstr ""
+"このモードではテキストの翻訳のみ可能です。ページの構成を変更するには、マスターページを編集してください。マスターページへの変更は自動的に翻訳版に反映されます。"
 
 #. module: website
 #: code:addons/website/controllers/backend.py:0
@@ -2749,7 +2767,10 @@ msgid "Indexed"
 msgstr "索引対象"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.pageProperties.xml:0
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
+#, python-format
 msgid "Info"
 msgstr "情報"
 
@@ -2846,7 +2867,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__is_mega_menu
 msgid "Is Mega Menu"
-msgstr ""
+msgstr "メガメニュー"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_partner__is_published
@@ -2855,7 +2876,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_published_mixin__is_published
 #: model:ir.model.fields,field_description:website.field_website_published_multi_mixin__is_published
 msgid "Is Published"
-msgstr ""
+msgstr "公開済"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__is_visible
@@ -3635,7 +3656,7 @@ msgstr "OK"
 #: code:addons/website/static/src/js/editor/editor_menu_translate.js:0
 #, python-format
 msgid "Ok, never show me this again"
-msgstr ""
+msgstr "今後このメッセージを表示しない"
 
 #. module: website
 #. openerp-web
@@ -4813,7 +4834,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.facebook_page.xml:0
 #, python-format
 msgid "Timeline"
-msgstr ""
+msgstr "タイムライン"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__timezone
@@ -4953,7 +4974,7 @@ msgstr "翻訳されたコンテンツ"
 #: code:addons/website/static/src/js/editor/editor_menu_translate.js:0
 #, python-format
 msgid "Translation Info"
-msgstr ""
+msgstr "翻訳情報"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -5235,7 +5256,7 @@ msgstr "表示"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__group_ids
 msgid "Visible Groups"
-msgstr ""
+msgstr "表示グループ"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_partner__website_published
@@ -5249,7 +5270,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_track__visit_datetime
 msgid "Visit Date"
-msgstr ""
+msgstr "訪問日"
 
 #. module: website
 #: model:ir.model,name:website.model_website_track
@@ -5268,7 +5289,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_search
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_kanban
 msgid "Visitor"
-msgstr ""
+msgstr "訪問者"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
@@ -5441,7 +5462,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.website_pages_tree_view
 #: model_terms:ir.ui.view,arch_db:website.website_pages_view_search
 msgid "Website Pages"
-msgstr ""
+msgstr "ウェブサイトのページ"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_base_automation__website_path
@@ -5831,11 +5852,6 @@ msgstr ""
 #, python-format
 msgid "signs to get your website ready in no time."
 msgstr "すぐにあなたのウェブサイトを準備するためのサイン。"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.robots
-msgid "sitemap.xml"
-msgstr "sitemap.xml"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.menu_search

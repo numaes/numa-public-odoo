@@ -431,6 +431,22 @@ var NumericField = InputField.extend({
     },
 
     /**
+     * Parse numerical value (integer or float)
+     *
+     * Note: We have to overwrite this method to skip the format if we are into
+     * edit mode on a input type number.
+     *
+     * @override
+     * @private
+     */
+    _parseValue: function (value) {
+        if (this.mode === 'edit' && this.nodeOptions.type === 'number') {
+            return Number(value);
+        }
+        return this._super.apply(this, arguments);
+    },
+
+    /**
      * Formats an input element for edit mode. This is in a separate function so
      * extending widgets can use it on their input without having input as tagName.
      *
@@ -676,6 +692,11 @@ var FieldDateRange = InputField.extend({
                 self.$el.data('daterangepicker').hide();
             }
         });
+
+        // Prevent bootstrap from focusing on modal (which breaks hours drop-down in firefox)
+        this.$pickerContainer.on('focusin.bs.modal', 'select', function (ev) {
+            ev.stopPropagation();
+        });
     },
 });
 
@@ -739,7 +760,7 @@ var FieldDate = InputField.extend({
      */
     activate: function () {
         if (this.isFocusable() && this.datewidget) {
-            this.datewidget.focus();
+            this.datewidget.$input.select();
             return true;
         }
         return false;
@@ -1316,7 +1337,7 @@ var FieldPercentage = FieldFloat.extend({
 var FieldText = InputField.extend(TranslatableFieldMixin, {
     description: _lt("Multiline Text"),
     className: 'o_field_text',
-    supportedFieldTypes: ['text'],
+    supportedFieldTypes: ['text', 'html'],
     tagName: 'span',
 
     /**
@@ -1600,13 +1621,6 @@ var CopyClipboard = {
     /**
      * @override
      */
-    _render: function () {
-        this._super.apply(this, arguments);
-        this.$el.addClass('o_field_copy');
-    },
-    /**
-     * @override
-     */
     _renderReadonly: function () {
         this._super.apply(this, arguments);
         if (this.value) {
@@ -1619,11 +1633,13 @@ var CopyClipboard = {
 var TextCopyClipboard = FieldText.extend(CopyClipboard, {
     description: _lt("Copy to Clipboard"),
     clipboardTemplate: 'CopyClipboardText',
+    className: "o_field_copy",
 });
 
 var CharCopyClipboard = FieldChar.extend(CopyClipboard, {
     description: _lt("Copy to Clipboard"),
     clipboardTemplate: 'CopyClipboardChar',
+    className: 'o_field_copy o_text_overflow',
 });
 
 var AbstractFieldBinary = AbstractField.extend({
@@ -1860,6 +1876,10 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
             } else {
                 $img = this.$('img');
             }
+            var zoomDelay = 0;
+            if (this.nodeOptions.zoom_delay) {
+                zoomDelay = this.nodeOptions.zoom_delay;
+            }
 
             if(this.recordData[imageField]) {
                 $img.attr('data-zoom', 1);
@@ -1867,6 +1887,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
 
                 $img.zoomOdoo({
                     event: 'mouseenter',
+                    timer: zoomDelay,
                     attach: '.o_content',
                     attachToTarget: true,
                     onShow: function () {
@@ -2285,7 +2306,7 @@ var StateSelectionWidget = AbstractField.extend({
             .addClass(currentState.state_class)
             .prop('special_click', true)
             .parent().attr('title', currentState.state_name)
-            .attr('aria-label', currentState.state_name);
+            .attr('aria-label', this.string + ": " + currentState.state_name);
 
         // Render "FormSelection.Items" and move it into "FormSelection"
         var $items = $(qweb.render('FormSelection.items', {
