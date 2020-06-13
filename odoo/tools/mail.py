@@ -53,7 +53,9 @@ class _Cleaner(clean.Cleaner):
         'border', 'border-color', 'border-radius', 'border-style', 'border-width', 'border-top', 'border-bottom',
         'height', 'width', 'max-width', 'min-width', 'min-height',
         # tables
-        'border-collapse', 'border-spacing', 'caption-side', 'empty-cells', 'table-layout']
+        'border-collapse', 'border-spacing', 'caption-side', 'empty-cells', 'table-layout',
+        'background', 'background-image', 'background-repeat',
+        'backgroud-position', 'background-size', 'background-color']
 
     _style_whitelist.extend(
         ['border-%s-%s' % (position, attribute)
