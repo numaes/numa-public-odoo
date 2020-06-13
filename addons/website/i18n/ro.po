@@ -37,6 +37,18 @@ msgid "\" alert with a"
 msgstr ""
 
 #. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" can not be empty."
+msgstr ""
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" must start with a leading slash."
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__page_count
 msgid "# Visited Pages"
 msgstr "Pagini vizitate"
@@ -1261,7 +1273,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_published_mixin__can_publish
 #: model:ir.model.fields,field_description:website.field_website_published_multi_mixin__can_publish
 msgid "Can Publish"
-msgstr ""
+msgstr "Poate publica"
 
 #. module: website
 #. openerp-web
@@ -1967,7 +1979,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.contentMenu.xml:0
 #, python-format
 msgid "Dropdown menu"
-msgstr ""
+msgstr "Meniul derulant"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
@@ -4893,7 +4905,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Toggle"
-msgstr ""
+msgstr "Comutare"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
@@ -5674,7 +5686,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Yellow"
-msgstr ""
+msgstr "Galben"
 
 #. module: website
 #. openerp-web
