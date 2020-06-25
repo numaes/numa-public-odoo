@@ -6327,7 +6327,7 @@ msgstr "Indehaver"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_holder_name
 msgid "Account Holder Name"
-msgstr ""
+msgstr "Kontoindehaver"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract
@@ -6380,6 +6380,7 @@ msgid ""
 "Account holder name, in case it is different than the name of the Account "
 "Holder"
 msgstr ""
+"Kontoindehaver navn, i tilfælde af, at det er forskellig fra kontoindehaver"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting
@@ -19337,7 +19338,7 @@ msgstr "Rapport"
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_report
 msgid "Report Action"
-msgstr ""
+msgstr "Rapporter handling"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__report_file
