@@ -2,7 +2,7 @@ odoo.define('web_editor.wysiwyg.root', function (require) {
 'use strict';
 
 var Widget = require('web.Widget');
-var Wysiwyg = requier('web_editor.wysiwyg');
+var Wysiwyg = require('web_editor.wysiwyg');
 
 var assetsLoaded = false;
 
