@@ -174,7 +174,8 @@ class Message(models.Model):
                 (self._table, operator)
         self.env.cr.execute(query, (value,))
         ids = [t[0] for t in self.env.cr.fetchall()]
-        return [('id', 'in', ids)]
+        # return domain with an implicit AND
+        return [('id', 'in', ids), (1, '=', 1)]
 
     @api.depends('size')
     def _compute_double_size(self):
@@ -888,3 +889,28 @@ class StateMixin(models.AbstractModel):
         ('confirmed', 'Confirmed'),
         ('done', 'Done'),
     ])
+
+# Special classes to ensure the correct usage of a shared cache amongst users.
+# See the method test_shared_cache_computed_field
+class SharedCacheComputeParent(models.Model):
+    _name = 'test_new_api.model_shared_cache_compute_parent'
+    _description = 'model_shared_cache_compute_parent'
+
+    name = fields.Char(string="Task Name")
+    line_ids = fields.One2many(
+        'test_new_api.model_shared_cache_compute_line', 'parent_id', string="Timesheets")
+    total_amount = fields.Integer(compute='_compute_total_amount', store=True, compute_sudo=True)
+
+    @api.depends('line_ids.amount')
+    def _compute_total_amount(self):
+        for parent in self:
+            parent.total_amount = sum(parent.line_ids.mapped('amount'))
+
+
+class ShareCacheComputeLine(models.Model):
+    _name = 'test_new_api.model_shared_cache_compute_line'
+    _description = 'model_shared_cache_compute_line'
+
+    parent_id = fields.Many2one('test_new_api.model_shared_cache_compute_parent')
+    amount = fields.Integer()
+    user_id = fields.Many2one('res.users', default= lambda self: self.env.user)  # Note: There is an ir.rule about this.

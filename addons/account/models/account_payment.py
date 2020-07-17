@@ -364,6 +364,7 @@ class account_payment(models.Model):
 
     @api.depends('invoice_ids', 'payment_type', 'partner_type', 'partner_id')
     def _compute_destination_account_id(self):
+        self.destination_account_id = False
         for payment in self:
             if payment.invoice_ids:
                 payment.destination_account_id = payment.invoice_ids[0].mapped(
@@ -374,15 +375,16 @@ class account_payment(models.Model):
                     raise UserError(_('There is no Transfer Account defined in the accounting settings. Please define one to be able to confirm this transfer.'))
                 payment.destination_account_id = payment.company_id.transfer_account_id.id
             elif payment.partner_id:
+                partner = self.partner_id.with_context(force_company=payment.company_id.id)
                 if payment.partner_type == 'customer':
-                    payment.destination_account_id = payment.partner_id.property_account_receivable_id.id
+                    payment.destination_account_id = partner.property_account_receivable_id.id
                 else:
-                    payment.destination_account_id = payment.partner_id.property_account_payable_id.id
+                    payment.destination_account_id = partner.property_account_payable_id.id
             elif payment.partner_type == 'customer':
-                default_account = self.env['ir.property'].get('property_account_receivable_id', 'res.partner')
+                default_account = self.env['ir.property'].with_context(force_company=payment.company_id.id).get('property_account_receivable_id', 'res.partner')
                 payment.destination_account_id = default_account.id
             elif payment.partner_type == 'supplier':
-                default_account = self.env['ir.property'].get('property_account_payable_id', 'res.partner')
+                default_account = self.env['ir.property'].with_context(force_company=payment.company_id.id).get('property_account_payable_id', 'res.partner')
                 payment.destination_account_id = default_account.id
 
     @api.depends('move_line_ids.matched_debit_ids', 'move_line_ids.matched_credit_ids')
@@ -708,7 +710,7 @@ class account_payment(models.Model):
         moves = self.mapped('move_line_ids.move_id')
         moves.filtered(lambda move: move.state == 'posted').button_draft()
         moves.with_context(force_delete=True).unlink()
-        self.write({'state': 'draft'})
+        self.write({'state': 'draft', 'invoice_ids': False})
 
     def _get_invoice_payment_amount(self, inv):
         """

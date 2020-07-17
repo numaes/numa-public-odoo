@@ -343,7 +343,11 @@ class PosOrder(models.Model):
         }
 
     def _is_pos_order_paid(self):
-        return float_is_zero(self.amount_total - self.amount_paid, precision_rounding=self.currency_id.rounding)
+        return float_is_zero(self._get_rounded_amount(self.amount_total) - self.amount_paid, precision_rounding=self.currency_id.rounding)
+
+    def _get_rounded_amount(self, amount):
+        currency = self.currency_id
+        return currency.round(amount) if currency else amount
 
     def action_pos_order_paid(self):
         if not self._is_pos_order_paid():
@@ -789,7 +793,6 @@ class PosOrderLine(models.Model):
             values['name'] = self.env['ir.sequence'].next_by_code('pos.order.line')
         return super(PosOrderLine, self).create(values)
 
-    @api.model
     def write(self, values):
         if values.get('pack_lot_line_ids'):
             for pl in values.get('pack_lot_ids'):

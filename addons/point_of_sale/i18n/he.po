@@ -2454,7 +2454,7 @@ msgstr "מועד אחרון לפעילות הבאה"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_summary
 msgid "Next Activity Summary"
-msgstr "תקציר הפעילות הבאה "
+msgstr "תיאור הפעילות הבאה "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_type_id
@@ -5245,6 +5245,13 @@ msgstr ""
 "עליך להיות מחובר לאינטרנט כדי לשמור את השינויים שלך.\n"
 "\n"
 "הזמנות שלא סונכרנו לפני כן, יסונכרנו בפעם הבאה שתסגור הזמנה בזמן שאתה מחובר לאינטרנט או כשתסגור את המשמרת."
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid ""
+"You must configure an intermediary account for the payment methods: %s."
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_product_action
