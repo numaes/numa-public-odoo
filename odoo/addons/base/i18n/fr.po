@@ -68,6 +68,7 @@
 # Cécile Collart <cco@odoo.com>, 2019
 # Jonathan Quique <jqu@odoo.com>, 2020
 # Vallen Delobel <edv@odoo.com>, 2020
+# Priscilla Sanchez <prs@odoo.com>, 2020
 # Pauline Thiry <pth@odoo.com>, 2020
 # 
 msgid ""
@@ -645,6 +646,9 @@ msgid ""
 "        Accounting reports send to HMRC\n"
 "    "
 msgstr ""
+"\n"
+"        Rapports comptables envoyés à HMRC\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_extension
@@ -8951,7 +8955,7 @@ msgstr "Rapports Comptables - Argentine"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_client_params
 msgid "Arguments sent to the client along with the view tag"
-msgstr ""
+msgstr "Arguments envoyés au client avec l'étiquette de vue"
 
 #. module: base
 #: model:res.country,name:base.am
@@ -9308,7 +9312,7 @@ msgstr "Pilote pour lecteur de code-barres"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_barcodes_mobile
 msgid "Barcode in Mobile"
-msgstr ""
+msgstr "Lecture de code-barres sur mobile"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_barcodes_mobile
@@ -12229,7 +12233,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_cancellation
 msgid "EDI Cancellation for Mexican Localization"
-msgstr ""
+msgstr "Annulation EDI pour la localisation mexicaine"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_external_trade
@@ -13032,6 +13036,9 @@ msgid ""
 "from mail header:\n"
 "%s"
 msgstr ""
+"Échec d'encodage de l'adresse %s\n"
+"depuis l'en-tête du mail:\n"
+"%s"
 
 #. module: base
 #: model:res.country,name:base.fk
@@ -18421,7 +18428,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_sale_coupon
 #: model:ir.module.module,summary:base.module_l10n_mx_edi_sale_coupon
 msgid "Odoo Mexico Localization for Sale Coupon"
-msgstr ""
+msgstr "Localisation mexicaine Odoo pour les coupons de vente"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_landing
@@ -24077,6 +24084,14 @@ msgid "The list of models that extends the current model."
 msgstr "La liste des modèles qui étendent le modèle actuel."
 
 #. module: base
+#: code:addons/base/ir/ir_model.py:522
+#, python-format
+msgid ""
+"The m2o field %s is required but declares its ondelete policy as being 'set "
+"null'. Only 'restrict' and 'cascade' make sense."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_filters_action_id
 msgid ""
 "The menu action this filter applies to. When left empty the filter applies "
@@ -24873,7 +24888,7 @@ msgstr "Rapports Comptables - Grande Bretagne"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uk_reports_hmrc
 msgid "UK - Accounting Reports to HMRC"
-msgstr ""
+msgstr "UK - Rapports comptable HMRC"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_delivery_ups
@@ -25035,7 +25050,7 @@ msgstr "Inconnu"
 #: code:addons/models.py:833
 #, python-format
 msgid "Unknown database error: '%s'"
-msgstr ""
+msgstr "Erreur base de données inconnue : '%s'"
 
 #. module: base
 #: code:addons/models.py:996
