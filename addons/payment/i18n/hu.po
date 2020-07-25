@@ -888,13 +888,13 @@ msgstr "Belső szerverhiba"
 #: code:addons/payment/models/account_invoice.py:55
 #, python-format
 msgid "Invalid token found! Token acquirer %s != %s"
-msgstr ""
+msgstr "Érvénytelen token! Token szolgáltató %s != %s"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:58
 #, python-format
 msgid "Invalid token found! Token partner %s != %s"
-msgstr ""
+msgstr "Érvénytelen token! Token partner %s != %s"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_invoice
@@ -1661,7 +1661,7 @@ msgstr "Állapot"
 #: selection:payment.acquirer,provider:0
 #: selection:res.company,payment_onboarding_payment_method:0
 msgid "Stripe"
-msgstr ""
+msgstr "Stripe"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__stripe_publishable_key
