@@ -36,11 +36,12 @@
 # ADADI REDOUANE <odadi332014@gmail.com>, 2019
 # Othman Gabr <jabor4u@hotmail.com>, 2020
 # Tasneem Sarhan <tsa@odoo.com>, 2020
-# Ali Alrehawi <alrehawi@hotmail.com>, 2020
 # Mustafa Rawi <mustafa@cubexco.com>, 2020
 # Enjy Abu-Taleb <ema@odootec.com>, 2020
 # Amer Hazaa <eng.amer.it@gmail.com>, 2020
 # MOHAMMAD IBRAHIM <m.moamir@outlook.com>, 2020
+# Saleh Albannay <saleh@cm.codes>, 2020
+# Ali Alrehawi <alrehawi@hotmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -48,7 +49,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: MOHAMMAD IBRAHIM <m.moamir@outlook.com>, 2020\n"
+"Last-Translator: Ali Alrehawi <alrehawi@hotmail.com>, 2020\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -954,7 +955,7 @@ msgstr "تمت تسوية أحد بنود كشف الحساب المُختارة
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid "A tag defined to be used on taxes must always have a country set."
-msgstr ""
+msgstr "العلامة المعرفة للضرائب يجب أن تحتوي دائماً على معرف الدولة."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
@@ -5782,6 +5783,8 @@ msgid ""
 "Incorrect fiscal year date: day is out of range for month. Month: %s; Day: "
 "%s"
 msgstr ""
+"تاريخ غير صحيح للسنة المالية: اليوم المدخل غير موجود في هذا الشهر. "
+"الشهر:%s;اليوم:%s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_incoterm_id
@@ -7373,6 +7376,8 @@ msgid ""
 "No users can edit journal entries related to a tax prior and inclusive of "
 "this date."
 msgstr ""
+"لايمكن للمستخدمين تعديل القيود المدخلة في دفتر اليومية المرتبطة بضرائب سابقة"
+" وشاملة لهذا التاريخ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__fiscalyear_lock_date
@@ -12795,7 +12800,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You don't have the access rights to post an invoice."
-msgstr ""
+msgstr "ليس لديك صلاحيات الوصول لمشاركة الفاتورة"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -13092,7 +13097,7 @@ msgstr "إدخالات غير مسويّة"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "vendor bills"
-msgstr "سند مورد"
+msgstr "فواتير المورد "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
