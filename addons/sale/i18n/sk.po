@@ -16,6 +16,7 @@
 # Peter Dovicovic <dovicovic@gmail.com>, 2020
 # Michal Matus <misko.matus@gmail.com>, 2020
 # Alexandra Brencicova <alexandra.brencicova@gmail.com>, 2020
+# Filip Boskovič <filip.boskovic@26house.com>, 2020
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
@@ -721,7 +722,7 @@ msgstr "<strong>Dátum objednávky:</strong>"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong>Quotation Date:</strong>"
-msgstr "<strong>Dátum ponuky:</strong>"
+msgstr "<strong>Dátum vystavenia:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1315,7 +1316,7 @@ msgstr "Vytvorte novú cenovú ponuku, prvý krok nového predaja."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create and View Invoice"
-msgstr "Vytvorenie a zobrazenie faktúry"
+msgstr "Vytvoriť a zobraziť faktúru"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
@@ -1503,7 +1504,7 @@ msgstr "Dátum:"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deduct_down_payments
 msgid "Deduct down payments"
-msgstr "Odpočet zálohy"
+msgstr "Odpočítať zálohu"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3090,7 +3091,7 @@ msgstr "Počet Cenových ponúk"
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Quotation Date"
-msgstr "Dátum ponuky"
+msgstr "Dátum vystavenia"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
