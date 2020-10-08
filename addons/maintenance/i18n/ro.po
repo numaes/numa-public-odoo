@@ -550,7 +550,7 @@ msgstr "Locație"
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_reports_losses
 msgid "Losses Analysis"
-msgstr ""
+msgstr "Analiză pierderi"
 
 #. module: maintenance
 #: selection:maintenance.request,priority:0
@@ -769,7 +769,7 @@ msgstr "Eficacitate Globală a Echipamentului (EGE)"
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Overdue Activities"
-msgstr ""
+msgstr "Activități restante"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_user_id
@@ -955,7 +955,7 @@ msgstr "Rebut"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_scrap_date
 msgid "Scrap Date"
-msgstr ""
+msgstr "Dacă casare"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_search

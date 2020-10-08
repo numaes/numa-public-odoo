@@ -2771,7 +2771,7 @@ msgstr "Sloučit s ruční kontrolou"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner_mass_deduplicate
 msgid "Merge with existing leads/opportunities of each partner"
-msgstr ""
+msgstr "Sloučit s existujícími potenciálními zákazníky / příležitostemi"
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,name:0
@@ -2930,7 +2930,7 @@ msgstr "Žádná další aktivita není plánována"
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "No salesperson"
-msgstr ""
+msgstr "Žádný obchodník"
 
 #. module: crm
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
@@ -2985,6 +2985,8 @@ msgid ""
 "Odoo helps you keep track of your sales pipeline to follow\n"
 "                    up potential sales and better forecast your future revenues."
 msgstr ""
+"Odoo vám pomůže sledovat vaše prodejní kanály, kde je třeba sledovat\n"
+"                   potenciální prodej a lépe předpovědět své budoucí příjmy."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3080,6 +3082,10 @@ msgid ""
 "mainly used by the sales manager in order to do the periodic review with the"
 " channels of the sales pipeline."
 msgstr ""
+"Analýza příležitostí vám poskytuje okamžitý přístup k vašim příležitostem s "
+"informacemi, jako jsou očekávané výnosy, plánované náklady, zmeškané termíny"
+" nebo počet interakcí na příležitost. Tuto sestavu používá hlavně manažer "
+"prodeje za účelem pravidelné kontroly kanálů obchodní nástěnky."
 
 #. module: crm
 #: model:ir.filters,name:crm.filter_opportunity_opportunities_cohort
@@ -3232,6 +3238,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
+"Nadřazený model s aliasem. Model obsahující odkaz na alias nemusí být nutně "
+"modelem daným od alias_model_id (příklad: project (parent_model) a task "
+"(model))"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_partner_id
@@ -3291,7 +3300,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 #, python-format
 msgid "Pipeline"
-msgstr ""
+msgstr "Obchodní nástenka"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_report_crm_opportunity_salesteam
@@ -3858,6 +3867,8 @@ msgid ""
 "Stages allow salespersons to easily track how a specific opportunity\n"
 "            is positioned in the sales cycle."
 msgstr ""
+"Fáze umožňují prodejcům snadno sledovat, jak konkrétní příležitost\n"
+"            je umístěn v prodejním cyklu."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_state
@@ -3973,6 +3984,8 @@ msgid ""
 "The email address associated with this channel. New emails received will "
 "automatically create new leads assigned to the channel."
 msgstr ""
+"E-mailová adresa přidružená k tomuto kanálu. Nové přijaté e-maily "
+"automaticky vytvoří nové potenciální zákazníky přiřazené kanálu."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4278,6 +4291,10 @@ msgid ""
 "                    a contact form filled in your website, or a file of unqualified\n"
 "                    prospects you import, etc."
 msgstr ""
+"Před vytvořením souboru použijte potenciální zákazníky, pokud potřebujete kvalifikační krok\n"
+"příležitost nebo zákazník. Může to být vizitka, kterou jste obdrželi,\n"
+"kontaktní formulář vyplněný na vašem webu nebo soubor nekvalifikovaných\n"
+"vyhlídky, které importujete atd."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lost_reason_action
@@ -4291,6 +4308,8 @@ msgid ""
 "Use opportunities to keep track of your sales pipeline, follow\n"
 "                up potential sales and better forecast your future revenues."
 msgstr ""
+"Využijte příležitosti ke sledování svého obchodní nástěnky, sledujte\n"
+"                       potenciální prodej a lépe předpovídejte své budoucí příjmy."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4319,6 +4338,7 @@ msgstr ""
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to your sales pipeline</b>."
 msgstr ""
+"Použite grafický ovládací prvek <b>vraťte se ke svému prodejnímu kanálu</b>."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_user_login
@@ -4589,6 +4609,9 @@ msgid ""
 "                opportunities, convert them into quotations, attach related\n"
 "                documents, track all discussions, and much more."
 msgstr ""
+"Budete moci plánovat schůzky a zaznamenávat aktivity z\n"
+"                obchodních příležitosti, převést je na nabídky, připojit související\n"
+"                dokumenty, sledovat všechny diskuse a mnoho dalšího."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_opportunities
@@ -4598,6 +4621,9 @@ msgid ""
 "                    opportunities, convert them into quotations, attach related\n"
 "                    documents, track all discussions, and much more."
 msgstr ""
+"Budete moci plánovat schůzky a telefonní hovory z\n"
+"příležitosti, převést je na nabídky, připojit související\n"
+"dokumenty, sledovat všechny diskuse a mnoho dalšího."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
