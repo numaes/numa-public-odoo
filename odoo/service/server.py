@@ -993,7 +993,7 @@ def preload_registries(dbnames):
     for dbname in dbnames:
         try:
             update_module = config['init'] or config['update']
-            registry = odoo.modules.Registry.new(dbname, update_module=update_module)
+            registry = odoo.modules.registry.Registry.new(dbname, update_module=update_module)
             # run test_file if provided
             if test_file:
                 _logger.info('loading test file %s', test_file)
