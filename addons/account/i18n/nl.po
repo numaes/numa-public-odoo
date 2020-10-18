@@ -14,13 +14,13 @@
 # Charles Vervaecke <cvk@odoo.com>, 2019
 # Wynand Tastenhoye <wta@odoo.com>, 2019
 # Laura Koedam <lko@odoo.com>, 2019
-# Gunther Clauwaert <gclauwae@hotmail.com>, 2019
 # Eric Geens <ericgeens@yahoo.com>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
 # ca2da8678cdb9cbd573eaf985f02c476, 2019
 # Antoine Gilard <ang@odoo.com>, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Martin Trigaux, 2020
+# Gunther Clauwaert <gclauwae@hotmail.com>, 2020
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # 
 msgid ""
@@ -7383,7 +7383,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__tax_negate
 msgid "Negate Tax Balance"
-msgstr ""
+msgstr "Negeer BTW evenwicht"
 
 #. module: account
 #. openerp-web
@@ -8649,7 +8649,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "Presets config"
-msgstr ""
+msgstr "Voorinstellingen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12979,6 +12979,8 @@ msgid ""
 "You cannot modify the taxes related to a posted journal item, you should "
 "reset the journal entry to draft to do so."
 msgstr ""
+"U kunt de BTW met betrekking tot een geboekte boekingsregel niet wijzigen, "
+"hiervoor moet u de boeking terugzetten naar concept."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13117,7 +13119,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You don't have the access rights to post an invoice."
-msgstr ""
+msgstr "U heeft geen toegangsrechten om een factuur te boeken."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -13202,7 +13204,7 @@ msgstr ""
 #: code:addons/account/models/account_cash_rounding.py:33
 #, python-format
 msgid "Please set a positive rounding value."
-msgstr ""
+msgstr "Stel een positieve afrondingswaarde in."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
