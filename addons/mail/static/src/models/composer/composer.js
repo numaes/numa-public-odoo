@@ -103,6 +103,21 @@ function factory(dependencies) {
         }
 
         /**
+         * Focus this composer and remove focus from all others.
+         * Focus is a global concern, it makes no sense to have multiple composers focused at the
+         * same time.
+         */
+        focus() {
+            const allComposers = this.env.models['mail.composer'].all();
+            for (const otherComposer of allComposers) {
+                if (otherComposer !== this && otherComposer.hasFocus) {
+                    otherComposer.update({ hasFocus: false });
+                }
+            }
+            this.update({ hasFocus: true });
+        }
+
+        /**
          * Inserts text content in text input based on selection.
          *
          * @param {string} content
@@ -174,7 +189,7 @@ function factory(dependencies) {
          */
         _computeRecipients() {
             const recipients = [...this.mentionedPartners];
-            if (this.thread) {
+            if (this.thread && !this.isLog) {
                 for (const recipient of this.thread.suggestedRecipientInfoList) {
                     if (recipient.partner && recipient.isSelected) {
                         recipients.push(recipient.partner);
@@ -645,6 +660,7 @@ function factory(dependencies) {
             if (this.suggestedCannedResponses[0]) {
                 this.update({
                     activeSuggestedCannedResponse: [['link', this.suggestedCannedResponses[0]]],
+                    hasToScrollToActiveSuggestion: true,
                 });
             } else {
                 this.update({
@@ -683,6 +699,7 @@ function factory(dependencies) {
             if (this.suggestedChannels[0]) {
                 this.update({
                     activeSuggestedChannel: [['link', this.suggestedChannels[0]]],
+                    hasToScrollToActiveSuggestion: true,
                 });
             } else {
                 this.update({
@@ -708,6 +725,7 @@ function factory(dependencies) {
             if (this.suggestedChannelCommands[0]) {
                 this.update({
                     activeSuggestedChannelCommand: [['link', this.suggestedChannelCommands[0]]],
+                    hasToScrollToActiveSuggestion: true,
                 });
             } else {
                 this.update({
@@ -752,10 +770,12 @@ function factory(dependencies) {
             if (this.mainSuggestedPartners[0]) {
                 this.update({
                     activeSuggestedPartner: [['link', this.mainSuggestedPartners[0]]],
+                    hasToScrollToActiveSuggestion: true,
                 });
             } else if (this.extraSuggestedPartners[0]) {
                 this.update({
                     activeSuggestedPartner: [['link', this.extraSuggestedPartners[0]]],
+                    hasToScrollToActiveSuggestion: true,
                 });
             } else {
                 this.update({
@@ -900,6 +920,13 @@ function factory(dependencies) {
             default: false,
         }),
         /**
+         * Determines whether the currently active suggestion should be scrolled
+         * into view.
+         */
+        hasToScrollToActiveSuggestion: attr({
+            default: false,
+        }),
+        /**
          * If true composer will log a note, else a comment will be posted.
          */
         isLog: attr({
@@ -939,6 +966,7 @@ function factory(dependencies) {
         recipients: many2many('mail.partner', {
             compute: '_computeRecipients',
             dependencies: [
+                'isLog',
                 'mentionedPartners',
                 'threadSuggestedRecipientInfoListIsSelected',
                 // FIXME thread.suggestedRecipientInfoList.partner should be a
