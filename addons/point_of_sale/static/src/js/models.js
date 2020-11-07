@@ -1630,6 +1630,7 @@ exports.Orderline = Backbone.Model.extend({
         this.selected = false;
         this.description = '';
         this.price_extra = 0;
+        this.full_product_name = '';
         this.id = orderline_id++;
         this.price_manually_set = false;
 
@@ -1647,6 +1648,7 @@ exports.Orderline = Backbone.Model.extend({
         this.set_quantity(json.qty, 'do not recompute unit price');
         this.set_description(json.description);
         this.set_price_extra(json.price_extra);
+        this.set_full_product_name(json.full_product_name);
         this.id = json.id ? json.id : orderline_id++;
         orderline_id = Math.max(this.id+1,orderline_id);
         var pack_lot_lines = json.pack_lot_ids;
@@ -1748,6 +1750,9 @@ exports.Orderline = Backbone.Model.extend({
     set_price_extra: function(price_extra){
         this.price_extra = parseFloat(price_extra) || 0.0;
     },
+    set_full_product_name: function(full_product_name){
+        this.full_product_name = full_product_name || '';
+    },
     get_price_extra: function () {
         return this.price_extra;
     },
@@ -1828,6 +1833,9 @@ exports.Orderline = Backbone.Model.extend({
         return this.product;
     },
     get_full_product_name: function () {
+        if (this.full_product_name) {
+            return this.full_product_name
+        }
         var full_name = this.product.display_name;
         if (this.description) {
             full_name += ` (${this.description})`;
@@ -3283,20 +3291,27 @@ exports.Order = Backbone.Model.extend({
     },
     get_rounding_applied: function() {
         if(this.pos.config.cash_rounding) {
-            var total = round_pr(this.get_total_with_tax(), this.pos.cash_rounding[0].rounding);
+            const only_cash = this.pos.config.only_round_cash_method;
+            const has_cash = _.some(this.get_paymentlines(), function(pl) { return pl.payment_method.is_cash_count == true;});
+            if (!only_cash || (only_cash && has_cash)) {
+                var total = round_pr(this.get_total_with_tax(), this.pos.cash_rounding[0].rounding);
 
-            var rounding_applied = total - (this.pos.config['iface_tax_included'] === "total"? this.get_subtotal(): this.get_total_with_tax());
-            // because floor and ceil doesn't include decimals in calculation, we reuse the value of the half-up and adapt it.
-            if (utils.float_is_zero(rounding_applied)){
-                // https://xkcd.com/217/
+                var rounding_applied = total - (this.pos.config['iface_tax_included'] === "total"? this.get_subtotal(): this.get_total_with_tax());
+                // because floor and ceil doesn't include decimals in calculation, we reuse the value of the half-up and adapt it.
+                if (utils.float_is_zero(rounding_applied, this.pos.currency.decimals)){
+                    // https://xkcd.com/217/
+                    return 0;
+                } else if(this.pos.cash_rounding[0].rounding_method === "UP" && rounding_applied < 0) {
+                    rounding_applied += this.pos.cash_rounding[0].rounding;
+                }
+                else if(this.pos.cash_rounding[0].rounding_method === "DOWN" && rounding_applied > 0){
+                    rounding_applied -= this.pos.cash_rounding[0].rounding;
+                }
+                return rounding_applied;
+            }
+            else {
                 return 0;
-            } else if(this.pos.cash_rounding[0].rounding_method === "UP" && rounding_applied < 0) {
-                rounding_applied += this.pos.cash_rounding[0].rounding;
             }
-            else if(this.pos.cash_rounding[0].rounding_method === "DOWN" && rounding_applied > 0){
-                rounding_applied -= this.pos.cash_rounding[0].rounding;
-            }
-            return rounding_applied;
         }
         return 0;
     },
