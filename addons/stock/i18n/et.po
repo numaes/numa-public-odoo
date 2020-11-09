@@ -15,8 +15,8 @@
 # Helen Sulaoja <helen@avalah.ee>, 2018
 # Maidu Targama <m.targama@gmail.com>, 2019
 # Algo Kärp <algokarp@gmail.com>, 2020
-# Eneli Õigus <enelioigus@gmail.com>, 2020
 # Piia Paurson <piia@avalah.ee>, 2020
+# Eneli Õigus <enelioigus@gmail.com>, 2020
 # Triine Aavik <triine@avalah.ee>, 2020
 # 
 msgid ""
@@ -241,7 +241,7 @@ msgstr "<span class=\"o_stat_text\">Laos</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "<span class=\"o_stat_text\">Operations</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Tegevused</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_mrp_line
@@ -310,7 +310,7 @@ msgstr "<strong>Kuupäev</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>From</strong>"
-msgstr "<strong>Alates</strong>"
+msgstr "<strong>Kust</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -385,7 +385,7 @@ msgstr "<strong>Planeeritud kuupäev</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>State</strong>"
-msgstr "<strong>Maakond</strong>"
+msgstr "<strong>Staatus</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_head
@@ -395,7 +395,7 @@ msgstr "<strong>Esialgne vajadus on uuendatud.</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>To</strong>"
-msgstr ""
+msgstr "<strong>Kuhu</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -494,7 +494,7 @@ msgstr "Lisage uus marsruut"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid ""
 "Add an internal note that will be printed on the Picking Operations sheet"
-msgstr ""
+msgstr "Lisage kõrvalmärkus, mis prinditakse noppetegevuste lehele"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_adv_location
@@ -1606,13 +1606,13 @@ msgstr "Saada kaup otse kliendile (1 samm)"
 #: code:addons/stock/models/stock_warehouse.py:526
 #, python-format
 msgid "Deliver in 1 step (ship)"
-msgstr ""
+msgstr "Tarne 1 sammuga (saatmine)"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:526
 #, python-format
 msgid "Deliver in 2 steps (pick + ship)"
-msgstr ""
+msgstr "Tarne 2 etapiga (pealevõtt ja saatmine)"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:527
@@ -1690,7 +1690,7 @@ msgstr "Tarnetellimuste kirjeldus"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Internal Transfers"
-msgstr "Ühendusesiseste ülekannete kirjeldus"
+msgstr "Sisemiste siirete kirjeldus"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -2064,12 +2064,12 @@ msgstr "Prognoositud kogus"
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
 msgid "From"
-msgstr "Saatja"
+msgstr "Kust"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_reserved_availability
 msgid "From Supplier"
-msgstr "Saatja tarnija"
+msgstr "Tarnijalt"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__complete_name
@@ -2962,7 +2962,7 @@ msgstr "Kirjete listvaade"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "List view of operations"
-msgstr ""
+msgstr "Tegevuste listivaade"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
@@ -3677,7 +3677,7 @@ msgstr "Operatsioonide tüübid"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_line_ids_without_package
 msgid "Operations without package"
-msgstr ""
+msgstr "Pakendita tegevused"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__partner_id
@@ -4036,37 +4036,37 @@ msgstr "Noppimine"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Picking List"
-msgstr "Noppeleht"
+msgstr "Laoleht"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Picking Lists"
-msgstr "Noppelehed"
+msgstr "Laolehed"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form
 msgid "Picking Moves"
-msgstr "Noppe siirded"
+msgstr "Lao siirded"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_picking
 msgid "Picking Operations"
-msgstr "Noppe tegevused"
+msgstr "Lao operatsioonid"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_type
 msgid "Picking Type"
-msgstr "Noppetüüp"
+msgstr "Operatsiooni tüüp"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "Picking list"
-msgstr "Noppeleht"
+msgstr "Laolehed"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.procurement_group_form_view
 msgid "Pickings"
-msgstr "Nopped"
+msgstr "Laolehed"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -4640,7 +4640,7 @@ msgstr "Hinda üle tähtaja korjeid"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 #: selection:stock.picking,state:0
 msgid "Ready"
-msgstr "Valmis"
+msgstr "Täielikult saadaval"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_qty
@@ -4689,13 +4689,13 @@ msgstr ""
 #: code:addons/stock/models/stock_warehouse.py:524
 #, python-format
 msgid "Receive in 1 step (stock)"
-msgstr ""
+msgstr "Kauba vastuvõtt 1 sammuga (ladustamine)"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:524
 #, python-format
 msgid "Receive in 2 steps (input + stock)"
-msgstr ""
+msgstr "Vastuvõtt 2 etapis (sisend + varu)"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:525
@@ -4905,7 +4905,7 @@ msgstr "Varustamine"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__resupply_wh_ids
 msgid "Resupply From"
-msgstr ""
+msgstr "Täienda varusid"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__resupply_route_ids
@@ -5457,7 +5457,7 @@ msgstr "Alusta inventuuri"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__state
 msgid "State"
-msgstr "Maakond"
+msgstr "Staatus"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__state
@@ -6582,7 +6582,7 @@ msgstr "Vaate asukoht"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 #: selection:stock.picking,state:0
 msgid "Waiting"
-msgstr "Ootel"
+msgstr "Osaliselt saadaval"
 
 #. module: stock
 #: selection:stock.move,state:0
@@ -6592,7 +6592,7 @@ msgstr "Ootab teist siiret"
 #. module: stock
 #: selection:stock.picking,state:0
 msgid "Waiting Another Operation"
-msgstr "Ootab teist tegevust"
+msgstr "Ootab lattu saabumist/tootmist"
 
 #. module: stock
 #: selection:stock.move,state:0

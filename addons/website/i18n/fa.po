@@ -781,7 +781,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.layout_footer_copyright
 msgid "<span>Copyright &amp;copy;</span>"
-msgstr ""
+msgstr "<span>حق تالیف &amp;copy;</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
@@ -2021,7 +2021,7 @@ msgstr ""
 #. module: website
 #: selection:website,auth_signup_uninvited:0
 msgid "Free sign up"
-msgstr ""
+msgstr "ثبت نام آزاد"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
@@ -3118,7 +3118,7 @@ msgstr "بر وبسایت"
 #. module: website
 #: selection:website,auth_signup_uninvited:0
 msgid "On invitation"
-msgstr ""
+msgstr "با دعوت"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -3297,7 +3297,7 @@ msgstr "منوی مادر"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__parent_path
 msgid "Parent Path"
-msgstr ""
+msgstr "مسیر والد"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website__partner_id
@@ -3528,7 +3528,7 @@ msgstr "ویرایشگر محدود"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
 msgid "Review"
-msgstr ""
+msgstr "مرور"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -3681,7 +3681,7 @@ msgstr "سایه‌ها"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_share
 msgid "Share"
-msgstr ""
+msgstr "اشتراک گذاری"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
@@ -4383,7 +4383,7 @@ msgstr "نوع نما"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__mode
 msgid "View inheritance mode"
-msgstr ""
+msgstr "مشاهده حالت وراٍت"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__inherit_children_ids
