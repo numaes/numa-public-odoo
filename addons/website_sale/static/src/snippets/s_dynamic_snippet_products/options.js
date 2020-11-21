@@ -28,8 +28,10 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
                 fields: ['id', 'res_id'],
             }
         }).then((data) => {
-            this.$target.get(0).dataset.filterId = data[0].res_id;
-            this.$target.get(0).dataset.numberOfRecords = this.dynamicFilters[data[0].res_id].limit;
+            if (data) {
+                this.$target.get(0).dataset.filterId = data[0].res_id;
+                this.$target.get(0).dataset.numberOfRecords = this.dynamicFilters[data[0].res_id].limit;
+            }
         });
     },
 
@@ -68,8 +70,9 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
      * @override
      * @private
      */
-    _renderCustomXML: function (uiFragment) {
-        return Promise.all([this._super.apply(this, arguments), this._renderProductCategorySelector(uiFragment)]);
+    _renderCustomXML: async function (uiFragment) {
+        await this._super.apply(this, arguments);
+        await this._renderProductCategorySelector(uiFragment);
     },
     /**
      * Renders the product categories option selector content into the provided uiFragment.

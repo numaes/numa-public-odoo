@@ -100,14 +100,14 @@ class Partner(models.Model):
         action['context'] = {
             'default_partner_ids': partner_ids,
         }
-        action['domain'] = [('id', 'in', self._compute_meeting()[self.id])]
+        action['domain'] = ['|', ('id', 'in', self._compute_meeting()[self.id]), ('partner_ids', 'in', self.ids)]
         return action
 
     def action_view_opportunity(self):
         '''
         This function returns an action that displays the opportunities from partner.
         '''
-        action = self.env.ref('crm.crm_lead_opportunities').read()[0]
+        action = self.env['ir.actions.act_window']._for_xml_id('crm.crm_lead_opportunities')
         if self.is_company:
             action['domain'] = [('partner_id.commercial_partner_id.id', '=', self.id)]
         else:

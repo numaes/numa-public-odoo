@@ -230,6 +230,32 @@ class TestFields(TransactionCaseWithUserDemo):
             sum(invalid_transitive_depends in field_triggers.get(None, []) for field_triggers in triggers.values()), 1
         )
 
+    @mute_logger('odoo.fields')
+    def test_10_computed_stored_x_name(self):
+        # create a custom model with two fields
+        self.env["ir.model"].create({
+            "name": "x_test_10_compute_store_x_name",
+            "model": "x_test_10_compute_store_x_name",
+            "field_id": [
+                (0, 0, {'name': 'x_name', 'ttype': 'char'}),
+                (0, 0, {'name': 'x_stuff_id', 'ttype': 'many2one', 'relation': 'ir.model'}),
+            ],
+        })
+        # set 'x_stuff_id' refer to a model not loaded yet
+        self.cr.execute("""
+            UPDATE ir_model_fields
+            SET relation = 'not.loaded'
+            WHERE model = 'x_test_10_compute_store_x_name' AND name = 'x_stuff_id'
+        """)
+        # set 'x_name' be computed and depend on 'x_stuff_id'
+        self.cr.execute("""
+            UPDATE ir_model_fields
+            SET compute = 'pass', depends = 'x_stuff_id.x_custom_1'
+            WHERE model = 'x_test_10_compute_store_x_name' AND name = 'x_name'
+        """)
+        # setting up models should not crash
+        self.registry.setup_models(self.cr)
+
     def test_10_display_name(self):
         """ test definition of automatic field 'display_name' """
         field = type(self.env['test_new_api.discussion']).display_name
@@ -645,6 +671,29 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(record.bare, False)
         self.assertEqual(record.bars, False)
         self.assertEqual(record.bares, False)
+
+    def test_16_compute_unassigned_access_error(self):
+        # create a real record
+        record = self.env['test_new_api.compute.unassigned'].create({})
+        record.flush()
+
+        # alter access rights: regular users cannot read 'record'
+        access = self.env.ref('test_new_api.access_test_new_api_compute_unassigned')
+        access.perm_read = False
+
+        # switch to environment with user demo
+        record = record.with_user(self.user_demo)
+        record.env.cache.invalidate()
+
+        # check that the record is not accessible
+        with self.assertRaises(AccessError):
+            record.bars
+
+        # modify the record and flush() changes with the current environment:
+        # this should not trigger an access error, even if unassigned computed
+        # fields are fetched from database
+        record.foo = "X"
+        record.flush()
 
     def test_20_float(self):
         """ test rounding of float fields """

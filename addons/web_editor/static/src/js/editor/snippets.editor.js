@@ -56,6 +56,7 @@ var SnippetEditor = Widget.extend({
         this.templateOptions = templateOptions;
         this.isTargetParentEditable = false;
         this.isTargetMovable = false;
+        this.$scrollingElement = $().getScrollingElement();
 
         this.__isStarted = new Promise(resolve => {
             this.__isStartedResolveFunc = resolve;
@@ -644,15 +645,24 @@ var SnippetEditor = Widget.extend({
 
         this.$editable.find('.oe_drop_zone').droppable({
             over: function () {
-                self.$editable.find('.oe_drop_zone.hide').removeClass('hide');
-                $(this).addClass('hide').first().after(self.$target);
-                self.dropped = true;
+                if (!self.dropped) {
+                    self.dropped = true;
+                    $(this).first().after(self.$target).addClass('invisible');
+                }
             },
             out: function () {
-                $(this).removeClass('hide');
-                self.$target.detach();
-                self.dropped = false;
+                var prev = self.$target.prev();
+                if (this === prev[0]) {
+                    self.dropped = false;
+                    self.$target.detach();
+                    $(this).removeClass('invisible');
+                }
             },
+        });
+        // Trigger a scroll on the draggable element so that jQuery updates
+        // the position of the drop zones.
+        this.$scrollingElement.on('scroll.scrolling_element', function () {
+            self.$el.trigger('scroll');
         });
     },
     /**
@@ -714,6 +724,7 @@ var SnippetEditor = Widget.extend({
         this.trigger_up('drag_and_drop_stop', {
             $snippet: this.$target,
         });
+        this.$scrollingElement.off('scroll.scrolling_element');
     },
     /**
      * @private
@@ -859,6 +870,7 @@ var SnippetsMenu = Widget.extend({
     id: 'oe_snippets',
     cacheSnippetTemplate: {},
     events: {
+        'click .oe_snippet': '_onSnippetClick',
         'click .o_install_btn': '_onInstallBtnClick',
         'click .o_we_add_snippet_btn': '_onBlocksTabClick',
         'click .o_we_invisible_entry': '_onInvisibleEntryClick',
@@ -1019,6 +1031,13 @@ var SnippetsMenu = Widget.extend({
                 return;
             }
             if ($target.closest(this._notActivableElementsSelector).length) {
+                return;
+            }
+            const $oeStructure = $target.closest('.oe_structure');
+            if ($oeStructure.length && !$oeStructure.children().length && this.$snippets) {
+                // If empty oe_structure, encourage using snippets in there by
+                // making them "wizz" in the panel.
+                this.$snippets.odooBounce();
                 return;
             }
             this._activateSnippet($target);
@@ -1908,10 +1927,10 @@ var SnippetsMenu = Widget.extend({
         var $toInsert, dropped, $snippet;
 
         let dragAndDropResolve;
+        const $scrollingElement = $().getScrollingElement();
 
         const smoothScrollOptions = this._getScrollOptions({
             jQueryDraggableOptions: {
-                distance: 0,
                 handle: '.oe_snippet_thumbnail:not(.o_we_already_dragging)',
                 helper: function () {
                     const dragSnip = this.cloneNode(true);
@@ -1960,7 +1979,7 @@ var SnippetsMenu = Widget.extend({
                         over: function () {
                             if (!dropped) {
                                 dropped = true;
-                                $(this).first().after($toInsert).addClass('d-none');
+                                $(this).first().after($toInsert).addClass('invisible');
                                 $toInsert.removeClass('oe_snippet_body');
                             }
                         },
@@ -1969,10 +1988,16 @@ var SnippetsMenu = Widget.extend({
                             if (this === prev[0]) {
                                 dropped = false;
                                 $toInsert.detach();
-                                $(this).removeClass('d-none');
+                                $(this).removeClass('invisible');
                                 $toInsert.addClass('oe_snippet_body');
                             }
                         },
+                    });
+
+                    // Trigger a scroll on the draggable element so that jQuery updates
+                    // the position of the drop zones.
+                    $scrollingElement.on('scroll.scrolling_element', function () {
+                        self.$el.trigger('scroll');
                     });
 
                     const prom = new Promise(resolve => dragAndDropResolve = () => resolve());
@@ -1980,6 +2005,7 @@ var SnippetsMenu = Widget.extend({
                 },
                 stop: async function (ev, ui) {
                     $toInsert.removeClass('oe_snippet_body');
+                    $scrollingElement.off('scroll.scrolling_element');
 
                     if (!dropped && ui.position.top > 3 && ui.position.left + ui.helper.outerHeight() < self.el.getBoundingClientRect().left) {
                         var $el = $.nearest({x: ui.position.left, y: ui.position.top}, '.oe_drop_zone', {container: document.body}).first();
@@ -2035,7 +2061,7 @@ var SnippetsMenu = Widget.extend({
                 },
             },
         });
-        this.draggableComponent = new SmoothScrollOnDrag(this, $snippets, $().getScrollingElement(), smoothScrollOptions);
+        this.draggableComponent = new SmoothScrollOnDrag(this, $snippets, $scrollingElement, smoothScrollOptions);
     },
     /**
      * Adds the 'o_default_snippet_text' class on nodes which contain only
@@ -2461,6 +2487,17 @@ var SnippetsMenu = Widget.extend({
             }
             this.trigger_up('request_save', data);
         }, true);
+    },
+    /**
+     * @private
+     */
+    _onSnippetClick() {
+        const $els = this.getEditableArea().find('.oe_structure.oe_empty').addBack('.oe_structure.oe_empty');
+        for (const el of $els) {
+            if (!el.children.length) {
+                $(el).odooBounce('o_we_snippet_area_animation');
+            }
+        }
     },
     /**
      * @private

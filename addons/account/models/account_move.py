@@ -153,7 +153,7 @@ class AccountMove(models.Model):
         default="entry", change_default=True)
     type_name = fields.Char('Type Name', compute='_compute_type_name')
     to_check = fields.Boolean(string='To Check', default=False,
-        help='If this checkbox is ticked, it means that the user was not sure of all the related informations at the time of the creation of the move and that the move needs to be checked again.')
+        help='If this checkbox is ticked, it means that the user was not sure of all the related information at the time of the creation of the move and that the move needs to be checked again.')
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, readonly=True,
         states={'draft': [('readonly', False)]},
         check_company=True, domain="[('id', 'in', suitable_journal_ids)]",
@@ -1486,11 +1486,13 @@ class AccountMove(models.Model):
 
             # At this point we only want to keep the taxes with a zero amount since they do not
             # generate a tax line.
+            zero_taxes = set()
             for line in move.line_ids:
                 for tax in line.tax_ids.flatten_taxes_hierarchy():
-                    if tax.tax_group_id not in res:
+                    if tax.tax_group_id not in res or tax.tax_group_id in zero_taxes:
                         res.setdefault(tax.tax_group_id, {'base': 0.0, 'amount': 0.0})
                         res[tax.tax_group_id]['base'] += tax_balance_multiplicator * (line.amount_currency if line.currency_id else line.balance)
+                        zero_taxes.add(tax.tax_group_id)
 
             res = sorted(res.items(), key=lambda l: l[0].sequence)
             move.amount_by_group = [(
@@ -2453,9 +2455,9 @@ class AccountMove(models.Model):
             elif move.is_purchase_document():
                 supplier_count[move.partner_id] += 1
         for partner, count in customer_count.items():
-            partner._increase_rank('customer_rank', count)
+            (partner | partner.commercial_partner_id)._increase_rank('customer_rank', count)
         for partner, count in supplier_count.items():
-            partner._increase_rank('supplier_rank', count)
+            (partner | partner.commercial_partner_id)._increase_rank('supplier_rank', count)
 
         # Trigger action for paid invoices in amount is zero
         to_post.filtered(
@@ -4701,7 +4703,7 @@ class AccountMoveLine(models.Model):
         return action
 
     def action_automatic_entry(self):
-        [action] = self.env.ref('account.account_automatic_entry_wizard_action').read()
+        action = self.env['ir.actions.act_window']._for_xml_id('account.account_automatic_entry_wizard_action')
         # Force the values of the move line in the context to avoid issues
         ctx = dict(self.env.context)
         ctx.pop('active_id', None)

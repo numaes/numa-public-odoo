@@ -85,7 +85,7 @@ class PickingType(models.Model):
         if 'sequence_id' not in vals or not vals['sequence_id']:
             if vals['warehouse_id']:
                 wh = self.env['stock.warehouse'].browse(vals['warehouse_id'])
-                vals['sequence_id'] = self.env['ir.sequence'].create({
+                vals['sequence_id'] = self.env['ir.sequence'].sudo().create({
                     'name': wh.name + ' ' + _('Sequence') + ' ' + vals['sequence_code'],
                     'prefix': wh.code + '/' + vals['sequence_code'] + '/', 'padding': 5,
                     'company_id': wh.company_id.id,
@@ -94,7 +94,7 @@ class PickingType(models.Model):
                 vals['sequence_id'] = self.env['ir.sequence'].create({
                     'name': _('Sequence') + ' ' + vals['sequence_code'],
                     'prefix': vals['sequence_code'], 'padding': 5,
-                    'company_id': self.env.company.id,
+                    'company_id': vals.get('company_id') or self.env.company.id,
                 }).id
 
         picking_type = super(PickingType, self).create(vals)
@@ -574,7 +574,7 @@ class Picking(models.Model):
 
     @api.onchange('picking_type_id', 'partner_id')
     def onchange_picking_type(self):
-        if self.picking_type_id:
+        if self.picking_type_id and self.state == 'draft':
             self = self.with_company(self.company_id)
             if self.picking_type_id.default_location_src_id:
                 location_id = self.picking_type_id.default_location_src_id.id
@@ -590,11 +590,13 @@ class Picking(models.Model):
             else:
                 location_dest_id, supplierloc = self.env['stock.warehouse']._get_partner_locations()
 
-            if self.state == 'draft':
-                self.location_id = location_id
-                self.location_dest_id = location_dest_id
+            self.location_id = location_id
+            self.location_dest_id = location_dest_id
+            (self.move_lines | self.move_ids_without_package).update({
+                "picking_type_id": self.picking_type_id,
+                "company_id": self.company_id,
+            })
 
-        # TDE CLEANME move into onchange_partner_id
         if self.partner_id and self.partner_id.picking_warn:
             if self.partner_id.picking_warn == 'no-message' and self.partner_id.parent_id:
                 partner = self.partner_id.parent_id
@@ -746,28 +748,6 @@ class Picking(models.Model):
             if picking.owner_id:
                 picking.move_lines.write({'restrict_partner_id': picking.owner_id.id})
                 picking.move_line_ids.write({'owner_id': picking.owner_id.id})
-            for move_line in picking.move_line_ids.filtered(lambda x: not x.move_id):
-                moves = picking.move_lines.filtered(lambda x: x.product_id == move_line.product_id)
-                moves = sorted(moves, key=lambda m: m.quantity_done < m.product_qty, reverse=True)
-                if moves:
-                    move_line.move_id = moves[0].id
-                else:
-                    new_move = self.env['stock.move'].create({
-                        'name': _('New Move:') + move_line.product_id.display_name,
-                        'product_id': move_line.product_id.id,
-                        'product_uom_qty': move_line.qty_done,
-                        'product_uom': move_line.product_uom_id.id,
-                        'description_picking': move_line.description_picking,
-                        'location_id': picking.location_id.id,
-                        'location_dest_id': picking.location_dest_id.id,
-                        'picking_id': picking.id,
-                        'picking_type_id': picking.picking_type_id.id,
-                        'restrict_partner_id': picking.owner_id.id,
-                        'company_id': picking.company_id.id,
-                    })
-                    move_line.move_id = new_move.id
-                    new_move._action_confirm()
-                    todo_moves |= new_move
         todo_moves._action_done(cancel_backorder=self.env.context.get('cancel_backorder'))
         self.write({'date_done': fields.Datetime.now(), 'priority': '0'})
 
@@ -875,9 +855,8 @@ class Picking(models.Model):
                             pl.location_dest_id = self._get_entire_pack_location_dest(pl.move_line_ids) or picking.location_dest_id.id
 
     def do_unreserve(self):
-        for picking in self:
-            picking.move_lines._do_unreserve()
-            picking.package_level_ids.filtered(lambda p: not p.move_ids).unlink()
+        self.move_lines._do_unreserve()
+        self.package_level_ids.filtered(lambda p: not p.move_ids).unlink()
 
     def button_validate(self):
         # Clean-up the context key at validation to avoid forcing the creation of immediate

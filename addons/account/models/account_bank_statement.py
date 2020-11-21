@@ -352,6 +352,13 @@ class AccountBankStatement(models.Model):
             if any(st_line.journal_id != statement.journal_id for st_line in statement.line_ids):
                 raise ValidationError(_('The journal of a bank statement line must always be the same as the bank statement one.'))
 
+    def _constrains_date_sequence(self):
+        # Multiple import methods set the name to things that are not sequences:
+        # i.e. Statement from {date1} to {date2}
+        # It makes this constraint not applicable, and it is less needed on bank statements as it
+        # is only an indication and not some thing legal.
+        return
+
     # -------------------------------------------------------------------------
     # BUSINESS METHODS
     # -------------------------------------------------------------------------
@@ -419,10 +426,7 @@ class AccountBankStatement(models.Model):
 
     def button_validate_or_action(self):
         if self.journal_type == 'cash' and not self.currency_id.is_zero(self.difference):
-            action_rec = self.env['ir.model.data'].xmlid_to_object('account.action_view_account_bnk_stmt_check')
-            if action_rec:
-                action = action_rec.read()[0]
-                return action
+            return self.env['ir.actions.act_window']._for_xml_id('account.action_view_account_bnk_stmt_check')
 
         return self.button_validate()
 

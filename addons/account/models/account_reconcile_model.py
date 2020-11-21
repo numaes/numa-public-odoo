@@ -94,7 +94,7 @@ class AccountReconcileModelLine(models.Model):
         for record in self:
             if record.amount_type == 'fixed' and record.amount == 0:
                 raise UserError(_('The amount is not a number'))
-            if record.amount_type == 'percentage' and not 0 < record.amount <= 100:
+            if record.amount_type == 'percentage' and not 0 < record.amount:
                 raise UserError(_('The amount is not a percentage'))
             if record.amount_type == 'regex':
                 try:
@@ -125,7 +125,7 @@ class AccountReconcileModel(models.Model):
     ], string='Type', default='writeoff_button', required=True)
     auto_reconcile = fields.Boolean(string='Auto-validate',
         help='Validate the statement line automatically (reconciliation based on your rule).')
-    to_check = fields.Boolean(string='To Check', default=False, help='This matching rule is used when the user is not certain of all the informations of the counterpart.')
+    to_check = fields.Boolean(string='To Check', default=False, help='This matching rule is used when the user is not certain of all the information of the counterpart.')
     matching_order = fields.Selection(
         selection=[
             ('old_first', 'Oldest first'),

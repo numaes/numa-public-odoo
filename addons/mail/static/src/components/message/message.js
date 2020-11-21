@@ -11,7 +11,7 @@ const components = {
     PartnerImStatusIcon: require('mail/static/src/components/partner_im_status_icon/partner_im_status_icon.js'),
 };
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
-const { timeFromNow } = require('mail.utils');
+const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
 
 const { _lt } = require('web.core');
 const { getLangDatetimeFormat } = require('web.time');
@@ -21,6 +21,7 @@ const { useRef } = owl.hooks;
 
 const READ_MORE = _lt("read more");
 const READ_LESS = _lt("read less");
+const { isEventHandled, markEventHandled } = require('mail/static/src/utils/utils.js');
 
 class Message extends Component {
 
@@ -41,10 +42,6 @@ class Message extends Component {
              * clicked state, it keeps displaying the commands.
              */
             isClicked: false,
-            /**
-             * Time elapsed from message datetime to current datetime.
-             */
-            timeElapsed: null,
         });
         useStore(props => {
             const message = this.env.models['mail.message'].get(props.messageLocalId);
@@ -78,6 +75,7 @@ class Message extends Component {
                 notifications: 1,
             },
         });
+        useUpdate({ func: () => this._update() });
         /**
          * The intent of the reply button depends on the last rendered state.
          */
@@ -102,14 +100,6 @@ class Message extends Component {
      * Allows patching constructor.
      */
     _constructor() {}
-
-    mounted() {
-        this._update();
-    }
-
-    patched() {
-        this._update();
-    }
 
     willUnmount() {
         clearInterval(this._intervalId);
@@ -393,6 +383,9 @@ class Message extends Component {
      * @private
      */
     _update() {
+        if (!this.message) {
+            return;
+        }
         // Remove all readmore before if any before reinsert them with _insertReadMoreLess.
         // This is needed because _insertReadMoreLess is working with direct DOM mutations
         // which are not sync with Owl.
@@ -401,14 +394,15 @@ class Message extends Component {
                 el.remove();
             }
             this._insertReadMoreLess($(this._contentRef.el));
+            this.env.messagingBus.trigger('o-component-message-read-more-less-inserted', {
+                message: this.message,
+            });
         }
         this._wasSelected = this.props.isSelected;
-        if (!this.state.timeElapsed) {
-            this.state.timeElapsed = timeFromNow(this.message.date);
-        }
+        this.message.refreshDateFromNow();
         clearInterval(this._intervalId);
         this._intervalId = setInterval(() => {
-            this.state.timeElapsed = timeFromNow(this.message.date);
+            this.message.refreshDateFromNow();
         }, 60 * 1000);
     }
 
@@ -448,7 +442,13 @@ class Message extends Component {
             }
             return;
         }
-        this.state.isClicked = !this.state.isClicked;
+        if (
+            !isEventHandled(ev, 'Message.ClickAuthorAvatar') &&
+            !isEventHandled(ev, 'Message.ClickAuthorName') &&
+            !isEventHandled(ev, 'Message.ClickFailure')
+        ) {
+            this.state.isClicked = !this.state.isClicked;
+        }
     }
 
     /**
@@ -456,6 +456,7 @@ class Message extends Component {
      * @param {MouseEvent} ev
      */
     _onClickAuthorAvatar(ev) {
+        markEventHandled(ev, 'Message.ClickAuthorAvatar');
         if (!this.hasAuthorOpenChat) {
             return;
         }
@@ -467,6 +468,7 @@ class Message extends Component {
      * @param {MouseEvent} ev
      */
     _onClickAuthorName(ev) {
+        markEventHandled(ev, 'Message.ClickAuthorName');
         if (!this.message.author) {
             return;
         }
@@ -478,6 +480,7 @@ class Message extends Component {
      * @param {MouseEvent} ev
      */
     _onClickFailure(ev) {
+        markEventHandled(ev, 'Message.ClickFailure');
         this.message.openResendAction();
     }
 

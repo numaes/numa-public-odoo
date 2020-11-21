@@ -83,7 +83,7 @@ class PurchaseOrder(models.Model):
              "products as this reference is usually written on the "
              "delivery order sent by your vendor.")
     date_order = fields.Datetime('Order Deadline', required=True, states=READONLY_STATES, index=True, copy=False, default=fields.Datetime.now,
-        help="Depicts the date where the Quotation should be validated and converted into a purchase order.")
+        help="Depicts the date within which the Quotation should be confirmed and converted into a purchase order.")
     date_approve = fields.Datetime('Confirmation Date', readonly=1, index=True, copy=False)
     partner_id = fields.Many2one('res.partner', string='Vendor', required=True, states=READONLY_STATES, change_default=True, tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", help="You can find a vendor by its Name, TIN, Email or Internal Reference.")
     dest_address_id = fields.Many2one('res.partner', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string='Drop Ship Address', states=READONLY_STATES,
@@ -557,8 +557,7 @@ class PurchaseOrder(models.Model):
             self.sudo()._read(['invoice_ids'])
             invoices = self.invoice_ids
 
-        action = self.env.ref('account.action_move_in_invoice_type').sudo()
-        result = action.read()[0]
+        result = self.env['ir.actions.act_window']._for_xml_id('account.action_move_in_invoice_type')
         # choose the view_mode accordingly
         if len(invoices) > 1:
             result['domain'] = [('id', 'in', invoices.ids)]
@@ -566,7 +565,7 @@ class PurchaseOrder(models.Model):
             res = self.env.ref('account.view_move_form', False)
             form_view = [(res and res.id or False, 'form')]
             if 'views' in result:
-                result['views'] = form_view + [(state, view) for state, view in action['views'] if view != 'form']
+                result['views'] = form_view + [(state, view) for state, view in result['views'] if view != 'form']
             else:
                 result['views'] = form_view
             result['res_id'] = invoices.id

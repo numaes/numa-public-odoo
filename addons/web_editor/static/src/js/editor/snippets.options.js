@@ -82,17 +82,25 @@ function _buildTitleElement(title) {
  * @param {string} src
  * @returns {HTMLElement}
  */
+const _buildImgElementCache = {};
 async function _buildImgElement(src) {
-    if (src.split('.').pop() === 'svg') {
-        const response = await window.fetch(src);
-        const text = await response.text();
-        const parser = new window.DOMParser();
-        const xmlDoc = parser.parseFromString(text, 'text/xml');
-        return xmlDoc.getElementsByTagName('svg')[0];
+    if (!(src in _buildImgElementCache)) {
+        _buildImgElementCache[src] = (async () => {
+            if (src.split('.').pop() === 'svg') {
+                const response = await window.fetch(src);
+                const text = await response.text();
+                const parser = new window.DOMParser();
+                const xmlDoc = parser.parseFromString(text, 'text/xml');
+                return xmlDoc.getElementsByTagName('svg')[0];
+            } else {
+                const imgEl = document.createElement('img');
+                imgEl.src = src;
+                return imgEl;
+            }
+        })();
     }
-    const imgEl = document.createElement('img');
-    imgEl.src = src;
-    return imgEl;
+    const node = await _buildImgElementCache[src];
+    return node.cloneNode(true);
 }
 /**
  * Build the correct DOM for a we-row element.
@@ -868,7 +876,9 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
      */
     close: function () {
         this._super(...arguments);
-        this.menuTogglerEl.classList.remove('active');
+        if (this.menuTogglerEl) {
+            this.menuTogglerEl.classList.remove('active');
+        }
     },
     /**
      * @override
@@ -3846,10 +3856,14 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
                 return color || '';
             }
             case 'flipX': {
-                return this.$target.find('> .o_we_shape.o_we_flip_x').length !== 0;
+                // Compat: flip classes are no longer used but may be present in client db
+                const hasFlipClass = this.$target.find('> .o_we_shape.o_we_flip_x').length !== 0;
+                return hasFlipClass || this._getShapeData().flip.includes('x');
             }
             case 'flipY': {
-                return this.$target.find('> .o_we_shape.o_we_flip_y').length !== 0;
+                // Compat: flip classes are no longer used but may be present in client db
+                const hasFlipClass = this.$target.find('> .o_we_shape.o_we_flip_y').length !== 0;
+                return hasFlipClass || this._getShapeData().flip.includes('y');
             }
         }
         return this._super(...arguments);
@@ -3911,55 +3925,91 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
      * @param {function} computeShapeData function to compute the new shape data.
      */
     _handlePreviewState(previewMode, computeShapeData) {
-        if (previewMode === 'reset') {
-            if (this.prevShape) {
-                this.$target[0].dataset.oeShapeData = this.prevShape;
-            } else {
-                delete this.$target[0].dataset.oeShapeData;
+        const target = this.$target[0];
+        const insertShapeContainer = newContainer => {
+            const shapeContainer = target.querySelector(':scope > .o_we_shape');
+            if (shapeContainer) {
+                shapeContainer.remove();
             }
+            if (newContainer) {
+                const preShapeLayerElement = this._getLastPreShapeLayerElement();
+                if (preShapeLayerElement) {
+                    $(preShapeLayerElement).after(newContainer);
+                } else {
+                    this.$target.prepend(newContainer);
+                }
+            }
+            return newContainer;
+        };
+
+        let changedShape = false;
+        if (previewMode === 'reset') {
+            insertShapeContainer(this.prevShapeContainer);
+            if (this.prevShape) {
+                target.dataset.oeShapeData = this.prevShape;
+            } else {
+                delete target.dataset.oeShapeData;
+            }
+            return;
         } else {
             if (previewMode === true) {
-                this.prevShape = this.$target[0].dataset.oeShapeData;
+                const shapeContainer = target.querySelector(':scope > .o_we_shape');
+                this.prevShapeContainer = shapeContainer && shapeContainer.cloneNode(true);
+                this.prevShape = target.dataset.oeShapeData;
             }
+            const curShapeData = target.dataset.oeShapeData || {};
             const newShapeData = computeShapeData();
+            const {shape: curShape} = curShapeData;
+            changedShape = newShapeData.shape !== curShape;
             this._markShape(newShapeData);
-            if (previewMode === false) {
-                this.prevShape = this.$target[0].dataset.oeShapeData;
-                if (newShapeData.hasOwnProperty('shape')) {
-                    // Need to rerender for correct number of colorpickers
-                    this.rerender = true;
-                }
+            if (previewMode === false && changedShape) {
+                // Need to rerender for correct number of colorpickers
+                this.rerender = true;
             }
         }
 
         // Updates/removes the shape container as needed and gives it the
         // correct background shape
-        const json = this.$target[0].dataset.oeShapeData;
+        const json = target.dataset.oeShapeData;
         const {shape, colors, flip = []} = json ? JSON.parse(json) : {};
-        const target = this.$target[0];
         let shapeContainer = target.querySelector(':scope > .o_we_shape');
         if (!shape) {
-            if (shapeContainer) {
-                shapeContainer.remove();
-            }
-            return;
+            return insertShapeContainer(null);
+        }
+        // When changing shape we want to reset the shape container (for transparency color)
+        if (changedShape) {
+            shapeContainer = insertShapeContainer(null);
         }
         if (!shapeContainer) {
-            shapeContainer = document.createElement('div');
-            const preShapeLayerElement = this._getLastPreShapeLayerElement();
-            if (preShapeLayerElement) {
-                $(preShapeLayerElement).after(shapeContainer);
-            } else {
-                target.prepend(shapeContainer);
-            }
+            shapeContainer = insertShapeContainer(document.createElement('div'));
             target.style.position = 'relative';
+            shapeContainer.className = `o_we_shape o_${shape.replace(/\//g, '_')}`;
         }
-        shapeContainer.className = `o_we_shape o_${shape.replace(/\//g, '_')}`;
-        flip.forEach(dir => {
-            shapeContainer.classList.add(`o_we_flip_${dir}`);
-        });
-        // Custom colors, overwrite shape that is set by the class
-        $(shapeContainer).css('background-image', colors ? `url("${this._getShapeSrc()}")` : '');
+        // Compat: remove old flip classes as flipping is now done inside the svg
+        shapeContainer.classList.remove('o_we_flip_x', 'o_we_flip_y');
+
+        if (colors || flip.length) {
+            // Custom colors/flip, overwrite shape that is set by the class
+            $(shapeContainer).css('background-image', `url("${this._getShapeSrc()}")`);
+            shapeContainer.style.backgroundPosition = '';
+            if (flip.length) {
+                let [xPos, yPos] = $(shapeContainer)
+                    .css('background-position')
+                    .split(' ')
+                    .map(p => parseFloat(p));
+                // -X + 2*Y is a symmetry of X around Y, this is a symmetry around 50%
+                xPos = flip.includes('x') ? -xPos + 100 : xPos;
+                yPos = flip.includes('y') ? -yPos + 100 : yPos;
+                shapeContainer.style.backgroundPosition = `${xPos}% ${yPos}%`;
+            }
+        } else {
+            // Remove custom bg image and let the shape class set the bg shape
+            $(shapeContainer).css('background-image', '');
+        }
+        if (previewMode === false) {
+            this.prevShapeContainer = shapeContainer.cloneNode(true);
+            this.prevShape = target.dataset.oeShapeData;
+        }
     },
     /**
      * Overwrites shape properties with the specified data.
@@ -3998,16 +4048,19 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
      * @private
      */
     _getShapeSrc() {
-        const {shape, colors} = this._getShapeData();
+        const {shape, colors, flip} = this._getShapeData();
         if (!shape) {
             return '';
         }
-        const queryString = Object.entries(colors)
+        const searchParams = Object.entries(colors)
             .map(([colorName, colorValue]) => {
                 const encodedCol = encodeURIComponent(colorValue);
                 return `${colorName}=${encodedCol}`;
-            }).join('&');
-        return `/web_editor/shape/${shape}.svg?${queryString}`;
+            });
+        if (flip.length) {
+            searchParams.push(`flip=${flip.sort().join('')}`);
+        }
+        return `/web_editor/shape/${shape}.svg?${searchParams.join('&')}`;
     },
     /**
      * Retrieves current shape data from the target's dataset.
