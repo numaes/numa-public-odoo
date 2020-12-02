@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-02 14:25+0000\n"
+"POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -946,15 +946,9 @@ msgid ""
 "        Generate payment orders as recommended by the SEPA norm, thanks to pain.001 messages. Supported pain version (countries) are pain.001.001.03 (generic), pain.001.001.03.ch.02 (Switzerland) and pain.001.003.03 (Germany). The generated XML file can then be uploaded to your bank.\n"
 "\n"
 "        This module follow the implementation guidelines issued by the European Payment Council.\n"
-"        For more informations about the SEPA standards : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
+"        For more information about the SEPA standards : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
 "    "
 msgstr ""
-"\n"
-"        Створіть платіжні доручення, як це рекомендовано стандартом SEPA, завдяки повідомленням від pain. 001. Підтримувані варіанти pain. (країни): pain.001.001.03 (загальний), pain.001.001.03.ch.02 (Швейцарія) та pain.001.003.03 (Німеччина). Згенерований XML-файл може бути завантажений у ваш банк.\n"
-"\n"
-"        Цей модуль відповідає інструкціям щодо впровадження, викладеним Європейською Радою з оплати.\n"
-"        Для отримання додаткової інформації про стандарти SEPA: http://www.iso20022.org/ та http://www.europeanpaymentscouncil.eu/\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_winbooks_import
@@ -2983,7 +2977,7 @@ msgid ""
 "This module has been tested as base for more of 1000 companies, because\n"
 "it is based in a mixtures of most common software in the Venezuelan\n"
 "market what will allow for sure to accountants feel them first steps with\n"
-"Odoo more confortable.\n"
+"Odoo more comfortable.\n"
 "\n"
 "This module doesn't pretend be the total localization for Venezuela,\n"
 "but it will help you to start really quickly with Odoo in this country.\n"
@@ -3580,12 +3574,6 @@ msgid ""
 "in the selected countries.\n"
 "The wizard can be run again for adding more countries.\n"
 "\n"
-"The wizard creates a separate Chart of Taxes for collecting the\n"
-"VAT amounts of the MOSS declaration, so extracting the MOSS\n"
-"data should be easy.\n"
-"Look for a Chart of Taxes named \"EU MOSS VAT Chart\" in the\n"
-"Taxes Report menu (Generic Accounting Report).\n"
-"\n"
 "References\n"
 "++++++++++\n"
 "- Directive 2008/8/EC\n"
@@ -3593,53 +3581,6 @@ msgid ""
 "\n"
 "    "
 msgstr ""
-"\n"
-"EU Mini One Stop Shop (MOSS) ПДВ для телекомунікацій, радіомовлення та електронних послуг\n"
-"================================================== ============================================\n"
-"\n"
-"Станом на 1 січня 2015 року телекомунікації, мовлення\n"
-"та електронні послуги, що продаються в межах Європейського Союзу\n"
-"треба завжди оподатковувати у країні, де знаходиться замовник\n"
-"з метою спрощення застосування цієї ЄС\n"
-"директиви, схема реєстрації Mini One Stop Shop (MOSS)\n"
-"дозволяє підприємствам робити унікальну податкову декларацію.\n"
-"\n"
-"Цей модуль робить це можливим, за допомогою\n"
-"необхідних схем оподаткування та податків ЄС для того, щоб\n"
-"автоматично застосовувати і фіксувати необхідні податки.\n"
-"\n"
-"Цей модуль встановлює майстер, який допоможе встановити схеми оподаткування\n"
-"та податки на продаж електронних послуг всередині ЄС.\n"
-"\n"
-"Майстер дозволяє вибрати:\n"
-" - країни ЄС, до яких ви їх продаєте\n"
-"   послуги\n"
-" - Ваш національний податок ПДВ для послуг, які мають бути нанесені на карту\n"
-"   до податку цільової країни\n"
-" - необов'язково: шаблон схеми оподаткування, для\n"
-"   копіювання співставлення рахунків. Повинен бути вашою\n"
-"   існуючою схемою оподаткування B2C в середині ЄС. (за замовчуванням\n"
-"   без співставлення рахунків)\n"
-" - необов'язково: рахунок для використання для збору\n"
-"   суми податку (за замовчуванням на рахунок, використаний вашим\n"
-"   національним ПДВ для послуг)\n"
-"\n"
-"Це створює відповідні схеми оподаткування та податки,\n"
-"автоматично застосовуються для продажу ЄС з клієнтом\n"
-"у вибраних країнах.\n"
-"Майстер можна знову запустити для додавання нових країн.\n"
-"\n"
-"Майстер створює окрему таблицю податків для збирання\n"
-"суми податку на додану вартість декларації MOSS, таким чином, витягуючи MOSS\n"
-"дані повинні бути легкими.\n"
-"Подивіться на план податків під назвою \"EU MOSS VAT Chart\" в\n"
-"Меню звіту про податки (Загальний бухгалтерський звіт).\n"
-"\n"
-"Референси\n"
-"++++++++++\n"
-"- Директива 2008/8 / ЄС\n"
-"- Регламент Ради ЄС (ЄС) № 1042/2013\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_hr
@@ -4270,6 +4211,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl_intrastat
+#: model:ir.module.module,description:base.module_l10n_nl_report_intrastat
 msgid ""
 "\n"
 "Generates Netherlands Intrastat report for declaration based on invoices.\n"
@@ -6351,9 +6293,9 @@ msgid ""
 "Swiss localization\n"
 "==================\n"
 "Added a QR-IBAN field on bank account.\n"
-"If this field is empty, but the bank account number itself is a valid QR-IBAN number, it will still be used as QR-IBAN as before.  \n"
-"But if you fill in the new QR-IBAN field, that one will be used as the QR-IBAN.  This should help for reconciliation as \n"
-"on the bank statements, the old IBAN code is still used.  \n"
+"If this field is empty but the bank account number itself is a valid QR-IBAN number, it will continue using it as QR-IBAN.\n"
+"However, if the new QR-IBAN field is filled, the value will be used as the QR-IBAN.\n"
+"This should help for reconciliation on the bank statements where the old IBAN code is still used.\n"
 "    "
 msgstr ""
 
@@ -6990,19 +6932,12 @@ msgid ""
 "This is the latest basic Israelian localisation necessary to run Odoo in Israel:\n"
 "================================================================================\n"
 "\n"
-"This module consists:\n"
-" - Generic Israelian chart of accounts\n"
-" - Israelian taxes\n"
+"This module consists of:\n"
+" - Generic Israel Chart of Accounts\n"
+" - Taxes and tax report\n"
+" - Fiscal position for Palestina\n"
 " "
 msgstr ""
-"\n"
-"Це остання ізраїльська базова локалізація, необхідна для запуску Odoo в Ізраїлі:\n"
-"================================================================================\n"
-"\n"
-"Цей модуль включає:\n"
-" - Загальний ізраїльський план рахунків\n"
-" - Ізральські податки\n"
-" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_za
@@ -7519,7 +7454,7 @@ msgstr ""
 msgid ""
 "\n"
 "This module allows to print your payments on pre-printed check paper.\n"
-"You can configure the output (layout, stubs informations, etc.) in company settings, and manage the\n"
+"You can configure the output (layout, stubs information, etc.) in company settings, and manage the\n"
 "checks numbering (if you use pre-printed checks without numbers) in journal settings.\n"
 "\n"
 "Supported formats\n"
@@ -7535,23 +7470,6 @@ msgid ""
 "- Check on bottom: ADP standard (https://www.checkdepot.net/checks/checkorder/laser_bottomcheck.htm)\n"
 "    "
 msgstr ""
-"\n"
-"Цей модуль дозволяє друкувати ваші платежі на попередньо роздрукованому чеку.\n"
-"Ви можете налаштувати випуск (макет, інформацію тощо) у налаштуваннях компанії, а також керувати \n"
-"нумерацією чеків (якщо ви використовуєте попередньо надруковані чеки без номерів) у налаштуваннях журналу.\n"
-"\n"
-"Підтримувані формати\n"
-"-----------------\n"
-"Цей модуль підтримує три найпоширеніші формати перевірки і буде працювати з коробки з пов'язаними чеками checkdepot.net.\n"
-"\n"
-"Переглянути усі чеки: https://www.checkdepot.net/checks/laser/Odoo.htm\n"
-"\n"
-"YВи можете вибрати між:\n"
-"\n"
-"- Чек зверху: Quicken / QuickBooks стандарт (https://www.checkdepot.net/checks/checkorder/laser_topcheck.htm)\n"
-"- Чек посередині: Peachtree стандарт (https://www.checkdepot.net/checks/checkorder/laser_middlecheck.htm)\n"
-"- Чек внизу: ADP стандарт(https://www.checkdepot.net/checks/checkorder/laser_bottomcheck.htm)\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ca_check_printing
@@ -7883,6 +7801,13 @@ msgstr ""
 "Вона встановлює профіль для асоціацій для управління подіями, реєстрації, членства,\n"
 "товари (схеми) членства.\n"
 "    "
+
+#. module: base
+#: model:ir.module.module,summary:base.module_account_online_synchronization
+msgid ""
+"\n"
+"This module is used for Online bank synchronization."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_approvals
@@ -8503,6 +8428,19 @@ msgstr ""
 "    "
 
 #. module: base
+#: model:ir.module.module,description:base.module_account_online_synchronization
+msgid ""
+"\n"
+"With this module, users will be able to link bank journals to their\n"
+"online bank accounts (for supported banking institutions), and configure\n"
+"a periodic and automatic synchronization of their bank statements.\n"
+"This module has been added end of 2020 and is purpose is to work with\n"
+"the latest providers. It should be used over the previous account_online_sync\n"
+"module.\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_payment_sips
 msgid ""
 "\n"
@@ -8918,10 +8856,9 @@ msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
-msgid "<code>Warning</code>: Warning Exception to use with <code>raise</code>"
+msgid ""
+"<code>UserError</code>: Warning Exception to use with <code>raise</code>"
 msgstr ""
-"<code>Увага</code>: Попередження про Виняток для використання з "
-"<code>підняттям</code>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -9042,8 +8979,8 @@ msgstr "<i class=\"fa fa-times\" title=\"Close the onboarding panel\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
-msgid "<span aria-label=\"Close\">&amp;times;</span>"
-msgstr "<span aria-label=\"Close\">&amp;times;</span>"
+msgid "<span aria-label=\"Close\">×</span>"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
@@ -9775,11 +9712,6 @@ msgstr ""
 #, python-format
 msgid "Access to unauthorized or invalid companies."
 msgstr "Доступ до неавторизованих чи недійсних компаній."
-
-#. module: base
-#: model:ir.module.category,name:base.module_category_account
-msgid "Account"
-msgstr "Рахунок"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_auto_transfer
@@ -10541,6 +10473,11 @@ msgid "Advanced features for stock_account"
 msgstr "Розширені функції для stock_account"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_proration
+msgid "Advantage Proration"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_payment_adyen
 #: model:ir.module.module,shortdesc:base.module_payment_adyen
 msgid "Adyen Payment Acquirer"
@@ -10647,6 +10584,11 @@ msgstr "Виділіть відпустку і слідкуйте за запи�
 #: model:ir.module.module,summary:base.module_helpdesk_fsm
 msgid "Allow generating fsm tasks from ticket"
 msgstr "Дозволяє створювати завдання виїзного обслуговування із заявок"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_hr_payroll_edit_lines
+msgid "Allow payslip edition"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_crm
@@ -11663,6 +11605,21 @@ msgid "Belgian Intrastat Declaration"
 msgstr "Бельгійська декларація Intrastat "
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_proration
+msgid "Belgian Payroll - Advantage Proration"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_posted_employee
+msgid "Belgian Payroll - Posted Employee"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_variable_revenue
+msgid "Belgian Payroll - Variable Revenue"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_blackbox_be
 msgid "Belgian Registered Cash Register"
 msgstr "Бельгійський зареєстрований грошовий реєстр"
@@ -11990,8 +11947,8 @@ msgstr "Від"
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
-msgid "By default the widget uses the field informations"
-msgstr "За замовчуванням віджет використовує інформацію поля"
+msgid "By default the widget uses the field information"
+msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_C
@@ -12171,6 +12128,12 @@ msgid ""
 msgstr ""
 "Неможливо створити нові '%s' записи лише з їхніх назв. Створіть ці записи "
 "вручну та спробуйте імпортувати знову."
+
+#. module: base
+#: code:addons/base/models/res_lang.py:0
+#, python-format
+msgid "Cannot deactivate a language that is currently used by contacts."
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0
@@ -14316,7 +14279,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_disallowed_expenses
 msgid "Disallowed Expenses"
-msgstr ""
+msgstr "Заборонені витрати"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_disallowed_expenses_fleet
@@ -16135,6 +16098,11 @@ msgstr ""
 "\n"
 "3. Звіт про пробний баланс 13-го місяця повинен бути створений з датами для звіту\n"
 "   всього звітного періоду.\n"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_payment_fix_register_token
+msgid "Fix register payment wizard with 'payment' module"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__image_url
@@ -19356,11 +19324,6 @@ msgid "Localization"
 msgstr "Розташування"
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_account_localizations
-msgid "Localizations"
-msgstr "Локалізації"
-
-#. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
 msgid "Log"
 msgstr "Примітка"
@@ -20764,6 +20727,11 @@ msgid "Netherlands Intrastat Declaration"
 msgstr "Нідерландська декларація Інтрастат"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_nl_report_intrastat
+msgid "Netherlands Intrastat Declaration Reports"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "New API Key"
 msgstr ""
@@ -21114,6 +21082,11 @@ msgstr "Кількість оновлених модулів"
 #: model:ir.model.fields,help:base.field_res_users__rules_count
 msgid "Number of record rules that apply to the current user"
 msgstr "Кількість правил запису, які застосовуються до поточного користувача"
+
+#. module: base
+#: model:res.country,vat_label:base.pf
+msgid "N° Tahiti"
+msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_O
@@ -22326,7 +22299,7 @@ msgid ""
 "### Blazing fast search\n"
 "\n"
 "Scan products, browse through hierarchical categories, or get quick information\n"
-"about products with the blasting fast filter accross all your products.\n"
+"about products with the blasting fast filter across all your products.\n"
 "\n"
 "Integrated Inventory Management\n"
 "-------------------------------\n"
@@ -22376,114 +22349,6 @@ msgid ""
 "interaction history, profiles, and more.\n"
 "\n"
 msgstr ""
-"Точка продажу Odoo\n"
-"-----------------------------\n"
-"\n"
-"<a href=\"https://www.odoo.com/page/point-of-sale\">Точка продажу</a>Odoo\n"
-"представляє надзвичайно чистий інтерфейс без необхідності встановлення, \n"
-"який працює онлайн та офлайн на сучасних обладнаннях.\n"
-"\n"
-"Це повна інтеграція з інвентаризацією та обліком компанії, дає статистику\n"
-" та консолідацію в реальному часі серед усіх магазинів без клопоту\n"
-" інтегрувати кілька додатків.\n"
-"\n"
-"Робота з обладнанням, яке ви вже маєте\n"
-"---------------------------------------\n"
-"\n"
-"### У вашому веб-браузері\n"
-"\n"
-"Точка продажу Odoo - це веб-додаток, який може запускатися на будь-якому пристрої та відображати\n"
-"веб-сайти з найменшими налаштуваннями.\n"
-"\n"
-"### Планшет чи клавіатура?\n"
-"\n"
-"Точка продажу чудово працює на будь-якому пристрої натискання, чи\n"
-"це планшети, такі як iPad планшетні термінали з\n"
-"клавіатурою.\n"
-"\n"
-"### Ваги та принтери\n"
-"\n"
-"Сканери штрих-кодів та принтери підтримуються з коробки і без обов'язкових налаштувань.\n"
-"Ваги, касові скриньки, а інші периферійні пристрої можуть використовуватися з proxy\n"
-"API.\n"
-"\n"
-"Онлайн та офлайн\n"
-"------------------\n"
-"\n"
-"### Точка продажу Odoo залишаться надійною, навіть якщо немає з'єднання\n"
-"\n"
-"Відкривайте нові магазини за допомогою лише підключення до інтернету: **без встановлення, без\n"
-"обов'язкового специфічного обладнання**.  Працює з будь-яким **планшетом iPad, PC, ноутбуком** або\n"
-"промисловою машиною точки продажу.\n"
-"\n"
-"Хоча для запуску торгової точки потрібне підключення до Інтернету, вона буде\n"
-" працювати навіть після повного відключення.\n"
-"\n"
-"\n"
-"Зрозумілий користувацький інтерфейс\n"
-"----------------------------\n"
-"\n"
-"### Просто та гарно\n"
-"\n"
-"Попрощайтеся з негарним, застарілим програмним забезпеченням точки продажу та насолоджуйтесь веб-інтерфейсом Odoo,\n"
-"створеним для сучасної роздрібної торгівлі.\n"
-"\n"
-"### Створено для продуктивності\n"
-"\n"
-"Незалежно від ресторану чи магазину, ви можете активувати кілька\n"
-" замовлень паралельно, щоб не змушувати клієнтів чекати.\n"
-"\n"
-"### Швидкий пошук\n"
-"\n"
-"Скануйте товари, переглядайте ієрархічні категорії або отримайте швидку інформацію\n"
-" про товари за допомогою швидкого фільтру, що шукає за всіма вашими товарами.\n"
-"\n"
-"Інтегроване управління складом\n"
-"-------------------------------\n"
-"\n"
-"Об’єднайте в реальному часі всі ваші торгові команди: магазини,\n"
-" електронну комерцію, торгові групи. Отримайте в режимі реального часу контроль запасів та точні прогнози для управління\n"
-" закупівлями.\n"
-"\n"
-"Повна система управління складом на кінчиках ваших пальців: отримуйте інформацію про\n"
-"наявність товарів, запускайте запит на поповнення тощо.\n"
-"\n"
-"Надавайте послуги клієнтам у магазині\n"
-"----------------------------------\n"
-"\n"
-"Надайте своєму покупцеві потужний досвід, інтегруючи внутрішні \n"
-"послуги для клієнтів. Обробляйте репарації, відслідковуйте гарантії, \n"
-"дотримуйтесь претензій клієнтів, плануйте замовлення на доставку тощо\n"
-"\n"
-"Інтеграція виставлення рахунків та Бухобліку\n"
-"----------------------------------\n"
-"\n"
-"Створіть рахунки клієнтів у кілька кліків. Контролюйте продажі та\n"
-" готівку в режимі реального часу та використовуйте потужний звіт Odoo\n"
-" для прийняття розумніших рішень для підвищення ефективності вашого магазину.\n"
-"\n"
-"Немає більше клопоту з необхідністю інтегрувати програмне забезпечення:\n"
-" автоматично опублікуйте всі ваші операції з продажів та складу у вашому G/L.\n"
-"\n"
-"Єдині дані з усіх магазинів\n"
-"------------------------------\n"
-"\n"
-"Отримуйте нові товари, цінові стратегії та акції, які автоматично застосовуються до вибраних магазинів. \n"
-"Робота над єдиною клієнтською базою. Немає необхідного складного\n"
-" інтерфейсу, щоб визначити глобальну стратегію серед усіх ваших магазинів.\n"
-"\n"
-"З бекендом Odoo, у вас є система, яка зарекомендувала себе як ідеально підходить для невеликих магазинів або великих\n"
-" транснаціональних компаній.\n"
-"Знайте своїх клієнтів - у магазині та поза ним\n"
-"--------------------------------------\n"
-"\n"
-"Успішні бренди об'єднують усі відносини з клієнтами за всіма своїми \n"
-"каналами, щоб розвивати точний профіль клієнта та спілкуватися з покупцями під час\n"
-" прийняття рішень щодо покупки в магазині чи в Інтернеті.\n"
-"\n"
-"З Odoo, ви отримаєте огляд клієнта на 360°, включаючи продажі перехресних каналів,\n"
-"інтерактивну історію, профілі та багато іншого.\n"
-"\n"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__opl-1
@@ -23024,6 +22889,11 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_marketing_online_appointment
 msgid "Online Appointment"
 msgstr "Онлайн-зустріч"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_account_online_synchronization
+msgid "Online Bank Statement Synchronization"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_sale
@@ -23963,6 +23833,11 @@ msgid "Payroll Localization"
 msgstr "Локалізація зарплати"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_hr_payroll_edit_lines
+msgid "Payroll: Edit lines - Recompute work entries"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_payulatam
 msgid "PayuLatam Payment Acquirer"
 msgstr "Платіжний еквайєр PayuLatam"
@@ -24162,6 +24037,11 @@ msgstr "Португалія"
 #: model:ir.module.module,shortdesc:base.module_l10n_pt
 msgid "Portugal - Accounting"
 msgstr "Португалія - Бухоблік"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_posted_employee
+msgid "Posted Employee"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__definition
@@ -25136,8 +25016,8 @@ msgstr "Вилучити з меню \"Друк\""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
-msgid "Remove the contextual action related this report"
-msgstr "Видалити контекстну дію, пов'язану з цим звітом"
+msgid "Remove the contextual action related to this report"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_renting
@@ -26831,8 +26711,8 @@ msgstr "Зберігайте розрахункові листи співроб�
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_hr_holidays
-msgid "Store employee's time off documents  in the Document app"
-msgstr "Зберігайте документи на відпустки працівників у модулі Документи"
+msgid "Store employee's time off documents in the Document app"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__store
@@ -28272,14 +28152,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_sequence.py:0
-#, python-format
-msgid ""
-"This transaction wasn't executed because another transaction is already "
-"using the same no-gap sequence. Please try again later."
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
 msgid "Thousands Separator"
 msgstr "Роздільник тисяч"
@@ -29557,6 +29429,11 @@ msgid "Vanuatu"
 msgstr "Вануату"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_variable_revenue
+msgid "Variable Revenue"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "Various fields may use Python code or Python expressions. The following "
@@ -29865,11 +29742,6 @@ msgid "Web-only translations"
 msgstr "Переклади"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_website_event_crm_questions
-msgid "Webiste Event CRM Questions"
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__website
 #: model:ir.module.category,name:base.module_category_website
 #: model:ir.module.category,name:base.module_category_website_website
@@ -29889,6 +29761,11 @@ msgstr "Веб-сайт - Управління продажами"
 #: model:ir.module.module,shortdesc:base.module_website_enterprise
 msgid "Website Enterprise"
 msgstr "Веб-сайт Enterprise"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_event_crm_questions
+msgid "Website Event CRM Questions"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_crm
@@ -30529,16 +30406,6 @@ msgstr "account_ponto"
 #: model:ir.module.module,shortdesc:base.module_account_qr_code_sepa
 msgid "account_qr_code_sepa"
 msgstr ""
-
-#. module: base
-#: model:ir.module.module,summary:base.module_l10n_lt
-msgid "accounting, Lithuanian"
-msgstr "бухоблік, Литва"
-
-#. module: base
-#: model:ir.module.module,summary:base.module_l10n_lt_reports
-msgid "accounting, report, Lithuanian"
-msgstr "бухоблік, звіт, Литва"
 
 #. module: base
 #: code:addons/models.py:0

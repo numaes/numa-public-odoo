@@ -18,23 +18,23 @@
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2020
 # Levent Karakaş <levent@mektup.at>, 2020
 # Nurettin Emre Ozbakir <emre.ozbakir@gamareklam.com>, 2020
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
 # Yedigen, 2020
-# Ediz Duman <neps1192@gmail.com>, 2020
-# UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2020
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2020
-# Umur Akın <umura@projetgrup.com>, 2020
 # abc Def <hdogan1974@gmail.com>, 2020
-# Tugay Hatıl <tugayh@projetgrup.com>, 2020
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
+# Ediz Duman <neps1192@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Murat Kaplan <muratk@projetgrup.com>, 2020
+# UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2020
+# Umur Akın <umura@projetgrup.com>, 2020
+# Tugay Hatıl <tugayh@projetgrup.com>, 2020
 # Murat Durmuş <muratd@projetgrup.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-02 14:25+0000\n"
+"POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
 "Last-Translator: Murat Durmuş <muratd@projetgrup.com>, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
@@ -813,13 +813,9 @@ msgid ""
 "        Generate payment orders as recommended by the SEPA norm, thanks to pain.001 messages. Supported pain version (countries) are pain.001.001.03 (generic), pain.001.001.03.ch.02 (Switzerland) and pain.001.003.03 (Germany). The generated XML file can then be uploaded to your bank.\n"
 "\n"
 "        This module follow the implementation guidelines issued by the European Payment Council.\n"
-"        For more informations about the SEPA standards : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
+"        For more information about the SEPA standards : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
 "    "
 msgstr ""
-"\n"
-"Önerilen SEPA normları gibi, ödeme talimatı oluşturun, pain.001 mesajlarına teşekkürler. Desteklenen pain versiyonu (ülkelere göre) pain.001.001.03 (genel), pain.001.001.03.ch.02 (İsviçre) ve pain.001.003.03 (Almanya). Oluşturulan XML dosyası daha sonra bankanıza yüklenebilir.\n"
-"Bu modül Avrupa Ödeme Konseyi tarafından verilen uygulama kurallarına uyar.\n"
-"SEPA standartları hakkında daha fazla bilgi için : http://www.iso20022.org/ ve http://www.europeanpaymentscouncil.eu/"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_winbooks_import
@@ -2568,7 +2564,7 @@ msgid ""
 "This module has been tested as base for more of 1000 companies, because\n"
 "it is based in a mixtures of most common software in the Venezuelan\n"
 "market what will allow for sure to accountants feel them first steps with\n"
-"Odoo more confortable.\n"
+"Odoo more comfortable.\n"
 "\n"
 "This module doesn't pretend be the total localization for Venezuela,\n"
 "but it will help you to start really quickly with Odoo in this country.\n"
@@ -3108,12 +3104,6 @@ msgid ""
 "in the selected countries.\n"
 "The wizard can be run again for adding more countries.\n"
 "\n"
-"The wizard creates a separate Chart of Taxes for collecting the\n"
-"VAT amounts of the MOSS declaration, so extracting the MOSS\n"
-"data should be easy.\n"
-"Look for a Chart of Taxes named \"EU MOSS VAT Chart\" in the\n"
-"Taxes Report menu (Generic Accounting Report).\n"
-"\n"
 "References\n"
 "++++++++++\n"
 "- Directive 2008/8/EC\n"
@@ -3121,26 +3111,6 @@ msgid ""
 "\n"
 "    "
 msgstr ""
-"\n"
-"Telekomünikasyon, yayın ve elektronik hizmetler için AB Mini One Stop Shop (MOSS) KDV\n"
-"1 Ocak 2015'ten itibaren Avrupa Birliği dahilinde satılan telekomünikasyon, yayın ve elektronik hizmetlerin, müşterinin ait olduğu ülkede her zaman vergilendirilmesi gerekmektedir. Bu AB yönergesinin uygulanmasını basitleştirmek için, Mini One Stop Shop (MOSS) kayıt şeması, işletmelerin benzersiz bir vergi beyannamesi yapmasına izin verir.\n"
-"Bu modül, gerekli vergileri otomatik olarak uygulamak ve kaydetmek için gerekli AB mali pozisyonlarının ve vergilerinin oluşturulmasına yardımcı olarak mümkün kılmaktadır.\n"
-"Bu modül, AB içindeki elektronik hizmetleri satmak için mali pozisyonların ve vergilerin kurulumuna yardımcı olacak bir sihirbaz kurar.\n"
-"Sihirbaz şunları seçmenize izin verir.\n"
-"- Bu hizmetleri sattığınız AB ülkeleri\n"
-"- Hedef ülke vergisine eşlenecek hizmetler için ulusal KDV verginiz\n"
-"- İsteğe bağlı olarak: hesap eşlemesini kopyalamak için bir şablon mali konumu. Mevcut B2C Intra-EU mali durumunuz olmalı (varsayılan hesap eşleştirmesi yok)\n"
-"- isteğe bağlı olarak: vergi miktarlarını toplamak için kullanılacak bir hesap (hizmetlerin ulusal KDV vergisi tarafından kullanılan hesaba varsayılan)\n"
-"Seçilen ülkelerdeki bir müşteri ile AB satışları için otomatik olarak geçerli olan ilgili mali pozisyonları ve vergileri yaratır.\n"
-"\n"
-"Daha fazla ülke eklemek için sihirbaz tekrar çalıştırılabilir.\n"
-"\n"
-"Sihirbaz, MOSS bildiriminin KDV tutarlarını toplamak için ayrı bir Grafik Çizelgesi oluşturur, bu nedenle MOSS verilerini çıkarmak kolay olmalıdır.\n"
-"Vergi Raporu menüsünde \"AB MOSS KDV Çizelgesi\" adlı Vergi Tablosuna bakın (Genel Muhasebe Raporu)\n"
-"Referanslar\n"
-"++++++++++\n"
-"- 2008/8 / EC sayılı Direktif\n"
-"- 1042/2013 sayılı Konsey Uygulama Tüzüğü"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_hr
@@ -3590,6 +3560,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl_intrastat
+#: model:ir.module.module,description:base.module_l10n_nl_report_intrastat
 msgid ""
 "\n"
 "Generates Netherlands Intrastat report for declaration based on invoices.\n"
@@ -5438,9 +5409,9 @@ msgid ""
 "Swiss localization\n"
 "==================\n"
 "Added a QR-IBAN field on bank account.\n"
-"If this field is empty, but the bank account number itself is a valid QR-IBAN number, it will still be used as QR-IBAN as before.  \n"
-"But if you fill in the new QR-IBAN field, that one will be used as the QR-IBAN.  This should help for reconciliation as \n"
-"on the bank statements, the old IBAN code is still used.  \n"
+"If this field is empty but the bank account number itself is a valid QR-IBAN number, it will continue using it as QR-IBAN.\n"
+"However, if the new QR-IBAN field is filled, the value will be used as the QR-IBAN.\n"
+"This should help for reconciliation on the bank statements where the old IBAN code is still used.\n"
 "    "
 msgstr ""
 
@@ -5998,9 +5969,10 @@ msgid ""
 "This is the latest basic Israelian localisation necessary to run Odoo in Israel:\n"
 "================================================================================\n"
 "\n"
-"This module consists:\n"
-" - Generic Israelian chart of accounts\n"
-" - Israelian taxes\n"
+"This module consists of:\n"
+" - Generic Israel Chart of Accounts\n"
+" - Taxes and tax report\n"
+" - Fiscal position for Palestina\n"
 " "
 msgstr ""
 
@@ -6465,7 +6437,7 @@ msgstr ""
 msgid ""
 "\n"
 "This module allows to print your payments on pre-printed check paper.\n"
-"You can configure the output (layout, stubs informations, etc.) in company settings, and manage the\n"
+"You can configure the output (layout, stubs information, etc.) in company settings, and manage the\n"
 "checks numbering (if you use pre-printed checks without numbers) in journal settings.\n"
 "\n"
 "Supported formats\n"
@@ -6481,22 +6453,6 @@ msgid ""
 "- Check on bottom: ADP standard (https://www.checkdepot.net/checks/checkorder/laser_bottomcheck.htm)\n"
 "    "
 msgstr ""
-"\n"
-"Bu modül, ödemelerinizin önceden yazdırılmış çek kağıdına yazdırılmasını sağlar.\n"
-"Çıktıyı (düzen, saplama bilgileri, vb.) Şirket ayarlarında yapılandırabilir ve günlük ayarlarında çek numaralandırmasını (numarasız önceden yazdırılmış kontrol kullanıyorsanız) yönetebilirsiniz.\n"
-"\n"
-"Desteklenen formatlar\n"
-"-----------------\n"
-"Bu modül en yaygın üç kontrol biçimini destekler ve checkdepot.net adresindeki bağlantılı kontrollerle birlikte çalışır.\n"
-"\n"
-"Tüm kontrolleri şu adresten görüntüle: https://www.checkdepot.net/checks/laser/Odoo.htm\n"
-"\n"
-"Aşağıdakiler arasından seçim yapabilirsiniz:\n"
-"\n"
-"- Üstte kontrol edin: Quicken / QuickBooks standardı (https://www.checkdepot.net/checks/checkorder/laser_topcheck.htm)\n"
-"- Ortada kontrol edin: Peachtree standardı (https://www.checkdepot.net/checks/checkorder/laser_middlecheck.htm)\n"
-"- Altta kontrol edin: ADP standardı \n"
-"(https://www.checkdepot.net/checks/checkorder/laser_bottomcheck.htm)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ca_check_printing
@@ -6808,6 +6764,13 @@ msgstr ""
 "Bu modül bir ilişkilendirme ile ilgili modülleri yapılandırır.\n"
 "\n"
 "Olayları, kayıtları, üyelikleri, üyelik ürünlerini (şemaları) yönetmek için derneklerin profilini yükler."
+
+#. module: base
+#: model:ir.module.module,summary:base.module_account_online_synchronization
+msgid ""
+"\n"
+"This module is used for Online bank synchronization."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_approvals
@@ -7370,6 +7333,19 @@ msgstr ""
 "Ekibinize slayt sunumları ekleyin, böylece yardım arayan müşteriler yeni biletler göndermeden önce bunları görebilir."
 
 #. module: base
+#: model:ir.module.module,description:base.module_account_online_synchronization
+msgid ""
+"\n"
+"With this module, users will be able to link bank journals to their\n"
+"online bank accounts (for supported banking institutions), and configure\n"
+"a periodic and automatic synchronization of their bank statements.\n"
+"This module has been added end of 2020 and is purpose is to work with\n"
+"the latest providers. It should be used over the previous account_online_sync\n"
+"module.\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_payment_sips
 msgid ""
 "\n"
@@ -7776,9 +7752,9 @@ msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
-msgid "<code>Warning</code>: Warning Exception to use with <code>raise</code>"
+msgid ""
+"<code>UserError</code>: Warning Exception to use with <code>raise</code>"
 msgstr ""
-"<code>Uyarı</code>:  İstisna Uyarısı<code>yükseltme ile kullanımda</code>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -7898,8 +7874,8 @@ msgstr "<i class=\"fa fa-times\" title=\"Close the onboarding panel\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
-msgid "<span aria-label=\"Close\">&amp;times;</span>"
-msgstr "<span aria-label=\"Close\">&amp;times;</span>"
+msgid "<span aria-label=\"Close\">×</span>"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
@@ -7921,6 +7897,14 @@ msgid ""
 "                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Şirket Adresi</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Fatura Adresi</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Teslim Adresi</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Diğer Adres</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Özel Adres</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Adres</b>\n"
+"                            </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
@@ -8546,11 +8530,6 @@ msgid "Access to unauthorized or invalid companies."
 msgstr ""
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_account
-msgid "Account"
-msgstr "Hesap"
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_auto_transfer
 msgid "Account Automatic Transfers"
 msgstr "Hesap Otomatik Transferleri"
@@ -8887,7 +8866,7 @@ msgstr "Ekle"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_language_install
 msgid "Add Language"
-msgstr ""
+msgstr "Dil Ekle"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mail_bot
@@ -9238,6 +9217,11 @@ msgid "Advanced features for stock_account"
 msgstr "stock_account için Gelişmiş Özellikler"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_proration
+msgid "Advantage Proration"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_payment_adyen
 #: model:ir.module.module,shortdesc:base.module_payment_adyen
 msgid "Adyen Payment Acquirer"
@@ -9343,6 +9327,11 @@ msgstr "Zaman aşımı ayırma ve zaman aşımı isteklerini izleme"
 #: model:ir.module.module,summary:base.module_helpdesk_fsm
 msgid "Allow generating fsm tasks from ticket"
 msgstr "Biletten fsm görevleri oluşturulmasına izin ver"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_hr_payroll_edit_lines
+msgid "Allow payslip edition"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_crm
@@ -10359,6 +10348,21 @@ msgid "Belgian Intrastat Declaration"
 msgstr "Belçika Intrastat beyannamesi"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_proration
+msgid "Belgian Payroll - Advantage Proration"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_posted_employee
+msgid "Belgian Payroll - Posted Employee"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_variable_revenue
+msgid "Belgian Payroll - Variable Revenue"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_blackbox_be
 msgid "Belgian Registered Cash Register"
 msgstr "Belçika Kaydedilmiş Kasa Hareketleri "
@@ -10685,8 +10689,8 @@ msgstr "İle"
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
-msgid "By default the widget uses the field informations"
-msgstr "Widget varsayılan olarak alan bilgilerini kullanır"
+msgid "By default the widget uses the field information"
+msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_C
@@ -10866,6 +10870,12 @@ msgid ""
 msgstr ""
 "Yalnızca isimleri kullanılarak yeni '%s' kayıtları oluşturulamaz. Lütfen bu "
 "kayıtları elle oluşturun ve içe aktarımı sonrasında deneyin.  "
+
+#. module: base
+#: code:addons/base/models/res_lang.py:0
+#, python-format
+msgid "Cannot deactivate a language that is currently used by contacts."
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0
@@ -14730,6 +14740,11 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_payment_fix_register_token
+msgid "Fix register payment wizard with 'payment' module"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__image_url
 msgid "Flag"
 msgstr "Bayrak"
@@ -16541,7 +16556,7 @@ msgstr ""
 #. module: base
 #: model:ir.actions.act_window,name:base.res_partner_industry_action
 msgid "Industries"
-msgstr ""
+msgstr "Sektörler"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner_industry
@@ -17937,11 +17952,6 @@ msgid "Localization"
 msgstr "Yerelleştirme"
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_account_localizations
-msgid "Localizations"
-msgstr ""
-
-#. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
 msgid "Log"
 msgstr "Log"
@@ -19303,6 +19313,11 @@ msgid "Netherlands Intrastat Declaration"
 msgstr "Hollanda Intrastat Beyannamesi"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_nl_report_intrastat
+msgid "Netherlands Intrastat Declaration Reports"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "New API Key"
 msgstr ""
@@ -19645,6 +19660,11 @@ msgstr "Bir kaç modül güncllendi"
 #: model:ir.model.fields,help:base.field_res_users__rules_count
 msgid "Number of record rules that apply to the current user"
 msgstr "Geçerli kullanıcı için geçerli kayıt kuralı sayısı"
+
+#. module: base
+#: model:res.country,vat_label:base.pf
+msgid "N° Tahiti"
+msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_O
@@ -20366,7 +20386,7 @@ msgid ""
 "### Blazing fast search\n"
 "\n"
 "Scan products, browse through hierarchical categories, or get quick information\n"
-"about products with the blasting fast filter accross all your products.\n"
+"about products with the blasting fast filter across all your products.\n"
 "\n"
 "Integrated Inventory Management\n"
 "-------------------------------\n"
@@ -20892,6 +20912,11 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_marketing_online_appointment
 msgid "Online Appointment"
 msgstr "Online Randevu"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_account_online_synchronization
+msgid "Online Bank Statement Synchronization"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_sale
@@ -21822,6 +21847,11 @@ msgid "Payroll Localization"
 msgstr "Bordro Yerelleştirmesi"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_hr_payroll_edit_lines
+msgid "Payroll: Edit lines - Recompute work entries"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_payulatam
 msgid "PayuLatam Payment Acquirer"
 msgstr "PayuLatam Ödeme Alıcısı"
@@ -22019,6 +22049,11 @@ msgstr "Portekiz"
 #: model:ir.module.module,shortdesc:base.module_l10n_pt
 msgid "Portugal - Accounting"
 msgstr "Portekiz - Muhasebe"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_posted_employee
+msgid "Posted Employee"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__definition
@@ -22990,8 +23025,8 @@ msgstr "'Yazdır' menüsünden kaldır"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
-msgid "Remove the contextual action related this report"
-msgstr "Bu raporla ilgili bağlamsal aksiyonu kaldır"
+msgid "Remove the contextual action related to this report"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_renting
@@ -24683,8 +24718,8 @@ msgstr "Çalışan maaş bordrolarını Belge uygulamasında sakla"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_hr_holidays
-msgid "Store employee's time off documents  in the Document app"
-msgstr "Çalışanın kapalı olduğu belgeleri Belge uygulamasında depola"
+msgid "Store employee's time off documents in the Document app"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__store
@@ -26111,14 +26146,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_sequence.py:0
-#, python-format
-msgid ""
-"This transaction wasn't executed because another transaction is already "
-"using the same no-gap sequence. Please try again later."
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
 msgid "Thousands Separator"
 msgstr "Bin Ayraçı"
@@ -27380,6 +27407,11 @@ msgid "Vanuatu"
 msgstr "Yeni Hebridler"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_variable_revenue
+msgid "Variable Revenue"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "Various fields may use Python code or Python expressions. The following "
@@ -27681,11 +27713,6 @@ msgid "Web-only translations"
 msgstr "Yalnızca-web çevirileri"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_website_event_crm_questions
-msgid "Webiste Event CRM Questions"
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__website
 #: model:ir.module.category,name:base.module_category_website
 #: model:ir.module.category,name:base.module_category_website_website
@@ -27705,6 +27732,11 @@ msgstr "Web Sitesi - Satış Yönetimi"
 #: model:ir.module.module,shortdesc:base.module_website_enterprise
 msgid "Website Enterprise"
 msgstr "Website Kurumsal"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_event_crm_questions
+msgid "Website Event CRM Questions"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_crm
@@ -28342,16 +28374,6 @@ msgstr "account_ponto"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_qr_code_sepa
 msgid "account_qr_code_sepa"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,summary:base.module_l10n_lt
-msgid "accounting, Lithuanian"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,summary:base.module_l10n_lt_reports
-msgid "accounting, report, Lithuanian"
 msgstr ""
 
 #. module: base

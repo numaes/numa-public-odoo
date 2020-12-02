@@ -18,11 +18,12 @@
 # Zamba Lee <zambalee@gmail.com>, 2020
 # KWOKYUK CHEUNG <cheungkwokyuk@gmail.com>, 2020
 # as co02 <asco02@163.com>, 2020
-# Xu Lei <xulei8@qq.com>, 2020
+# Lei Xu <xulei8@qq.com>, 2020
 # v2exerer <9010446@qq.com>, 2020
 # 湘子 南 <1360857908@qq.com>, 2020
 # inspur qiuguodong <qiuguodong@inspur.com>, 2020
 # mrshelly <mrshelly@hotmail.com>, 2020
+# John Lin <linyinhuan@139.com>, 2020
 # xu xiaohu <xu.xiaohu@gmail.com>, 2020
 # 苏州远鼎 <tiexinliu@126.com>, 2020
 # Connie Xiao <connie.xiao@elico-corp.com>, 2020
@@ -35,12 +36,10 @@
 # niulin lnc. <admin@niulin.net>, 2020
 # zpq001 <zpq001@live.com>, 2020
 # Joray <13637815@qq.com>, 2020
-# e2f_cn c5 <jarvisn@ecinnovations.com>, 2020
 # diaojiaolou <124412206@qq.com>, 2020
 # Felix Yuen <fyu@odoo.com>, 2020
 # Shane Tsoi <sso@odoo.com>, 2020
 # e2f <projects@e2f.com>, 2020
-# liAnGjiA <liangjia@qq.com>, 2020
 # Wei "oldrev" Li <liwei@sandwych.com>, 2020
 # waveyeung <waveyeung@qq.com>, 2020
 # Gary Wei <Gary.wei@elico-corp.com>, 2020
@@ -49,27 +48,28 @@
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2020
 # Eddie Lim <bhweelim@yahoo.com>, 2020
 # 老窦 北京 <2662059195@qq.com>, 2020
-# guohuadeng <guohuadeng@hotmail.com>, 2020
 # keecome <7017511@qq.com>, 2020
 # 卫安琪 <weianqi1991@gmail.com>, 2020
 # Emily Jia <eji@odoo.com>, 2020
 # snow wang <147156565@qq.com>, 2020
 # Jeanphy <hzh0292@qq.com>, 2020
-# Martin Trigaux, 2020
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # F4NNIU <sparkamax+fanniu@gmail.com>, 2020
-# John Lin <linyinhuan@139.com>, 2020
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
+# ljsrzc007 <ljsrzc007@gmail.com>, 2020
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2020
+# Martin Trigaux, 2020
+# liAnGjiA <liangjia@qq.com>, 2020
+# guohuadeng <guohuadeng@hotmail.com>, 2020
 # 稀饭~~ <wangwhai@qq.com>, 2020
-# Lin Li <ljsrzc007@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-02 14:25+0000\n"
+"POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Lin Li <ljsrzc007@gmail.com>, 2020\n"
+"Last-Translator: 稀饭~~ <wangwhai@qq.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1137,15 +1137,9 @@ msgid ""
 "        Generate payment orders as recommended by the SEPA norm, thanks to pain.001 messages. Supported pain version (countries) are pain.001.001.03 (generic), pain.001.001.03.ch.02 (Switzerland) and pain.001.003.03 (Germany). The generated XML file can then be uploaded to your bank.\n"
 "\n"
 "        This module follow the implementation guidelines issued by the European Payment Council.\n"
-"        For more informations about the SEPA standards : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
+"        For more information about the SEPA standards : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
 "    "
 msgstr ""
-"\n"
-" 生成 SEPA 规范所推荐的付款订单，多亏 pain.001 消息。支持的 pain 版本（国家/地区）是 pain.001.001.03 （通用）、 pain.001.001.03.ch.02 （瑞士）和 pain.001.003.03（德国）。然后，可将生成的  XML 文件上载至银行。\n"
-"\n"
-" 本模块遵循欧洲支付理事会所颁发的实施指南。\n"
-" 有关 SEPA  标准的详细信息： http://www.iso20022.org/ 和 http://www.europeanpaymentscouncil.eu/\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_winbooks_import
@@ -3333,7 +3327,7 @@ msgid ""
 "This module has been tested as base for more of 1000 companies, because\n"
 "it is based in a mixtures of most common software in the Venezuelan\n"
 "market what will allow for sure to accountants feel them first steps with\n"
-"Odoo more confortable.\n"
+"Odoo more comfortable.\n"
 "\n"
 "This module doesn't pretend be the total localization for Venezuela,\n"
 "but it will help you to start really quickly with Odoo in this country.\n"
@@ -3351,34 +3345,6 @@ msgid ""
 "If you install this module, and select Custom chart a basic chart will be proposed,\n"
 "but you will need set manually account defaults for taxes.\n"
 msgstr ""
-"\n"
-"委内瑞拉的会计科目表\n"
-"===============================\n"
-"\n"
-"Venezuela doesn't have any chart of account by law, but the default\n"
-"proposed in Odoo should comply with some Accepted best practices in Venezuela,\n"
-"this plan comply with this practices.\n"
-"\n"
-"This module has been tested as base for more of 1000 companies, because\n"
-"it is based in a mixtures of most common software in the Venezuelan\n"
-"market what will allow for sure to accountants feel them first steps with\n"
-"Odoo more confortable.\n"
-"\n"
-"This module doesn't pretend be the total localization for Venezuela,\n"
-"but it will help you to start really quickly with Odoo in this country.\n"
-"\n"
-"This module give you.\n"
-"---------------------\n"
-"\n"
-"- Basic taxes for Venezuela.\n"
-"- Have basic data to run tests with community localization.\n"
-"- Start a company from 0 if your needs are basic from an accounting PoV.\n"
-"\n"
-"We recomend use of account_anglo_saxon if you want valued your\n"
-"stocks as Venezuela does with out invoices.\n"
-"\n"
-"If you install this module, and select Custom chart a basic chart will be proposed,\n"
-"but you will need set manually account defaults for taxes.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_th
@@ -3968,12 +3934,6 @@ msgid ""
 "in the selected countries.\n"
 "The wizard can be run again for adding more countries.\n"
 "\n"
-"The wizard creates a separate Chart of Taxes for collecting the\n"
-"VAT amounts of the MOSS declaration, so extracting the MOSS\n"
-"data should be easy.\n"
-"Look for a Chart of Taxes named \"EU MOSS VAT Chart\" in the\n"
-"Taxes Report menu (Generic Accounting Report).\n"
-"\n"
 "References\n"
 "++++++++++\n"
 "- Directive 2008/8/EC\n"
@@ -3981,47 +3941,6 @@ msgid ""
 "\n"
 "    "
 msgstr ""
-"\n"
-"欧盟迷你一站式店铺(MOSS) 提供电信,广播,电子服务VAT\n"
-"=============================================================================================\n"
-"\n"
-"截至2015年一月,电信，广播电子服务\n"
-"在欧洲的销售必须在客户所在的国家含税。\n"
-". 为了简化EU的流程,迷你一站式店铺 (MOSS) 注册方案\n"
-"允许交易有一个特别的税号。\n"
-"\n"
-"这个模块能帮助您创建所需的\n"
-"欧盟财政位置和税号来自动应用和记录所需的税。\n"
-"\n"
-"这个模块安装了一个向导来帮助设置财政位置\n"
-"及在欧盟内销售电子服务税。\n"
-"\n"
-"向导让您选择:\n"
-" - 销售电子服务所在的欧盟国家\n"
-" - 您国家的VAT服务税,对应到\n"
-"   目标国家的税\n"
-" - 选项: 一个财政位置模板， \n"
-"   用于复制账户映射. 也会作为您\n"
-"   现有的B2C Intra-EU财政位置. (默认\n"
-"   是无账户映射)\n"
-" - 选项: 用于收集税款的账户\n"
-"    (默认为您国家的VAT服务税的账户)\n"
-"\n"
-"这创建了对应的财务位置和税，\n"
-"自动用于客户所选国家的欧盟销售。\n"
-"向导可多次运行来增加更多的国家。\n"
-"\n"
-"向导为税创建了分割符来收集MOSS的VAT总额\n"
-"，所以提取MOSS数据会很容易。\n"
-"查找税中的 \"欧盟MOSS VAT 图\" \n"
-"在税报表菜单 (总账报表).\n"
-"\n"
-"参照\n"
-"++++++++++\n"
-"- Directive 2008/8/EC\n"
-"- Council Implementing Regulation (EU) No 1042/2013\n"
-"\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_hr
@@ -4676,6 +4595,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl_intrastat
+#: model:ir.module.module,description:base.module_l10n_nl_report_intrastat
 msgid ""
 "\n"
 "Generates Netherlands Intrastat report for declaration based on invoices.\n"
@@ -6825,19 +6745,11 @@ msgid ""
 "Swiss localization\n"
 "==================\n"
 "Added a QR-IBAN field on bank account.\n"
-"If this field is empty, but the bank account number itself is a valid QR-IBAN number, it will still be used as QR-IBAN as before.  \n"
-"But if you fill in the new QR-IBAN field, that one will be used as the QR-IBAN.  This should help for reconciliation as \n"
-"on the bank statements, the old IBAN code is still used.  \n"
+"If this field is empty but the bank account number itself is a valid QR-IBAN number, it will continue using it as QR-IBAN.\n"
+"However, if the new QR-IBAN field is filled, the value will be used as the QR-IBAN.\n"
+"This should help for reconciliation on the bank statements where the old IBAN code is still used.\n"
 "    "
 msgstr ""
-"\n"
-"瑞士本地化\n"
-"==================\n"
-"在银行帐户上添加了 QR-IBAN 字段。\n"
-"如果此字段为空，但银行帐号本身是有效的 QR-IBAN 号码，则它仍然将一样用作 QR-IBAN。 \n"
-"但是，如果您填写新的 QR-IBAN 字段，该字段将用作 QR-IBAN。 这应该有助于和解\n"
-"在银行对帐单上，旧 IBAN 代码仍在使用。 \n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ch
@@ -7485,17 +7397,12 @@ msgid ""
 "This is the latest basic Israelian localisation necessary to run Odoo in Israel:\n"
 "================================================================================\n"
 "\n"
-"This module consists:\n"
-" - Generic Israelian chart of accounts\n"
-" - Israelian taxes\n"
+"This module consists of:\n"
+" - Generic Israel Chart of Accounts\n"
+" - Taxes and tax report\n"
+" - Fiscal position for Palestina\n"
 " "
 msgstr ""
-"\n"
-"这是南非在ZA管理Odoo所必需的最新基本本地化::\n"
-"================================================================================\n"
-"    - 一般帐目图表\n"
-"    - SARS增值税准备结构\n"
-" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_za
@@ -8038,7 +7945,7 @@ msgstr ""
 msgid ""
 "\n"
 "This module allows to print your payments on pre-printed check paper.\n"
-"You can configure the output (layout, stubs informations, etc.) in company settings, and manage the\n"
+"You can configure the output (layout, stubs information, etc.) in company settings, and manage the\n"
 "checks numbering (if you use pre-printed checks without numbers) in journal settings.\n"
 "\n"
 "Supported formats\n"
@@ -8054,24 +7961,6 @@ msgid ""
 "- Check on bottom: ADP standard (https://www.checkdepot.net/checks/checkorder/laser_bottomcheck.htm)\n"
 "    "
 msgstr ""
-"\n"
-"此模块允许在预打印的支票纸上打印付款。\n"
-"您可以在公司设置中配置输出（布局、存根信息等），并管理\n"
-"在日志设置中检查编号（如果使用不带数字的预打印支票）。\n"
-"\n"
-"支持的格式\n"
-"-----------------\n"
-"此模块支持三种最常见的检查格式，并将使用来自checkdepot.net的链接支票开箱即用。\n"
-"\n"
-"查看所有检查：https://www.checkdepot.net/checks/laser/Odoo.htm\n"
-"\n"
-"您可以选择：\n"
-"\n"
-"- 检查顶部：加快/快速书籍标准（https://www.checkdepot.net/checks/checkorder/laser_topcheck.htm）\n"
-"- 检查中间：桃树标准（https://www.checkdepot.net/checks/checkorder/laser_middlecheck.htm）\n"
-"- 检查底部：ADP标准（https://www.checkdepot.net/checks/checkorder/laser_bottomcheck.htm）\n"
-"\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ca_check_printing
@@ -8441,6 +8330,13 @@ msgstr ""
 "安装社团协会的档案，用于管理活动，注册信息，会员信息，\n"
 "会员产品（方案）等。\n"
 " "
+
+#. module: base
+#: model:ir.module.module,summary:base.module_account_online_synchronization
+msgid ""
+"\n"
+"This module is used for Online bank synchronization."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_approvals
@@ -9091,6 +8987,19 @@ msgstr ""
 "    "
 
 #. module: base
+#: model:ir.module.module,description:base.module_account_online_synchronization
+msgid ""
+"\n"
+"With this module, users will be able to link bank journals to their\n"
+"online bank accounts (for supported banking institutions), and configure\n"
+"a periodic and automatic synchronization of their bank statements.\n"
+"This module has been added end of 2020 and is purpose is to work with\n"
+"the latest providers. It should be used over the previous account_online_sync\n"
+"module.\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_payment_sips
 msgid ""
 "\n"
@@ -9511,8 +9420,9 @@ msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
-msgid "<code>Warning</code>: Warning Exception to use with <code>raise</code>"
-msgstr "<code>警告</code>：使用<code>提高</code>时出现警告异常"
+msgid ""
+"<code>UserError</code>: Warning Exception to use with <code>raise</code>"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -9629,8 +9539,8 @@ msgstr "<i class=\"fa fa-times\" title=\"Close the onboarding panel\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
-msgid "<span aria-label=\"Close\">&amp;times;</span>"
-msgstr "<span aria-label=\"Close\">&amp;times;</span>"
+msgid "<span aria-label=\"Close\">×</span>"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
@@ -10383,11 +10293,6 @@ msgstr "访问导出功能"
 #, python-format
 msgid "Access to unauthorized or invalid companies."
 msgstr "读取未授权或无效的公司。"
-
-#. module: base
-#: model:ir.module.category,name:base.module_category_account
-msgid "Account"
-msgstr "科目"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_auto_transfer
@@ -11150,6 +11055,11 @@ msgid "Advanced features for stock_account"
 msgstr "库存会计高级特性"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_proration
+msgid "Advantage Proration"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_payment_adyen
 #: model:ir.module.module,shortdesc:base.module_payment_adyen
 msgid "Adyen Payment Acquirer"
@@ -11252,6 +11162,11 @@ msgstr "分配假期并关注休假申请"
 #: model:ir.module.module,summary:base.module_helpdesk_fsm
 msgid "Allow generating fsm tasks from ticket"
 msgstr "启用从工单生成现场服务任务"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_hr_payroll_edit_lines
+msgid "Allow payslip edition"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_crm
@@ -12247,6 +12162,21 @@ msgid "Belgian Intrastat Declaration"
 msgstr "比利时国际联盟申报"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_proration
+msgid "Belgian Payroll - Advantage Proration"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_posted_employee
+msgid "Belgian Payroll - Posted Employee"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_variable_revenue
+msgid "Belgian Payroll - Variable Revenue"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_blackbox_be
 msgid "Belgian Registered Cash Register"
 msgstr "比利时注册的收银机"
@@ -12576,8 +12506,8 @@ msgstr "由"
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
-msgid "By default the widget uses the field informations"
-msgstr "默认情况下，小部件使用字段信息"
+msgid "By default the widget uses the field information"
+msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_C
@@ -12751,6 +12681,12 @@ msgid ""
 "Cannot create new '%s' records from their name alone. Please create those "
 "records manually and try importing again."
 msgstr "无法仅从名称中创建新的%s记录。请手动创建这些记录并再次尝试导入。"
+
+#. module: base
+#: code:addons/base/models/res_lang.py:0
+#, python-format
+msgid "Cannot deactivate a language that is currently used by contacts."
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0
@@ -14880,7 +14816,7 @@ msgstr "丢弃"
 #: model_terms:res.partner,website_description:base.res_partner_3
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Discover more"
-msgstr "探索更多"
+msgstr "了解更多"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity_discuss
@@ -16657,6 +16593,11 @@ msgstr ""
 "\n"
 "3. 试验余额第 13 个月报告必须生成，并带有所有\n"
 "   要报告的会计年度。\n"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_payment_fix_register_token
+msgid "Fix register payment wizard with 'payment' module"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__image_url
@@ -19822,11 +19763,6 @@ msgid "Localization"
 msgstr "定位"
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_account_localizations
-msgid "Localizations"
-msgstr "本地化"
-
-#. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
 msgid "Log"
 msgstr "日志"
@@ -21287,6 +21223,11 @@ msgid "Netherlands Intrastat Declaration"
 msgstr "荷兰国际联盟申报"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_nl_report_intrastat
+msgid "Netherlands Intrastat Declaration Reports"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "New API Key"
 msgstr "新API秘钥"
@@ -21641,6 +21582,11 @@ msgstr "已更新的模块数量"
 #: model:ir.model.fields,help:base.field_res_users__rules_count
 msgid "Number of record rules that apply to the current user"
 msgstr "当前用户的记录访问规则的数量"
+
+#. module: base
+#: model:res.country,vat_label:base.pf
+msgid "N° Tahiti"
+msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_O
@@ -22851,7 +22797,7 @@ msgid ""
 "### Blazing fast search\n"
 "\n"
 "Scan products, browse through hierarchical categories, or get quick information\n"
-"about products with the blasting fast filter accross all your products.\n"
+"about products with the blasting fast filter across all your products.\n"
 "\n"
 "Integrated Inventory Management\n"
 "-------------------------------\n"
@@ -22901,113 +22847,6 @@ msgid ""
 "interaction history, profiles, and more.\n"
 "\n"
 msgstr ""
-"Odoo PoS\n"
-"-----------------------------\n"
-"\n"
-"Odoo<a href=\"https://www.odoo.com/page/point-of-sale\">的POS</a>\n"
-"引入了一个超级干净的界面，无需安装即可运行\n"
-"在线和离线在现代硬件上。\n"
-"\n"
-"它与公司库存和会计完全集成，让您真正\n"
-"时间统计和整合之间的所有商店没有麻烦\n"
-"集成多个应用程序。\n"
-"\n"
-"使用您已有的硬件\n"
-"---------------------------------------\n"
-"\n"
-"• 在 Web 浏览器中\n"
-"\n"
-"Odoo 的 POS 是一个 Web 应用程序，可以在任何可以显示的设备上运行\n"
-"需要很少或不需要设置的网站。\n"
-"\n"
-"• 触摸屏或键盘？\n"
-"\n"
-"销售点在任何类型的触摸设备完美工作，无论是否\n"
-"它是多点触控平板电脑，如 iPad 或无键盘电阻式触摸屏\n"
-"终端。\n"
-"\n"
-"• 缩放和打印机\n"
-"\n"
-"条形码扫描器和打印机在开箱即用，无需设置\n"
-"必填。秤、现金箱和其他外围设备可与代理一起使用\n"
-"Api。\n"
-"\n"
-"联机和脱机\n"
-"------------------\n"
-"\n"
-"• Odoo 的 POS 保持可靠，即使您的连接不是\n"
-"\n"
-"部署仅连接 Internet 的新商店： *无安装，无\n"
-"所需的特定硬件*。它适用于任何 [iPad， 平板电脑， 笔记本电脑] 或\n"
-"工业POS机。\n"
-"\n"
-"虽然需要互联网连接才能开始销售点，但它会\n"
-"即使在完全断开后也能保持运行状态。\n"
-"\n"
-"超级干净的用户界面\n"
-"----------------------------\n"
-"\n"
-"• 简单美观\n"
-"\n"
-"告别丑陋，过时的POS软件，享受Odoo网络界面\n"
-"专为现代零售商而设计。\n"
-"\n"
-"• 专为生产力而设计\n"
-"\n"
-"无论是餐厅还是商店，您都可以激活多个订单\n"
-"同时不使您的客户等待。\n"
-"\n"
-"• 快速快速搜索\n"
-"\n"
-"扫描产品、浏览分层类别或获取快速信息\n"
-"关于产品，在所有产品中使用爆破快速过滤器。\n"
-"\n"
-"综合库存管理\n"
-"-------------------------------\n"
-"\n"
-"实时整合所有销售团队：商店、电子商务、销售\n"
-"团队。实时控制库存和准确预测以进行管理\n"
-"采购。\n"
-"\n"
-"一个完整的仓库管理系统触手可及：获取有关信息的信息\n"
-"产品可用性、触发采购请求等。\n"
-"\n"
-"提供店内客户服务\n"
-"----------------------------------\n"
-"\n"
-"通过整合店内客户，为您的购物者提供强大的体验\n"
-"服务。处理赔偿，跟踪战利品，跟踪客户索赔，计划\n"
-"交货单等\n"
-"\n"
-"开票与会计集成\n"
-"----------------------------------\n"
-"\n"
-"只需单击几下即可生成客户发票。实际控制销售额和现金\n"
-"时间，并使用 Odoo 的强大报告做出更明智的决策，以改善\n"
-"你的商店的效率。\n"
-"\n"
-"无需集成软件的更多麻烦：获得您的所有销售额和\n"
-"库存操作自动过帐到您的信用证中。\n"
-"\n"
-"所有商店之间的统一数据\n"
-"------------------------------\n"
-"\n"
-"自动应用新产品、定价策略和促销\n"
-"选定的商店。建立统一的客户群。没有复杂的接口是\n"
-"需要在您的所有商店中试用全球战略。\n"
-"\n"
-"Odoo 作为后端，您有一个系统被证明是完全适合\n"
-"小型商店或大型跨国公司。\n"
-"\n"
-"了解您的客户 - 在商店和外出\n"
-"--------------------------------------\n"
-"\n"
-"成功的品牌将所有客户关系整合到所有客户关系中\n"
-"渠道，以开发准确的客户档案，并与购物者沟通，\n"
-"他们在商店或网上做出购买决定。\n"
-"\n"
-"借助 Odoo，您可以获得 360° 的客户视图，包括跨渠道销售，\n"
-"交互历史记录、配置文件等。\n"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__opl-1
@@ -23684,6 +23523,11 @@ msgstr "一对多字段不能作为“commercial_fields”或“地址字段”�
 #: model:ir.module.category,name:base.module_category_marketing_online_appointment
 msgid "Online Appointment"
 msgstr "在线预约"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_account_online_synchronization
+msgid "Online Bank Statement Synchronization"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_sale
@@ -24729,6 +24573,11 @@ msgid "Payroll Localization"
 msgstr "工资条本地化"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_hr_payroll_edit_lines
+msgid "Payroll: Edit lines - Recompute work entries"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_payulatam
 msgid "PayuLatam Payment Acquirer"
 msgstr "PayuLatam支付"
@@ -24916,6 +24765,11 @@ msgstr "葡萄牙"
 #: model:ir.module.module,shortdesc:base.module_l10n_pt
 msgid "Portugal - Accounting"
 msgstr "葡萄牙 - 会计"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_posted_employee
+msgid "Posted Employee"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__definition
@@ -25943,8 +25797,8 @@ msgstr "从'打印'菜单中移走"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
-msgid "Remove the contextual action related this report"
-msgstr "移除与此报表相关的上下文动作"
+msgid "Remove the contextual action related to this report"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_renting
@@ -27628,8 +27482,8 @@ msgstr "在文档模块中存储员工合同"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_hr_holidays
-msgid "Store employee's time off documents  in the Document app"
-msgstr "在文档模块中存储员工休假申请"
+msgid "Store employee's time off documents in the Document app"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__store
@@ -29023,14 +28877,6 @@ msgstr ""
 "%s"
 
 #. module: base
-#: code:addons/base/models/ir_sequence.py:0
-#, python-format
-msgid ""
-"This transaction wasn't executed because another transaction is already "
-"using the same no-gap sequence. Please try again later."
-msgstr "这个交易不能执行，因为另外一个交易在使用这个相同的无间隔序列号，请稍后再试。"
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
 msgid "Thousands Separator"
 msgstr "千位分隔符"
@@ -30286,6 +30132,11 @@ msgid "Vanuatu"
 msgstr "努瓦阿图"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_variable_revenue
+msgid "Variable Revenue"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "Various fields may use Python code or Python expressions. The following "
@@ -30585,11 +30436,6 @@ msgid "Web-only translations"
 msgstr "仅WEB 翻译"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_website_event_crm_questions
-msgid "Webiste Event CRM Questions"
-msgstr "网站事件和CRM问题"
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__website
 #: model:ir.module.category,name:base.module_category_website
 #: model:ir.module.category,name:base.module_category_website_website
@@ -30609,6 +30455,11 @@ msgstr "网站-销售管理"
 #: model:ir.module.module,shortdesc:base.module_website_enterprise
 msgid "Website Enterprise"
 msgstr "网站企业版"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_event_crm_questions
+msgid "Website Event CRM Questions"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_crm
@@ -31220,16 +31071,6 @@ msgstr "account_ponto"
 #: model:ir.module.module,shortdesc:base.module_account_qr_code_sepa
 msgid "account_qr_code_sepa"
 msgstr "account_qr_code_sepa"
-
-#. module: base
-#: model:ir.module.module,summary:base.module_l10n_lt
-msgid "accounting, Lithuanian"
-msgstr "立陶宛会计"
-
-#. module: base
-#: model:ir.module.module,summary:base.module_l10n_lt_reports
-msgid "accounting, report, Lithuanian"
-msgstr "会计， 报告， 立陶宛"
 
 #. module: base
 #: code:addons/models.py:0

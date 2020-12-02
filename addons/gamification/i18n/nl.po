@@ -28,7 +28,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__rank_users_count
 msgid "# Users"
-msgstr ""
+msgstr "# Gebruikers"
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:0
@@ -167,6 +167,8 @@ msgid ""
 "<br/>Reward (badge %(badge_name)s) for every succeeding user was sent to "
 "%(users)s."
 msgstr ""
+"<br/>Beloning (badge %(badge_name)s) voor elke volgende gebruiker is "
+"verzonden naar %(users)s."
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:0
@@ -277,7 +279,7 @@ msgstr ""
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
 msgid "<span class=\"o_stat_text\">Users</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Gebruikers</span>"
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.simple_report_template
@@ -497,6 +499,8 @@ msgid ""
 "A goal definition is a technical specification of a condition to reach.\n"
 "                The dates, values to reach or users are defined in goal instance."
 msgstr ""
+"Een doeldefinitie is een technische specificatie van een te bereiken conditie.\n"
+"De datums, te bereiken waarden of gebruikers worden gedefinieerd in het doelinstantie."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line__condition
@@ -914,6 +918,8 @@ msgid ""
 "Define how the goals will be computed. The result of the operation will be "
 "stored in the field 'Current'."
 msgstr ""
+"Bepaal hoe de doelen worden berekend. Het resultaat van de bewerking wordt "
+"opgeslagen in het veld 'Huidig'."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__challenge_category
@@ -1181,7 +1187,7 @@ msgstr "Gamification: Doel uitdaging controle"
 #: model:ir.cron,cron_name:gamification.ir_cron_consolidate_last_month
 #: model:ir.cron,name:gamification.ir_cron_consolidate_last_month
 msgid "Gamification: Karma tracking consolidation"
-msgstr ""
+msgstr "Gamification: Karma-tracking consolidatie"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__goal_id
@@ -1318,7 +1324,7 @@ msgstr "Verborgen"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "How is the goal computed?"
-msgstr ""
+msgstr "Hoe wordt het doel berekend?"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__challenge_category__hr
@@ -1419,6 +1425,8 @@ msgid ""
 "In batch mode, this indicates which field distinguishes one user from the "
 "other, e.g. user_id, partner_id..."
 msgstr ""
+"In de batchmodus geeft dit aan welk veld de ene gebruiker van de andere "
+"onderscheidt, bijv. user_id, partner_id ..."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__last_update
@@ -2317,6 +2325,9 @@ msgid ""
 "\n"
 "%(error)s not found"
 msgstr ""
+"De modelconfiguratie voor de definitie %(name)s lijkt onjuist, controleer deze.\n"
+"\n"
+"%(error)s niet gevonden"
 
 #. module: gamification
 #: code:addons/gamification/models/goal.py:0
@@ -2326,6 +2337,9 @@ msgid ""
 "\n"
 "%(field_name)s not stored"
 msgstr ""
+"De modelconfiguratie voor de definitie %(name)s lijkt onjuist, controleer deze.\n"
+"\n"
+"%(field_name)s niet opgeslagen"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__model_id
@@ -2467,7 +2481,7 @@ msgstr "Totaal"
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_karma_tracking
 msgid "Track Karma Changes"
-msgstr ""
+msgstr "Houd Karma-veranderingen bij"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_form
@@ -2484,7 +2498,7 @@ msgstr "Traceerdatum"
 #: model:ir.ui.menu,name:gamification.gamification_karma_tracking_menu
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_tree
 msgid "Trackings"
-msgstr ""
+msgstr "Bijhouden"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__unique_owner_ids

@@ -487,7 +487,7 @@ class Product(models.Model):
                 single_product=True
             )
         else:
-            self = self.with_context(product_tmpl_id=self.product_tmpl_id.id)
+            self = self.with_context(product_tmpl_ids=self.product_tmpl_id.ids)
         action = self.env['stock.quant']._get_quants_action(domain)
         action["name"] = _('Update Quantity')
         return action
@@ -602,7 +602,7 @@ class ProductTemplate(models.Model):
     # TDE FIXME: seems only visible in a view - remove me ?
     route_from_categ_ids = fields.Many2many(
         relation="stock.location.route", string="Category Routes",
-        related='categ_id.total_route_ids', readonly=False)
+        related='categ_id.total_route_ids', readonly=False, related_sudo=False)
 
     @api.depends('type')
     def _compute_has_available_route_ids(self):

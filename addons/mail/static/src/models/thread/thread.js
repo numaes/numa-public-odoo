@@ -819,6 +819,7 @@ function factory(dependencies) {
                     res_model: this.model,
                 },
             }, { shadow: true }));
+            this.update({ areFollowersLoaded: true });
             if (followers.length > 0) {
                 this.update({
                     followers: [['insert-and-replace', followers.map(data =>
@@ -1401,6 +1402,20 @@ function factory(dependencies) {
         }
 
         /**
+         * Compute an url string that can be used inside a href attribute
+         *
+         * @private
+         * @returns {string}
+         */
+        _computeUrl() {
+            const baseHref = this.env.session.url('/web');
+            if (this.model === 'mail.channel') {
+                return `${baseHref}#action=mail.action_discuss&active_id=${this.model}_${this.id}`;
+            }
+            return `${baseHref}#model=${this.model}&id=${this.id}`;
+        }
+
+        /**
          * @private
          * @param {Object} param0
          * @param {boolean} param0.isTyping
@@ -1427,12 +1442,51 @@ function factory(dependencies) {
         }
 
         /**
+         * Cleans followers of current thread. In particular, chats are supposed
+         * to work with "members", not with "followers". This clean up is only
+         * necessary to remove illegitimate followers in stable version, it can
+         * be removed in master after proper migration to clean the database.
+         *
+         * @private
+         */
+        _onChangeFollowersPartner() {
+            if (this.channel_type !== 'chat') {
+                return;
+            }
+            for (const follower of this.followers) {
+                if (follower.partner) {
+                    follower.remove();
+                }
+            }
+        }
+
+        /**
          * @private
          */
         _onChangeLastSeenByCurrentPartnerMessageId() {
             this.env.messagingBus.trigger('o-thread-last-seen-by-current-partner-message-id-changed', {
                 thread: this,
             });
+        }
+
+        /**
+         * Fetches followers of chats when they are displayed for the first
+         * time. This is necessary to clean the followers.
+         * @see `_onChangeFollowersPartner` for more information.
+         *
+         * @private
+         */
+        _onChangeThreadViews() {
+            if (this.channel_type !== 'chat') {
+                return;
+            }
+            if (this.threadViews.length === 0) {
+                return;
+            }
+            if (this.areFollowersLoaded) {
+                return;
+            }
+            this.refreshFollowers();
         }
 
         /**
@@ -1563,6 +1617,13 @@ function factory(dependencies) {
             ],
         }),
         areAttachmentsLoaded: attr({
+            default: false,
+        }),
+        /**
+         * States whether followers have been loaded at least once for this
+         * thread.
+         */
+        areFollowersLoaded: attr({
             default: false,
         }),
         attachments: many2many('mail.attachment', {
@@ -1854,6 +1915,16 @@ function factory(dependencies) {
             dependencies: ['messages'],
         }),
         /**
+         * Not a real field, used to trigger `_onChangeFollowersPartner` when one of
+         * the dependencies changes.
+         */
+        onChangeFollowersPartner: attr({
+            compute: '_onChangeFollowersPartner',
+            dependencies: [
+                'followersPartner',
+            ],
+        }),
+        /**
          * Not a real field, used to trigger `_onChangeLastSeenByCurrentPartnerMessageId` when one of
          * the dependencies changes.
          */
@@ -1861,6 +1932,16 @@ function factory(dependencies) {
             compute: '_onChangeLastSeenByCurrentPartnerMessageId',
             dependencies: [
                 'lastSeenByCurrentPartnerMessageId',
+            ],
+        }),
+        /**
+         * Not a real field, used to trigger `_onChangeThreadViews` when one of
+         * the dependencies changes.
+         */
+        onChangeThreadView: attr({
+            compute: '_onChangeThreadViews',
+            dependencies: [
+                'threadViews',
             ],
         }),
         /**
@@ -2018,6 +2099,17 @@ function factory(dependencies) {
             compute: '_computeTypingStatusText',
             default: '',
             dependencies: ['orderedOtherTypingMembers'],
+        }),
+        /**
+         * URL to access to the conversation.
+         */
+        url: attr({
+            compute: '_computeUrl',
+            default: '',
+            dependencies: [
+                'id',
+                'model',
+            ]
         }),
         uuid: attr(),
     };
