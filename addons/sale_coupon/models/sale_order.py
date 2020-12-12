@@ -52,6 +52,8 @@ class SaleOrder(models.Model):
         res = super(SaleOrder, self).action_cancel()
         self.generated_coupon_ids.write({'state': 'expired'})
         self.applied_coupon_ids.write({'state': 'new'})
+        self.applied_coupon_ids.sales_order_id = False
+        self.recompute_coupon_lines()
         return res
 
     def action_draft(self):
@@ -228,7 +230,7 @@ class SaleOrder(models.Model):
         if coupon:
             coupon.write({'state': 'reserved'})
         else:
-            coupon = self.env['coupon.coupon'].create({
+            coupon = self.env['coupon.coupon'].sudo().create({
                 'program_id': program.id,
                 'state': 'reserved',
                 'partner_id': self.partner_id.id,

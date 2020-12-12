@@ -43,6 +43,12 @@ class ComposerTextInput extends Component {
          * Reference of the textarea. Useful to set height, selection and content.
          */
         this._textareaRef = useRef('textarea');
+        /**
+         * This is the invisible textarea used to compute the composer height
+         * based on the text content. We need it to downsize the textarea
+         * properly without flicker.
+         */
+        this._mirroredTextareaRef = useRef('mirroredTextarea');
     }
 
     //--------------------------------------------------------------------------
@@ -148,11 +154,14 @@ class ComposerTextInput extends Component {
             return;
         }
         this._textareaRef.el.value = this.composer.textInputContent;
-        this._textareaRef.el.setSelectionRange(
-            this.composer.textInputCursorStart,
-            this.composer.textInputCursorEnd,
-            this.composer.textInputSelectionDirection,
-        );
+        this._mirroredTextareaRef.el.value = this.composer.textInputContent;
+        if (this.composer.hasFocus) {
+            this._textareaRef.el.setSelectionRange(
+                this.composer.textInputCursorStart,
+                this.composer.textInputCursorEnd,
+                this.composer.textInputSelectionDirection,
+            );
+        }
         this._updateHeight();
     }
 
@@ -162,8 +171,7 @@ class ComposerTextInput extends Component {
      * @private
      */
     _updateHeight() {
-        this._textareaRef.el.style.height = "0px";
-        this._textareaRef.el.style.height = (this._textareaRef.el.scrollHeight) + "px";
+        this._textareaRef.el.style.height = (this._mirroredTextareaRef.el.scrollHeight) + "px";
     }
 
     //--------------------------------------------------------------------------

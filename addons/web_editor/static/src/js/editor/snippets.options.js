@@ -1575,7 +1575,7 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
         this.inputEl.setAttribute('data-target', '#' + datetimePickerId);
 
         const datepickersOptions = {
-            minDate: moment({ y: 1 }),
+            minDate: moment({ y: 1000 }),
             maxDate: moment().add(200, 'y'),
             calendarWeeks: true,
             defaultDate: moment().format(),
@@ -4005,6 +4005,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         } else {
             // Remove custom bg image and let the shape class set the bg shape
             $(shapeContainer).css('background-image', '');
+            $(shapeContainer).css('background-position', '');
         }
         if (previewMode === false) {
             this.prevShapeContainer = shapeContainer.cloneNode(true);
