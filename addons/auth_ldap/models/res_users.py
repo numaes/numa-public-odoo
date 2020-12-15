@@ -15,9 +15,9 @@ class Users(models.Model):
             return super(Users, cls)._login(db, login, password, user_agent_env=user_agent_env)
         except AccessDenied as e:
             with registry(db).cursor() as cr:
-                cr.execute("SELECT id FROM res_users WHERE lower(login)=%s", (login,))
+                cr.execute("SELECT id FROM res_users WHERE lower(login)=lower(%s)", (login,))
                 res = cr.fetchone()
-                if res:
+                if not res:
                     raise e
 
                 env = api.Environment(cr, SUPERUSER_ID, {})
