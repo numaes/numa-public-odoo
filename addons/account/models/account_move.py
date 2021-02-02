@@ -445,10 +445,10 @@ class AccountMove(models.Model):
 
         self._recompute_dynamic_lines(recompute_tax_base_amount=True)
 
-    @api.onchange('payment_reference')
+    @api.onchange('payment_reference', 'ref')
     def _onchange_payment_reference(self):
         for line in self.line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable')):
-            line.name = self.payment_reference
+            line.name = self.payment_reference or self.ref
 
     @api.onchange('invoice_vendor_bill_id')
     def _onchange_invoice_vendor_bill(self):
@@ -619,19 +619,22 @@ class AccountMove(models.Model):
                     'tax_base_amount': 0.0,
                     'grouping_dict': False,
                 }
-        self.line_ids -= to_remove
+        if not recompute_tax_base_amount:
+            self.line_ids -= to_remove
 
         # ==== Mount base lines ====
         for line in self.line_ids.filtered(lambda line: not line.tax_repartition_line_id):
             # Don't call compute_all if there is no tax.
             if not line.tax_ids:
-                line.tax_tag_ids = [(5, 0, 0)]
+                if not recompute_tax_base_amount:
+                    line.tax_tag_ids = [(5, 0, 0)]
                 continue
 
             compute_all_vals = _compute_base_line_taxes(line)
 
             # Assign tags on base line
-            line.tax_tag_ids = compute_all_vals['base_tags'] or [(5, 0, 0)]
+            if not recompute_tax_base_amount:
+                line.tax_tag_ids = compute_all_vals['base_tags'] or [(5, 0, 0)]
 
             tax_exigible = True
             for tax_vals in compute_all_vals['taxes']:
@@ -653,20 +656,22 @@ class AccountMove(models.Model):
                 taxes_map_entry['amount'] += tax_vals['amount']
                 taxes_map_entry['tax_base_amount'] += self._get_base_amount_to_display(tax_vals['base'], tax_repartition_line, tax_vals['group'])
                 taxes_map_entry['grouping_dict'] = grouping_dict
-            line.tax_exigible = tax_exigible
+            if not recompute_tax_base_amount:
+                line.tax_exigible = tax_exigible
 
         # ==== Process taxes_map ====
         for taxes_map_entry in taxes_map.values():
             # The tax line is no longer used in any base lines, drop it.
             if taxes_map_entry['tax_line'] and not taxes_map_entry['grouping_dict']:
-                self.line_ids -= taxes_map_entry['tax_line']
+                if not recompute_tax_base_amount:
+                    self.line_ids -= taxes_map_entry['tax_line']
                 continue
 
             currency = self.env['res.currency'].browse(taxes_map_entry['grouping_dict']['currency_id'])
 
             # Don't create tax lines with zero balance.
             if currency.is_zero(taxes_map_entry['amount']):
-                if taxes_map_entry['tax_line']:
+                if taxes_map_entry['tax_line'] and not recompute_tax_base_amount:
                     self.line_ids -= taxes_map_entry['tax_line']
                 continue
 
@@ -674,8 +679,9 @@ class AccountMove(models.Model):
             tax_base_amount = currency._convert(taxes_map_entry['tax_base_amount'], self.company_currency_id, self.company_id, self.date or fields.Date.context_today(self))
 
             # Recompute only the tax_base_amount.
-            if taxes_map_entry['tax_line'] and recompute_tax_base_amount:
-                taxes_map_entry['tax_line'].tax_base_amount = tax_base_amount
+            if recompute_tax_base_amount:
+                if taxes_map_entry['tax_line']:
+                    taxes_map_entry['tax_line'].tax_base_amount = tax_base_amount
                 continue
 
             balance = currency._convert(
@@ -939,7 +945,8 @@ class AccountMove(models.Model):
             # Recompute amls: update existing line or create new one for each payment term.
             new_terms_lines = self.env['account.move.line']
             for date_maturity, balance, amount_currency in to_compute:
-                if self.journal_id.company_id.currency_id.is_zero(balance) and len(to_compute) > 1:
+                currency = self.journal_id.company_id.currency_id
+                if currency and currency.is_zero(balance) and len(to_compute) > 1:
                     continue
 
                 if existing_terms_lines_index < len(existing_terms_lines):
@@ -1048,7 +1055,8 @@ class AccountMove(models.Model):
     def _compute_suitable_journal_ids(self):
         for m in self:
             journal_type = m.invoice_filter_type_domain or 'general'
-            domain = [('company_id', '=', m.company_id.id), ('type', '=', journal_type)]
+            company_id = m.company_id.id or self.env.company.id
+            domain = [('company_id', '=', company_id), ('type', '=', journal_type)]
             m.suitable_journal_ids = self.env['account.journal'].search(domain)
 
     @api.depends('posted_before', 'state', 'journal_id', 'date')
@@ -3629,10 +3637,10 @@ class AccountMoveLine(models.Model):
                 raise UserError(_('You cannot use this account (%s) in this journal, check the field \'Allowed Journals\' on the related account.', account.display_name))
 
             failed_check = False
-            if journal.type_control_ids or journal.account_control_ids:
+            if (journal.type_control_ids - journal.default_account_id.user_type_id) or journal.account_control_ids:
                 failed_check = True
                 if journal.type_control_ids:
-                    failed_check = account.user_type_id not in journal.type_control_ids
+                    failed_check = account.user_type_id not in (journal.type_control_ids - journal.default_account_id.user_type_id)
                 if failed_check and journal.account_control_ids:
                     failed_check = account not in journal.account_control_ids
 
@@ -4556,6 +4564,12 @@ class AccountMoveLine(models.Model):
             # Don't copy the name of a payment term line.
             if line.move_id.is_invoice() and line.account_id.user_type_id.type in ('receivable', 'payable'):
                 values['name'] = ''
+            # Don't copy restricted fields of notes
+            if line.display_type in ('line_section', 'line_note'):
+                values['amount_currency'] = 0
+                values['debit'] = 0
+                values['credit'] = 0
+                values['account_id'] = False
             if self._context.get('include_business_fields'):
                 line._copy_data_extend_business_fields(values)
         return res
