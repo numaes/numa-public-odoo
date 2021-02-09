@@ -154,6 +154,7 @@ class CompanyLDAP(models.Model):
             ldap_binddn = conf['ldap_binddn'] or ''
             conn.simple_bind_s(to_text(ldap_binddn), to_text(ldap_password))
             results = conn.search_st(to_text(conf['ldap_base']), ldap.SCOPE_SUBTREE, filter, retrieve_attributes, timeout=60)
+            _logger.info('LDAP result %s', str(results))
             conn.unbind()
         except ldap.INVALID_CREDENTIALS:
             _logger.error('LDAP bind failed.')
