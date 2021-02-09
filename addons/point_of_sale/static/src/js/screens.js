@@ -2036,7 +2036,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
             line.set_payment_status('waitingCancel');
             self.render_paymentlines();
 
-            payment_terminal.send_payment_cancel(self.pos.get_order(), cid).finally(function () {
+            payment_terminal.send_payment_cancel(self.pos.get_order(), cid).then(function () {
                 line.set_payment_status('retry');
                 self.render_paymentlines();
             });
@@ -2347,7 +2347,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
         var self = this;
         var order = this.pos.get_order();
 
-        if (order.is_paid_with_cash() && this.pos.config.iface_cashdrawer) { 
+        if ((order.is_paid_with_cash() || order.get_change()) && this.pos.config.iface_cashdrawer) { 
 
                 this.pos.proxy.printer.open_cashbox();
         }

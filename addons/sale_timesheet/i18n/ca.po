@@ -5,11 +5,11 @@
 # Translators:
 # Martin Trigaux, 2020
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2020
-# Carles Antoli <carlesantoli@hotmail.com>, 2020
 # RGB Consulting <odoo@rgbconsulting.com>, 2020
 # Quim - eccit <quim@eccit.com>, 2020
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2020
 # Arnau Ros, 2020
+# Carles Antoli <carlesantoli@hotmail.com>, 2020
 # jabelchi <jabelchi@gmail.com>, 2020
 # 
 msgid ""
@@ -1302,12 +1302,12 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__amount_untaxed_invoiced
 msgid "Untaxed Amount Invoiced"
-msgstr ""
+msgstr "Import sense impostos facturat"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__amount_untaxed_to_invoice
 msgid "Untaxed Amount To Invoice"
-msgstr ""
+msgstr "Import a facturar sense impostos"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_amount_untaxed_to_invoice

@@ -6,7 +6,6 @@
 # Tina Rittmüller <tr@ife.de>, 2019
 # f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2019
 # Michael Schütt <michael.schuett.lwl@gmail.com>, 2019
-# Caroline Renson <car@odoo.com>, 2019
 # Felix Schubert <felix.schubert@go-erp.com>, 2019
 # Wolfgang Taferner, 2019
 # Andreas Stauder <andreas.stauder@brain-tec.ch>, 2019
@@ -27,7 +26,8 @@
 # JEK Odoo <jek@odoo.com>, 2020
 # Ermin Trevisan <trevi@twanda.com>, 2020
 # Antoine Gilard <ang@odoo.com>, 2020
-# Andreas Jonderko <a.jonderko@gastronovi.com>, 2020
+# Caroline Renson <car@odoo.com>, 2021
+# Andreas Jonderko <a.jonderko@gastronovi.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -35,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Andreas Jonderko <a.jonderko@gastronovi.com>, 2020\n"
+"Last-Translator: Andreas Jonderko <a.jonderko@gastronovi.com>, 2021\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1599,6 +1599,12 @@ msgid "Customer is required for inbox / email notification"
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/models/mail_notification.py:0
+#, python-format
+msgid "Can not update the message or recipient of a notification."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__date
 #: model:ir.model.fields,field_description:mail.field_mail_message__date
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -1904,7 +1910,7 @@ msgstr "Dokumenten Name"
 #: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Document not downloadable"
-msgstr ""
+msgstr "Dokument kann nicht heruntergeladen werden"
 
 #. module: mail
 #. openerp-web
@@ -2465,6 +2471,12 @@ msgstr "Nur Abonnenten"
 #, python-format
 msgid "Following"
 msgstr "Abonniert"
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:778
+#, python-format
+msgid "Following invites are invalid as user groups do not match: %s"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__icon
@@ -3434,7 +3446,7 @@ msgstr "Als fertig makieren"
 #: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Mark as todo"
-msgstr ""
+msgstr "Als Aufgabe markieren"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_blacklist_menu
@@ -3748,7 +3760,7 @@ msgstr "Moderationsstatus"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__moderation_counter
 msgid "Moderation count"
-msgstr ""
+msgstr "Moderatoren Anzahl"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__is_moderator
@@ -5051,7 +5063,7 @@ msgstr "Rich-text/HTML-Nachricht"
 #: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Rotate"
-msgstr ""
+msgstr "Drehen"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
@@ -5258,7 +5270,7 @@ msgstr "Sende eine Nachricht"
 #: code:addons/mail/static/src/xml/discuss.xml:0
 #, python-format
 msgid "Send by mail"
-msgstr ""
+msgstr "Sende per E-Mail"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_partner_mass_mail
@@ -5642,6 +5654,12 @@ msgstr ""
 "versuchen, den richtigen Besitzer auf der Basis des Absenders zu finden oder"
 " das Administrator-Konto verwenden, wenn kein System-Benutzer für diese "
 "Adresse gefunden wird."
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "The partner can not join this channel"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_message.py:0
@@ -6382,6 +6400,24 @@ msgstr ""
 "Mailbox anzeigen zu lassen."
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not remove this partner from this channel"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not write on the record of other users"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not write on this field"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/res_users.py:0
 #, python-format
 msgid ""
@@ -6432,8 +6468,8 @@ msgstr "Du wurdest hinzugefügt zu "
 #. openerp-web
 #: code:addons/mail/static/src/js/services/mail_notification_manager.js:0
 #, python-format
-msgid "You have been invited to: "
-msgstr "Sie wurden eingeladen zu:"
+msgid "You have been invited to: %s"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_notify_moderation
@@ -6489,7 +6525,7 @@ msgstr "Du : "
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_light
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_paynow
 msgid "Your"
-msgstr "Ihr"
+msgstr "Ihr(e)"
 
 #. module: mail
 #. openerp-web
