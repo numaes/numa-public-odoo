@@ -11,7 +11,6 @@
 # woutvanrooij <wout.vanrooij@dynapps.be>, 2020
 # Antoine Gilard <ang@odoo.com>, 2020
 # ca2da8678cdb9cbd573eaf985f02c476, 2020
-# Martin Trigaux, 2020
 # Cécile Collart <cco@odoo.com>, 2020
 # Cas Vissers <c.vissers@brahoo.nl>, 2020
 # dpms <pieter.van.de.wygaert@telenet.be>, 2020
@@ -20,17 +19,18 @@
 # Wynand Tastenhoye <wta@odoo.com>, 2020
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
 # Eric Geens <ericgeens@yahoo.com>, 2020
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2020
 # Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2021
+# Martin Trigaux, 2021
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 15:35+0000\n"
+"POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2021\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -166,6 +166,12 @@ msgstr "-> Zie de gedeeltelijk afgeletterde boekingen"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ". You might want to put a higher number here."
 msgstr ". Misschien wilt u hier een hoger nummer neerzetten."
+
+#. module: account
+#: code:addons/account/wizard/account_resequence.py:0
+#, python-format
+msgid "... (%s other)"
+msgstr "... (%s overige)"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -1369,7 +1375,7 @@ msgstr "Rekening op product"
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__account_id
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line_template__account_id
 msgid "Account on which to post the tax amount"
-msgstr "Rekening waarop het BTW-bedrag te posten"
+msgstr "Rekening waarop het belastingbedrag moet worden geboekt"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_invoice_with_payments
@@ -2520,6 +2526,13 @@ msgid "Balance"
 msgstr "Saldo"
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_selection.js:0
+#, python-format
+msgid "Balance Sheet"
+msgstr "Balans"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__balance_end
 msgid "Balance as calculated based on Opening Balance and transaction lines"
 msgstr "Saldo berekend op basis van de openingsbalans en alle boekingen"
@@ -2850,7 +2863,7 @@ msgstr "Blokkerend bericht"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_type__include_initial_balance
 msgid "Bring Accounts Balance Forward"
-msgstr "Breng rekeningslado voorwaarts"
+msgstr "Breng rekeningsaldo voorwaarts"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
@@ -4492,7 +4505,7 @@ msgstr "Debet boeking"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__debit_account_id
 msgid "Debit account"
-msgstr "Debiteurenrekening"
+msgstr "Debet rekening"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matched_debit_ids
@@ -5296,7 +5309,7 @@ msgstr "Verwacht een grootboek rekeningschema"
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__account_type__expense
 #, python-format
 msgid "Expense"
-msgstr "Declaratie"
+msgstr "Kosten"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_category__property_account_expense_categ_id
@@ -6368,10 +6381,10 @@ msgid ""
 "transactions will be reconciled with entries on the Outstanding Receipts "
 "Account instead of the receivable account."
 msgstr ""
-"Inkomende betalingen die worden geactiveerd door facturen creditfacturen, "
+"Inkomende betalingen die worden geactiveerd door facturen/creditfacturen, "
 "worden geboekt op de rekening voor openstaande ontvangsten en worden "
 "weergegeven als blauwe lijnen bij het afletteren. Tijdens het afletterproces"
-" worden de betreffende transacties afgeletterd met posten op de rekening "
+" worden de betreffende transacties afgeletterd met boekingen op de rekening "
 "voor openstaande ontvangsten in plaats van de rekening voor ontvangsten."
 
 #. module: account
@@ -8134,8 +8147,8 @@ msgid ""
 "No users can edit journal entries related to a tax prior and inclusive of "
 "this date."
 msgstr ""
-"Er zijn geen gebruikers die de dagboek boekingen kunnen wijzigen gerelateerd"
-" aan een BTW voorafgaand of op deze datum."
+"Er zijn geen gebruikers die de boekingen kunnen wijzigen gerelateerd aan een"
+" BTW voorafgaand of op deze datum."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__fiscalyear_lock_date
@@ -8634,6 +8647,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.tax_adjustments_wizard
 msgid "Options"
 msgstr "Opties"
+
+#. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Or send a bill to %s@%s"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__ordering
@@ -9345,7 +9364,7 @@ msgstr "Portaal toegang URL"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Post"
-msgstr "Posten"
+msgstr "Boeken"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -9747,7 +9766,7 @@ msgstr "Debiteurenrekeningen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.product_template_form_view
 msgid "Receivables"
-msgstr "Debiteuren rekening"
+msgstr "Debiteuren"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment__payment_type__inbound
@@ -13361,7 +13380,7 @@ msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and vendor bills"
 msgstr ""
-"Deze betalingsvoorwaarden zullen gebruikt worden in plaats van de standaard "
+"Deze betalingscondities zullen gebruikt worden in plaats van de standaard "
 "voor inkooporders en leveranciersfacturen"
 
 #. module: account
@@ -13603,6 +13622,12 @@ msgid "Transfers"
 msgstr "Verplaatsingen"
 
 #. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Try a sample vendor bill"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__user_type_id
 #: model:ir.model.fields,field_description:account.field_account_account_template__user_type_id
 #: model:ir.model.fields,field_description:account.field_account_account_type__type
@@ -13809,6 +13834,12 @@ msgstr "Automatisch wisselkoersen updaten"
 #, python-format
 msgid "Upload"
 msgstr "Upload"
+
+#. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Upload your own bill"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__use_anglo_saxon
@@ -14348,7 +14379,7 @@ msgid ""
 "for vendor bill."
 msgstr ""
 "U kunt alleen een crediteurenrekening instellen op regels voor "
-"betalingsvoorwaarden voor leveranciersfacturen."
+"betalingscondities voor leveranciersfacturen."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14358,7 +14389,7 @@ msgid ""
 "lines for customer invoice."
 msgstr ""
 "U kunt alleen een debiteurenrekening instellen op regels voor "
-"betalingsvoorwaarden voor klantfacturen."
+"betalingscondities voor klantfacturen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__invoice_reference_type
@@ -14829,7 +14860,7 @@ msgstr "Maak een 'tussenrekening' aan in uw kas register."
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You need to add a line before posting."
-msgstr "Je moet een regel toevoegen voordat je kunt posten."
+msgstr "U moet een regel toevoegen voordat u boekt."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14925,7 +14956,7 @@ msgstr "dag(en) na het einde van de gefactureerde maand"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__day_after_invoice_date
 msgid "days after the invoice date"
-msgstr "dagen na de factureringsdatum"
+msgstr "dagen na factuurdatum"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard

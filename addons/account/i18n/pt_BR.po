@@ -10,6 +10,7 @@
 # Hildeberto Abreu Magalhães <hildeberto@gmail.com>, 2020
 # Eduardo Aparicio <eduardo.caparica@gmail.com>, 2020
 # Lucas Rabelo <lucas.rabelo@nextsolucoes.net.br>, 2020
+# Thiago Alves Cavalcante <thiagoalcav@gmail.com>, 2020
 # 6dd21606a11e5d7d8e94f6aa08fa2771_7a56499 <e74a6544b2625f1cc3570d395d0e36e4_602227>, 2020
 # Rui Andrada <shingonoide@gmail.com>, 2020
 # Cesar Silveira <cesar.consultant@gmail.com>, 2020
@@ -27,7 +28,6 @@
 # Paulo C Pinheiro <clanslive@gmail.com>, 2020
 # André Carvalho <and2carvalho@gmail.com>, 2020
 # Raphael Mendonça, 2020
-# Thiago Alves Cavalcante <thiagoalcav@gmail.com>, 2020
 # Clemilton Clementino <clemylton@hotmail.com>, 2020
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2020
 # Diego Bittencourt <diegomb86@gmail.com>, 2020
@@ -61,14 +61,14 @@
 # Marcelo at JambuTec <marcelo@jambu.com.br>, 2020
 # Frederico Freire Boaventura <fboaventura@live.com>, 2020
 # Liane Cafarate <lic@odoo.com>, 2020
-# Luis Felipe Miléo <mileo@kmee.com.br>, 2020
+# Luis Felipe Miléo <mileo@kmee.com.br>, 2021
 # Éder Brito <britoederr@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 15:35+0000\n"
+"POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
 "Last-Translator: Éder Brito <britoederr@gmail.com>, 2021\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
@@ -208,6 +208,12 @@ msgid ". You might want to put a higher number here."
 msgstr ". Você pode querer colocar um número maior aqui "
 
 #. module: account
+#: code:addons/account/wizard/account_resequence.py:0
+#, python-format
+msgid "... (%s other)"
+msgstr "... (%s outro)"
+
+#. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
 msgid "15 Days"
 msgstr "15 Dias"
@@ -235,7 +241,7 @@ msgstr "30% adiantado e restante no final do mês seguinte"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance_60days
 msgid "30% Now, Balance 60 Days"
-msgstr "30% Agora, Balanço de 60 dias"
+msgstr "30% Agora, Restante de 60 dias"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_45days
@@ -700,7 +706,7 @@ msgstr "<span role=\"separator\">Visualizar</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in General Ledger\">Balance in GL</span>"
-msgstr "<span title=\"Balance in General Ledger\">Balanço no GL</span>"
+msgstr "<span title=\"Balance in General Ledger\">Saldo no BG</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2557,6 +2563,13 @@ msgid "Balance"
 msgstr "Saldo"
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_selection.js:0
+#, python-format
+msgid "Balance Sheet"
+msgstr "Balanço patrimonial"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__balance_end
 msgid "Balance as calculated based on Opening Balance and transaction lines"
 msgstr ""
@@ -2737,7 +2750,7 @@ msgstr ""
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Bank: Balance"
-msgstr "Banco: Balanço"
+msgstr "Banco: Saldo"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_banks_menu
@@ -2889,7 +2902,7 @@ msgstr "Mensagem de Bloqueio"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_type__include_initial_balance
 msgid "Bring Accounts Balance Forward"
-msgstr "Antecipar Balanço de Contas"
+msgstr "Antecipar Saldo de Contas"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
@@ -8678,6 +8691,12 @@ msgid "Options"
 msgstr "Opções"
 
 #. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Or send a bill to %s@%s"
+msgstr "Ou envie uma conta para %s@%s"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__ordering
 msgid "Ordering"
 msgstr "Encomenda"
@@ -9174,7 +9193,7 @@ msgstr "Condição de pagamento: 30% adiantado no final do mês seguinte"
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_advance_60days
 msgid "Payment terms: 30% Now, Balance 60 Days"
-msgstr "Condição de pagamento: 30% agora, Saldo em 60 Dias"
+msgstr "Condição de pagamento: 30% agora, Restante em 60 Dias"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_45days
@@ -13636,6 +13655,12 @@ msgid "Transfers"
 msgstr "Transferências"
 
 #. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Try a sample vendor bill"
+msgstr "Experimente uma amostra de fatura de fornecedor"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__user_type_id
 #: model:ir.model.fields,field_description:account.field_account_account_template__user_type_id
 #: model:ir.model.fields,field_description:account.field_account_account_type__type
@@ -13842,6 +13867,12 @@ msgstr "Atualizar cambio de moedas automaticamente"
 #, python-format
 msgid "Upload"
 msgstr "Enviar"
+
+#. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Upload your own bill"
+msgstr "Carregue sua própria conta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__use_anglo_saxon
