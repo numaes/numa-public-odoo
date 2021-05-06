@@ -22,10 +22,10 @@
 # Maksym <ms@myodoo.pl>, 2020
 # Grażyna Grzelak <grazyna.grzelak@openglobe.pl>, 2020
 # Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2020
-# Martin Trigaux, 2020
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2020
 # Karol Rybak <karolrybak85@gmail.com>, 2020
 # Monika Grzelak <m.e.grzelak@gmail.com>, 2020
+# Martin Trigaux, 2021
 # Piotr Strębski <strebski@gmail.com>, 2021
 # 
 msgid ""
@@ -6346,6 +6346,11 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.website_search_box
+msgid "Search..."
+msgstr "Szukaj..."
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features
 msgid "Second Feature"
 msgstr "Druga funkcjonalność"
@@ -8471,7 +8476,7 @@ msgstr ""
 #: code:addons/website/controllers/backend.py:0
 #, python-format
 msgid "You do not have sufficient rights to perform that action."
-msgstr ""
+msgstr "Nie posiadasz wystarczających praw do przeprowadzenia tego działania."
 
 #. module: website
 #: code:addons/website/models/mixins.py:0
@@ -8729,7 +8734,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.menu,name:website.menu_website_dashboard
 msgid "eCommerce Dashboard"
-msgstr ""
+msgstr "Konsola eCommerce"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets

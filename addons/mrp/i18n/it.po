@@ -1687,12 +1687,12 @@ msgstr "Attesi"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__duration_expected
 msgid "Expected Duration"
-msgstr "Durata prevista"
+msgstr "Durata attesa"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__duration_expected
 msgid "Expected duration (in minutes)"
-msgstr "Durata prevista (in minuti)"
+msgstr "Durata attesa (in minuti)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__datas
@@ -2068,7 +2068,7 @@ msgstr "Trasferimenti influenzati:"
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "Import Template for Bills of Materials"
-msgstr "Importa Template della Bill of Materials"
+msgstr "Importa modello per le distinte base"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -2631,7 +2631,7 @@ msgstr "Segna completato"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_mps
 msgid "Master Production Schedule"
-msgstr "Programma principale di produzione"
+msgstr "Programma principale di produzione (MPS)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reservation_state
@@ -4755,7 +4755,7 @@ msgid ""
 "is useful if you have long lead time and if you produce based on sales "
 "forecasts."
 msgstr ""
-"L'utilizzo di un documento PPP, per programmare le operazioni di riordino e "
+"L'utilizzo di un documento MPS, per programmare le operazioni di riordino e "
 "produzione, è utile in presenza di tempi di risposta lunghi e se la "
 "produzione è basata su previsioni di vendita."
 
@@ -5255,6 +5255,15 @@ msgid ""
 "                            <span attrs=\"{'invisible':[('mrp_production_count', '=', 1)]}\">these manufacturing orders</span>.\n"
 "                        </b>"
 msgstr ""
+"È stata consumata una quantità diversa da quella attesa dei seguenti prodotti.\n"
+"                        <b attrs=\"{'invisible': [('consumption', '=', 'strict')]}\">\n"
+"                            Confermare che è stato fatto intenzionalmente.\n"
+"                        </b>\n"
+"                        <b attrs=\"{'invisible': [('consumption', '!=', 'strict')]}\">\n"
+"                            Controllare il consumo dei componenti o chiedere a un supervisore di convalidare \n"
+"                            <span attrs=\"{'invisible':[('mrp_production_count', '!=', 1)]}\">l'ordine di produzione</span>\n"
+"                            <span attrs=\"{'invisible':[('mrp_production_count', '=', 1)]}\">gli ordini di produzione</span>.\n"
+"                        </b>"
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:0
