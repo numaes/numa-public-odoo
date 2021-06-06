@@ -63,6 +63,9 @@ msgid ""
 "\n"
 "Transfers %s: You cannot validate these transfers if no quantities are reserved nor done. To force these transfers, switch in edit more and encode the done quantities."
 msgstr ""
+"\n"
+"\n"
+"Převody %s: Tyto převody nelze potvrdit, pokud není rezervováno ani provedeno žádné množství. Chcete-li tyto převody vynutit, přepněte se do editace více a zakódujte hotová množství."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -114,6 +117,7 @@ msgstr "${(object.name or '').replace('/','_')}"
 msgid ""
 "${object.company_id.name} Delivery Order (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} Objednávka dodávky (Ref ${object.name or 'n/a' })"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -1430,7 +1434,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Counterpart Locations"
-msgstr ""
+msgstr "Lokality protistrany"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -1697,7 +1701,7 @@ msgstr "Uzávěrka"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Deadline exceed or/and by the scheduled"
-msgstr ""
+msgstr "Termín překračuje nebo/i do plánovaného"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -1800,7 +1804,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move__delay_alert_date
 #: model:ir.model.fields,field_description:stock.field_stock_picking__delay_alert_date
 msgid "Delay Alert Date"
-msgstr ""
+msgstr "Datum upozornění na zpoždění"
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:0
@@ -2048,7 +2052,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_lot_on_delivery_slip
 msgid "Display Lots & Serial Numbers on Delivery Slips"
-msgstr ""
+msgstr "Zobrazení šarží a sériových čísel na dodacích listech"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule__display_name
@@ -2117,7 +2121,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
 msgid "Do you confirm you want to scrap"
-msgstr ""
+msgstr "Potvrzujete, že chcete vyřadit"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2411,7 +2415,7 @@ msgstr "Předpověď"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__forecast_availability
 msgid "Forecast Availability"
-msgstr ""
+msgstr "Předpověď dostupnosti"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
@@ -2515,7 +2519,7 @@ msgstr "Předpokládané zásoby"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 msgid "Forecasted with Pending"
-msgstr ""
+msgstr "Předpokládané s čekajícími"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_replenishment_header
@@ -3243,7 +3247,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__has_deadline_issue
 msgid "Is late"
-msgstr ""
+msgstr "Má zpoždění"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__has_deadline_issue
@@ -3988,7 +3992,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_putaway_tree
 msgid "No putaway rule found. Let's create one!"
-msgstr ""
+msgstr "Nebylo nalezeno žádné pravidlo pro odložení. Pojďme ho vytvořit!"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint
@@ -4129,6 +4133,8 @@ msgid ""
 "On hand quantity which hasn't been reserved on a transfer, in the default "
 "unit of measure of the product"
 msgstr ""
+"Množství na skladě, které nebylo rezervováno při převodu, ve výchozí měrné "
+"jednotce produktu."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
@@ -4221,7 +4227,7 @@ msgstr "Volitelné podrobnosti umístění, pouze pro informační účely"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__returned_move_ids
 msgid "Optional: all returned moves created from this move"
-msgstr ""
+msgstr "Nepovinné: všechny vrácené pohyby vytvořené z tohoto pohybu."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__move_dest_ids
@@ -5051,7 +5057,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_qty_multiple_check
 msgid "Qty Multiple must be greater than or equal to zero."
-msgstr ""
+msgstr "Qty Multiple musí být větší nebo rovno nule."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -5617,7 +5623,7 @@ msgstr "Trasy"
 #: model:ir.model.fields,field_description:stock.field_product_product__has_available_route_ids
 #: model:ir.model.fields,field_description:stock.field_product_template__has_available_route_ids
 msgid "Routes can be selected on this product"
-msgstr ""
+msgstr "U tohoto produktu lze vybrat trasy"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__resupply_wh_ids
@@ -6601,6 +6607,8 @@ msgid ""
 "The parent location that includes this location. Example : The 'Dispatch "
 "Zone' is the 'Gate 1' parent location."
 msgstr ""
+"Nadřazené umístění, které zahrnuje toto umístění. Příklad: \"Dispečerská "
+"zóna\" je nadřazená lokace \"Brána 1\"."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__qty_multiple
@@ -6778,6 +6786,7 @@ msgstr "Použití tohoto umístění nelze změnit, protože obsahuje produkty."
 msgid ""
 "This lot %(lot_name)s is incompatible with this product %(product_name)s"
 msgstr ""
+"Tato šarže %(lot_name)s je nekompatibilní s tímto produktem %(product_name)s"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_action
@@ -7115,7 +7124,7 @@ msgstr ""
 #: code:addons/stock/static/src/js/report_stock_forecasted.js:0
 #, python-format
 msgid "Try to add some incoming or outgoing transfers."
-msgstr ""
+msgstr "Zkuste přidat některé příchozí nebo odchozí přenosy."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule__type
@@ -8144,7 +8153,7 @@ msgstr "z "
 #: code:addons/stock/static/src/xml/popover_widget.xml:0
 #, python-format
 msgid "planned on"
-msgstr ""
+msgstr "plánováno na"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
