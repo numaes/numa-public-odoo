@@ -330,10 +330,14 @@ class QWeb(object):
             except (QWebException, TransactionRollbackError) as e:
                 raise e
             except Exception as e:
+                import sys, traceback
+                exc_type, exc_value, exc_traceback = sys.exc_info()
+                traceback_msg = ''.join(traceback.format_exception(exc_type, exc_value, exc_traceback))
                 path = log['last_path_node']
                 element, document = self.get_template(template, options)
                 node = element.getroottree().xpath(path) if ':' not in path else None
-                raise QWebException("Error to render compiling AST", e, path, node and etree.tostring(node[0], encoding='unicode'), name)
+                raise QWebException("Error to render compiling AST. Traceback:\n%s" % traceback_msg,
+                                    e, path, node and etree.tostring(node[0], encoding='unicode'), name)
 
         return _compiled_fn
 
