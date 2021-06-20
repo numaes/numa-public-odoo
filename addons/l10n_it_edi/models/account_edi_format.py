@@ -288,7 +288,7 @@ class AccountEdiFormat(models.Model):
                 if elements:
                     date_str = elements[0].text
                     date_obj = datetime.strptime(date_str, DEFAULT_FACTUR_ITALIAN_DATE_FORMAT)
-                    invoice_form.invoice_date = date_obj.strftime(DEFAULT_FACTUR_ITALIAN_DATE_FORMAT)
+                    invoice_form.invoice_date = date_obj
 
                 #  Dati Bollo. <2.1.1.6>
                 elements = body_tree.xpath('.//DatiGeneraliDocumento/DatiBollo/ImportoBollo')
@@ -393,7 +393,7 @@ class AccountEdiFormat(models.Model):
                     if elements:
                         message_to_log.append("%s<br/>%s" % (
                             _("Bank account not found, useful informations from XML file:"),
-                            self._compose_info_message(body_tree, './/DatiPagamento')))
+                            invoice._compose_info_message(body_tree, './/DatiPagamento')))
 
                 # Invoice lines. <2.2.1>
                 elements = body_tree.xpath('.//DettaglioLinee')
