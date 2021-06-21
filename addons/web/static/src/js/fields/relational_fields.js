@@ -3000,6 +3000,9 @@ var FieldSelection = AbstractField.extend({
         this.$el.empty();
         var required = this.attrs.modifiersValue && this.attrs.modifiersValue.required;
         for (var i = 0 ; i < this.values.length ; i++) {
+            if (!this.values[i])
+                continue;
+
             var disabled = required && this.values[i][0] === false;
 
             this.$el.append($('<option/>', {
