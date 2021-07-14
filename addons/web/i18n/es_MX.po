@@ -4,7 +4,9 @@
 # 
 # Translators:
 # Cécile Collart <cco@odoo.com>, 2021
+# Martin Trigaux, 2021
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021
+# Lucia Pacheco <lpo@odoo.com>, 2021
 # Braulio D. López Vázquez <bdl@odoo.com>, 2021
 # 
 msgid ""
@@ -685,7 +687,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Apply"
-msgstr ""
+msgstr "Aplicar"
 
 #. module: web
 #. openerp-web
@@ -951,7 +953,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 #, python-format
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #. module: web
 #. openerp-web
@@ -1284,7 +1286,7 @@ msgstr ""
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__country_id
 msgid "Country"
-msgstr ""
+msgstr "País"
 
 #. module: web
 #. openerp-web
@@ -1407,7 +1409,7 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
 msgid "Database"
-msgstr ""
+msgstr "Base de datos"
 
 #. module: web
 #. openerp-web
@@ -1466,7 +1468,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/web_calendar.xml:0
 #, python-format
 msgid "Delete"
-msgstr ""
+msgstr "Borrar"
 
 #. module: web
 #. openerp-web
@@ -1503,7 +1505,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/menu.xml:0
 #, python-format
 msgid "Description"
-msgstr ""
+msgstr "Descripción"
 
 #. module: web
 #. openerp-web
@@ -1517,7 +1519,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Discard"
-msgstr ""
+msgstr "Descartar"
 
 #. module: web
 #. openerp-web
@@ -1583,7 +1585,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Domain"
-msgstr ""
+msgstr "Dominio"
 
 #. module: web
 #. openerp-web
@@ -1649,7 +1651,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Dropdown menu"
-msgstr ""
+msgstr "Menú desplegable"
 
 #. module: web
 #. openerp-web
@@ -1733,7 +1735,7 @@ msgstr ""
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Error"
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
@@ -1870,7 +1872,7 @@ msgstr ""
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "File"
-msgstr ""
+msgstr "Archivo"
 
 #. module: web
 #. openerp-web
@@ -1960,7 +1962,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/name_and_signature.xml:0
 #, python-format
 msgid "Full Name"
-msgstr ""
+msgstr "Nombre completo"
 
 #. module: web
 #. openerp-web
@@ -1983,7 +1985,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/graph/graph_view.js:0
 #, python-format
 msgid "Graph"
-msgstr ""
+msgstr "Gráfica"
 
 #. module: web
 #. openerp-web
@@ -2328,7 +2330,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Loading..."
-msgstr ""
+msgstr "Cargando…"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
@@ -2580,7 +2582,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/basic/basic_model.js:0
 #, python-format
 msgid "New"
-msgstr ""
+msgstr "Nuevo"
 
 #. module: web
 #. openerp-web
@@ -2619,7 +2621,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/web_calendar.xml:0
 #, python-format
 msgid "Next"
-msgstr ""
+msgstr "Siguiente"
 
 #. module: web
 #. openerp-web
@@ -3016,12 +3018,12 @@ msgstr ""
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__partner_id
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
 msgid "Password"
-msgstr ""
+msgstr "Contraseña"
 
 #. module: web
 #. openerp-web
@@ -3212,7 +3214,7 @@ msgstr ""
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__primary_color
 msgid "Primary Color"
-msgstr ""
+msgstr "Color primario"
 
 #. module: web
 #. openerp-web
@@ -3220,14 +3222,14 @@ msgstr ""
 #: code:addons/web/static/src/xml/report.xml:0
 #, python-format
 msgid "Print"
-msgstr ""
+msgstr "Imprimir"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Priority"
-msgstr ""
+msgstr "Prioridad"
 
 #. module: web
 #. openerp-web
@@ -3389,7 +3391,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Remove"
-msgstr ""
+msgstr "Quitar"
 
 #. module: web
 #. openerp-web
@@ -3433,17 +3435,17 @@ msgstr ""
 #: code:addons/web/static/src/js/chrome/action_manager_report.js:0
 #, python-format
 msgid "Report"
-msgstr ""
+msgstr "Reporte"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__report_footer
 msgid "Report Footer"
-msgstr ""
+msgstr "Pie de página del reporte"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__report_layout_id
 msgid "Report Layout"
-msgstr ""
+msgstr "Diseño del reporte"
 
 #. module: web
 #. openerp-web
@@ -3614,7 +3616,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Select"
-msgstr ""
+msgstr "Seleccionar"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
@@ -3670,7 +3672,7 @@ msgstr ""
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
 msgid "Selection"
-msgstr ""
+msgstr "Presentación"
 
 #. module: web
 #. openerp-web
@@ -3713,7 +3715,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Settings"
-msgstr ""
+msgstr "Configuración"
 
 #. module: web
 #. openerp-web
@@ -3834,7 +3836,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/calendar/calendar_quick_create.js:0
 #, python-format
 msgid "Summary"
-msgstr ""
+msgstr "Resumen"
 
 #. module: web
 #. openerp-web
@@ -4081,7 +4083,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/web_calendar.xml:0
 #, python-format
 msgid "Today"
-msgstr ""
+msgstr "Hoy"
 
 #. module: web
 #. openerp-web
@@ -4117,7 +4119,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/pivot/pivot_model.js:0
 #, python-format
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #. module: web
 #. openerp-web
@@ -4215,7 +4217,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Unfold"
-msgstr ""
+msgstr "Desdoblar"
 
 #. module: web
 #. openerp-web
@@ -4362,7 +4364,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "User"
-msgstr ""
+msgstr "Usuario"
 
 #. module: web
 #. openerp-web
@@ -4377,7 +4379,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Users"
-msgstr ""
+msgstr "Usuarios"
 
 #. module: web
 #. openerp-web
@@ -4459,7 +4461,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Advertencia"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.benchmark_suite
@@ -4489,7 +4491,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/web_calendar.xml:0
 #, python-format
 msgid "Week"
-msgstr ""
+msgstr "Semana"
 
 #. module: web
 #. openerp-web
