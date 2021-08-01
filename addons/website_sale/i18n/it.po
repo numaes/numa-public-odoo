@@ -3282,14 +3282,14 @@ msgid ""
 "You are editing your <b>billing and shipping</b> addresses at the same time!<br/>\n"
 "                                            If you want to modify your shipping address, create a"
 msgstr ""
-"Questa operazione modifica sia l'indirizzo di <b>fatturazione</b> che quello di <b>spedizione</b>. <br/>\n"
+"L'operazione modifica sia l'indirizzo di <b>fatturazione</b> che quello di <b>spedizione</b>. <br/>\n"
 "                                            Per variare il recapito di spedizione, creare un"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_dashboard
 msgid "You don't have any order from the website"
-msgstr "Non hai nessun ordine sul sito web"
+msgstr "Nessun ordine proveniente dal sito web"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_order_action_to_invoice
