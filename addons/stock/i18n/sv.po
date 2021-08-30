@@ -9,12 +9,13 @@
 # Leif Persson <leifpz54@gmail.com>, 2019
 # Robert Frykelius <robert.frykelius@linserv.se>, 2019
 # Kristoffer Grundström <lovaren@gmail.com>, 2019
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2019
 # Haojun Zou <apollo_zhj@msn.com>, 2019
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2019
 # Kim Asplund <kim.asplund@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2020
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
+# Simon Strömberg <simon.stromberg@vertel.se>, 2021
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2020\n"
+"Last-Translator: Simon Strömberg <simon.stromberg@vertel.se>, 2021\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -275,6 +276,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -392,7 +395,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_warehouse_orderpoint_kanban
 msgid "<strong>Min qty :</strong>"
-msgstr ""
+msgstr "<strong>Min ant :</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -435,13 +438,13 @@ msgstr "<strong>Produkt</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_kanban
 msgid "<strong>Qty: </strong>"
-msgstr ""
+msgstr "<strong>Antal: </strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Quantity</strong>"
-msgstr ""
+msgstr "<strong>Kvantitet</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -461,7 +464,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_head
 msgid "<strong>The initial demand has been updated.</strong>"
-msgstr ""
+msgstr "<strong>Den ursprungliga efterfrågan har uppdaterats.</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -727,7 +730,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
 msgid "As soon as possible"
-msgstr ""
+msgstr "Så snart som möjligt"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__owner_id
@@ -1292,13 +1295,13 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "Create Backorder"
-msgstr ""
+msgstr "Skapa restorder"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Create Backorder?"
-msgstr ""
+msgstr "Skapa restorder"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_type_use_create_lots
@@ -1719,7 +1722,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Demand"
-msgstr ""
+msgstr "Efterfrågan"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__route_ids
@@ -1859,7 +1862,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
 msgid "Discard"
-msgstr "Förkasta"
+msgstr "Avbryt"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__display_assign_serial
@@ -2057,7 +2060,7 @@ msgstr "Förväntat datum"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_product_expiry
 msgid "Expiration Dates"
-msgstr ""
+msgstr "Förfallodatum"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
@@ -2324,7 +2327,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_has_variants
 #: model:ir.model.fields,field_description:stock.field_stock_rules_report__product_has_variants
 msgid "Has variants"
-msgstr ""
+msgstr "Har varianter"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posz
@@ -2398,7 +2401,7 @@ msgstr "Ikon"
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_exception_icon
 #: model:ir.model.fields,help:stock.field_stock_production_lot__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Ikon för att indikera en undantagsaktivitet."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction
@@ -2595,7 +2598,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_move_tree
 msgid "Initial Demand"
-msgstr ""
+msgstr "Initial efterfrågan"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -3227,7 +3230,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_main_attachment_id
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Huvudbilaga"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -3286,7 +3289,7 @@ msgstr "Manuell åtgärd"
 #: code:addons/stock/wizard/product_replenish.py:0
 #, python-format
 msgid "Manual Replenishment"
-msgstr ""
+msgstr "Manuell påfyllnad"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_config_settings__module_procurement_jit__0
@@ -3318,7 +3321,7 @@ msgstr "Största antal"
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_has_error
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Fel vid meddelandeleverans"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner__picking_warn_msg
@@ -3486,19 +3489,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_date_deadline
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Nästa slutdatum för aktivitet"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_summary
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "Nästa aktivitetssummering"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_type_id
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Nästa aktivitetstyp"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -3508,7 +3511,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "No Backorder"
-msgstr ""
+msgstr "Ingen restorder"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__no-message
@@ -3607,7 +3610,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_has_error_counter
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Antal fel"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction_counter
@@ -3621,7 +3624,7 @@ msgstr "Antal meddelanden som kräver en åtgärd"
 #: model:ir.model.fields,help:stock.field_stock_production_lot__message_has_error_counter
 #: model:ir.model.fields,help:stock.field_stock_scrap__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Antal meddelanden med leveransfel"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_unread_counter
@@ -4543,7 +4546,7 @@ msgstr "Antal"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "Quantity :"
-msgstr ""
+msgstr "Antal :"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__quantity_done
@@ -4699,7 +4702,7 @@ msgstr "Mottagningar"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Receive From"
-msgstr ""
+msgstr "Mottag från"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__one_step
@@ -5054,17 +5057,17 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_procurement_compute
 #: model_terms:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
 msgid "Run Scheduler"
-msgstr ""
+msgstr "Kör schemaläggare"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_scheduler_compute
 msgid "Run Scheduler Manually"
-msgstr ""
+msgstr "Kör schemaläggare manuellt"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 msgid "Run the scheduler"
-msgstr ""
+msgstr "Kör schemaläggaren"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_sms
@@ -5076,7 +5079,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_has_sms_error
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "SMS leveransfel"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__date_planned
@@ -5135,17 +5138,17 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_scrap
 msgid "Scrap Orders"
-msgstr ""
+msgstr "Skrota ordrar"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_stock_scrap
 msgid "Scrap products"
-msgstr ""
+msgstr "Skrota produkter"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__scrapped
 msgid "Scrapped"
-msgstr ""
+msgstr "Skrotad"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_stock_scrap
@@ -5300,6 +5303,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set product attributes (e.g. color, size) to manage variants"
 msgstr ""
+"Välj produktegenskaper (t.ex. färg, storlek) för att hantera varianter"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
@@ -5819,6 +5823,8 @@ msgid ""
 "The backorder <a href=# data-oe-model=stock.picking data-oe-id=%d>%s</a> has"
 " been created."
 msgstr ""
+"Restorder <a href=# data-oe-model=stock.picking data-oe-id=%d>%s</a> har "
+"skapats."
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq
@@ -6187,7 +6193,7 @@ msgstr "Att göra"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "To Process"
-msgstr ""
+msgstr "Att behandla"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -6460,7 +6466,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Unlock"
-msgstr ""
+msgstr "Lås upp"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_quant_package_form
@@ -6487,15 +6493,22 @@ msgid "Unreserve"
 msgstr "Avboka"
 
 #. module: stock
+#: code:addons/stock/models/stock_inventory.py:0
+#: code:addons/stock/models/stock_inventory.py:0
+#, python-format
+msgid "Unsupported search on %s outside of an Inventory Adjustment"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
 msgid "UoM"
-msgstr ""
+msgstr "Enhet"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
 msgid "UoM Categories"
-msgstr ""
+msgstr "Enhetskategorier"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_change_product_quantity
@@ -6504,6 +6517,7 @@ msgstr "Uppdatera produktantalet"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
+#: model:ir.actions.act_window,name:stock.dashboard_open_quants
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_product_view_form_easy_inherit_stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button

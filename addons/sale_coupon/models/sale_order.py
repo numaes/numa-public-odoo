@@ -95,11 +95,12 @@ class SaleOrder(models.Model):
                 order_total = sum(order_lines.mapped('price_total')) - (program.reward_product_quantity * program.reward_product_id.lst_price)
                 reward_product_qty = min(reward_product_qty, order_total // program.rule_minimum_amount)
         else:
-            reward_product_qty = min(max_product_qty, total_qty)
+            program_in_order = max_product_qty // program.rule_min_quantity
+            reward_product_qty = min(program.reward_product_quantity * program_in_order, total_qty)
 
         reward_qty = min(int(int(max_product_qty / program.rule_min_quantity) * program.reward_product_quantity), reward_product_qty)
         # Take the default taxes on the reward product, mapped with the fiscal position
-        taxes = program.reward_product_id.taxes_id
+        taxes = program.reward_product_id.taxes_id.filtered(lambda t: t.company_id.id == self.company_id.id)
         if self.fiscal_position_id:
             taxes = self.fiscal_position_id.map_tax(taxes)
         return {
@@ -141,6 +142,9 @@ class SaleOrder(models.Model):
 
     def _get_reward_values_discount(self, program):
         if program.discount_type == 'fixed_amount':
+            taxes = program.discount_line_product_id.taxes_id
+            if self.fiscal_position_id:
+                taxes = self.fiscal_position_id.map_tax(taxes)
             return [{
                 'name': _("Discount: ") + program.name,
                 'product_id': program.discount_line_product_id.id,
@@ -148,7 +152,7 @@ class SaleOrder(models.Model):
                 'product_uom_qty': 1.0,
                 'product_uom': program.discount_line_product_id.uom_id.id,
                 'is_reward_line': True,
-                'tax_id': [(4, tax.id, False) for tax in program.discount_line_product_id.taxes_id],
+                'tax_id': [(4, tax.id, False) for tax in taxes],
             }]
         reward_dict = {}
         lines = self._get_paid_order_lines()
@@ -510,6 +514,13 @@ class SaleOrderLine(models.Model):
             # If company_id is set, always filter taxes by the company
             taxes = line.tax_id.filtered(lambda r: not line.company_id or r.company_id == line.company_id)
             line.tax_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_shipping_id) if fpos else taxes
+
+    def _get_display_price(self, product):
+        # A product created from a promotion does not have a list_price.
+        # The price_unit of a reward order line is computed by the promotion, so it can be used directly
+        if self.is_reward_line:
+            return self.price_unit
+        return super()._get_display_price(product)
 
     # Invalidation of `sale.coupon.program.order_count`
     # `test_program_rules_validity_dates_and_uses`,

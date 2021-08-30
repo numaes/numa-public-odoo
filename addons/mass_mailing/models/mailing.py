@@ -181,7 +181,6 @@ class MassMailing(models.Model):
             total = row['expected'] = (row['expected'] - row['ignored']) or 1
             row['received_ratio'] = 100.0 * row['delivered'] / total
             row['opened_ratio'] = 100.0 * row['opened'] / total
-            row['clicks_ratio'] = 100.0 * row['clicked'] / total
             row['replied_ratio'] = 100.0 * row['replied'] / total
             row['bounced_ratio'] = 100.0 * row['bounced'] / total
             self.browse(row.pop('mailing_id')).update(row)
@@ -517,8 +516,11 @@ class MassMailing(models.Model):
     def action_send_mail(self, res_ids=None):
         author_id = self.env.user.partner_id.id
 
+        # If no recipient is passed, we don't want to use the recipients of the first
+        # mailing for all the others
+        initial_res_ids = res_ids
         for mailing in self:
-            if not res_ids:
+            if not initial_res_ids:
                 res_ids = mailing._get_remaining_recipients()
             if not res_ids:
                 raise UserError(_('There are no recipients selected.'))
