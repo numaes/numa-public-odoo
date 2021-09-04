@@ -4427,7 +4427,7 @@ msgstr "ABAJO"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_board_journal_1
 msgid "Dashboard"
-msgstr "Tablero"
+msgstr "Centro de comando"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_check_hash_integrity
