@@ -196,7 +196,7 @@ msgstr "(policz)"
 #: code:addons/web/static/src/js/control_panel/search_bar.js:0
 #, python-format
 msgid "(no result)"
-msgstr ""
+msgstr "(brak wyników)"
 
 #. module: web
 #. openerp-web
@@ -3190,7 +3190,7 @@ msgstr "Zaktualizuj tłumaczenia:"
 #, python-format
 msgid ""
 "Please use the copy button to report the error to your support service."
-msgstr "Użyj przycisku kopiuj, aby zgłosić błąd do usługi pomocy technicznej."
+msgstr "Użyj przycisku kopiuj, aby zgłosić błąd do pomocy technicznej."
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -4832,7 +4832,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "for:"
-msgstr ""
+msgstr "dla:"
 
 #. module: web
 #. openerp-web
