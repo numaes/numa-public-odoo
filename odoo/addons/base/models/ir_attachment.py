@@ -276,20 +276,23 @@ class IrAttachment(models.Model):
             :return mime : string indicating the mimetype, or application/octet-stream by default
         """
         mimetype = None
-        if values.get('mimetype'):
-            mimetype = values['mimetype']
-        if not mimetype and values.get('name'):
-            mimetype = mimetypes.guess_type(values['name'])[0]
-        if not mimetype and values.get('url'):
-            mimetype = mimetypes.guess_type(values['url'])[0]
-        if not mimetype or mimetype == 'application/octet-stream':
-            raw = None
-            if values.get('raw'):
-                raw = values['raw']
-            elif values.get('datas'):
-                raw = base64.b64decode(values['datas'])
-            if raw:
-                mimetype = guess_mimetype(raw)
+        try:
+            if values.get('mimetype'):
+                mimetype = values['mimetype']
+            if not mimetype and values.get('name'):
+                mimetype = mimetypes.guess_type(values['name'])[0]
+            if not mimetype and values.get('url'):
+                mimetype = mimetypes.guess_type(values['url'])[0]
+            if not mimetype or mimetype == 'application/octet-stream':
+                raw = None
+                if values.get('raw'):
+                    raw = values['raw']
+                elif values.get('datas'):
+                    raw = base64.b64decode(values['datas'])
+                if raw:
+                    mimetype = guess_mimetype(raw)
+        except:
+            pass
         return mimetype or 'application/octet-stream'
 
     def _postprocess_contents(self, values):
