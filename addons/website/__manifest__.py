@@ -20,10 +20,10 @@
     ],
     'installable': True,
     'data': [
-        'data/website_data.xml',
-        'data/website_visitor_cron.xml',
         'security/website_security.xml',
         'security/ir.model.access.csv',
+        'data/website_data.xml',
+        'data/website_visitor_cron.xml',
         'data/digest_data.xml',
         'views/assets.xml',
         'views/website_templates.xml',
