@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <record id="group_multi_website" model="res.groups">
+            <field name="name">Multi-website</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
         <!-- split between ir_ui_view & website_page record to keep external_id on ir_ui_view -->
         <record id="homepage" model="ir.ui.view">
             <field name="name">Home</field>
@@ -780,10 +784,6 @@
             <field name="limit" eval="16"/>
             <field name="name">Countries</field>
             <field name="website_id" ref="website.default_website"/>
-        </record>
-        <record id="group_multi_website" model="res.groups">
-            <field name="name">Multi-website</field>
-            <field name="category_id" ref="base.module_category_hidden"/>
         </record>
     </data>
 </odoo>
