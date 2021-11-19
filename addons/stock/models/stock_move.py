@@ -292,7 +292,7 @@ class StockMove(models.Model):
         self.ensure_one()
         if self.picking_type_id.show_reserved is False:
             return self.move_line_nosuggest_ids
-        return self.move_line_ids
+        return self.browse(self.ids).move_line_ids
 
     @api.depends('move_orig_ids.date', 'move_orig_ids.state', 'state', 'date')
     def _compute_delay_alert_date(self):
@@ -856,6 +856,7 @@ class StockMove(models.Model):
             moves_to_unlink._clean_merged()
             moves_to_unlink._action_cancel()
             moves_to_unlink.sudo().unlink()
+
         return (self | self.env['stock.move'].concat(*moves_to_merge)) - moves_to_unlink
 
     def _get_relevant_state_among_moves(self):
@@ -1495,7 +1496,7 @@ class StockMove(models.Model):
                 precision_rounding=rounding,
                 rounding_method='HALF-UP')
             extra_move_vals = self._prepare_extra_move_vals(extra_move_quantity)
-            extra_move = self.copy(default=extra_move_vals)
+            extra_move = self.browse(self.id).copy(default=extra_move_vals)
 
             merge_into_self = all(self[field] == extra_move[field] for field in self._prepare_merge_moves_distinct_fields())
 
@@ -1506,23 +1507,26 @@ class StockMove(models.Model):
                 extra_move = extra_move._action_confirm()
 
             # link it to some move lines. We don't need to do it for move since they should be merged.
-            if not merge_into_self or not extra_move.picking_id:
-                for move_line in self.move_line_ids.filtered(lambda ml: ml.qty_done):
-                    if float_compare(move_line.qty_done, extra_move_quantity, precision_rounding=rounding) <= 0:
-                        # move this move line to our extra move
-                        move_line.move_id = extra_move.id
-                        extra_move_quantity -= move_line.qty_done
-                    else:
-                        # split this move line and assign the new part to our extra move
-                        quantity_split = float_round(
-                            move_line.qty_done - extra_move_quantity,
-                            precision_rounding=self.product_uom.rounding,
-                            rounding_method='UP')
-                        move_line.qty_done = quantity_split
-                        move_line.copy(default={'move_id': extra_move.id, 'qty_done': extra_move_quantity, 'product_uom_qty': 0})
-                        extra_move_quantity -= extra_move_quantity
-                    if extra_move_quantity == 0.0:
-                        break
+            self = self.browse(self.ids)
+            for em_extra_move in extra_move:
+                if not merge_into_self or not em_extra_move.picking_id:
+                    for move_line in self.move_line_ids.filtered(lambda ml: ml.qty_done):
+                        if float_compare(move_line.qty_done, extra_move_quantity, precision_rounding=rounding) <= 0:
+                            # move this move line to our extra move
+                            move_line.move_id = em_extra_move.id
+                            extra_move_quantity -= move_line.qty_done
+                        else:
+                            # split this move line and assign the new part to our extra move
+                            quantity_split = float_round(
+                                move_line.qty_done - extra_move_quantity,
+                                precision_rounding=self.product_uom.rounding,
+                                rounding_method='UP')
+                            move_line.qty_done = quantity_split
+                            move_line.copy(default={'move_id': em_extra_move.id, 'qty_done': extra_move_quantity, 'product_uom_qty': 0})
+                            extra_move_quantity -= extra_move_quantity
+                        if extra_move_quantity == 0.0:
+                            break
+
         return extra_move | self
 
     def _action_done(self, cancel_backorder=False):
@@ -1539,10 +1543,11 @@ class StockMove(models.Model):
 
         # Create extra moves where necessary
         for move in moves:
-            if move.state == 'cancel' or move.quantity_done <= 0:
-                continue
+            if move.exists():
+                if move.state == 'cancel' or move.quantity_done <= 0:
+                    continue
 
-            moves_todo |= move._create_extra_move()
+                moves_todo |= move._create_extra_move()
 
         moves_todo._check_company()
         # Split moves where necessary and move quants
