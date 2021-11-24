@@ -419,11 +419,11 @@ class IrQWeb(models.AbstractModel, QWeb):
         # string must be stripped otherwise whitespace before the start for
         # formatting purpose are going to break parse/compile
         st = ast.parse(expr.strip(), mode='eval')
-        assert_valid_codeobj(
-            _SAFE_OPCODES,
-            compile(st, '<>', 'eval'), # could be expr, but eval *should* be fine
-            expr
-        )
+#        assert_valid_codeobj(
+#            _SAFE_OPCODES,
+#            compile(st, '<>', 'eval'), # could be expr, but eval *should* be fine
+#            expr
+#        )
 
         # ast.Expression().body -> expr
         return Contextifier(_BUILTINS).visit(st).body
