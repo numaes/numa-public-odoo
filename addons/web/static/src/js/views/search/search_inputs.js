@@ -176,7 +176,7 @@ var Field = Input.extend( /** @lends instance.web.search.Field# */ {
             return domains[0];
         }
         _.each(domains, Domain.prototype.normalizeArray);
-        var ors = _.times(domains.length - 1, _.constant("|"));
+        var ors = _.times(domains.length - 1, _.constant("&"));
         return ors.concat.apply(ors, domains);
     }
 });
