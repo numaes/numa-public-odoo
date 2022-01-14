@@ -39,6 +39,14 @@ class AccountMove(models.Model):
     _check_company_auto = True
     _sequence_index = "journal_id"
 
+    def init(self):
+        self.env.cr.execute("""
+            CREATE INDEX IF NOT EXISTS account_move_to_check_idx
+            ON account_move(journal_id) WHERE to_check = true;
+            CREATE INDEX IF NOT EXISTS account_move_payment_idx
+            ON account_move(journal_id, state, payment_state, move_type, date);
+        """)
+
     @property
     def _sequence_monthly_regex(self):
         return self.journal_id.sequence_override_regex or super()._sequence_monthly_regex
@@ -450,6 +458,7 @@ class AccountMove(models.Model):
         if self.is_sale_document(include_receipts=True) and self.partner_id:
             self.invoice_payment_term_id = self.partner_id.property_payment_term_id or self.invoice_payment_term_id
             new_term_account = self.partner_id.commercial_partner_id.property_account_receivable_id
+            self.narration = self.company_id.with_context(lang=self.partner_id.lang or self.env.lang).invoice_terms
         elif self.is_purchase_document(include_receipts=True) and self.partner_id:
             self.invoice_payment_term_id = self.partner_id.property_supplier_payment_term_id or self.invoice_payment_term_id
             new_term_account = self.partner_id.commercial_partner_id.property_account_payable_id
@@ -1735,9 +1744,9 @@ class AccountMove(models.Model):
             raise ValidationError(_('Posted journal entry must have an unique sequence number per company.\n'
                                     'Problematic numbers: %s\n') % ', '.join(r[1] for r in res))
 
-    @api.constrains('ref', 'move_type', 'partner_id', 'journal_id', 'invoice_date')
+    @api.constrains('ref', 'move_type', 'partner_id', 'journal_id', 'invoice_date', 'state')
     def _check_duplicate_supplier_reference(self):
-        moves = self.filtered(lambda move: move.is_purchase_document() and move.ref)
+        moves = self.filtered(lambda move: move.state == 'posted' and move.is_purchase_document() and move.ref)
         if not moves:
             return
 
@@ -3103,7 +3112,7 @@ class AccountMoveLine(models.Model):
         help="The move of this entry line.")
     move_name = fields.Char(string='Number', related='move_id.name', store=True, index=True)
     date = fields.Date(related='move_id.date', store=True, readonly=True, index=True, copy=False, group_operator='min')
-    ref = fields.Char(related='move_id.ref', store=True, copy=False, index=True, readonly=False)
+    ref = fields.Char(related='move_id.ref', store=True, copy=False, index=True, readonly=True)
     parent_state = fields.Selection(related='move_id.state', store=True, readonly=True)
     journal_id = fields.Many2one(related='move_id.journal_id', store=True, index=True, copy=False)
     company_id = fields.Many2one(related='move_id.company_id', store=True, readonly=True, default=lambda self: self.env.company)
