@@ -13,6 +13,7 @@ const dom = require('web.dom');
 var mixins = require('web.mixins');
 var publicWidget = require('web.public.widget');
 var utils = require('web.utils');
+const wUtils = require('website.utils');
 
 var qweb = core.qweb;
 
@@ -712,11 +713,13 @@ registry.mediaVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
             // Unsupported domain, don't inject iframe
             return;
         }
-        return this.$target.append($('<iframe/>', {
+        const iframeEl = $('<iframe/>', {
             src: src,
             frameborder: '0',
             allowfullscreen: 'allowfullscreen',
-        }))[0];
+        })[0];
+        this.$target.append(iframeEl);
+        return iframeEl;
     },
 });
 
@@ -1161,6 +1164,73 @@ registry.BottomFixedElement = publicWidget.Widget.extend({
                 }
             }
         }
+    },
+});
+
+/**
+ * The websites, by default, use image lazy loading via the loading="lazy"
+ * attribute on <img> elements. However, this does not work great on all
+ * browsers. This widget fixes the behaviors with as less code as possible.
+ */
+registry.ImagesLazyLoading = publicWidget.Widget.extend({
+    selector: '#wrapwrap',
+
+    /**
+     * @override
+     */
+    start() {
+        // For each image on the page, force a 1px min-height so that Chrome
+        // understands the image exists on different zoom sizes of the browser.
+        // Indeed, without this, on a 90% zoom, some images were never loaded.
+        // Once the image has been loaded, the 1px min-height is removed.
+        // Note: another possible solution without JS would be this CSS rule:
+        // ```
+        // [loading="lazy"] {
+        //     min-height: 1px;
+        // }
+        // ```
+        // This would solve the problem the same way with a CSS rule with a
+        // very small priority (any class setting a min-height would still have
+        // priority). However, the min-height would always be forced even once
+        // the image is loaded, which could mess with some layouts relying on
+        // the image intrinsic min-height.
+        const imgEls = this.$target[0].querySelectorAll('img[loading="lazy"]');
+        for (const imgEl of imgEls) {
+            // Write initial min-height on the dataset, so that it can also
+            // be properly restored on widget destroy.
+            imgEl.dataset.lazyLoadingInitialMinHeight = imgEl.style.minHeight;
+            imgEl.style.minHeight = '1px';
+            wUtils.onceAllImagesLoaded($(imgEl)).then(() => {
+                if (this.isDestroyed()) {
+                    return;
+                }
+                this._restoreImage(imgEl);
+            });
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+        const imgEls = this.$target[0].querySelectorAll('img[data-lazy-loading-initial-min-height]');
+        for (const imgEl of imgEls) {
+            this._restoreImage(imgEl);
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {HTMLImageElement} imgEl
+     */
+    _restoreImage(imgEl) {
+        imgEl.style.minHeight = imgEl.dataset.lazyLoadingInitialMinHeight;
+        delete imgEl.dataset.lazyLoadingInitialMinHeight;
     },
 });
 

@@ -298,6 +298,11 @@ msgid ""
 "founded TinyERP. This was the first phase of OpenERP which would later "
 "became Odoo, the most installed open-source business software worldwide."
 msgstr ""
+"Als 13 anys, John DOE ja estava començant a desenvolupar les seves primeres "
+"aplicacions empresarials per a clients. Després de dominar l'enginyeria "
+"civil, va fundar TinyERP. Aquesta va ser la primera fase de OpenERP que "
+"després es convertiria en Odoo, el programari empresarial de codi obert més "
+"instal·lat a tot el món."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -428,7 +433,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Date &amp; Time"
-msgstr ""
+msgstr "Data &amp; Hora"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__display_name
@@ -598,7 +603,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Google"
-msgstr ""
+msgstr "Google"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__id
@@ -625,7 +630,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__is_ongoing
 msgid "Is Ongoing"
-msgstr ""
+msgstr "Està en curs"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__is_participating
@@ -640,7 +645,7 @@ msgstr "Està publicat"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
 msgid "John DOE"
-msgstr ""
+msgstr "John DOE"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event____last_update
@@ -1087,7 +1092,7 @@ msgstr "Imatge del lloc web"
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__is_ongoing
 msgid "Whether event has begun"
-msgstr ""
+msgstr "Si l'esdeveniment ha començat"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__is_done

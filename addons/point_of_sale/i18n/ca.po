@@ -14,12 +14,12 @@
 # Carles Antoli <carlesantoli@hotmail.com>, 2020
 # Susanna Pujol, 2020
 # Martin Trigaux, 2021
-# Manel Fernandez Ramirez <manelfera@outlook.com>, 2021
 # José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
 # Quim - eccit <quim@eccit.com>, 2021
-# jabelchi, 2021
 # Harcogourmet, 2022
 # ericrolo, 2022
+# jabelchi, 2022
+# Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
 # marcescu, 2022
 # 
 msgid ""
@@ -2798,6 +2798,13 @@ msgid "Next Order List"
 msgstr "Llista de comandes següent"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
+#, python-format
+msgid "No"
+msgstr "No"
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "No Taxes"
@@ -3756,7 +3763,7 @@ msgstr "Fixat"
 #: code:addons/point_of_sale/static/src/xml/Screens/OrderManagementScreen/OrderManagementControlPanel.xml:0
 #, python-format
 msgid "Previous Order List"
-msgstr ""
+msgstr "Llista de comandes anterior"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4628,6 +4635,13 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
+#, python-format
+msgid "Some Serial/Lot Numbers are missing"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/static/src/js/Chrome.js:0
 #, python-format
 msgid ""
@@ -5490,7 +5504,7 @@ msgstr "No s'ha pogut descarregar la factura"
 #: code:addons/point_of_sale/static/src/js/Screens/OrderManagementScreen/OrderFetcher.js:0
 #, python-format
 msgid "Unable to fetch orders if offline."
-msgstr ""
+msgstr "No s'han pogut recuperar les comandes si estan fora de línia."
 
 #. module: point_of_sale
 #. openerp-web
@@ -5755,6 +5769,13 @@ msgid "Would you like to load demo data?"
 msgstr "Voleu carregar dades de demo?"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
+#, python-format
+msgid "Yes"
+msgstr "Sí"
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid ""
@@ -5776,6 +5797,15 @@ msgstr ""
 #, python-format
 msgid "You are not allowed to change this quantity"
 msgstr "No teniu permès canviar aquesta quantitat."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
+#, python-format
+msgid ""
+"You are trying to sell products with serial/lot numbers, but some of them are not set.\n"
+"Would you like to proceed anyway?"
+msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/account_bank_statement.py:0

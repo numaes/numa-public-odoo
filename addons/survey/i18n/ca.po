@@ -691,7 +691,7 @@ msgstr ""
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p1
 msgid "About you"
-msgstr ""
+msgstr "Quant a tu"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__survey_access_mode
@@ -1131,7 +1131,7 @@ msgstr ""
 #: model:ir.actions.report,name:survey.certification_report
 #: model:ir.model.fields.selection,name:survey.selection__gamification_challenge__challenge_category__certification
 msgid "Certifications"
-msgstr ""
+msgstr "Certificacions"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_res_partner__certifications_count
@@ -1153,7 +1153,7 @@ msgstr ""
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_2_choice_1
 msgid "Chair floor protection"
-msgstr ""
+msgstr "Protecció del terra de la cadira"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_header
@@ -1809,7 +1809,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_open
 msgid "Go to"
-msgstr ""
+msgstr "Anar"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p5_q1_sug1
@@ -3385,7 +3385,7 @@ msgstr ""
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q4_sug4
 msgid "South America"
-msgstr ""
+msgstr "Amèrica del Sud"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q2_sug4
@@ -3542,7 +3542,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model,name:survey.model_survey_invite
 msgid "Survey Invitation Wizard"
-msgstr ""
+msgstr "Assistent d'invitació a l'enquesta"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_question_answer
@@ -3729,7 +3729,7 @@ msgstr "La resposta ha d'estar en el tipus adequat"
 #: model:survey.question,validation_error_msg:survey.vendor_certification_page_3_question_6
 #, python-format
 msgid "The answer you entered is not valid."
-msgstr ""
+msgstr "La resposta que heu introduït no és vàlida."
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_attempts_limit_check

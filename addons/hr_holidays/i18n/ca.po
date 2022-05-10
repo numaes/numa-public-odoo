@@ -808,7 +808,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_dashboard
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_action_approve_department
 msgid "All Time Off"
-msgstr ""
+msgstr "Tot el Temps desactivat"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__duration_display
@@ -1342,7 +1342,7 @@ msgstr "Departament"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_departure_wizard
 msgid "Departure Wizard"
-msgstr ""
+msgstr "Assistent de sortida"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__name
@@ -1639,7 +1639,7 @@ msgstr "Informe resum de vacances"
 #: model:mail.message.subtype,description:hr_holidays.mt_leave_home_working
 #: model:mail.message.subtype,name:hr_holidays.mt_leave_home_working
 msgid "Home Working"
-msgstr ""
+msgstr "Treball a casa"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_hour_from
@@ -2480,7 +2480,7 @@ msgstr "Sol·licitat (Dies/Hores)"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_resource_calendar_leaves
 msgid "Resource Time Off Detail"
-msgstr ""
+msgstr "Detall del temps lliure dels recursos"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__responsible_id
@@ -2921,7 +2921,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_holiday_status_normal_tree
 msgid "Time Off Type"
-msgstr ""
+msgstr "Tipus de temps desactivat"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status

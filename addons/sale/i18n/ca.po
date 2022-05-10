@@ -2419,7 +2419,7 @@ msgstr "No s'ha trobat cap comanda per facturar"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
 msgid "No orders to upsell found."
-msgstr ""
+msgstr "No s'ha trobat cap ordre per pujar."
 
 #. module: sale
 #. openerp-web
@@ -3685,17 +3685,17 @@ msgstr "Comença a comprovar les dades de la teva empresa."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_order_confirmation_state
 msgid "State of the onboarding confirmation order step"
-msgstr ""
+msgstr "Estat del pas de l'ordre de confirmació d'embarcament"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_sample_quotation_state
 msgid "State of the onboarding sample quotation step"
-msgstr ""
+msgstr "Estat del pas de la cita de la mostra d'embarcament"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_quotation_onboarding_state
 msgid "State of the sale onboarding panel"
-msgstr ""
+msgstr "Panell sobre l'estat de la venda"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__state
@@ -3725,12 +3725,12 @@ msgstr "Stripe"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__stripe_publishable_key
 msgid "Stripe Publishable Key"
-msgstr ""
+msgstr "Clau publicable de Stripe"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__stripe_secret_key
 msgid "Stripe Secret Key"
-msgstr ""
+msgstr "Clau secreta de Stripe"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_subtotal
@@ -3772,6 +3772,8 @@ msgid ""
 "Technical Field, True if the pricelist was changed;\n"
 " this will then display a recomputation button"
 msgstr ""
+"Camp tècnic, Veritable si la llista de preus va ser modificada;\n"
+"Això mostrarà un botó de recomputació"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__display_type
@@ -3784,6 +3786,8 @@ msgid ""
 "Tell us why you are refusing this quotation, this will help us improve our "
 "services."
 msgstr ""
+"Diguin-nos per què rebutgen aquesta cita, això ens ajudarà a millorar els "
+"nostres serveis."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -3807,6 +3811,8 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s is cancelled. You "
 "cannot register an expense on a cancelled Sales Order."
 msgstr ""
+"La comanda de vendes %s vinculat al compte analític %s s'ha cancel·lat. No "
+"podeu registrar una despesa en una ordre de vendes cancel·lada."
 
 #. module: sale
 #: code:addons/sale/models/account_move.py:0
@@ -3816,6 +3822,9 @@ msgid ""
 "You cannot register an expense on a locked Sales Order. Please create a new "
 "SO linked to this Analytic Account."
 msgstr ""
+"La comanda de vendes %s enllaçat al compte analític %s està actualment "
+"bloquejat. No podeu registrar una despesa en una ordre de vendes bloquejada."
+" Si us plau, creu un nou SO vinculat a aquest compte analític."
 
 #. module: sale
 #: code:addons/sale/models/account_move.py:0
@@ -3824,6 +3833,8 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s must be validated "
 "before registering expenses."
 msgstr ""
+"La comanda de vendes %senllaçat al compte analític%s s'ha de validar abans "
+"de registrar les despeses."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__analytic_account_id
@@ -3837,11 +3848,13 @@ msgid ""
 "The delivery date is sooner than the expected date.You may be unable to "
 "honor the delivery date."
 msgstr ""
+"La data d'entrega és més ràpida que la data prevista.Pot ser que no puguis "
+"complir la data de lliurament."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "The fixed amount to be invoiced in advance, taxes excluded."
-msgstr ""
+msgstr "L'import fix a facturar per endavant, els impostos exclosos."
 
 #. module: sale
 #: code:addons/sale/models/product_template.py:0
@@ -3851,6 +3864,9 @@ msgid ""
 "%s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
+"Els productes següents no es poden restringir a l'empresa %s perquè ja s'han utilitzat en quotes o comandes de vendes en una altra empresa:\n"
+"%s\n"
+"Pots arxivar aquests productes i recrear-los amb la restricció de la teva empresa, o deixar-los com a productes compartits."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -3876,7 +3892,7 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The order is not in a state requiring customer signature."
-msgstr ""
+msgstr "La comanda no està en un estat que requereix la signatura del client."
 
 #. module: sale
 #: code:addons/sale/models/payment.py:0
@@ -3980,6 +3996,8 @@ msgid ""
 "This is a name that helps you keep track of your different campaign efforts,"
 " e.g. Fall_Drive, Christmas_Special"
 msgstr ""
+"Es tracta d'un nom que l'ajuda a realitzar un seguiment de les seves "
+"diferents campanyes, per exemple, Fall_Drive, Christmas_Special"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__commitment_date
@@ -3987,12 +4005,17 @@ msgid ""
 "This is the delivery date promised to the customer. If set, the delivery "
 "order will be scheduled based on this date rather than product lead times."
 msgstr ""
+"És la data de lliurament promès al client. Si s'estableix, l'ordre de "
+"lliurament es programarà en funció d'aquesta data i no dels terminis de "
+"lliurament del producte."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_move__medium_id
 #: model:ir.model.fields,help:sale.field_sale_order__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
 msgstr ""
+"Aquest és el mètode de lliurament, per exemple, targeta postal, correu "
+"electrònic o anunci publicitari"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_move__source_id
@@ -4001,6 +4024,8 @@ msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
 msgstr ""
+"Aquesta és la font de l'enllaç, per exemple, el motor de cerca, un altre "
+"domini, o el nom de la llista de correu electrònic"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_all
@@ -4054,6 +4079,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "This will update all unit prices based on the currently set pricelist."
 msgstr ""
+"Això actualitzarà tots els preus unitaris basats en la llista de preus "
+"actualment establerta."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__to_invoice
@@ -4093,6 +4120,8 @@ msgid ""
 "To speed up order confirmation, we can activate electronic signatures or "
 "payments."
 msgstr ""
+"Para agilizar la confirmación del pedido, podemos activar las firmas o los "
+"pagos electrónicos."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
