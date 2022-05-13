@@ -206,7 +206,6 @@ li > p {
     border-bottom-width: $border-width;
     border-bottom-style: solid;
     border-bottom-color: $border-color;
-    line-height: 2.1rem;
 }
 .o_page_header {
     @extend %o-page-header;
@@ -422,6 +421,7 @@ img.o_we_custom_image {
 .oe_attachments .o_image_small {
     height: 40px;
     width: 50px;
+    background-repeat: no-repeat;
 }
 
 form label {

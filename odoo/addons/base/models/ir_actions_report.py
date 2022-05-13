@@ -24,7 +24,7 @@ from lxml import etree
 from contextlib import closing
 from distutils.version import LooseVersion
 from reportlab.graphics.barcode import createBarcodeDrawing
-from PyPDF2 import PdfFileWriter, PdfFileReader
+from PyPDF2 import PdfFileWriter, PdfFileReader, utils
 from collections import OrderedDict
 from collections.abc import Iterable
 from PIL import Image, ImageFile
@@ -181,7 +181,7 @@ class IrActionsReport(models.Model):
             output_stream = io.BytesIO()
             img.convert("RGB").save(output_stream, format="pdf")
             return output_stream
-        return io.BytesIO(base64.decodestring(attachment.datas))
+        return io.BytesIO(base64.decodebytes(attachment.datas))
 
     def retrieve_attachment(self, record):
         '''Retrieve an attachment for a specific record.
@@ -213,7 +213,7 @@ class IrActionsReport(models.Model):
             return None
         attachment_vals = {
             'name': attachment_name,
-            'datas': base64.encodestring(buffer.getvalue()),
+            'datas': base64.encodebytes(buffer.getvalue()),
             'res_model': self.model,
             'res_id': record.id,
             'type': 'binary',
@@ -366,12 +366,16 @@ class IrActionsReport(models.Model):
             footer_node.append(node)
 
         # Retrieve bodies
+        layout_sections = None
         for node in root.xpath(match_klass.format('article')):
             layout_with_lang = layout
-            # set context language to body language
             if node.get('data-oe-lang'):
+                # context language to body language
                 layout_with_lang = layout_with_lang.with_context(lang=node.get('data-oe-lang'))
-            body = layout_with_lang.render(dict(subst=False, body=lxml.html.tostring(node), base_url=base_url))
+                # set header/lang to body lang prioritizing current user language
+                if not layout_sections or node.get('data-oe-lang') == self.env.lang:
+                    layout_sections = layout_with_lang
+            body = layout_with_lang.render(dict(subst=False, body=lxml.html.tostring(node), base_url=base_url, report_xml_id=self.xml_id))
             bodies.append(body)
             if node.get('data-oe-model') == self.model:
                 res_ids.append(int(node.get('data-oe-id', 0)))
@@ -389,8 +393,8 @@ class IrActionsReport(models.Model):
             if attribute[0].startswith('data-report-'):
                 specific_paperformat_args[attribute[0]] = attribute[1]
 
-        header = layout.render(dict(subst=True, body=lxml.html.tostring(header_node), base_url=base_url))
-        footer = layout.render(dict(subst=True, body=lxml.html.tostring(footer_node), base_url=base_url))
+        header = (layout_sections or layout).render(dict(subst=True, body=lxml.html.tostring(header_node), base_url=base_url))
+        footer = (layout_sections or layout).render(dict(subst=True, body=lxml.html.tostring(footer_node), base_url=base_url))
 
         return bodies, res_ids, header, footer, specific_paperformat_args
 
@@ -497,6 +501,9 @@ class IrActionsReport(models.Model):
             barcode_type = 'EAN13'
             if len(value) in (11, 12):
                 value = '0%s' % value
+        elif barcode_type == 'auto':
+            symbology_guess = {8: 'EAN8', 13: 'EAN13'}
+            barcode_type = symbology_guess.get(len(value), 'Code128')
         try:
             width, height, humanreadable, quiet = int(width), int(height), bool(int(humanreadable)), bool(int(quiet))
             # for `QR` type, `quiet` is not supported. And is simply ignored.
@@ -646,11 +653,40 @@ class IrActionsReport(models.Model):
         if len(streams) == 1:
             result = streams[0].getvalue()
         else:
-            result = self._merge_pdfs(streams)
+            try:
+                result = self._merge_pdfs(streams)
+            except utils.PdfReadError:
+                raise UserError(_("One of the documents, you try to merge is encrypted"))
 
         # We have to close the streams after PdfFileWriter's call to write()
         close_streams(streams)
         return result
+
+    def _get_unreadable_pdfs(self, streams):
+        unreadable_streams = []
+
+        for stream in streams:
+            writer = PdfFileWriter()
+            result_stream = io.BytesIO()
+            try:
+                reader = PdfFileReader(stream)
+                writer.appendPagesFromReader(reader)
+                writer.write(result_stream)
+            except utils.PdfReadError:
+                unreadable_streams.append(stream)
+
+        return unreadable_streams
+
+    def _raise_on_unreadable_pdfs(self, streams, stream_record):
+        unreadable_pdfs = self._get_unreadable_pdfs(streams)
+        if unreadable_pdfs:
+            records = [stream_record[s].name for s in unreadable_pdfs if s in stream_record]
+            raise UserError(_(
+                "Odoo is unable to merge the PDFs attached to the following records:\n"
+                "%s\n\n"
+                "Please exclude them from the selection to continue. It's possible to "
+                "still retrieve those PDFs by selecting each of the affected records "
+                "individually, which will avoid merging.") % "\n".join(records))
 
     def _merge_pdfs(self, streams):
         writer = PdfFileWriter()
@@ -700,6 +736,8 @@ class IrActionsReport(models.Model):
             return self.with_context(context).render_qweb_html(res_ids, data=data)[0]
 
         save_in_attachment = OrderedDict()
+        # Maps the streams in `save_in_attachment` back to the records they came from
+        stream_record = dict()
         if res_ids:
             # Dispatch the records by ones having an attachment and ones requesting a call to
             # wkhtmltopdf.
@@ -710,7 +748,9 @@ class IrActionsReport(models.Model):
                 for record_id in record_ids:
                     attachment = self.retrieve_attachment(record_id)
                     if attachment:
-                        save_in_attachment[record_id.id] = self._retrieve_stream_from_attachment(attachment)
+                        stream = self._retrieve_stream_from_attachment(attachment)
+                        save_in_attachment[record_id.id] = stream
+                        stream_record[stream] = record_id
                     if not self.attachment_use or not attachment:
                         wk_record_ids += record_id
             else:
@@ -722,6 +762,7 @@ class IrActionsReport(models.Model):
         # - The report is not fully present in attachments.
         if save_in_attachment and not res_ids:
             _logger.info('The PDF report has been generated from attachments.')
+            self._raise_on_unreadable_pdfs(save_in_attachment.values(), stream_record)
             return self._post_pdf(save_in_attachment), 'pdf'
 
         if self.get_wkhtmltopdf_state() == 'install':
@@ -752,6 +793,7 @@ class IrActionsReport(models.Model):
         )
         if res_ids:
             _logger.info('The PDF report has been generated for model: %s, records %s.' % (self.model, str(res_ids)))
+            self._raise_on_unreadable_pdfs(save_in_attachment.values(), stream_record)
             return self._post_pdf(save_in_attachment, pdf_content=pdf_content, res_ids=html_ids), 'pdf'
         return pdf_content, 'pdf'
 

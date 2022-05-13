@@ -5,8 +5,9 @@ import base64
 import re
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import float_round
 
-FK_HEAD_LIST = ['FK', 'KD_JENIS_TRANSAKSI', 'FG_PENGGANTI', 'NOMOR_FAKTUR', 'MASA_PAJAK', 'TAHUN_PAJAK', 'TANGGAL_FAKTUR', 'NPWP', 'NAMA', 'ALAMAT_LENGKAP', 'JUMLAH_DPP', 'JUMLAH_PPN', 'JUMLAH_PPNBM', 'ID_KETERANGAN_TAMBAHAN', 'FG_UANG_MUKA', 'UANG_MUKA_DPP', 'UANG_MUKA_PPN', 'UANG_MUKA_PPNBM', 'REFERENSI']
+FK_HEAD_LIST = ['FK', 'KD_JENIS_TRANSAKSI', 'FG_PENGGANTI', 'NOMOR_FAKTUR', 'MASA_PAJAK', 'TAHUN_PAJAK', 'TANGGAL_FAKTUR', 'NPWP', 'NAMA', 'ALAMAT_LENGKAP', 'JUMLAH_DPP', 'JUMLAH_PPN', 'JUMLAH_PPNBM', 'ID_KETERANGAN_TAMBAHAN', 'FG_UANG_MUKA', 'UANG_MUKA_DPP', 'UANG_MUKA_PPN', 'UANG_MUKA_PPNBM', 'REFERENSI', 'KODE_DOKUMEN_PENDUKUNG']
 
 LT_HEAD_LIST = ['LT', 'NPWP', 'NAMA', 'JALAN', 'BLOK', 'NOMOR', 'RT', 'RW', 'KECAMATAN', 'KELURAHAN', 'KABUPATEN', 'PROPINSI', 'KODE_POS', 'NOMOR_TELEPON']
 
@@ -63,10 +64,11 @@ class AccountMove(models.Model):
     def _constraint_kode_ppn(self):
         ppn_tag = self.env.ref('l10n_id.ppn_tag')
         for move in self.filtered(lambda m: m.l10n_id_kode_transaksi != '08'):
-            if any(ppn_tag.id in line.tag_ids.ids for line in move.line_ids if line.exclude_from_invoice_tab is False) and any(ppn_tag.id not in line.tag_ids.ids for line in move.line_ids if line.exclude_from_invoice_tab is False):
+            if any(ppn_tag.id in line.tag_ids.ids for line in move.line_ids if line.exclude_from_invoice_tab is False and not line.display_type) \
+                    and any(ppn_tag.id not in line.tag_ids.ids for line in move.line_ids if line.exclude_from_invoice_tab is False and not line.display_type):
                 raise UserError(_('Cannot mix VAT subject and Non-VAT subject items in the same invoice with this kode transaksi.'))
         for move in self.filtered(lambda m: m.l10n_id_kode_transaksi == '08'):
-            if any(ppn_tag.id in line.tag_ids.ids for line in move.line_ids if line.exclude_from_invoice_tab is False):
+            if any(ppn_tag.id in line.tag_ids.ids for line in move.line_ids if line.exclude_from_invoice_tab is False and not line.display_type):
                 raise UserError('Kode transaksi 08 is only for non VAT subject items.')
 
     @api.constrains('l10n_id_tax_number')
@@ -156,12 +158,11 @@ class AccountMove(models.Model):
             street = ', '.join([x for x in (move.partner_id.street, move.partner_id.street2) if x])
 
             invoice_npwp = '000000000000000'
-            if not move.partner_id.vat:
-                if move.partner_id.vat and len(move.partner_id.vat) >= 12:
-                    invoice_npwp = move.partner_id.vat
-                elif (not move.partner_id.vat or len(move.partner_id.vat) < 12) and move.partner_id.l10n_id_nik:
-                    invoice_npwp = move.partner_id.l10n_id_nik
-                invoice_npwp = invoice_npwp.replace('.', '').replace('-', '')
+            if move.partner_id.vat and len(move.partner_id.vat) >= 12:
+                invoice_npwp = move.partner_id.vat
+            elif (not move.partner_id.vat or len(move.partner_id.vat) < 12) and move.partner_id.l10n_id_nik:
+                invoice_npwp = move.partner_id.l10n_id_nik
+            invoice_npwp = invoice_npwp.replace('.', '').replace('-', '')
 
             # Here all fields or columns based on eTax Invoice Third Party
             eTax['KD_JENIS_TRANSAKSI'] = move.l10n_id_tax_number[0:2] or 0
@@ -173,15 +174,16 @@ class AccountMove(models.Model):
             eTax['NPWP'] = invoice_npwp
             eTax['NAMA'] = move.partner_id.name if eTax['NPWP'] == '000000000000000' else move.partner_id.l10n_id_tax_name or move.partner_id.name
             eTax['ALAMAT_LENGKAP'] = move.partner_id.contact_address.replace('\n', '') if eTax['NPWP'] == '000000000000000' else move.partner_id.l10n_id_tax_address or street
-            eTax['JUMLAH_DPP'] = int(round(move.amount_untaxed, 0)) # currency rounded to the unit
-            eTax['JUMLAH_PPN'] = int(round(move.amount_tax, 0))
+            eTax['JUMLAH_DPP'] = int(float_round(move.amount_untaxed, 0)) # currency rounded to the unit
+            eTax['JUMLAH_PPN'] = int(float_round(move.amount_tax, 0))
             eTax['ID_KETERANGAN_TAMBAHAN'] = '1' if move.l10n_id_kode_transaksi == '07' else ''
             eTax['REFERENSI'] = number_ref
+            eTax['KODE_DOKUMEN_PENDUKUNG'] = '0'
 
-            lines = move.line_ids.filtered(lambda x: x.product_id.id == int(dp_product_id) and x.price_unit < 0)
+            lines = move.line_ids.filtered(lambda x: x.product_id.id == int(dp_product_id) and x.price_unit < 0 and not x.display_type)
             eTax['FG_UANG_MUKA'] = 0
-            eTax['UANG_MUKA_DPP'] = int(abs(sum(lines.mapped('price_subtotal'))))
-            eTax['UANG_MUKA_PPN'] = int(abs(sum(lines.mapped(lambda l: l.price_total - l.price_subtotal))))
+            eTax['UANG_MUKA_DPP'] = int(abs(sum(lines.mapped(lambda l: float_round(l.price_subtotal, 0)))))
+            eTax['UANG_MUKA_PPN'] = int(abs(sum(lines.mapped(lambda l: float_round(l.price_total - l.price_subtotal, 0)))))
 
             company_npwp = company_id.partner_id.vat or '000000000000000'
 
@@ -194,7 +196,7 @@ class AccountMove(models.Model):
             # HOW TO ADD 2 line to 1 line for free product
             free, sales = [], []
 
-            for line in move.line_ids.filtered(lambda l: not l.exclude_from_invoice_tab):
+            for line in move.line_ids.filtered(lambda l: not l.exclude_from_invoice_tab and not l.display_type):
                 # *invoice_line_unit_price is price unit use for harga_satuan's column
                 # *invoice_line_quantity is quantity use for jumlah_barang's column
                 # *invoice_line_total_price is bruto price use for harga_total's column
@@ -214,10 +216,10 @@ class AccountMove(models.Model):
                 line_dict = {
                     'KODE_OBJEK': line.product_id.default_code or '',
                     'NAMA': line.product_id.name or '',
-                    'HARGA_SATUAN': int(invoice_line_unit_price),
+                    'HARGA_SATUAN': int(float_round(invoice_line_unit_price, 0)),
                     'JUMLAH_BARANG': line.quantity,
-                    'HARGA_TOTAL': int(invoice_line_total_price),
-                    'DPP': int(line.price_subtotal),
+                    'HARGA_TOTAL': int(float_round(invoice_line_total_price, 0)),
+                    'DPP': int(float_round(line.price_subtotal, 0)),
                     'product_id': line.product_id.id,
                 }
 
@@ -226,16 +228,16 @@ class AccountMove(models.Model):
                         free_tax_line += (line.price_subtotal * (tax.amount / 100.0)) * -1.0
 
                     line_dict.update({
-                        'DISKON': int(invoice_line_total_price - line.price_subtotal),
-                        'PPN': int(free_tax_line),
+                        'DISKON': int(float_round(invoice_line_total_price - line.price_subtotal, 0)),
+                        'PPN': int(float_round(free_tax_line, 0)),
                     })
                     free.append(line_dict)
                 elif line.price_subtotal != 0.0:
                     invoice_line_discount_m2m = invoice_line_total_price - line.price_subtotal
 
                     line_dict.update({
-                        'DISKON': int(invoice_line_discount_m2m),
-                        'PPN': int(tax_line),
+                        'DISKON': int(float_round(invoice_line_discount_m2m, 0)),
+                        'PPN': int(float_round(tax_line, 0)),
                     })
                     sales.append(line_dict)
 
@@ -258,14 +260,14 @@ class AccountMove(models.Model):
                             if tax.amount > 0:
                                 tax_line += sale['DPP'] * (tax.amount / 100.0)
 
-                        sale['PPN'] = int(tax_line)
+                        sale['PPN'] = int(float_round(tax_line, 0))
 
                         free.remove(f)
 
                 sub_total_before_adjustment += sale['DPP']
                 sub_total_ppn_before_adjustment += sale['PPN']
                 bruto_total += sale['DISKON']
-                total_discount += round(sale['DISKON'], 2)
+                total_discount += float_round(sale['DISKON'], 2)
 
             output_head += _csv_row(fk_values_list, delimiter)
             output_head += _csv_row(lt_values_list, delimiter)

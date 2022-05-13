@@ -106,6 +106,17 @@ class TestExpression(TransactionCase):
         test('not ilike', 'B', ['0', 'a'])
         test('not like', 'AB', ['0', 'a', 'b', 'a b'])
 
+    def test_09_hierarchy_filtered_domain(self):
+        Partner = self.env['res.partner']
+        p = Partner.create({'name': 'dummy'})
+
+        # hierarchy without parent
+        self.assertFalse(p.parent_id)
+        p2 = self._search(Partner, [('parent_id', 'child_of', p.id)], [('id', '=', p.id)])
+        self.assertEqual(p2, p)
+        p3 = self._search(Partner, [('parent_id', 'parent_of', p.id)], [('id', '=', p.id)])
+        self.assertEqual(p3, p)
+
     def test_10_hierarchy_in_m2m(self):
         Partner = self.env['res.partner']
         Category = self.env['res.partner.category']
@@ -176,6 +187,41 @@ class TestExpression(TransactionCase):
         with self.assertLogs('odoo.osv.expression'):
             cats = self._search(Category, [('id', 'parent_of', False)])
         self.assertEqual(len(cats), 0)
+
+    @mute_logger('odoo.models.unlink')
+    def test_10_hierarchy_access(self):
+        user_demo = self.env.ref('base.user_demo')
+        Partner = self.env['res.partner'].with_user(user_demo)
+        top = Partner.create({'name': 'Top'})
+        med = Partner.create({'name': 'Medium', 'parent_id': top.id})
+        bot = Partner.create({'name': 'Bottom', 'parent_id': med.id})
+
+        # restrict access of user Demo to partners Top and Bottom
+        accessible = top + bot
+        self.env['ir.rule'].search([]).unlink()
+        self.env['ir.rule'].create({
+            'name': 'partners rule',
+            'model_id': self.env['ir.model']._get('res.partner').id,
+            'domain_force': str([('id', 'in', accessible.ids)]),
+        })
+
+        # these searches should return the subset of accessible nodes that are
+        # in the given hierarchy
+        self.assertEqual(Partner.search([]), accessible)
+        self.assertEqual(Partner.search([('id', 'child_of', top.ids)]), accessible)
+        self.assertEqual(Partner.search([('id', 'parent_of', bot.ids)]), accessible)
+
+        # same kind of search from another model
+        Bank = self.env['res.partner.bank'].with_user(user_demo)
+        bank_top, _bank_med, bank_bot = Bank.create([
+            {'acc_number': '1', 'partner_id': top.id},
+            {'acc_number': '2', 'partner_id': med.id},
+            {'acc_number': '3', 'partner_id': bot.id},
+        ])
+
+        self.assertEqual(Bank.search([('partner_id', 'in', accessible.ids)]), bank_top + bank_bot)
+        self.assertEqual(Bank.search([('partner_id', 'child_of', top.ids)]), bank_top + bank_bot)
+        self.assertEqual(Bank.search([('partner_id', 'parent_of', bot.ids)]), bank_top + bank_bot)
 
     def test_10_eq_lt_gt_lte_gte(self):
         # test if less/greater than or equal operators work
@@ -569,6 +615,17 @@ class TestExpression(TransactionCase):
         norm_domain = ['&', '&', '&'] + domain
         self.assertEqual(norm_domain, expression.normalize_domain(domain), "Non-normalized domains should be properly normalized")
 
+    def test_35_negating_thruty_leafs(self):
+        self.assertEqual(expression.distribute_not(['!', '!', expression.TRUE_LEAF]), [expression.TRUE_LEAF], "distribute_not applied wrongly")
+        self.assertEqual(expression.distribute_not(['!', '!', expression.FALSE_LEAF]), [expression.FALSE_LEAF], "distribute_not applied wrongly")
+        self.assertEqual(expression.distribute_not(['!', '!', '!', '!', expression.TRUE_LEAF]), [expression.TRUE_LEAF], "distribute_not applied wrongly")
+        self.assertEqual(expression.distribute_not(['!', '!', '!', '!', expression.FALSE_LEAF]), [expression.FALSE_LEAF], "distribute_not applied wrongly")
+
+        self.assertEqual(expression.distribute_not(['!', expression.TRUE_LEAF]), [expression.FALSE_LEAF], "distribute_not applied wrongly")
+        self.assertEqual(expression.distribute_not(['!', expression.FALSE_LEAF]), [expression.TRUE_LEAF], "distribute_not applied wrongly")
+        self.assertEqual(expression.distribute_not(['!', '!', '!', expression.TRUE_LEAF]), [expression.FALSE_LEAF], "distribute_not applied wrongly")
+        self.assertEqual(expression.distribute_not(['!', '!', '!', expression.FALSE_LEAF]), [expression.TRUE_LEAF], "distribute_not applied wrongly")
+
     def test_40_negating_long_expression(self):
         source = ['!', '&', ('user_id', '=', 4), ('partner_id', 'in', [1, 2])]
         expect = ['|', ('user_id', '!=', 4), ('partner_id', 'not in', [1, 2])]
@@ -762,6 +819,16 @@ class TestExpression(TransactionCase):
         # AND with OR with single FALSE_LEAF and normal leaf
         expr = expression.AND([expression.OR([false]), normal])
         self.assertEqual(expr, false)
+
+    def test_filtered_domain_order(self):
+        domain = [('name', 'ilike', 'a')]
+        countries = self.env['res.country'].search(domain)
+        self.assertGreater(len(countries), 1)
+        # same ids, same order
+        self.assertEqual(countries.filtered_domain(domain)._ids, countries._ids)
+        # again, trying the other way around
+        countries = countries.browse(reversed(countries._ids))
+        self.assertEqual(countries.filtered_domain(domain)._ids, countries._ids)
 
 
 class TestAutoJoin(TransactionCase):

@@ -12,8 +12,8 @@
 # Melroy van den Berg <webmaster1989@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Antoine Gilard <ang@odoo.com>, 2020
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2020\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -367,6 +367,14 @@ msgid "A Manufacturing Order is already done or cancelled."
 msgstr "Een productieorder is al gereed of geannuleerd!"
 
 #. module: mrp
+#: code:addons/mrp/models/stock_warehouse.py:0
+#, python-format
+msgid ""
+"A product with a kit-type bill of materials can not have a reordering rule."
+msgstr ""
+"Een product met een stuklijst van het type kit kan geen aanvulregel hebben."
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid "A workcenter cannot be an alternative of itself"
@@ -546,6 +554,15 @@ msgstr "Goedkeuren"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Archived"
 msgstr "Gearchiveerd"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid ""
+"At least one work order has a quantity produced lower than the quantity "
+"produced in the manufacturing order. You must complete the work orders "
+"before posting the inventory."
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -1909,6 +1926,17 @@ msgstr "Is de huidige gebruiker aan het werk"
 #, python-format
 msgid "It has already been unblocked."
 msgstr "Het is al gedeblokkeerd."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid ""
+"It is not possible to unplan one single Work Order. You should unplan the "
+"Manufacturing Order instead in order to unplan all the linked operations."
+msgstr ""
+"Het is niet mogelijk om van één enkele werkorder de planning ongedaan te "
+"maken. Je moet de planning van de productieorder in plaats daarvan ongedaan "
+"maken om alle gekoppelde bewerkingen te annuleren."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__type__phantom
@@ -3970,6 +3998,18 @@ msgstr ""
 "liggen. Corrigeer dit om de werkorder op te slaan."
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"The product has already been used at least once, editing its structure may "
+"lead to undesirable behaviours. You should rather archive the product and "
+"create a new one with a new bill of materials."
+msgstr ""
+"Het product is al minstens één keer gebruikt, het wijzigen van de structuur "
+"kan leiden tot ongewenst gedrag. Je kunt het product beter archiveren en een"
+" nieuwe aanmaken met een nieuwe stuklijst."
+
+#. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:0
 #, python-format
 msgid "The production order for '%s' has no quantity specified."
@@ -4859,7 +4899,7 @@ msgstr "Werknemer werkend aan dit werkorder."
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workorder_line
 msgid "Workorder move line"
-msgstr "Werkorder mutatie lijn"
+msgstr "Werkorder mutatieregel"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__worksheet
@@ -4907,6 +4947,16 @@ msgid "You can not consume without telling for which lot you consumed it"
 msgstr ""
 "U kunt niet verbruiken zonder dat u vertelt voor welke serienummer het "
 "gebruikt is."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"You can not create a kit-type bill of materials for products that have at "
+"least one reordering rule."
+msgstr ""
+"U kunt geen stuklijst van het type kit maken voor producten die ten minste "
+"één aanvulregel hebben."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -5030,6 +5080,16 @@ msgstr ""
 #, python-format
 msgid "You have to produce at least one %s."
 msgstr "U moet minimaal één %s produceren."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid ""
+"You must indicate a non-zero amount consumed for at least one of your "
+"components"
+msgstr ""
+"U moet een verbruikte hoeveelheid aangeven die niet gelijk is aan nul voor "
+"minstens één van uw componenten"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0

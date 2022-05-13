@@ -127,6 +127,7 @@ class IrAttachment(models.Model):
 
     def _mark_for_gc(self, fname):
         """ Add ``fname`` in a checklist for the filestore garbage collection. """
+        fname = re.sub('[.]', '', fname).strip('/\\')
         # we use a spooldir: add an empty file in the subdirectory 'checklist'
         full_path = os.path.join(self._full_path('checklist'), fname)
         if not os.path.exists(full_path):
@@ -166,23 +167,26 @@ class IrAttachment(models.Model):
                 fname = "%s/%s" % (dirname, filename)
                 checklist[fname] = os.path.join(dirpath, filename)
 
-        # determine which files to keep among the checklist
-        whitelist = set()
-        for names in cr.split_for_in_conditions(checklist):
-            cr.execute("SELECT store_fname FROM ir_attachment WHERE store_fname IN %s", [names])
-            whitelist.update(row[0] for row in cr.fetchall())
-
-        # remove garbage files, and clean up checklist
+        # Clean up the checklist. The checklist is split in chunks and files are garbage-collected
+        # for each chunk.
         removed = 0
-        for fname, filepath in checklist.items():
-            if fname not in whitelist:
-                try:
-                    os.unlink(self._full_path(fname))
-                    removed += 1
-                except (OSError, IOError):
-                    _logger.info("_file_gc could not unlink %s", self._full_path(fname), exc_info=True)
-            with tools.ignore(OSError):
-                os.unlink(filepath)
+        for names in cr.split_for_in_conditions(checklist):
+            # determine which files to keep among the checklist
+            cr.execute("SELECT store_fname FROM ir_attachment WHERE store_fname IN %s", [names])
+            whitelist = set(row[0] for row in cr.fetchall())
+
+            # remove garbage files, and clean up checklist
+            for fname in names:
+                filepath = checklist[fname]
+                if fname not in whitelist:
+                    try:
+                        os.unlink(self._full_path(fname))
+                        _logger.debug("_file_gc unlinked %s", self._full_path(fname))
+                        removed += 1
+                    except (OSError, IOError):
+                        _logger.info("_file_gc could not unlink %s", self._full_path(fname), exc_info=True)
+                with tools.ignore(OSError):
+                    os.unlink(filepath)
 
         # commit to release the lock
         cr.commit()
@@ -247,7 +251,9 @@ class IrAttachment(models.Model):
 
     def _check_contents(self, values):
         mimetype = values['mimetype'] = self._compute_mimetype(values)
-        xml_like = 'ht' in mimetype or 'xml' in mimetype # hta, html, xhtml, etc.
+        xml_like = 'ht' in mimetype or ( # hta, html, xhtml, etc.
+                'xml' in mimetype and    # other xml (svg, text/xml, etc)
+                not 'openxmlformats' in mimetype)  # exception for Office formats
         user = self.env.context.get('binary_field_real_user', self.env.user)
         force_text = (xml_like and (not user._is_system() or
             self.env.context.get('attachments_mime_plainxml')))
@@ -342,10 +348,10 @@ class IrAttachment(models.Model):
             self.env['ir.attachment'].flush(['res_model', 'res_id', 'create_uid', 'public', 'res_field'])
             self._cr.execute('SELECT res_model, res_id, create_uid, public, res_field FROM ir_attachment WHERE id IN %s', [tuple(self.ids)])
             for res_model, res_id, create_uid, public, res_field in self._cr.fetchall():
-                if not self.env.is_system() and res_field:
-                    raise AccessError(_("Sorry, you are not allowed to access this document."))
                 if public and mode == 'read':
                     continue
+                if not self.env.is_system() and (res_field or (not res_id and create_uid != self.env.uid)):
+                    raise AccessError(_("Sorry, you are not allowed to access this document."))
                 if not (res_model and res_id):
                     if create_uid != self._uid:
                         require_employee = True
@@ -388,11 +394,11 @@ class IrAttachment(models.Model):
         """Override read_group to add res_field=False in domain if not present."""
         if not fields:
             raise AccessError(_("Sorry, you must provide fields to read on attachments"))
+        groupby = [groupby] if isinstance(groupby, str) else groupby
         if any('(' in field for field in fields + groupby):
             raise AccessError(_("Sorry, the syntax 'name:agg(field)' is not available for attachments"))
         if not any(item[0] in ('id', 'res_field') for item in domain):
             domain.insert(0, ('res_field', '=', False))
-        groupby = [groupby] if isinstance(groupby, str) else groupby
         allowed_fields = self._read_group_allowed_fields()
         fields_set = set(field.split(':')[0] for field in fields + groupby)
         if not self.env.is_system() and (not fields or fields_set.difference(allowed_fields)):
@@ -403,7 +409,9 @@ class IrAttachment(models.Model):
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
         # add res_field=False in domain if not present; the arg[0] trick below
         # works for domain items and '&'/'|'/'!' operators too
+        discard_binary_fields_attachments = False
         if not any(arg[0] in ('id', 'res_field') for arg in args):
+            discard_binary_fields_attachments = True
             args.insert(0, ('res_field', '=', False))
 
         ids = super(IrAttachment, self)._search(args, offset=offset, limit=limit, order=order,
@@ -434,8 +442,8 @@ class IrAttachment(models.Model):
                 continue
             # model_attachments = {res_model: {res_id: set(ids)}}
             model_attachments[row['res_model']][row['res_id']].add(row['id'])
-            # Should not retrieve binary fields attachments
-            if row['res_field']:
+            # Should not retrieve binary fields attachments if not explicitly required
+            if discard_binary_fields_attachments and row['res_field']:
                 binary_fields_attachments.add(row['id'])
 
         if binary_fields_attachments:
@@ -460,11 +468,14 @@ class IrAttachment(models.Model):
         result = [id for id in orig_ids if id in ids]
 
         # If the original search reached the limit, it is important the
-        # filtered record set does so too. When a JS view recieve a
-        # record set whose length is bellow the limit, it thinks it
-        # reached the last page.
-        if len(orig_ids) == limit and len(result) < len(orig_ids):
-            result.extend(self._search(args, offset=offset + len(orig_ids),
+        # filtered record set does so too. When a JS view receive a
+        # record set whose length is below the limit, it thinks it
+        # reached the last page. To avoid an infinite recursion due to the
+        # permission checks the sub-call need to be aware of the number of
+        # expected records to retrieve
+        if len(orig_ids) == limit and len(result) < self._context.get('need', limit):
+            need = self._context.get('need', limit) - len(result)
+            result.extend(self.with_context(need=need)._search(args, offset=offset + len(orig_ids),
                                        limit=limit, order=order, count=count,
                                        access_rights_uid=access_rights_uid)[:limit - len(result)])
 
@@ -477,14 +488,16 @@ class IrAttachment(models.Model):
     def write(self, vals):
         self.check('write', values=vals)
         # remove computed field depending of datas
-        for field in ('file_size', 'checksum'):
+        for field in ('file_size', 'checksum', 'store_fname'):
             vals.pop(field, False)
         if 'mimetype' in vals or 'datas' in vals:
             vals = self._check_contents(vals)
         return super(IrAttachment, self).write(vals)
 
     def copy(self, default=None):
-        self.check('write')
+        if not (default or {}).keys() & {'datas', 'db_datas'}:
+            # ensure the content is kept and recomputes checksum/store_fname
+            default = dict(default or {}, datas=self.datas)
         return super(IrAttachment, self).copy(default)
 
     def unlink(self):
@@ -506,10 +519,16 @@ class IrAttachment(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         record_tuple_set = set()
+
+        # remove computed field depending of datas
+        vals_list = [{
+            key: value
+            for key, value
+            in vals.items()
+            if key not in ('file_size', 'checksum', 'store_fname')
+        } for vals in vals_list]
+
         for values in vals_list:
-            # remove computed field depending of datas
-            for field in ('file_size', 'checksum'):
-                values.pop(field, False)
             values = self._check_contents(values)
             if 'datas' in values:
                 values.update(self._get_datas_related_values(values.pop('datas'), values['mimetype']))
@@ -518,9 +537,11 @@ class IrAttachment(models.Model):
             # creating multiple attachments on a single record.
             record_tuple = (values.get('res_model'), values.get('res_id'))
             record_tuple_set.add(record_tuple)
-        for record_tuple in record_tuple_set:
-            (res_model, res_id) = record_tuple
-            self.check('create', values={'res_model':res_model, 'res_id':res_id})
+
+        # don't use possible contextual recordset for check, see commit for details
+        Attachments = self.browse()
+        for res_model, res_id in record_tuple_set:
+            Attachments.check('create', values={'res_model':res_model, 'res_id':res_id})
         return super(IrAttachment, self).create(vals_list)
 
     def _post_add_create(self):

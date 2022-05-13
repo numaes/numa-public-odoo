@@ -169,7 +169,8 @@ class account_journal(models.Model):
                 next_date = start_date + timedelta(days=7)
                 query += " UNION ALL ("+select_sql_clause+" and invoice_date_due >= '"+start_date.strftime(DF)+"' and invoice_date_due < '"+next_date.strftime(DF)+"')"
                 start_date = next_date
-
+        # Ensure results returned by postgres match the order of data list
+        query += " ORDER BY aggr_date ASC"
         self.env.cr.execute(query, query_args)
         query_results = self.env.cr.dictfetchall()
         is_sample_data = True
@@ -266,7 +267,7 @@ class account_journal(models.Model):
                     company_id
                 FROM account_move move
                 WHERE journal_id = %s
-                AND date <= %s
+                AND invoice_date_due <= %s
                 AND state = 'posted'
                 AND invoice_payment_state = 'not_paid'
                 AND type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt');
@@ -423,7 +424,15 @@ class account_journal(models.Model):
     def action_open_reconcile(self):
         if self.type in ['bank', 'cash']:
             # Open reconciliation view for bank statements belonging to this journal
-            bank_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids)]).mapped('line_ids')
+            limit = int(self.env["ir.config_parameter"].sudo().get_param("account.reconcile.batch", 1000))
+            bank_stmt = self.env['account.bank.statement.line'].search([
+                ('journal_id', 'in', self.ids),
+                # take not reconciled lines only. See _check_lines_reconciled method
+                ('account_id', '=', False),
+                ('journal_entry_ids', '=', False),
+                ('amount', '!=', 0),
+            ], limit=limit)
+
             return {
                 'type': 'ir.actions.client',
                 'tag': 'bank_statement_reconciliation_view',

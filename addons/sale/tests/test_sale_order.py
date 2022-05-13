@@ -24,6 +24,25 @@ class TestSaleOrder(TestCommonSaleNoChart):
         group_employee = cls.env.ref('base.group_user')
         cls.user_manager.write({'groups_id': [(6, 0, [group_salemanager.id, group_employee.id])]})
         cls.user_employee.write({'groups_id': [(6, 0, [group_salesman.id, group_employee.id])]})
+        cls.crm_team0 = cls.env['crm.team'].create({
+            'name': 'crm team 0',
+            'company_id': cls.env.user.company_id.id,
+        })
+        cls.crm_team1 = cls.env['crm.team'].create({
+            'name': 'crm team 1',
+            'company_id': cls.env.user.company_id.id,
+        })
+        cls.user_in_team = cls.env['res.users'].create({
+            'email': 'team0user@example.com',
+            'login': 'team0user',
+            'name': 'User in Team 0',
+            'sale_team_id': cls.crm_team0.id
+        })
+        cls.user_not_in_team = cls.env['res.users'].create({
+            'email': 'noteamuser@example.com',
+            'login': 'noteamuser',
+            'name': 'User Not In Team',
+        })
 
         # set up accounts and products and journals
         cls.setUpAdditionalAccounts()
@@ -514,3 +533,189 @@ class TestSaleOrder(TestCommonSaleNoChart):
         self.assertEqual(so_line_1.price_unit, 100.0)
         self.assertEqual(so_line_2.discount, 10)
         self.assertEqual(so_line_2.price_unit, 20)
+
+    def test_assign_sales_team_from_partner_user(self):
+        """Use the team from the customer's sales person, if it is set"""
+        partner = self.env['res.partner'].create({
+            'name': 'Customer of User In Team',
+            'user_id': self.user_in_team.id,
+            'team_id': self.crm_team1.id,
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': partner.id,
+        })
+        sale_order.onchange_partner_id()
+        self.assertEqual(sale_order.team_id.id, self.crm_team0.id, 'Should assign to team of sales person')
+
+    def test_assign_sales_team_from_partner_team(self):
+        """If no team set on the customer's sales person, fall back to the customer's team"""
+        partner = self.env['res.partner'].create({
+            'name': 'Customer of User Not In Team',
+            'user_id': self.user_not_in_team.id,
+            'team_id': self.crm_team1.id,
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': partner.id,
+        })
+        sale_order.onchange_partner_id()
+        self.assertEqual(sale_order.team_id.id, self.crm_team1.id, 'Should assign to team of partner')
+
+    def test_assign_sales_team_when_changing_user(self):
+        """When we assign a sales person, change the team on the sales order to their team"""
+        sale_order = self.env['sale.order'].create({
+            'user_id': self.user_not_in_team.id,
+            'partner_id': self.partner_customer_usd.id,
+            'team_id': self.crm_team1.id
+        })
+        sale_order.user_id = self.user_in_team
+        sale_order.onchange_user_id()
+        self.assertEqual(sale_order.team_id.id, self.crm_team0.id, 'Should assign to team of sales person')
+
+    def test_keep_sales_team_when_changing_user_with_no_team(self):
+        """When we assign a sales person that has no team, do not reset the team to default"""
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_customer_usd.id,
+            'team_id': self.crm_team1.id
+        })
+        sale_order.user_id = self.user_not_in_team
+        sale_order.onchange_user_id()
+        self.assertEqual(sale_order.team_id.id, self.crm_team1.id, 'Should not reset the team to default')
+
+    def test_discount_and_untaxed_subtotal(self):
+        """When adding a discount on a SO line, this test ensures that the untaxed amount to invoice is
+        equal to the untaxed subtotal"""
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_customer_usd.id,
+            'order_line': [(0, 0, {
+                'product_id': self.product_deliver.id,
+                'product_uom_qty': 38,
+                'price_unit': 541.26,
+                'discount': 2.00,
+            })]
+        })
+        sale_order.action_confirm()
+        line = sale_order.order_line
+        self.assertEqual(line.untaxed_amount_to_invoice, 0)
+
+        line.qty_delivered = 38
+        # (541.26 - 0.02 * 541.26) * 38 = 20156.5224 ~= 20156.52
+        self.assertEqual(line.price_subtotal, 20156.52)
+        self.assertEqual(line.untaxed_amount_to_invoice, line.price_subtotal)
+
+        # Same with an included-in-price tax
+        sale_order = sale_order.copy()
+        line = sale_order.order_line
+        line.tax_id = [(0, 0, {
+            'name': 'Super Tax',
+            'amount_type': 'percent',
+            'amount': 15.0,
+            'price_include': True,
+        })]
+        sale_order.action_confirm()
+        self.assertEqual(line.untaxed_amount_to_invoice, 0)
+
+        line.qty_delivered = 38
+        # (541,26 / 1,15) * ,98 * 38 = 17527,410782609 ~= 17527.41
+        self.assertEqual(line.price_subtotal, 17527.41)
+        self.assertEqual(line.untaxed_amount_to_invoice, line.price_subtotal)
+
+    def test_discount_and_amount_undiscounted(self):
+        """When adding a discount on a SO line, this test ensures that amount undiscounted is
+        consistent with the used tax"""
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_customer_usd.id,
+            'order_line': [(0, 0, {
+                'product_id': self.product_deliver.id,
+                'product_uom_qty': 1,
+                'price_unit': 100.0,
+                'discount': 1.00,
+            })]
+        })
+        sale_order.action_confirm()
+        line = sale_order.order_line
+
+        # test discount and qty 1
+        self.assertEqual(sale_order.amount_undiscounted, 100.0)
+        self.assertEqual(line.price_subtotal, 99.0)
+
+        # more quantity 1 -> 3
+        sale_form = Form(sale_order)
+        with sale_form.order_line.edit(0) as line_form:
+            line_form.product_uom_qty = 3.0
+            line_form.price_unit = 100.0
+        sale_order = sale_form.save()
+
+        self.assertEqual(sale_order.amount_undiscounted, 300.0)
+        self.assertEqual(line.price_subtotal, 297.0)
+
+        # undiscounted
+        with sale_form.order_line.edit(0) as line_form:
+            line_form.discount = 0.0
+        sale_order = sale_form.save()
+        self.assertEqual(line.price_subtotal, 300.0)
+        self.assertEqual(sale_order.amount_undiscounted, 300.0)
+
+        # Same with an included-in-price tax
+        sale_order = sale_order.copy()
+        line = sale_order.order_line
+        line.tax_id = [(0, 0, {
+            'name': 'Super Tax',
+            'amount_type': 'percent',
+            'amount': 10.0,
+            'price_include': True,
+        })]
+        line.discount = 50.0
+        sale_order.action_confirm()
+
+        # 300 with 10% incl tax -> 272.72 total tax excluded without discount
+        # 136.36 price tax excluded with discount applied
+        self.assertEqual(sale_order.amount_undiscounted, 272.72)
+        self.assertEqual(line.price_subtotal, 136.36)
+
+    def test_free_product_and_price_include_fixed_tax(self):
+        """ Check that fixed tax include are correctly computed while the price_unit is 0
+        """
+        # please ensure this test remains consistent with
+        # test_out_invoice_line_onchange_2_taxes_fixed_price_include_free_product in account module
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_customer_usd.id,
+            'order_line': [(0, 0, {
+                'product_id': self.product_deliver.id,
+                'product_uom_qty': 1,
+                'price_unit': 0.0,
+            })]
+        })
+        sale_order.action_confirm()
+        line = sale_order.order_line
+        line.tax_id = [
+            (0, 0, {
+                'name': 'BEBAT 0.05',
+                'type_tax_use': 'sale',
+                'amount_type': 'fixed',
+                'amount': 0.05,
+                'price_include': True,
+                'include_base_amount': True,
+            }),
+            (0, 0, {
+                'name': 'Recupel 0.25',
+                'type_tax_use': 'sale',
+                'amount_type': 'fixed',
+                'amount': 0.25,
+                'price_include': True,
+                'include_base_amount': True,
+            }),
+        ]
+        sale_order.action_confirm()
+        self.assertRecordValues(sale_order, [{
+            'amount_untaxed': -0.30,
+            'amount_tax': 0.30,
+            'amount_total': 0.0,
+        }])
+
+    def test_sol_name_search(self):
+        # Shouldn't raise
+        self.env['sale.order']._search([('order_line', 'ilike', 'acoustic')])
+
+        name_search_data = self.env['sale.order.line'].name_search(name=self.sale_order.name)
+        sol_ids_found = dict(name_search_data).keys()
+        self.assertEqual(list(sol_ids_found), self.sale_order.order_line.ids)

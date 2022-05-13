@@ -20,6 +20,8 @@
 # Mustafa Rawi <mustafa@cubexco.com>, 2019
 # Osoul <baruni@osoul.ly>, 2019
 # Tasneem Sarhan <tsa@odoo.com>, 2020
+# Mohamed Abuelmagd <mabuelmagd12@gmail.com>, 2021
+# Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -27,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Tasneem Sarhan <tsa@odoo.com>, 2020\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -525,6 +527,8 @@ msgid ""
 "Analytic account to which this project is linked for financial management. "
 "Use an analytic account to record cost and revenue on your project."
 msgstr ""
+"الحساب التحليلي الذي يرتبط به هذا المشروع للإدارة المالية. استخدم حساباً "
+"تحليلياً لتسجيل التكلفة والإيرادات في مشروعك. "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2094,7 +2098,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
 msgid "Percentage of happy ratings"
-msgstr ""
+msgstr "نسبة التقييمات السعيدة "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -3252,7 +3256,7 @@ msgstr "يمكنك أيضًا إضافة وصف لمساعدة زملائك عل
 msgid ""
 "You cannot change the company of an analytical account if it is related to a"
 " project."
-msgstr ""
+msgstr "لا يمكنك تغيير شركه حساب تحليلي اذا كان مرتبط بمشروع"
 
 #. module: project
 #: code:addons/project/models/project.py:0

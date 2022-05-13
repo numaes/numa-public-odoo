@@ -14,6 +14,7 @@ from odoo import http, tools, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
+from odoo.exceptions import UserError
 from odoo.http import request
 
 _logger = logging.getLogger(__name__)
@@ -110,8 +111,9 @@ class WebsiteForum(WebsiteProfile):
             # check that sorting is valid
             # retro-compatibily for V8 and google links
             try:
+                sorting = werkzeug.urls.url_unquote_plus(sorting)
                 Post._generate_order_by(sorting, None)
-            except ValueError:
+            except (UserError, ValueError):
                 sorting = False
 
         if not sorting:
@@ -131,6 +133,8 @@ class WebsiteForum(WebsiteProfile):
             url_args['search'] = search
         if filters:
             url_args['filters'] = filters
+        if my:
+            url_args['my'] = my
         pager = request.website.pager(url=url, total=question_count, page=page,
                                       step=self._post_per_page, scope=self._post_per_page,
                                       url_args=url_args)
@@ -164,7 +168,10 @@ class WebsiteForum(WebsiteProfile):
             fields=['id', 'name'],
             limit=int(limit),
         )
-        return json.dumps(data)
+        return request.make_response(
+            json.dumps(data),
+            headers=[("Content-Type", "application/json")]
+        )
 
     @http.route(['/forum/<model("forum.forum"):forum>/tag', '/forum/<model("forum.forum"):forum>/tag/<string:tag_char>'], type='http', auth="public", website=True, sitemap=False)
     def tags(self, forum, tag_char=None, **post):

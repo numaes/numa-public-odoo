@@ -9,14 +9,15 @@
 # Igor Krizanovic <krizanovic.igor@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Boško Stojaković <bluesoft83@gmail.com>, 2020
+# Ervin Cerović, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 13.0+e\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-25 09:16+0000\n"
+"POT-Creation-Date: 2020-07-23 15:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Boško Stojaković <bluesoft83@gmail.com>, 2020\n"
+"Last-Translator: Ervin Cerović, 2022\n"
 "Language-Team: Bosnian (https://www.transifex.com/odoo/teams/41243/bs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,6 +38,15 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"    Vrsta računa\\Šablon kontnog plana\\PDV\\Kategorija pomoćnog računovodstva\\Knjiga vaučera za upravljačko računovodstvo\\Knjiga vaučera za finansijsko računovodstvo\n"
+"\n"
+"   Dodajte podatke kineske provincije\n"
+"\n"
+"   Dodajte kontni plan za mala preduzeća\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_kitchen_printer
@@ -61,6 +71,16 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Finansijski izvještaji za Austriju.\n"
+"================================\n"
+"\n"
+"    * Definira sljedeće izvještaje:\n"
+"        * Dobit/gubitak (§ 231 UGB Gesamtkostenverfahren)\n"
+"        * Bilans stanja (§ 224 UGB)\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_invoice_bba
@@ -1150,7 +1170,7 @@ msgid ""
 "Setup\n"
 "-----\n"
 "\n"
-"- *Configuration > Journals*\n"
+"- *Account > Configuration > invoicing > Journals*\n"
 "\n"
 "    If needed, create new journal or choose an existing journal with **Type**\n"
 "    set to *“Bank”*.\n"
@@ -1159,28 +1179,9 @@ msgid ""
 "\n"
 "    On the **Bank Account** tab, enter the **Account Number**.\n"
 "\n"
-"- *Configuration > Bank Accounts*\n"
-"\n"
-"    Account will show up in list as the journal name.\n"
-"\n"
-"    Editing will show the **Account Number**.  This is important as it is used by\n"
-"    the ABA process.\n"
-"\n"
-"    **Bank** is optional.\n"
-"\n"
-"- *Sales > Configuration > Bank Accounts > Bank Accounts*\n"
-"\n"
-"    Account will show up in list as the account number.\n"
-"\n"
-"    **ABA Payments** - Set to *“Account for Making ABA Payments”*.\n"
+"    On the same tab, ensure the ABA transfer information is set up.\n"
 "\n"
 "    **BSB** - Required, 6 digits, and will be auto formatted.\n"
-"\n"
-"    **Account Holder** - Optional.\n"
-"\n"
-"    **Account / Payee Name** - Required.  Generally not validated by the banks\n"
-"    on ABA file transfers, and may show up on the payee bank statement against\n"
-"    the payment.\n"
 "\n"
 "    **Financial Institution Code** - Required (provided by bank or can be found\n"
 "    on Google).  It is three uppercase 3 characters.\n"
@@ -1189,30 +1190,42 @@ msgid ""
 "    may reject the ABA file if the Supplying User Name is not as expected.  It\n"
 "    cannot be longer than 26 characters.\n"
 "\n"
-"    **Identification Number (APCA)** - User Identification number is bank\n"
+"    **APCA Identification Number** - User Identification number is bank\n"
 "    allocated.  It is 6 digits.\n"
 "\n"
 "    **Include Self Balancing Transaction** - Some institutions require that the\n"
 "    last be a self balancing transaction which is used as a verification.\n"
 "\n"
+"- *Accounting > Configuration > Payments > Bank Accounts*\n"
+"\n"
+"    Account will show up in list as the journal name.\n"
+"\n"
+"    Editing will show the **Account Number**.  This is important as it is used by\n"
+"    the ABA process.\n"
+"\n"
+"    **Bank** is optional.\n"
+"\n"
+"- *Contacts > Configuration > Bank Accounts > Bank Accounts*\n"
+"\n"
+"    Paying account will show up in list as the account number.\n"
+"\n"
+"    **Account Holder Name** - Can be entered here, if Required.  Generally not\n"
+"    validated by the banks on ABA file transfers, but may show up on the payee\n"
+"    bank statement against the payment.\n"
+"\n"
 "- Vendor bank accounts can be set up in the same place, however, it is\n"
 "  generally easier to set them up from the partner from for the Vendor.\n"
 "\n"
-"- *Accounting > Purchases > Vendors*\n"
+"- *Accounting > Vendors > Vendors*\n"
 "\n"
-"    On **Sales & Purchases** tab, click on *\"Bank account(s)\"* from where a\n"
+"    On **Accounting** tab, click on *\"View accounts detail\"* from where a\n"
 "    vendor bank account can be created or edited.\n"
 "\n"
-"    **Account Number** - Required.\n"
-"\n"
-"    **ABA Payments** - Set to *“Allow ABA Payments to this Account”*.\n"
+"    **Account Number** - Required, must be less than 9 digits.\n"
 "\n"
 "    **BSB** - Required, 6 digits, and will be auto formatted.\n"
 "\n"
-"    **Account Holder** - Optional.\n"
-"\n"
-"    **Account / Payee Name** - Required.  Generally not validated by the\n"
-"    banks.\n"
+"    **Account Holder Name** - Optional.\n"
 "\n"
 "Use\n"
 "---\n"
@@ -1226,18 +1239,22 @@ msgid ""
 "    Select **ABA Credit Transfer** radio button.\n"
 "\n"
 "    If the vendor has multiple bank account, you may need to select the\n"
-"    correct **Recipient Bank Account**.\n"
+"    correct **Recipient Bank Account**.  Or if paying a vendor bill, it may\n"
+"    need the correct bank account associated with it.\n"
 "\n"
 "    Enter payment amount, etc.\n"
 "\n"
-"- *Purchases > Payments*\n"
+"- *Vendors > Payments*\n"
 "\n"
 "    After payment(s) are confirmed, they will show up in the payments list.\n"
 "\n"
 "    Using filters, or sorting, select the payments to be included.  Under\n"
-"    *Actions* choose *Download ABA Payment*.  A pop up appears with the ABA\n"
-"    file from which you can click on the file to download locally.  This\n"
-"    file can then be uploaded to the bank.\n"
+"    *Actions* choose *Create batch payment*.\n"
+"\n"
+"- *Vendors > Batch Payments*\n"
+"\n"
+"    When validating a batch payment, the ABA file will be generated.  It can\n"
+"    be regenerated.  This file can then be uploaded to the bank.\n"
 msgstr ""
 
 #. module: base
@@ -5758,11 +5775,27 @@ msgid ", required"
 msgstr ", zahtjevano"
 
 #. module: base
+#: code:addons/models.py:0
+#, python-format
+msgid ""
+"- %(record)r belongs to company %(company)r and %(field)r (%(fname)s: "
+"%(values)s) belongs to another company."
+msgstr ""
+
+#. module: base
 #: code:addons/model.py:0
 #, python-format
 msgid ""
 "- Create/update: a mandatory field is not set.\n"
 "- Delete: another model requires the record being deleted. If possible, archive it instead."
+msgstr ""
+
+#. module: base
+#: code:addons/models.py:0
+#, python-format
+msgid ""
+"- Record is company %(company)r and %(field)r (%(fname)s: %(values)s) "
+"belongs to another company."
 msgstr ""
 
 #. module: base
@@ -6732,7 +6765,7 @@ msgstr "Nosioc računa"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_holder_name
 msgid "Account Holder Name"
-msgstr ""
+msgstr "Ime vlasnika računa"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract
@@ -6762,7 +6795,7 @@ msgstr "Broj računa mora biti jedinstven"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_taxcloud
 msgid "Account TaxCloud"
-msgstr ""
+msgstr "Račun poreznog oblaka"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_account_taxcloud
@@ -6799,7 +6832,7 @@ msgstr ""
 msgid ""
 "Account holder name, in case it is different than the name of the Account "
 "Holder"
-msgstr ""
+msgstr "Ime vlasnika računa, u slučaju da se ono razlike od računa vlasnika"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting
@@ -7222,7 +7255,7 @@ msgstr ""
 #: model:ir.model.fields,help:base.field_res_country_state__name
 msgid ""
 "Administrative divisions of a country. E.g. Fed. State, Departement, Canton"
-msgstr "Administrativna podjela države. (federacije, republike, kantoni...)"
+msgstr "Administrativna podjela države. npr. federacije, republike, kantoni"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0 code:addons/base/models/ir_model.py:0
@@ -7946,7 +7979,7 @@ msgstr "Čarobnjak automatskog spajanja"
 #. module: base
 #: model:ir.model,name:base.model_ir_autovacuum
 msgid "Automatic Vacuum"
-msgstr ""
+msgstr "Automatski vakuum"
 
 #. module: base
 #: code:addons/base/models/ir_module.py:0
@@ -8147,6 +8180,8 @@ msgstr "Žiro račun"
 msgid ""
 "Bank account type: Normal or IBAN. Inferred from the bank account number."
 msgstr ""
+"Vrsta bankovnog računa: normalni ili IBAN. Zaključuje se iz broja bankovnog "
+"računa."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__bank_ids
@@ -8289,7 +8324,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_batch_payment
 msgid "Batch Payment"
-msgstr ""
+msgstr "Grupno plaćanje"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_country__name_position__before
@@ -8776,6 +8811,12 @@ msgstr ""
 msgid ""
 "Cannot create new '%s' records from their name alone. Please create those "
 "records manually and try importing again."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/res_lang.py:0
+#, python-format
+msgid "Cannot deactivate a language that is currently used by contacts."
 msgstr ""
 
 #. module: base
@@ -9289,7 +9330,7 @@ msgstr "Podatci kompanije"
 #. module: base
 #: model:ir.model,name:base.model_base_document_layout
 msgid "Company Document Layout"
-msgstr ""
+msgstr "Izgled dokumenta firme"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__favicon
@@ -9644,8 +9685,8 @@ msgstr "Vrijednost konteksta"
 msgid ""
 "Context dictionary as Python expression, empty by default (Default: {})"
 msgstr ""
-"Riječnik (dictionary) konteksta kao Python izraz, početna vrijednost je "
-"prazno (Zadano: {})"
+"Riječnik konteksta kao Python izraz, početna vrijednost je prazno (Zadano: "
+"{})"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_contract_sign
@@ -13216,8 +13257,8 @@ msgid ""
 "Helps you manage your inventory and main stock operations: delivery orders, "
 "receptions, etc."
 msgstr ""
-"Pomaže Vam u upravljanju popisa zalihe (inventure) i glavnim operacijama "
-"zalihe: nalozi isporuke, prijemi, itd..."
+"Pomaže Vam u upravljanju popisa zalihe i glavnim operacijama zalihe: nalozi "
+"isporuke, prijemi, itd."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_manufacturing_manufacturing
@@ -13301,7 +13342,7 @@ msgstr "Istorija"
 #. module: base
 #: model:res.country,name:base.va
 msgid "Holy See (Vatican City State)"
-msgstr "Vatikan"
+msgstr "Vatikan (Sveta stolica)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__action_id
@@ -13355,7 +13396,7 @@ msgid ""
 "a negative number indicates no limit."
 msgstr ""
 "Koliko pute je pozvana metoda,\n"
-"negativan broj(-1) znači bez limita."
+"negativan broj znači bez limita."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -13537,7 +13578,7 @@ msgstr "ISO šifra"
 #. module: base
 #: model:ir.model.fields,help:base.field_base_language_import__code
 msgid "ISO Language and Country code, e.g. en_US"
-msgstr "ISO šifra jezika i zemlje (en_US, bs_BS)"
+msgstr "ISO šifra jezika i zemlje npr. bs_BS"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__iso_code
@@ -13826,7 +13867,7 @@ msgstr "Uvoz / Izvoz"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_amazon
 msgid "Import Amazon orders and sync deliveries"
-msgstr ""
+msgstr "Uvoz narudžbi od Amazona i sinhr isporuka"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_facturx
@@ -14296,6 +14337,12 @@ msgid "Invalid model name %r in action definition."
 msgstr "Nepravilan naziv modela %r u definiciji akcije."
 
 #. module: base
+#: code:addons/base/models/ir_actions.py:611
+#, python-format
+msgid "many2many fields cannot be evaluated by reference"
+msgstr ""
+
+#. module: base
 #: code:addons/template_inheritance.py:0
 #, python-format
 msgid "Invalid position attribute: '%s'"
@@ -14374,7 +14421,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__type__invoice
 msgid "Invoice Address"
-msgstr "Adresa fakture (kupca)"
+msgstr "Adresa fakture"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.layout_preview
@@ -14515,7 +14562,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.je
 msgid "Jersey"
-msgstr "Džersi (Jersey)"
+msgstr "Jersey"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__function
@@ -15028,7 +15075,7 @@ msgstr "Pokreni čarobnjaka za konfiguraciju"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_document_layout
 msgid "Layout"
-msgstr ""
+msgstr "Izgled"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__address_format
@@ -16512,7 +16559,7 @@ msgstr "Višejezični kontni planovi"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 msgid "My Document(s)"
-msgstr "Moj(i) Dokument(i)"
+msgstr "Moji Dokument(i)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_search
@@ -18064,11 +18111,21 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:base.action_partner_customer_form
 #: model_terms:ir.actions.act_window,help:base.action_partner_form
 msgid "Odoo helps you easily track all activities related to a customer."
-msgstr ""
+msgstr "Odoo pomaže da jednostavnije pratite sve aktivnosti vezane za kupca."
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_supplier_form
 msgid "Odoo helps you easily track all activities related to a vendor."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"Odoo is unable to merge the PDFs attached to the following records:\n"
+"%s\n"
+"\n"
+"Please exclude them from the selection to continue. It's possible to still retrieve those PDFs by selecting each of the affected records individually, which will avoid merging."
 msgstr ""
 
 #. module: base
@@ -18138,6 +18195,12 @@ msgid ""
 msgstr ""
 "Jedan od dokumenata kojem pokušavate da pristupite je bio obrisan, molimo "
 "pokušajte ponovno nakon osvježavanja."
+
+#. module: base
+#: code:addons/base/models/ir_actions_report.py:0
+#, python-format
+msgid "One of the documents, you try to merge is encrypted"
+msgstr ""
 
 #. module: base
 #: code:addons/models.py:0
@@ -18324,7 +18387,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_client__res_model
 msgid "Optional model, mostly used for needactions."
-msgstr "Opcionalni model, najčešće korišćen za potrebne akcije (needactions)."
+msgstr "Opcionalni model, najčešće korišćen za potrebne akcije."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server__smtp_pass
@@ -18670,7 +18733,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pad_project
 msgid "Pad on tasks"
-msgstr "Blok (pad)  na zadatcima"
+msgstr "Blokpad na zadacima"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__page_height
@@ -20431,7 +20494,7 @@ msgstr "Pravila"
 #: code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid "Rules can not be applied on Transient models."
-msgstr "Pravila se ne mogu primjenjivati na prolaznim (transient) modelima."
+msgstr "Pravila se ne mogu primjenjivati na prolaznim modelima."
 
 #. module: base
 #: code:addons/base/models/ir_rule.py:0
@@ -20700,7 +20763,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users__user_id
 #: model_terms:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Salesperson"
-msgstr "Prodavač(ica)"
+msgstr "Prodavač"
 
 #. module: base
 #: model:res.country,name:base.ws
@@ -20715,7 +20778,7 @@ msgstr "San Marino"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__sanitized_acc_number
 msgid "Sanitized Account Number"
-msgstr ""
+msgstr "Ispravljeni broj računa"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__6
@@ -20890,7 +20953,7 @@ msgstr "Vidi sve moguće vrijednosti"
 #: code:addons/common.py:0
 #, python-format
 msgid "See http://openerp.com"
-msgstr "Pogledajte http://odoo.com"
+msgstr "Pogledajte http://openerp.com"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_report_paperformat__format
@@ -21434,17 +21497,6 @@ msgid "Somalia"
 msgstr "Somalija"
 
 #. module: base
-#: code:addons/models.py:0
-#, python-format
-msgid ""
-"Some records are incompatible with the company of the %(document_descr)s.\n"
-"\n"
-"Incompatibilities:\n"
-"Fields: %(fields)s\n"
-"Record ids: %(records)s\n"
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields,help:base.field_res_bank__bic
 #: model:ir.model.fields,help:base.field_res_partner_bank__bank_bic
 msgid "Sometimes called BIC or Swift."
@@ -21859,7 +21911,7 @@ msgstr "Sufiks"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__suffix
 msgid "Suffix value of the record for the sequence"
-msgstr "Sufiks (poslije brojača) za ovu sekvencu"
+msgstr "Vrijednost sufiksa upisa za ovu sekvencu"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__summary
@@ -22459,6 +22511,12 @@ msgid "The internal user in charge of this contact."
 msgstr "Interni korisnik je zadužen za ovaj kontakt."
 
 #. module: base
+#: code:addons/base/models/res_country.py:106
+#, python-format
+msgid "The layout contains an invalid format key"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_model__inherited_model_ids
 msgid "The list of models that extends the current model."
 msgstr "Lista modela koji proširuju trenutni model."
@@ -23005,7 +23063,7 @@ msgstr "Format vremena"
 #: model:ir.module.category,name:base.module_category_human_resources_time_off
 #: model:ir.module.module,shortdesc:base.module_hr_holidays
 msgid "Time Off"
-msgstr ""
+msgstr "Odsustva"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_calendar
@@ -23115,7 +23173,7 @@ msgstr "Treba biti nadograđeno"
 msgid ""
 "To enable it, make sure this directory exists and is writable on the server:"
 msgstr ""
-"Da bi ste ga omogućili, obezbjedite da ovaj direktorijum postoji i da se u "
+"Da bi ste ga omogućili, obezbjedite da ovaj direktorij postoji i da se u "
 "njega može upisivati na serveru:"
 
 #. module: base
@@ -23235,7 +23293,7 @@ msgstr "Prelazan"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__transient
 msgid "Transient Model"
-msgstr "Prolazni model (osv_memory)"
+msgstr "Prolazni model"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -23400,7 +23458,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_twitter_wall
 msgid "Twitter Wall"
-msgstr ""
+msgstr "Twitter zid"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_twitter
@@ -23624,7 +23682,7 @@ msgstr "Deinstaliraj modul"
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module_dependency__state__uninstallable
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module_exclusion__state__uninstallable
 msgid "Uninstallable"
-msgstr "Nemoguće deinstalirati"
+msgstr "Nemoguće instalirati"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.layout_preview
@@ -23860,7 +23918,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__use_date_range
 msgid "Use subsequences per date_range"
-msgstr "Koristi podsekvence po rasponima datuma (date_range)"
+msgstr "Koristi podsekvence po rasponima datuma"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_gamification
@@ -24615,7 +24673,9 @@ msgstr ""
 msgid ""
 "Whether values for this field can be translated (enables the translation "
 "mechanism for that field)"
-msgstr "Da li vrijednosti ovog polja mogu biti prevedene na više jezika."
+msgstr ""
+"Da li vrijednosti ovog polja mogu biti prevedene (omogućava mehanizam "
+"prevoda za to polje)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__implementation
@@ -24813,8 +24873,8 @@ msgstr "Ne možete aktivirati super korisnika."
 #. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
-msgid "You cannot archive a contact linked to an internal user."
-msgstr "Ne možete arhivirati kontakta koji je povezan sa internim korisnikom."
+msgid "You cannot archive a contact linked to a portal or internal user."
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0
@@ -25161,7 +25221,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
 msgid "email@yourcompany.com"
-msgstr "email@vasakompanija.ba"
+msgstr "email@yourcompany.com"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.layout_preview

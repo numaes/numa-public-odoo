@@ -194,7 +194,12 @@ class IrHttp(models.AbstractModel):
                 return serve
 
         # Don't handle exception but use werkzeug debugger if server in --dev mode
-        if 'werkzeug' in tools.config['dev_mode'] and not isinstance(exception, werkzeug.exceptions.NotFound):
+        # Don't intercept JSON request to respect the JSON Spec and return exception as JSON
+        # "The Response is expressed as a single JSON Object, with the following members:
+        #   jsonrpc, result, error, id"
+        if ('werkzeug' in tools.config['dev_mode']
+                and not isinstance(exception, werkzeug.exceptions.NotFound)
+                and request._request_type != 'json'):
             raise exception
 
         try:
@@ -374,12 +379,10 @@ class IrHttp(models.AbstractModel):
             content = record[field] or ''
 
         # filename
-        default_filename = False
         if not filename:
             if filename_field in record:
                 filename = record[filename_field]
             if not filename:
-                default_filename = True
                 filename = "%s-%s-%s" % (record._name, record.id, field)
 
         if not mimetype:
@@ -390,8 +393,8 @@ class IrHttp(models.AbstractModel):
             mimetype = guess_mimetype(decoded_content, default=default_mimetype)
 
         # extension
-        _, existing_extension = os.path.splitext(filename)
-        if not existing_extension or default_filename:
+        has_extension = bool(mimetypes.guess_type(filename)[0])
+        if not has_extension:
             extension = mimetypes.guess_extension(mimetype)
             if extension:
                 filename = "%s%s" % (filename, extension)
@@ -403,7 +406,7 @@ class IrHttp(models.AbstractModel):
         return status, content, filename, mimetype, filehash
 
     def _binary_set_headers(self, status, content, filename, mimetype, unique, filehash=None, download=False):
-        headers = [('Content-Type', mimetype), ('X-Content-Type-Options', 'nosniff')]
+        headers = [('Content-Type', mimetype), ('X-Content-Type-Options', 'nosniff'), ('Content-Security-Policy', "default-src 'none'")]
         # cache
         etag = bool(request) and request.httprequest.headers.get('If-None-Match')
         status = status or 200
@@ -450,7 +453,8 @@ class IrHttp(models.AbstractModel):
         content, headers, status = None, [], None
 
         if record._name == 'ir.attachment':
-            status, content, filename, mimetype, filehash = self._binary_ir_attachment_redirect_content(record, default_mimetype=default_mimetype)
+            status, content, default_filename, mimetype, filehash = self._binary_ir_attachment_redirect_content(record, default_mimetype=default_mimetype)
+            filename = filename or default_filename
         if not content:
             status, content, filename, mimetype, filehash = self._binary_record_content(
                 record, field=field, filename=filename, filename_field=filename_field,

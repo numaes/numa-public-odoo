@@ -41,19 +41,22 @@
 # Patrick Heuel <patrick.heuel@odoo-bs.com>, 2019
 # philku79 <philip.kuss@gmx.de>, 2019
 # Ermin Trevisan <trevi@twanda.com>, 2020
-# JEK Odoo <jek@odoo.com>, 2020
-# Florian Pose <fp@igh.de>, 2020
+# Jérôme JEK <jek@odoo.com>, 2020
 # Martin Trigaux, 2020
 # f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2020
-# Chris Egal <sodaswed@web.de>, 2020
+# Florian Pose <fp@igh.de>, 2020
+# Chris Egal <sodaswed@web.de>, 2021
+# EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2021
+# spilymp <visessa+github@gmail.com>, 2021
+# Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 13.0+e\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-25 09:16+0000\n"
+"POT-Creation-Date: 2020-07-23 15:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Chris Egal <sodaswed@web.de>, 2020\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -648,6 +651,11 @@ msgid ""
 "        Contains Balance Sheet, Profit/Loss reports\n"
 "    "
 msgstr ""
+"\n"
+"Buchhaltungsberichte für Litauen\n"
+"\n"
+"Enthält Bilanz, Gewinn/Verlust-Berichte\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl_reports
@@ -676,6 +684,9 @@ msgid ""
 "        Accounting reports for Sweden\n"
 "    "
 msgstr ""
+"\n"
+"        Buchhaltungsberichte für Schweden\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ch_reports
@@ -831,6 +842,17 @@ msgid ""
 "        * Account Tags.\n"
 "    "
 msgstr ""
+"\n"
+"       Kontenplan-Vorlage für Buchhaltung in Litauen.\n"
+"\n"
+"        Dieses Modul enthält auch:\n"
+"\n"
+"        * Liste der in Litauen verfügbaren Banken.\n"
+"* Steuerklassen.\n"
+"* Die wichtigsten litauischen Steuersätze.\n"
+"* Steuerliche Positionen.\n"
+"* Konto-Tags.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_fsm
@@ -1179,7 +1201,7 @@ msgstr ""
 "\n"
 "\n"
 "\n"
-" Eine bestimmte Zahlungsmethode „SEPA-Lastschrift“ ist auch für offene Rechnungen verfügbar, wenn Sie im Assistenten „Einzahlung erfassen“ ein Bankkonto auswählen.\n"
+" Eine bestimmte Zahlungsmethode „SEPA-Lastschrift“ ist auch für offene Rechnungen verfügbar, wenn Sie im Assistenten „Zahlung erfassen“ ein Bankkonto auswählen.\n"
 " Sie können diese Methode nutzen, um eine SDD-Zahlung für Rechnungen zu generieren, wenn Sie nach der Validierung ein Mandat für den Eigentümer hinzugefügt haben. Sie werden eine Fehlermeldung sehen, wenn Sie versuchen, diese Methode für eine Rechnung zu verwenden, für deren Zahlung kein Mandat verwendet werden kann."
 
 #. module: base
@@ -1430,6 +1452,23 @@ msgid ""
 "    but rather the amount of these lines will be deduced from the lines they apply to during tax computation.\n"
 "    "
 msgstr ""
+"\n"
+"    Verwalten Sie Rabatte in Taxclouds-Berechnungen.\n"
+"Siehe https://taxcloud.com/support/discounts oder\n"
+"https://service.taxcloud.net/hc/en-us/articles/360015649791-How-can-discounts-be-applied-\n"
+"    Zusammenfassung: Alle vom Verkäufer gewährten Rabatte müssen auf den Verkaufspreis angewendet werden, bevor die Umsatzsteuer berechnet wird.\n"
+"Die Verkäufer sollten ihre Methode den Kunden in einer Richtlinie zur Anwendung von Rabatten offenlegen.\n"
+"\n"
+"    Der Algorithmus sieht folgendermaßen aus:\n"
+"- Die zeilenspezifischen Rabatte werden zuerst auf die Zeilen angewendet, für die sie gelten sollen.\n"
+"Das heißt, produktspezifische Rabatte oder Rabatte auf die billigste Zeile.\n"
+"- Dann werden die globalen Rabatte so weit wie möglich gleichmäßig auf die bezahlten Zeilen angewandt.\n"
+"Bleibt ein Restbetrag übrig, wird dieser nacheinander in der Reihenfolge der Zeilen angewandt,\n"
+"bis entweder kein Rabatt oder keine rabattfähige Zeile mehr übrig ist.\n"
+"\n"
+"    Beachten Sie, dass auf Rabattzeilen (mit einem negativen Preis) keine Steuern erhoben werden,\n"
+"sondern der Betrag dieser Zeilen wird bei der Steuerberechnung von den Zeilen abgezogen, für die sie gelten.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon_taxcloud_delivery
@@ -1594,7 +1633,7 @@ msgid ""
 "Setup\n"
 "-----\n"
 "\n"
-"- *Configuration > Journals*\n"
+"- *Account > Configuration > invoicing > Journals*\n"
 "\n"
 "    If needed, create new journal or choose an existing journal with **Type**\n"
 "    set to *“Bank”*.\n"
@@ -1603,28 +1642,9 @@ msgid ""
 "\n"
 "    On the **Bank Account** tab, enter the **Account Number**.\n"
 "\n"
-"- *Configuration > Bank Accounts*\n"
-"\n"
-"    Account will show up in list as the journal name.\n"
-"\n"
-"    Editing will show the **Account Number**.  This is important as it is used by\n"
-"    the ABA process.\n"
-"\n"
-"    **Bank** is optional.\n"
-"\n"
-"- *Sales > Configuration > Bank Accounts > Bank Accounts*\n"
-"\n"
-"    Account will show up in list as the account number.\n"
-"\n"
-"    **ABA Payments** - Set to *“Account for Making ABA Payments”*.\n"
+"    On the same tab, ensure the ABA transfer information is set up.\n"
 "\n"
 "    **BSB** - Required, 6 digits, and will be auto formatted.\n"
-"\n"
-"    **Account Holder** - Optional.\n"
-"\n"
-"    **Account / Payee Name** - Required.  Generally not validated by the banks\n"
-"    on ABA file transfers, and may show up on the payee bank statement against\n"
-"    the payment.\n"
 "\n"
 "    **Financial Institution Code** - Required (provided by bank or can be found\n"
 "    on Google).  It is three uppercase 3 characters.\n"
@@ -1633,30 +1653,42 @@ msgid ""
 "    may reject the ABA file if the Supplying User Name is not as expected.  It\n"
 "    cannot be longer than 26 characters.\n"
 "\n"
-"    **Identification Number (APCA)** - User Identification number is bank\n"
+"    **APCA Identification Number** - User Identification number is bank\n"
 "    allocated.  It is 6 digits.\n"
 "\n"
 "    **Include Self Balancing Transaction** - Some institutions require that the\n"
 "    last be a self balancing transaction which is used as a verification.\n"
 "\n"
+"- *Accounting > Configuration > Payments > Bank Accounts*\n"
+"\n"
+"    Account will show up in list as the journal name.\n"
+"\n"
+"    Editing will show the **Account Number**.  This is important as it is used by\n"
+"    the ABA process.\n"
+"\n"
+"    **Bank** is optional.\n"
+"\n"
+"- *Contacts > Configuration > Bank Accounts > Bank Accounts*\n"
+"\n"
+"    Paying account will show up in list as the account number.\n"
+"\n"
+"    **Account Holder Name** - Can be entered here, if Required.  Generally not\n"
+"    validated by the banks on ABA file transfers, but may show up on the payee\n"
+"    bank statement against the payment.\n"
+"\n"
 "- Vendor bank accounts can be set up in the same place, however, it is\n"
 "  generally easier to set them up from the partner from for the Vendor.\n"
 "\n"
-"- *Accounting > Purchases > Vendors*\n"
+"- *Accounting > Vendors > Vendors*\n"
 "\n"
-"    On **Sales & Purchases** tab, click on *\"Bank account(s)\"* from where a\n"
+"    On **Accounting** tab, click on *\"View accounts detail\"* from where a\n"
 "    vendor bank account can be created or edited.\n"
 "\n"
-"    **Account Number** - Required.\n"
-"\n"
-"    **ABA Payments** - Set to *“Allow ABA Payments to this Account”*.\n"
+"    **Account Number** - Required, must be less than 9 digits.\n"
 "\n"
 "    **BSB** - Required, 6 digits, and will be auto formatted.\n"
 "\n"
-"    **Account Holder** - Optional.\n"
-"\n"
-"    **Account / Payee Name** - Required.  Generally not validated by the\n"
-"    banks.\n"
+"    **Account Holder Name** - Optional.\n"
 "\n"
 "Use\n"
 "---\n"
@@ -1670,115 +1702,119 @@ msgid ""
 "    Select **ABA Credit Transfer** radio button.\n"
 "\n"
 "    If the vendor has multiple bank account, you may need to select the\n"
-"    correct **Recipient Bank Account**.\n"
+"    correct **Recipient Bank Account**.  Or if paying a vendor bill, it may\n"
+"    need the correct bank account associated with it.\n"
 "\n"
 "    Enter payment amount, etc.\n"
 "\n"
-"- *Purchases > Payments*\n"
+"- *Vendors > Payments*\n"
 "\n"
 "    After payment(s) are confirmed, they will show up in the payments list.\n"
 "\n"
 "    Using filters, or sorting, select the payments to be included.  Under\n"
-"    *Actions* choose *Download ABA Payment*.  A pop up appears with the ABA\n"
-"    file from which you can click on the file to download locally.  This\n"
-"    file can then be uploaded to the bank.\n"
+"    *Actions* choose *Create batch payment*.\n"
+"\n"
+"- *Vendors > Batch Payments*\n"
+"\n"
+"    When validating a batch payment, the ABA file will be generated.  It can\n"
+"    be regenerated.  This file can then be uploaded to the bank.\n"
 msgstr ""
 "\n"
-"ABA Überweisung\n"
-"==================\n"
+"ABA Credit Transfer\n"
+"===================\n"
 "\n"
-"Dieses Modul ermöglicht die Generierung von Zahlungsstapeln als ABA (Australian\n"
-"Bankers Association) Textdateien. Die generierte 'aba'-Datei kann hochgeladen werden\n"
-"zu vielen australischen Banken.\n"
+"This module allows the generation of payment batches as ABA (Australian\n"
+"Bankers Association) text files.  The generated 'aba' file can be uploaded\n"
+"to many Australian banks.\n"
 "\n"
-"Konfiguration\n"
+"Setup\n"
 "-----\n"
 "\n"
-"- * Konfiguration> Journale *\n"
+"- *Account > Configuration > invoicing > Journals*\n"
 "\n"
-"Erstellen Sie bei Bedarf ein neues Journal oder wählen Sie ein vorhandenes Journal mit ** Typ **\n"
-"auf * “Bank” * setzen.\n"
+"    If needed, create new journal or choose an existing journal with **Type**\n"
+"    set to *“Bank”*.\n"
 "\n"
-"Stellen Sie sicher, dass unter ** Erweiterte Einstellungen ** die Option ABA-Überweisung aktiviert ist.\n"
+"    On **Advanced Settings**, ensure ABA Credit Transfer is ticked.\n"
 "\n"
-" Geben Sie auf der Registerkarte ** Bankkonto ** die ** Kontonummer ** ein.\n"
+"    On the **Bank Account** tab, enter the **Account Number**.\n"
 "\n"
-"- * Konfiguration> Bankkonten *\n"
-"    Das Konto wird in der Liste als Journalname angezeigt.\n"
+"    On the same tab, ensure the ABA transfer information is set up.\n"
 "\n"
-" Beim Bearbeiten wird die ** Kontonummer ** angezeigt. Dies ist wichtig, da es von der ABA-Prozess\n"
-" verwendet wird\n"
+"    **BSB** - Required, 6 digits, and will be auto formatted.\n"
 "\n"
-" ** Bank ** ist optional.\n"
+"    **Financial Institution Code** - Required (provided by bank or can be found\n"
+"    on Google).  It is three uppercase 3 characters.\n"
 "\n"
-"- * Verkauf> Konfiguration> Bankkonten> Bankkonten *\n"
+"    **Supplying User Name** - Some banks allow this to be freeform, some banks\n"
+"    may reject the ABA file if the Supplying User Name is not as expected.  It\n"
+"    cannot be longer than 26 characters.\n"
 "\n"
-" Das Konto wird in der Liste als Kontonummer angezeigt.\n"
+"    **APCA Identification Number** - User Identification number is bank\n"
+"    allocated.  It is 6 digits.\n"
 "\n"
-"** ABA-Zahlungen ** - Auf * \"Konto für ABA-Zahlungen\" * setzen.\n"
+"    **Include Self Balancing Transaction** - Some institutions require that the\n"
+"    last be a self balancing transaction which is used as a verification.\n"
 "\n"
-"   ** BSB ** - Erforderlich mit 6-stellen und wird automatisch formatiert.\n"
+"- *Accounting > Configuration > Payments > Bank Accounts*\n"
 "\n"
-" ** Kontoinhaber ** - Optional.\n"
+"    Account will show up in list as the journal name.\n"
 "\n"
-" ** Name des Kontos / Zahlungsempfängers ** - Erforderlich. In der Regel nicht von den Banken validiert\n"
-"auf der ABA-Dateiübertragungen und  die Bezahlung  ist möglicherweise auf dem Kontoauszug \n"
-"des Zahlungsempfängers.\n"
+"    Editing will show the **Account Number**.  This is important as it is used by\n"
+"    the ABA process.\n"
 "\n"
-"  ** Code für Finanzinstitute ** - Erforderlich (wird von der Bank bereitgestellt oder kann gefunden werden\n"
-"auf Google). Es sind drei 3-stellige Großbuchstaben.\n"
+"    **Bank** is optional.\n"
 "\n"
-" ** Angabe des Benutzernamens ** - Einige Banken erlauben dies als Freiform, einige Banken\n"
-"kann die ABA-Datei ablehnen, wenn der angegebene Benutzername nicht den Erwartungen entspricht. Es\n"
-"darf nicht länger als 26 Zeichen sein.\n"
+"- *Contacts > Configuration > Bank Accounts > Bank Accounts*\n"
 "\n"
-" ** Identifikationsnummer (APCA) ** - Benutzeridentifikationsnummer ist Bank\n"
-"zugeteilt. Es sind 6 Ziffern.\n"
+"    Paying account will show up in list as the account number.\n"
 "\n"
-"** Selbstausgleichstransaktion einschließen ** - Einige Institute verlangen, dass die\n"
-" die zuletzt  selbstausgleichende Transaktionsollte , sollte es sich um eine  handeln, die als Verifizierung verwendet wird.\n"
+"    **Account Holder Name** - Can be entered here, if Required.  Generally not\n"
+"    validated by the banks on ABA file transfers, but may show up on the payee\n"
+"    bank statement against the payment.\n"
 "\n"
-"- Kreditorenbankkonten können jedoch an derselben Stelle eingerichtet werden\n"
-"In der Regel ist es einfacher, sie vom Partner des Anbieters einzurichten.\n"
-"- * Buchhaltung> Einkäufe> Lieferanten *\n"
+"- Vendor bank accounts can be set up in the same place, however, it is\n"
+"  generally easier to set them up from the partner from for the Vendor.\n"
 "\n"
-"Klicken Sie auf der Registerkarte ** Verkäufe und Einkäufe ** auf * \"Bankkonten\" *, von wo aus ein\n"
-"Lieferantenbankkonto kann erstellt oder bearbeitet werden.\n"
+"- *Accounting > Vendors > Vendors*\n"
 "\n"
-" ** Kontonummer ** - Erforderlich.\n"
+"    On **Accounting** tab, click on *\"View accounts detail\"* from where a\n"
+"    vendor bank account can be created or edited.\n"
 "\n"
-" ** ABA-Zahlungen ** - Auf * \"ABA-Zahlungen auf diesem Konto zulassen\" * setzen.\n"
+"    **Account Number** - Required, must be less than 9 digits.\n"
 "\n"
-"** BSB ** - Erforderlich, 6-stellig und wird automatisch formatiert.\n"
+"    **BSB** - Required, 6 digits, and will be auto formatted.\n"
 "\n"
-" ** Kontoinhaber ** - Optional.\n"
+"    **Account Holder Name** - Optional.\n"
 "\n"
-"** Name des Kontos / Zahlungsempfängers ** - Erforderlich. Im Allgemeinen nicht von der validiert\n"
-" Banken.\n"
-"\n"
-"Benutzung\n"
+"Use\n"
 "---\n"
 "\n"
-"- Legen Sie wie gewohnt eine Kreditorenzahlung an.\n"
+"- Create a vendor payment in the normal way.\n"
 "\n"
-"Stellen Sie sicher, dass der ** Lieferant ** über ein gültiges ABA-Zahlungskonto verfügt.\n"
+"    Ensure the **Vendor** is one with a valid ABA payment account.\n"
 "\n"
-"Wählen Sie das richtige ** Zahlungsjournal **, das für ABA-Zahlungen festgelegt ist.\n"
+"    Choose the correct **Payment Journal** which is set for ABA payments.\n"
 "\n"
-"Wählen Sie das Optionsfeld ** ABA-Überweisung **.\n"
+"    Select **ABA Credit Transfer** radio button.\n"
 "\n"
-"Wenn der Kreditor über mehrere Bankkonten verfügt, müssen Sie möglicherweise das auswählen\n"
-"richtig ** Empfänger Bankkonto **.\n"
+"    If the vendor has multiple bank account, you may need to select the\n"
+"    correct **Recipient Bank Account**.  Or if paying a vendor bill, it may\n"
+"    need the correct bank account associated with it.\n"
 "\n"
-"Zahlungsbetrag eingeben usw.\n"
-"- * Einkäufe> Zahlungen *\n"
+"    Enter payment amount, etc.\n"
 "\n"
-"Nachdem die Zahlung (en) bestätigt wurden, werden sie in der Zahlungsliste angezeigt.\n"
+"- *Vendors > Payments*\n"
 "\n"
-" Wählen Sie mithilfe von Filtern oder Sortieren die Zahlungen aus, die einbezogen werden sollen. Unter\n"
-" * Aktionen * Wählen Sie * ABA Zahlungen herunterladen *. Ein Popup mit der ABA - Datei\n"
-"wird angezeigt, auf die Sie Klicken können,  um sie lokal herunterzuladen. Diese\n"
-"Datei kann dann in die Bank hochgeladen werden.\n"
+"    After payment(s) are confirmed, they will show up in the payments list.\n"
+"\n"
+"    Using filters, or sorting, select the payments to be included.  Under\n"
+"    *Actions* choose *Create batch payment*.\n"
+"\n"
+"- *Vendors > Batch Payments*\n"
+"\n"
+"    When validating a batch payment, the ABA file will be generated.  It can\n"
+"    be regenerated.  This file can then be uploaded to the bank.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_auto_transfer
@@ -1884,6 +1920,9 @@ msgid ""
 "=================================\n"
 "    "
 msgstr ""
+"\n"
+"Buchhaltungsberichte für Dänemark\n"
+"================================="
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fi_reports
@@ -1894,6 +1933,9 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Buchhaltungsberichte für Finland\n"
+"================================="
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_reports
@@ -2637,6 +2679,10 @@ msgid ""
 "This is meant to be used with localization specific modules.\n"
 "    "
 msgstr ""
+"\n"
+"Basismodul für SAF-T-Meldungen\n"
+"===============================\n"
+"Dies ist für die Verwendung mit lokalisierungsspezifischen Modulen gedacht."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_br
@@ -2794,6 +2840,25 @@ msgid ""
 "No modified version is certified and supported by Odoo SA.\n"
 "    "
 msgstr ""
+"\n"
+"Belgische Registrierkasse\n"
+"\n"
+"================================\n"
+"\n"
+"Dieses Modul verwandelt das Point-of-Sale-Modul in eine zertifizierte belgische Registrierkasse.\n"
+"\n"
+"Mehr Informationen:\n"
+"  * http://www.systemedecaisseenregistreuse.be/\n"
+"  * http://www.geregistreerdkassasysteem.be/\n"
+"\n"
+"Rechtliches\n"
+"-----\n"
+"**Der Gebruch von pos_blackbox_be Quellen ist nur für die odoo.com SaaS Plattform  für Version 13.0 \n"
+"zertifiziert.** Kontaktieren Sie Odoo SA bevor Sie das pos_blackbox_be Modul installieren.\n"
+"\n"
+"Eine verschlüsselte und zertifizierte Version der pos_blackbox_be kann auf\n"
+"Anfrage für On-Premise-Installationen zur Verfügung gestellt werden.\n"
+"Modifizierte Versionen sind nicht zertifiziert und werden von Odoo SA nicht unterstützt."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bo
@@ -2900,6 +2965,10 @@ msgid ""
 "=================================\n"
 "    "
 msgstr ""
+"\n"
+"Kassenbasis für Buchhaltungsbericht\n"
+"=================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_skills_survey
@@ -4296,6 +4365,11 @@ msgid ""
 "The wizard used is similar as the one for the credit note.\n"
 "    "
 msgstr ""
+"\n"
+"In vielen Ländern wird eine Lastschrift als Erhöhung der Beträge einer bestehenden Rechnung verwendet \n"
+"oder in einigen speziellen Fällen zur Stornierung einer Gutschrift. \n"
+"Sie ist wie eine normale Rechnung, allerdings muss die Verbindung zur ursprünglichen Rechnung im Auge behalten werden. \n"
+"Der verwendete Assistent ist ähnlich wie der für die Gutschrift."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn
@@ -6591,6 +6665,16 @@ msgid ""
 "Set the payment reference type from the Sales Journal.\n"
 "    "
 msgstr ""
+"\n"
+"Dies ist das Odoo-Modul zur Verwaltung der Buchhaltung in Finnland.\n"
+"============================================================\n"
+"\n"
+"Nachdem Sie dieses Modul installiert haben, haben Sie Zugriff auf :\n"
+"* Finnischen Kontenplan\n"
+"* Steuerliche Positionen\n"
+"* Zahlungsreferenztypen für Rechnungen (Finnische Standardreferenz & Finnische Gläubigerreferenz (RF))\n"
+"\n"
+"Legen Sie die Zahlungsreferenzart aus dem Verkaufsjournal fest."
 
 #. module: base
 #: model:ir.module.module,description:base.module_uom
@@ -6863,6 +6947,11 @@ msgid ""
 "    - generic Indonesian chart of accounts\n"
 "    - tax structure"
 msgstr ""
+"\n"
+"Dies ist die neueste indonesische Odoo-Lokalisierung, die notwendig ist, um Odoo Buchhaltung für KMUs zu betreiben:\n"
+"=================================================================================================\n"
+"- allgemeiner indonesischer Kontenplan\n"
+"- Steuerstruktur"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uk
@@ -7024,6 +7113,10 @@ msgid ""
 "======================================================================\n"
 "This module applies to companies based in Algeria.\n"
 msgstr ""
+"\n"
+"Dies ist das Modul zur Verwaltung des Kontenplans für Algerien in Odoo.\n"
+"======================================================================\n"
+"Dieses Modul gilt für Unternehmen mit Sitz in Algerien.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr
@@ -7305,6 +7398,8 @@ msgid ""
 "This module allows Employees (and not users) to log in to the Point of Sale application using the fiscal data module\n"
 "    "
 msgstr ""
+"\n"
+"Mit diesem Modul können sich die Mitarbeiter (nicht Benutzer) über das Modul für steuerliche Daten bei der Kassensystemanwendung anmelden."
 
 #. module: base
 #: model:ir.module.module,description:base.module_rating
@@ -7343,6 +7438,8 @@ msgid ""
 "This module allows to configure commissions for resellers.\n"
 "    "
 msgstr ""
+"\n"
+"Dieses Modul ermöglicht die Konfiguration von Provisionen für Händler."
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_automation
@@ -8602,6 +8699,16 @@ msgid ", required"
 msgstr ", erforderlich"
 
 #. module: base
+#: code:addons/models.py:0
+#, python-format
+msgid ""
+"- %(record)r belongs to company %(company)r and %(field)r (%(fname)s: "
+"%(values)s) belongs to another company."
+msgstr ""
+"- %(record)r gehört zum Unternehmen %(company)r und %(field)r (%(fname)s: "
+"%(values)s) gehört zu einem anderen Unternehmen."
+
+#. module: base
 #: code:addons/model.py:0
 #, python-format
 msgid ""
@@ -8610,6 +8717,14 @@ msgid ""
 msgstr ""
 "- Anlegen/Aktualisieren: Ein Pflichtfeld ist nicht gesetzt.\n"
 "- Löschen: Ein anderes Modell erfordert, dass der Datensatz gelöscht wird. Wenn möglich, archivieren Sie es stattdessen."
+
+#. module: base
+#: code:addons/models.py:0
+#, python-format
+msgid ""
+"- Record is company %(company)r and %(field)r (%(fname)s: %(values)s) "
+"belongs to another company."
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -9629,7 +9744,7 @@ msgstr "Zugriff auf private Adressen"
 #: code:addons/api.py:0 code:addons/api.py:0
 #, python-format
 msgid "Access to unauthorized or invalid companies."
-msgstr ""
+msgstr "Zugang zu nicht autorisierten oder ungültigen Unternehmen."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_analytic_default
@@ -9686,7 +9801,7 @@ msgstr "Kontoinhaber"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_holder_name
 msgid "Account Holder Name"
-msgstr "Kontoinhaber"
+msgstr "Abweichender Kontoinhaber"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract
@@ -9696,7 +9811,7 @@ msgstr "Auszug aus der Kontorechnung"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract_purchase
 msgid "Account Invoice Extract Purchase"
-msgstr ""
+msgstr "Konto Rechnung Auszug Einkauf"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__account_no
@@ -9731,12 +9846,12 @@ msgstr "TaxCloud-Konto – Verkauf"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_coupon_taxcloud
 msgid "Account Taxcloud - Sale (coupon)"
-msgstr ""
+msgstr "Account Taxcloud - Sale (Coupon)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_coupon_taxcloud_delivery
 msgid "Account Taxcloud - Sale (coupon) - Delivery"
-msgstr ""
+msgstr "Konto Taxcloud - Verkauf (Coupon) - Lieferung"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_winbooks_import
@@ -10012,7 +10127,7 @@ msgstr "Fügen Sie die Funktion zum Barcode-Scannen zur Eventverwaltung hinzu."
 #. module: base
 #: model:ir.module.module,summary:base.module_account_reports_cash_basis
 msgid "Add cash basis functionality for reports"
-msgstr ""
+msgstr "Hinzufügen von Cash-Basis-Funktionalität für Berichte"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_slides_survey
@@ -10088,7 +10203,7 @@ msgstr "Adresse"
 #. module: base
 #: model:ir.model,name:base.model_format_address_mixin
 msgid "Address Format"
-msgstr ""
+msgstr "Adressformat "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__type
@@ -10316,7 +10431,7 @@ msgstr "Algerien"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_dz
 msgid "Algeria - Accounting"
-msgstr ""
+msgstr "Algerien -Buchhaltung"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_alipay
@@ -10962,6 +11077,8 @@ msgid ""
 "Automatically finds the purchase order linked to a vendor bill when using "
 "invoice extraction"
 msgstr ""
+"Findet bei der Rechnungsextraktion automatisch die mit einer "
+"Lieferantenrechnung verknüpfte Bestellung"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_translation__state
@@ -11331,7 +11448,7 @@ msgstr "Registrierte Barkasse – Belgien"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_hr_l10n_be
 msgid "Belgian Registered Cash Register Employee module"
-msgstr ""
+msgstr "Belgisches Modul Registrierkasse Mitarbeiter"
 
 #. module: base
 #: model:res.country,name:base.be
@@ -11788,6 +11905,14 @@ msgstr ""
 #. module: base
 #: code:addons/base/models/res_lang.py:0
 #, python-format
+msgid "Cannot deactivate a language that is currently used by contacts."
+msgstr ""
+"Eine Sprache, die derzeit von Kontakten verwendet wird, kann nicht "
+"deaktiviert werden."
+
+#. module: base
+#: code:addons/base/models/res_lang.py:0
+#, python-format
 msgid "Cannot deactivate a language that is currently used by users."
 msgstr ""
 "Eine Sprache, die derzeit von Benutzern verwendet wird, kann nicht "
@@ -12176,7 +12301,7 @@ msgstr "Kolumbien - Buchhaltungsauswertungen"
 #: model:ir.module.module,description:base.module_l10n_co_pos
 #: model:ir.module.module,shortdesc:base.module_l10n_co_pos
 msgid "Colombian - Point of Sale"
-msgstr ""
+msgstr "Kolumbien - Kassensystem"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_co
@@ -12492,6 +12617,8 @@ msgstr "Installationsassistenten"
 #: model:ir.module.module,summary:base.module_partner_commission
 msgid "Configure resellers commissions on subscription sale"
 msgstr ""
+"Konfigurieren Sie die Provisionen für Wiederverkäufer beim Verkauf von "
+"Abonnements"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet_enterprise
@@ -13512,7 +13639,7 @@ msgstr "Tage"
 #: model:ir.module.module,shortdesc:base.module_account_debit_note
 #: model:ir.module.module,summary:base.module_account_debit_note
 msgid "Debit Notes"
-msgstr ""
+msgstr "Lastschriften"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_debug
@@ -13580,7 +13707,7 @@ msgstr "Standardeinstellungen"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_window__limit
 msgid "Default limit for the list view"
-msgstr "Standardlimit Liste"
+msgstr "Standardlimit für Liste"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__default
@@ -13690,12 +13817,12 @@ msgstr "Dänemark"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_dk
 msgid "Denmark - Accounting"
-msgstr ""
+msgstr "Dänemark - Buchhaltung"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_dk_reports
 msgid "Denmark - Accounting Reports"
-msgstr ""
+msgstr "Dänemark - Buchführung"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__depends
@@ -15263,6 +15390,12 @@ msgid ""
 "Technical Details:\n"
 "%s"
 msgstr ""
+"Datei %r kann aufgrund einer fehlerhaften Datei nicht importiert werden.\n"
+"\n"
+"Dieses Problem kann durch doppelte Einträge verursacht werden, die sich auf das gleiche Feld beziehen. Bitte überprüfen Sie den Inhalt der Datei, die Sie zu importieren versuchen.\n"
+"\n"
+"Technische Details:\n"
+"%s"
 
 #. module: base
 #: code:addons/base/wizard/base_import_language.py:0
@@ -15382,12 +15515,12 @@ msgstr "Finnland"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fi_reports
 msgid "Finland - Accounting Reports"
-msgstr ""
+msgstr "Finnland - Buchhaltungsberichte"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fi
 msgid "Finnish Localization"
-msgstr ""
+msgstr "Finnische Lokalisierung"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__week_start
@@ -15577,6 +15710,8 @@ msgid ""
 "Found more than 10 errors and more than one error per 10 records, "
 "interrupted to avoid showing too many errors."
 msgstr ""
+"Mehr als 10 Fehler und mehr als ein Fehler pro 10 Datensätze gefunden, "
+"unterbrochen, um nicht zu viele Fehler anzuzeigen."
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:0
@@ -17259,12 +17394,12 @@ msgstr "Indonesien"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_id_efaktur
 msgid "Indonesia E-faktur"
-msgstr ""
+msgstr "Indonesien E-Faktur"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_id
 msgid "Indonesian - Accounting"
-msgstr ""
+msgstr "Indonesian - Buchhaltung"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_partner_industry_action
@@ -17426,7 +17561,7 @@ msgstr "Couponmechanismus in Versandkosten integrieren."
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_six
 msgid "Integrate your POS with a Six payment terminal"
-msgstr ""
+msgstr "Integrieren Sie Ihr Kassensystem mit einem Six-Zahlungsterminal"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_adyen
@@ -17581,6 +17716,12 @@ msgstr "Unültiger Schlüssel: QWeb view sollte einen Schlüssel haben"
 #, python-format
 msgid "Invalid model name %r in action definition."
 msgstr "Ungültiger Modulname %r in der Aktionsdefinition."
+
+#. module: base
+#: code:addons/base/models/ir_actions.py:611
+#, python-format
+msgid "many2many fields cannot be evaluated by reference"
+msgstr ""
 
 #. module: base
 #: code:addons/template_inheritance.py:0
@@ -17764,7 +17905,7 @@ msgstr "Israel"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_il
 msgid "Israel - Accounting"
-msgstr ""
+msgstr "Israel - Buchhaltung"
 
 #. module: base
 #: model:res.country,name:base.it
@@ -17940,7 +18081,7 @@ msgstr "LGPL Version 3"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
 msgid "LT - Accounting Reports"
-msgstr ""
+msgstr "LT - Buchhaltungsberichte"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_landed_costs
@@ -17988,7 +18129,7 @@ msgstr "Sprachpaket"
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid "Language code cannot be modified."
-msgstr "Der Sprachcode kann nicht verändert werden. "
+msgstr "Der Sprachcode kann nicht verändert werden."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_translation_lang_fkey_res_lang
@@ -18358,7 +18499,7 @@ msgstr "Zu Tickets führen"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Learn More"
-msgstr "Lernen Sie mehr"
+msgstr "Mehr erfahren"
 
 #. module: base
 #: model:res.country,name:base.lb
@@ -18560,7 +18701,7 @@ msgstr "Litauen"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt
 msgid "Lithuania - Accounting"
-msgstr ""
+msgstr "Litauen - Buchhaltung"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_website_live_chat
@@ -18969,12 +19110,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_coupon_taxcloud_delivery
 msgid "Manage discounts in taxclouds computations with delivery."
-msgstr ""
+msgstr "Verwalten Sie Rabatte in Taxclouds-Berechnungen mit Lieferung."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_coupon_taxcloud
 msgid "Manage discounts in taxclouds computations."
-msgstr ""
+msgstr "Verwalten Sie Rabatte in Taxclouds-Berechnungen."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_plm
@@ -19553,7 +19694,7 @@ msgstr "Sonstiges"
 #: model:res.partner.title,name:base.res_partner_title_miss
 #: model:res.partner.title,shortcut:base.res_partner_title_miss
 msgid "Miss"
-msgstr "Frl."
+msgstr "Fr."
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:0
@@ -19949,7 +20090,7 @@ msgstr "NIT"
 #. module: base
 #: model:res.country,vat_label:base.id
 msgid "NPWP"
-msgstr ""
+msgstr "NPWP"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__group_by_name
@@ -20260,7 +20401,7 @@ msgstr "Norwegische Buchhaltung"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_no_saft
 msgid "Norwegian Standard Audit File for Tax"
-msgstr ""
+msgstr "Norwegische Standardprüfungsdatei für Steuern"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__state__uninstalled
@@ -22342,6 +22483,20 @@ msgstr ""
 "einem Lieferanten zusammenhängen."
 
 #. module: base
+#: code:addons/base/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"Odoo is unable to merge the PDFs attached to the following records:\n"
+"%s\n"
+"\n"
+"Please exclude them from the selection to continue. It's possible to still retrieve those PDFs by selecting each of the affected records individually, which will avoid merging."
+msgstr ""
+"Odoo kann die PDFs, die an die folgenden Datensätze angehängt sind, nicht zusammenführen:\n"
+"%s\n"
+"\n"
+"Bitte schließen Sie diese von der Auswahl aus, um fortzufahren. Sie können diese PDFs immer noch abrufen, indem Sie die betroffenen Datensätze einzeln auswählen, wodurch die Zusammenführung vermieden wird."
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_odoo_referral
 msgid "Odoo referral program"
 msgstr ""
@@ -22412,6 +22567,12 @@ msgstr ""
 "Bitte versuchen Sie es erneut nach einer Aktualisierung."
 
 #. module: base
+#: code:addons/base/models/ir_actions_report.py:0
+#, python-format
+msgid "One of the documents, you try to merge is encrypted"
+msgstr "Eines der Dokumente, die Sie zusammenführen wollen, ist verschlüsselt"
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid ""
@@ -22428,6 +22589,9 @@ msgid ""
 "One or more of the selected modules have already been uninstalled, if you "
 "believe this to be an error, you may try again later or contact support."
 msgstr ""
+"Eines oder mehrere der ausgewählten Module wurden bereits deinstalliert. "
+"Wenn Sie glauben, dass dies ein Fehler ist, können Sie es später noch einmal"
+" versuchen oder den Support kontaktieren."
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0
@@ -23104,7 +23268,7 @@ msgstr "POS Adyen"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_six
 msgid "POS Six"
-msgstr ""
+msgstr "Kassensystem Six"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pad_project
@@ -24781,7 +24945,7 @@ msgstr "Reseller"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_partner_commission
 msgid "Resellers Commissions For Subscription"
-msgstr ""
+msgstr "Wiederverkäufer Provisionen für Abonnements"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__reset_mode
@@ -25965,22 +26129,6 @@ msgid "Somalia"
 msgstr "Somalia"
 
 #. module: base
-#: code:addons/models.py:0
-#, python-format
-msgid ""
-"Some records are incompatible with the company of the %(document_descr)s.\n"
-"\n"
-"Incompatibilities:\n"
-"Fields: %(fields)s\n"
-"Record ids: %(records)s\n"
-msgstr ""
-"Einige Datensätze sind nicht kompatibel mit der Firma des %(document_descr)s.\n"
-"\n"
-"Unvereinbarkeiten:\n"
-"Felder: %(fields)s\n"
-"Datensatz-IDs: %(records)s\n"
-
-#. module: base
 #: model:ir.model.fields,help:base.field_res_bank__bic
 #: model:ir.model.fields,help:base.field_res_partner_bank__bank_bic
 msgid "Sometimes called BIC or Swift."
@@ -26156,7 +26304,7 @@ msgstr "Standard"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_saft
 msgid "Standard Audit File for Tax Base module"
-msgstr ""
+msgstr "Standardprüfungsdatei für das Steuerbasismodul"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade_install
@@ -26462,7 +26610,7 @@ msgstr "Schweden"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_se_reports
 msgid "Sweden - Accounting Reports"
-msgstr ""
+msgstr "Schweden - Buchhaltungsberichte"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_se_ocr
@@ -26472,7 +26620,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_se
 msgid "Swedish - Accounting"
-msgstr ""
+msgstr "Schweden - Buchhaltung"
 
 #. module: base
 #: model:res.country,name:base.ch
@@ -27042,6 +27190,12 @@ msgstr "Komplette Bezeichnung des Landes."
 #: model:ir.model.fields,help:base.field_res_users__user_id
 msgid "The internal user in charge of this contact."
 msgstr "Der interne Benutzer, der für diesen Kontakt verantwortlich ist."
+
+#. module: base
+#: code:addons/base/models/res_country.py:106
+#, python-format
+msgid "The layout contains an invalid format key"
+msgstr "Das Layout enthält einen ungültigen Formatschlüssel"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model__inherited_model_ids
@@ -28149,7 +28303,7 @@ msgstr "Vereinigtes Königreich Buchhaltungsauswertungen"
 #: model:ir.module.module,shortdesc:base.module_product_unspsc
 #: model:ir.module.module,summary:base.module_product_unspsc
 msgid "UNSPSC product codes"
-msgstr ""
+msgstr "UNSPSC product codes"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_ups
@@ -28191,7 +28345,7 @@ msgstr "USA kleinere amerikanische Überseeinseln"
 #. module: base
 #: model:res.country,vat_label:base.at
 msgid "USt"
-msgstr ""
+msgstr "USt"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_utm
@@ -28433,7 +28587,7 @@ msgstr "Aktualisieren"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_view_base_module_update
 msgid "Update Apps List"
-msgstr "Update der Apps"
+msgstr "App-Liste aktualisieren"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_data__date_update
@@ -29057,6 +29211,10 @@ msgid ""
 "enhancing solutions through the use of advanced software for our clients "
 "worldwide. At Lumber Inc we bring operational experience combined..."
 msgstr ""
+"Wir sind ein Technologie- und Strategieberatungsunternehmen, das durch den "
+"Einsatz fortschrittlicher Software wertsteigernde Lösungen für unsere Kunden"
+" weltweit schafft. Bei Lumber Inc bringen wir operative Erfahrung "
+"kombiniert..."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_18
@@ -29065,6 +29223,9 @@ msgid ""
 " <br> <br>\n"
 "At Lumber Inc we bring operational experience combined with technological acumen. We understand that any software that supports business operations needs to be designed in such a way that facilitates the execution of critical operational processes, and serves as a tool to the users rather than a barrier. Our approach is focused on the process first, ensuring that it contributes to the goals of the company, we then optimize it, and design the software solutions to best support it."
 msgstr ""
+"Wir sind eine Technologie- und Strategieberatungsfirma, die durch den Einsatz fortschrittlicher Software wertsteigernde Lösungen für unsere Kunden weltweit schafft.\n"
+"<br><br>\n"
+"Bei Lumber Inc bringen wir betriebliche Erfahrung in Kombination mit technologischem Scharfsinn ein. Wir wissen, dass jede Software, die Geschäftsabläufe unterstützt, so konzipiert sein muss, dass sie die Ausführung kritischer betrieblicher Prozesse erleichtert und den Benutzern als Werkzeug dient, statt Hindernis zu sein. Unser Ansatz konzentriert sich zunächst auf den Prozess und stellt sicher, dass er zur Erreichung der Unternehmensziele beiträgt. Wir optimieren ihn und entwickeln die entsprechende Softwarelösung."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web
@@ -29074,7 +29235,7 @@ msgstr "Web"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_web_cohort
 msgid "Web Cohort Tests"
-msgstr ""
+msgstr "Web Cohort Tests"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_editor
@@ -29110,7 +29271,7 @@ msgstr "Web-Routen"
 #. module: base
 #: model:ir.module.module,summary:base.module_test_web_cohort
 msgid "Web cohort Test"
-msgstr ""
+msgstr "Web cohort Test"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_translation_search
@@ -29528,10 +29689,10 @@ msgstr "Sie können den Superuser nicht aktivieren."
 #. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
-msgid "You cannot archive a contact linked to an internal user."
+msgid "You cannot archive a contact linked to a portal or internal user."
 msgstr ""
-"Sie können einen Kontakt, der mit einem internen Benutzer verknüpft ist, "
-"nicht archivieren."
+"Sie können einen Kontakt, der mit einem Portal oder einem internen Benutzer "
+"verknüpft ist, nicht archivieren."
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0
@@ -30100,7 +30261,7 @@ msgstr "test read_group"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_xlsx_export
 msgid "test xlsx export"
-msgstr ""
+msgstr "test xlsx export"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_assetsbundle

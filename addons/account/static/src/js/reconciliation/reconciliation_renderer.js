@@ -68,6 +68,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
             'number': state.valuenow,
             'timePerTransaction': Math.round(dt/1000/state.valuemax),
             'context': state.context,
+            'bank_statement_id': state.bank_statement_id,
         }));
         $done.find('*').addClass('o_reward_subcontent');
         $done.find('.button_close_statement').click(this._onCloseBankStatement.bind(this));
@@ -332,9 +333,21 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         var self = this;
         // isValid
         var to_check_checked = !!(state.to_check);
-        this.$('caption .o_buttons button.o_validate').toggleClass('d-none', !!state.balance.type && !to_check_checked);
-        this.$('caption .o_buttons button.o_reconcile').toggleClass('d-none', state.balance.type <= 0 || to_check_checked);
-        this.$('caption .o_buttons .o_no_valid').toggleClass('d-none', state.balance.type >= 0 || to_check_checked);
+        let buttonDisplayed;
+        if (state.balance.type === -1) {
+            buttonDisplayed = 'invalid';
+        } else if (state.balance.type === 0) {
+            buttonDisplayed = 'validate';
+        } else if (state.balance.type === 1) {
+            buttonDisplayed = to_check_checked ? 'validate' : 'reconcile';
+        }
+        const buttons = {
+            'validate': this.$('caption .o_buttons button.o_validate'),
+            'reconcile': this.$('caption .o_buttons button.o_reconcile'),
+            'invalid': this.$('caption .o_buttons .o_no_valid'),
+        };
+        Object.entries(buttons).forEach(([name, $button]) =>
+            $button.toggleClass('d-none', name !== buttonDisplayed));
         self.$('caption .o_buttons button.o_validate').toggleClass('text-warning', to_check_checked);
 
         // partner_id
@@ -531,7 +544,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             relation: 'account.journal',
             type: 'many2one',
             name: 'journal_id',
-            domain: [['company_id', '=', state.st_line.company_id]],
+            domain: [['company_id', '=', state.st_line.company_id], ['type', '=', 'general']],
         }, {
             relation: 'account.tax',
             type: 'many2many',
@@ -541,6 +554,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             relation: 'account.analytic.account',
             type: 'many2one',
             name: 'analytic_account_id',
+            domain: ["|", ['company_id', '=', state.st_line.company_id], ['company_id', '=', false]]
         }, {
             relation: 'account.analytic.tag',
             type: 'many2many',
@@ -555,7 +569,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             type: 'float',
             name: 'amount',
         }, {
-            type: 'char', //TODO is it a bug or a feature when type date exists ?
+            type: 'date',
             name: 'date',
         }, {
             type: 'boolean',

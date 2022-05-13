@@ -70,7 +70,6 @@ _logger = logging.getLogger(__name__)
 # The odoo library is supposed already configured.
 ADDONS_PATH = odoo.tools.config['addons_path']
 HOST = '127.0.0.1'
-PORT = odoo.tools.config['http_port']
 # Useless constant, tests are aware of the content of demo data
 ADMIN_USER_ID = odoo.SUPERUSER_ID
 
@@ -162,9 +161,128 @@ def new_test_user(env, login='', groups='base.group_user', context=None, **kwarg
 # ------------------------------------------------------------
 # Main classes
 # ------------------------------------------------------------
+class OdooSuite(unittest.suite.TestSuite):
+
+    if sys.version_info < (3, 8):
+        # Partial backport of bpo-24412, merged in CPython 3.8
+
+        def _handleClassSetUp(self, test, result):
+            previousClass = getattr(result, '_previousTestClass', None)
+            currentClass = test.__class__
+            if currentClass == previousClass:
+                return
+            if result._moduleSetUpFailed:
+                return
+            if getattr(currentClass, "__unittest_skip__", False):
+                return
+
+            try:
+                currentClass._classSetupFailed = False
+            except TypeError:
+                # test may actually be a function
+                # so its class will be a builtin-type
+                pass
+
+            setUpClass = getattr(currentClass, 'setUpClass', None)
+            if setUpClass is not None:
+                unittest.suite._call_if_exists(result, '_setupStdout')
+                try:
+                    setUpClass()
+                except Exception as e:
+                    if isinstance(result, unittest.suite._DebugResult):
+                        raise
+                    currentClass._classSetupFailed = True
+                    className = unittest.util.strclass(currentClass)
+                    self._createClassOrModuleLevelException(result, e,
+                                                            'setUpClass',
+                                                            className)
+                finally:
+                    unittest.suite._call_if_exists(result, '_restoreStdout')
+                    if currentClass._classSetupFailed is True:
+                        if hasattr(currentClass, 'doClassCleanups'):
+                            currentClass.doClassCleanups()
+                            if len(currentClass.tearDown_exceptions) > 0:
+                                for exc in currentClass.tearDown_exceptions:
+                                    self._createClassOrModuleLevelException(
+                                            result, exc[1], 'setUpClass', className,
+                                            info=exc)
+
+        def _createClassOrModuleLevelException(self, result, exc, method_name, parent, info=None):
+            errorName = f'{method_name} ({parent})'
+            self._addClassOrModuleLevelException(result, exc, errorName, info)
+
+        def _addClassOrModuleLevelException(self, result, exception, errorName, info=None):
+            error = unittest.suite._ErrorHolder(errorName)
+            addSkip = getattr(result, 'addSkip', None)
+            if addSkip is not None and isinstance(exception, unittest.case.SkipTest):
+                addSkip(error, str(exception))
+            else:
+                if not info:
+                    result.addError(error, sys.exc_info())
+                else:
+                    result.addError(error, info)
+
+        def _tearDownPreviousClass(self, test, result):
+            previousClass = getattr(result, '_previousTestClass', None)
+            currentClass = test.__class__
+            if currentClass == previousClass:
+                return
+            if getattr(previousClass, '_classSetupFailed', False):
+                return
+            if getattr(result, '_moduleSetUpFailed', False):
+                return
+            if getattr(previousClass, "__unittest_skip__", False):
+                return
+
+            tearDownClass = getattr(previousClass, 'tearDownClass', None)
+            if tearDownClass is not None:
+                unittest.suite._call_if_exists(result, '_setupStdout')
+                try:
+                    tearDownClass()
+                except Exception as e:
+                    if isinstance(result, unittest.suite._DebugResult):
+                        raise
+                    className = unittest.util.strclass(previousClass)
+                    self._createClassOrModuleLevelException(result, e,
+                                                            'tearDownClass',
+                                                            className)
+                finally:
+                    unittest.suite._call_if_exists(result, '_restoreStdout')
+                    if hasattr(previousClass, 'doClassCleanups'):
+                        previousClass.doClassCleanups()
+                        if len(previousClass.tearDown_exceptions) > 0:
+                            for exc in previousClass.tearDown_exceptions:
+                                className = unittest.util.strclass(previousClass)
+                                self._createClassOrModuleLevelException(result, exc[1],
+                                                                        'tearDownClass',
+                                                                        className,
+                                                                        info=exc)
 
 
 class TreeCase(unittest.TestCase):
+
+    if sys.version_info < (3, 8):
+        # Partial backport of bpo-24412, merged in CPython 3.8
+        _class_cleanups = []
+
+        @classmethod
+        def addClassCleanup(cls, function, *args, **kwargs):
+            """Same as addCleanup, except the cleanup items are called even if
+            setUpClass fails (unlike tearDownClass). Backport of bpo-24412."""
+            cls._class_cleanups.append((function, args, kwargs))
+
+        @classmethod
+        def doClassCleanups(cls):
+            """Execute all class cleanup functions. Normally called for you after tearDownClass.
+            Backport of bpo-24412."""
+            cls.tearDown_exceptions = []
+            while cls._class_cleanups:
+                function, args, kwargs = cls._class_cleanups.pop()
+                try:
+                    function(*args, **kwargs)
+                except Exception as exc:
+                    cls.tearDown_exceptions.append(sys.exc_info())
+
     def __init__(self, methodName='runTest'):
         super(TreeCase, self).__init__(methodName)
         self.addTypeEqualityFunc(etree._Element, self.assertTreesEqual)
@@ -458,23 +576,19 @@ class SingleTransactionCase(BaseCase):
 
     @classmethod
     def setUpClass(cls):
-        super(SingleTransactionCase, cls).setUpClass()
+        super().setUpClass()
         cls.registry = odoo.registry(get_db_name())
+        cls.addClassCleanup(cls.registry.clear_caches)
+
         cls.cr = cls.registry.cursor()
+        cls.addClassCleanup(cls.cr.close)
+
         cls.env = api.Environment(cls.cr, odoo.SUPERUSER_ID, {})
+        cls.addClassCleanup(cls.env.reset)
 
     def setUp(self):
         super(SingleTransactionCase, self).setUp()
         self.env.user.flush()
-
-    @classmethod
-    def tearDownClass(cls):
-        # rollback and close the cursor, and reset the environments
-        cls.registry.clear_caches()
-        cls.env.reset()
-        cls.cr.rollback()
-        cls.cr.close()
-        super(SingleTransactionCase, cls).tearDownClass()
 
 
 savepoint_seq = itertools.count()
@@ -490,20 +604,20 @@ class SavepointCase(SingleTransactionCase):
     the test data either.
     """
     def setUp(self):
-        super(SavepointCase, self).setUp()
-        self._savepoint_id = next(savepoint_seq)
-        self.cr.execute('SAVEPOINT test_%d' % self._savepoint_id)
+        super().setUp()
+
         # restore environments after the test to avoid invoking flush() with an
         # invalid environment (inexistent user id) from another test
         envs = self.env.all.envs
         self.addCleanup(envs.update, list(envs))
         self.addCleanup(envs.clear)
 
-    def tearDown(self):
-        self.cr.execute('ROLLBACK TO SAVEPOINT test_%d' % self._savepoint_id)
-        self.env.clear()
-        self.registry.clear_caches()
-        super(SavepointCase, self).tearDown()
+        self.addCleanup(self.registry.clear_caches)
+        self.addCleanup(self.env.clear)
+
+        self._savepoint_id = next(savepoint_seq)
+        self.cr.execute('SAVEPOINT test_%d' % self._savepoint_id)
+        self.addCleanup(self.cr.execute, 'ROLLBACK TO SAVEPOINT test_%d' % self._savepoint_id)
 
 
 class ChromeBrowserException(Exception):
@@ -587,15 +701,24 @@ class ChromeBrowser():
                     return bin_
 
         elif system == 'Windows':
-            # TODO: handle windows platform: https://stackoverflow.com/a/40674915
-            pass
+            bins = [
+                '%ProgramFiles%\\Google\\Chrome\\Application\\chrome.exe',
+                '%ProgramFiles(x86)%\\Google\\Chrome\\Application\\chrome.exe',
+                '%LocalAppData%\\Google\\Chrome\\Application\\chrome.exe',
+            ]
+            for bin_ in bins:
+                bin_ = os.path.expandvars(bin_)
+                if os.path.exists(bin_):
+                    return bin_
 
         raise unittest.SkipTest("Chrome executable not found")
 
     def _spawn_chrome(self, cmd):
-        if os.name != 'posix':
-            return
-        pid = os.fork()
+        if os.name == 'nt':
+            proc = subprocess.Popen(cmd, stderr=subprocess.DEVNULL)
+            pid = proc.pid
+        else:
+            pid = os.fork()
         if pid != 0:
             return pid
         else:
@@ -676,7 +799,7 @@ class ChromeBrowser():
             version : get chrome and dev tools version
             protocol : get the full protocol
         """
-        command = os.path.join('json', command).strip('/')
+        command = '/'.join(['json', command]).strip('/')
         url = werkzeug.urls.url_join('http://%s:%s/' % (HOST, self.devtools_port), command)
         self._logger.info("Issuing json command %s", url)
         delay = 0.1
@@ -886,8 +1009,16 @@ class ChromeBrowser():
             ffmpeg_path = None
 
         if ffmpeg_path:
-            framerate = int(len(self.screencast_frames) / (self.screencast_frames[-1].get('timestamp') - self.screencast_frames[0].get('timestamp')))
-            r = subprocess.run([ffmpeg_path, '-framerate', str(framerate), '-i', '%s/frame_%%05d.png' % self.screencasts_frames_dir, outfile])
+            nb_frames = len(self.screencast_frames)
+            concat_script_path = os.path.join(self.screencasts_dir, fname.replace('.mp4', '.txt'))
+            with open(concat_script_path, 'w') as concat_file:
+                for i in range(nb_frames):
+                    frame_file_path = os.path.join(self.screencasts_frames_dir, self.screencast_frames[i]['file_path'])
+                    end_time = time.time() if i == nb_frames - 1 else self.screencast_frames[i+1]['timestamp']
+                    duration = end_time - self.screencast_frames[i]['timestamp']
+                    concat_file.write("file '%s'\nduration %s\n" % (frame_file_path, duration))
+                concat_file.write("file '%s'" % frame_file_path)  # needed by the concat plugin
+            r = subprocess.run([ffmpeg_path, '-intra', '-f', 'concat','-safe', '0', '-i', concat_script_path, '-pix_fmt', 'yuv420p', outfile])
             self._logger.log(25, 'Screencast in: %s', outfile)
         else:
             outfile = outfile.strip('.mp4')
@@ -899,7 +1030,7 @@ class ChromeBrowser():
             os.makedirs(self.screencasts_dir, exist_ok=True)
             self.screencasts_frames_dir = os.path.join(self.screencasts_dir, 'frames')
             os.makedirs(self.screencasts_frames_dir, exist_ok=True)
-        self._websocket_send('Page.startScreencast', params={'maxWidth': 1024, 'maxHeight': 576})
+        self._websocket_send('Page.startScreencast')
 
     def set_cookie(self, name, value, path, domain):
         params = {'name': name, 'value': value, 'path': path, 'domain': domain}
@@ -969,6 +1100,7 @@ class ChromeBrowser():
             elif res:
                 self._logger.debug('chrome devtools protocol event: %s', res)
         self.take_screenshot()
+        self._save_screencast()
         raise ChromeBrowserException('Script timeout exceeded : %s' % (time.time() - start_time))
 
 
@@ -1083,7 +1215,7 @@ class HttpCase(TransactionCase):
     def __init__(self, methodName='runTest'):
         super(HttpCase, self).__init__(methodName)
         # v8 api with correct xmlrpc exception handling.
-        self.xmlrpc_url = url_8 = 'http://%s:%d/xmlrpc/2/' % (HOST, PORT)
+        self.xmlrpc_url = url_8 = 'http://%s:%d/xmlrpc/2/' % (HOST, odoo.tools.config['http_port'])
         self.xmlrpc_common = xmlrpclib.ServerProxy(url_8 + 'common')
         self.xmlrpc_db = xmlrpclib.ServerProxy(url_8 + 'db')
         self.xmlrpc_object = xmlrpclib.ServerProxy(url_8 + 'object')
@@ -1095,17 +1227,13 @@ class HttpCase(TransactionCase):
         # start browser on demand
         if cls.browser is None:
             cls.browser = ChromeBrowser(cls._logger, cls.browser_size, cls.__name__)
+            cls.addClassCleanup(cls.terminate_browser)
 
     @classmethod
     def terminate_browser(cls):
         if cls.browser:
             cls.browser.stop()
             cls.browser = None
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.terminate_browser()
-        super(HttpCase, cls).tearDownClass()
 
     def setUp(self):
         super(HttpCase, self).setUp()
@@ -1125,7 +1253,7 @@ class HttpCase(TransactionCase):
     def url_open(self, url, data=None, files=None, timeout=10, headers=None):
         self.env['base'].flush()
         if url.startswith('/'):
-            url = "http://%s:%s%s" % (HOST, PORT, url)
+            url = "http://%s:%s%s" % (HOST, odoo.tools.config['http_port'], url)
         if data or files:
             return self.opener.post(url, data=data, files=files, timeout=timeout, headers=headers)
         return self.opener.get(url, timeout=timeout, headers=headers)
@@ -1203,7 +1331,7 @@ class HttpCase(TransactionCase):
 
         try:
             self.authenticate(login, login)
-            base_url = "http://%s:%s" % (HOST, PORT)
+            base_url = "http://%s:%s" % (HOST, odoo.tools.config['http_port'])
             ICP = self.env['ir.config_parameter']
             ICP.set_param('web.base.url', base_url)
             # flush updates to the database before launching the client side,
@@ -1503,7 +1631,7 @@ class Form(object):
             order.append(fname)
 
             modifiers[fname] = {
-                modifier: domain if isinstance(domain, bool) else normalize_domain(domain)
+                modifier: bool(domain) if isinstance(domain, int) else normalize_domain(domain)
                 for modifier, domain in json.loads(f.get('modifiers', '{}')).items()
             }
             ctx = f.get('context')
@@ -1579,8 +1707,11 @@ class Form(object):
             return O2MProxy(self, field)
         return v
 
-    def _get_modifier(self, field, modifier, default=False, modmap=None, vals=None):
-        d = (modmap or self._view['modifiers'])[field].get(modifier, default)
+    def _get_modifier(self, field, modifier, *, default=False, view=None, modmap=None, vals=None):
+        if view is None:
+            view = self._view
+
+        d = (modmap or view['modifiers'])[field].get(modifier, default)
         if isinstance(d, bool):
             return d
 
@@ -1621,7 +1752,7 @@ class Form(object):
                     # we're looking up the "current view" so bits might be
                     # missing when processing o2ms in the parent (see
                     # values_to_save:1450 or so)
-                    f_ = self._view['fields'].get(f, {'type': None})
+                    f_ = view['fields'].get(f, {'type': None})
                     if f_['type'] == 'many2many':
                         # field value should be [(6, _, ids)], we want just the ids
                         field_val = field_val[0][2] if field_val else []
@@ -1639,8 +1770,8 @@ class Form(object):
         '<=': operator.le,
         '>=': operator.ge,
         '>': operator.gt,
-        'in': lambda a, b: a in b,
-        'not in': lambda a, b: a not in b
+        'in': lambda a, b: (a in b) if isinstance(b, (tuple, list)) else (b in a),
+        'not in': lambda a, b: (a not in b) if isinstance(b, (tuple, list)) else (b not in a),
     }
     def _get_context(self, field):
         c = self._view['contexts'].get(field)
@@ -1758,7 +1889,7 @@ class Form(object):
         for f in fields:
             get_modifier = functools.partial(
                 self._get_modifier,
-                f, modmap=view['modifiers'],
+                f, view=view,
                 vals=modifiers_values or record_values
             )
             descr = fields[f]
@@ -1914,7 +2045,7 @@ class Form(object):
                         stored = UpdateDict(record_to_values(subfields, record))
 
                     updates = (
-                        (k, self._cleanup_onchange(subfields[k], v, None))
+                        (k, self._cleanup_onchange(subfields[k], v, stored.get(k)))
                         for k, v in command[2].items()
                         if k in subfields
                     )
@@ -1944,7 +2075,9 @@ class Form(object):
             else:
                 ids = list(current[0][2])
             for command in value:
-                if command[0] == 3:
+                if command[0] == 1:
+                    ids.append(command[1])
+                elif command[0] == 3:
                     ids.remove(command[1])
                 elif command[0] == 4:
                     ids.append(command[1])
@@ -1985,11 +2118,11 @@ class O2MForm(Form):
             if hasattr(vals, '_changed'):
                 self._changed.update(vals._changed)
 
-    def _get_modifier(self, field, modifier, default=False, modmap=None, vals=None):
+    def _get_modifier(self, field, modifier, *, default=False, view=None, modmap=None, vals=None):
         if vals is None:
             vals = {**self._values, '•parent•': self._proxy._parent._values}
 
-        return super()._get_modifier(field, modifier, default=default, modmap=modmap, vals=vals)
+        return super()._get_modifier(field, modifier, default=default, view=view, modmap=modmap, vals=vals)
 
     def _onchange_values(self):
         values = super(O2MForm, self)._onchange_values()
@@ -2164,7 +2297,7 @@ class O2MProxy(X2MProxy):
         del self._records[index]
         self._parent._perform_onchange([self._field])
 
-class M2MProxy(X2MProxy, collections.Sequence):
+class M2MProxy(X2MProxy, collections.abc.Sequence):
     """ M2MProxy()
 
     Behaves as a :class:`~collection.Sequence` of recordsets, can be

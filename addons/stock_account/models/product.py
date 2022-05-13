@@ -3,8 +3,9 @@
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
-from odoo.tools import float_is_zero
+from odoo.tools import float_is_zero, float_repr, float_compare
 from odoo.exceptions import ValidationError
+from collections import defaultdict
 
 
 class ProductTemplate(models.Model):
@@ -92,8 +93,8 @@ class ProductTemplate(models.Model):
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
-    value_svl = fields.Float(compute='_compute_value_svl')
-    quantity_svl = fields.Float(compute='_compute_value_svl')
+    value_svl = fields.Float(compute='_compute_value_svl', compute_sudo=True)
+    quantity_svl = fields.Float(compute='_compute_value_svl', compute_sudo=True)
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'product_id')
 
     @api.depends('stock_valuation_layer_ids')
@@ -131,9 +132,11 @@ class ProductProduct(models.Model):
         :rtype: dict
         """
         self.ensure_one()
+        company_id = self.env.context.get('force_company', self.env.company.id)
+        company = self.env['res.company'].browse(company_id)
         vals = {
             'product_id': self.id,
-            'value': unit_cost * quantity,
+            'value': company.currency_id.round(unit_cost * quantity),
             'unit_cost': unit_cost,
             'quantity': quantity,
         }
@@ -150,20 +153,45 @@ class ProductProduct(models.Model):
         :rtype: dict
         """
         self.ensure_one()
+        company_id = self.env.context.get('force_company', self.env.company.id)
+        company = self.env['res.company'].browse(company_id)
+        currency = company.currency_id
         # Quantity is negative for out valuation layers.
         quantity = -1 * quantity
         vals = {
             'product_id' : self.id,
-            'value': quantity * self.standard_price,
+            'value': currency.round(quantity * self.standard_price),
             'unit_cost': self.standard_price,
             'quantity': quantity,
         }
         if self.cost_method in ('average', 'fifo'):
             fifo_vals = self._run_fifo(abs(quantity), company)
             vals['remaining_qty'] = fifo_vals.get('remaining_qty')
+            # In case of AVCO, fix rounding issue of standard price when needed.
+            if self.cost_method == 'average':
+                rounding_error = currency.round(self.standard_price * self.quantity_svl - self.value_svl)
+                if rounding_error:
+                    # If it is bigger than the (smallest number of the currency * quantity) / 2,
+                    # then it isn't a rounding error but a stock valuation error, we shouldn't fix it under the hood ...
+                    if abs(rounding_error) <= (abs(quantity) * currency.rounding) / 2:
+                        vals['value'] += rounding_error
+                        vals['rounding_adjustment'] = '\nRounding Adjustment: %s%s %s' % (
+                            '+' if rounding_error > 0 else '',
+                            float_repr(rounding_error, precision_digits=currency.decimal_places),
+                            currency.symbol
+                        )
             if self.cost_method == 'fifo':
                 vals.update(fifo_vals)
         return vals
+
+    def write(self, vals):
+        if self.env.context.get('import_file') and not self.env.context.get('import_standard_price'):
+            if 'standard_price' in vals:
+                for product in self:
+                    counterpart_account_id = product.property_account_expense_id.id or product.categ_id.property_account_expense_categ_id.id
+                    product.with_context(import_standard_price=True)._change_standard_price(vals['standard_price'], counterpart_account_id)
+        res = super(ProductProduct, self).write(vals)
+        return res
 
     def _change_standard_price(self, new_price, counterpart_account_id=False):
         """Helper to create the stock valuation layers and the account moves
@@ -178,7 +206,7 @@ class ProductProduct(models.Model):
             if product.cost_method not in ('standard', 'average'):
                 continue
             quantity_svl = product.sudo().quantity_svl
-            if float_is_zero(quantity_svl, precision_rounding=product.uom_id.rounding):
+            if float_compare(quantity_svl, 0.0, precision_rounding=product.uom_id.rounding) <= 0:
                 continue
             diff = new_price - product.standard_price
             value = company_id.currency_id.round(quantity_svl * diff)
@@ -202,7 +230,7 @@ class ProductProduct(models.Model):
             product = stock_valuation_layer.product_id
             value = stock_valuation_layer.value
 
-            if product.valuation != 'real_time':
+            if product.type != 'product' or product.valuation != 'real_time':
                 continue
 
             # Sanity check.
@@ -423,7 +451,7 @@ class ProductProduct(models.Model):
                 # FIXME: create an empty layer to track the change?
                 continue
             svsl_vals = product._prepare_out_svl_vals(product.quantity_svl, self.env.company)
-            svsl_vals['description'] = description
+            svsl_vals['description'] = description + svsl_vals.pop('rounding_adjustment', '')
             svsl_vals['company_id'] = self.env.company.id
             empty_stock_svl_list.append(svsl_vals)
         return empty_stock_svl_list, products_orig_quantity_svl, impacted_products
@@ -592,14 +620,26 @@ class ProductProduct(models.Model):
         if not qty_to_invoice:
             return 0.0
 
+        # if True, consider the incoming moves
+        is_returned = self.env.context.get('is_returned', False)
+
+        returned_quantities = defaultdict(float)
+        for move in stock_moves:
+            if move.origin_returned_move_id:
+                returned_quantities[move.origin_returned_move_id.id] += abs(sum(move.sudo().stock_valuation_layer_ids.mapped('quantity')))
         candidates = stock_moves\
             .sudo()\
+            .filtered(lambda m: is_returned == bool(m.origin_returned_move_id and sum(m.stock_valuation_layer_ids.mapped('quantity')) >= 0))\
             .mapped('stock_valuation_layer_ids')\
             .sorted()
         qty_to_take_on_candidates = qty_to_invoice
         tmp_value = 0  # to accumulate the value taken on the candidates
         for candidate in candidates:
+            if not candidate.quantity:
+                continue
             candidate_quantity = abs(candidate.quantity)
+            if candidate.stock_move_id.id in returned_quantities:
+                candidate_quantity -= returned_quantities[candidate.stock_move_id.id]
             if float_is_zero(candidate_quantity, precision_rounding=candidate.uom_id.rounding):
                 continue  # correction entries
             if not float_is_zero(qty_invoiced, precision_rounding=candidate.uom_id.rounding):

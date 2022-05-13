@@ -6,8 +6,9 @@ var core = require('web.core');
 var _t = core._t;
 
 var PrinterMixin = {
-    init: function () {
+    init: function (pos) {
         this.receipt_queue = [];
+        this.pos = pos;
     },
 
     /**
@@ -56,7 +57,8 @@ var PrinterMixin = {
                 onrendered: function (canvas) {
                     $('.pos-receipt-print').empty();
                     resolve(self.process_canvas(canvas));
-                } 
+                },
+                letterRendering: self.pos.htmlToImgLetterRendering(),
             })
         });
         return promise;
@@ -83,8 +85,7 @@ var PrinterMixin = {
 
 var Printer = core.Class.extend(PrinterMixin, {
     init: function (url, pos) {
-        PrinterMixin.init.call(this, arguments);
-        this.pos = pos;
+        PrinterMixin.init.call(this, pos);
         this.connection = new Session(undefined, url || 'http://localhost:8069', { use_cors: true});
     },
 

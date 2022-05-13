@@ -95,7 +95,7 @@ class HrEmployeePrivate(models.Model):
     km_home_work = fields.Integer(string="Km Home-Work", groups="hr.group_hr_user", tracking=True)
 
     image_1920 = fields.Image(default=_default_image)
-    phone = fields.Char(related='address_home_id.phone', related_sudo=False, string="Private Phone", groups="hr.group_hr_user")
+    phone = fields.Char(related='address_home_id.phone', related_sudo=False, readonly=False, string="Private Phone", groups="hr.group_hr_user")
     # employee in company
     child_ids = fields.One2many('hr.employee', 'parent_id', string='Direct subordinates')
     category_ids = fields.Many2many(
@@ -104,7 +104,7 @@ class HrEmployeePrivate(models.Model):
         string='Tags')
     # misc
     notes = fields.Text('Notes', groups="hr.group_hr_user")
-    color = fields.Integer('Color Index', default=0, groups="hr.group_hr_user")
+    color = fields.Integer('Color Index', default=0)
     barcode = fields.Char(string="Badge ID", help="ID used for employee identification.", groups="hr.group_hr_user", copy=False)
     pin = fields.Char(string="PIN", groups="hr.group_hr_user", copy=False,
         help="PIN used to Check In/Out in Kiosk Mode (if enabled in Configuration).")

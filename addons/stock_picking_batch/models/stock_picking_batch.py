@@ -75,7 +75,7 @@ class StockPickingBatch(models.Model):
                 picking_type = picking.picking_type_id
                 if (picking_type.use_create_lots or picking_type.use_existing_lots):
                     for ml in picking.move_line_ids:
-                        if ml.product_id.tracking != 'none':
+                        if ml.product_id.tracking != 'none' and not ml.lot_id and not ml.lot_name:
                             raise UserError(_('Some products require lots/serial numbers.'))
                 # Check if we need to set some qty done.
                 picking_without_qty_done |= picking
@@ -83,7 +83,7 @@ class StockPickingBatch(models.Model):
                 picking_to_backorder |= picking
             else:
                 picking.action_done()
-        if picking_without_qty_done:
+        if pickings and len(picking_without_qty_done) == len(pickings):
             view = self.env.ref('stock.view_immediate_transfer')
             wiz = self.env['stock.immediate.transfer'].create({
                 'pick_ids': [(4, p.id) for p in picking_without_qty_done],
@@ -100,8 +100,12 @@ class StockPickingBatch(models.Model):
                 'res_id': wiz.id,
                 'context': self.env.context,
             }
-        if picking_to_backorder:
-            return picking_to_backorder.action_generate_backorder_wizard()
+        if picking_to_backorder or picking_without_qty_done:
+            res = picking_to_backorder.action_generate_backorder_wizard()
+            if picking_without_qty_done and 'context' in res:
+                res['context']['pickings_to_detach'] = picking_without_qty_done.ids
+            return res
+
         # Change the state only if there is no other action (= wizard) waiting.
         self.write({'state': 'done'})
         return True

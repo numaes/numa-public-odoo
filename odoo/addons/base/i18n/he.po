@@ -6,7 +6,6 @@
 # Fishfur A Banter <fishfurbanter@gmail.com>, 2019
 # Moshe Flam <pashute@gmail.com>, 2019
 # Leandro Noijovich <eliel.sorcerer@gmail.com>, 2019
-# hed shefetr <hed@laylinetech.com>, 2019
 # Amit Spilman <amit@laylinetech.com>, 2019
 # Mor Kir <morki@013.net.il>, 2019
 # ExcaliberX <excaliberx@gmail.com>, 2019
@@ -16,14 +15,18 @@
 # Martin Trigaux, 2020
 # Yihya Hugirat <hugirat@gmail.com>, 2020
 # דודי מלכה <Dudimalka6@gmail.com>, 2020
+# Yves Goldberg <admin@ygol.com>, 2020
+# hed shefer <hed@laylinetech.com>, 2020
+# david danilov, 2021
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 13.0+e\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-25 09:16+0000\n"
+"POT-Creation-Date: 2020-07-23 15:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: דודי מלכה <Dudimalka6@gmail.com>, 2020\n"
+"Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2022\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1311,7 +1314,7 @@ msgid ""
 "Setup\n"
 "-----\n"
 "\n"
-"- *Configuration > Journals*\n"
+"- *Account > Configuration > invoicing > Journals*\n"
 "\n"
 "    If needed, create new journal or choose an existing journal with **Type**\n"
 "    set to *“Bank”*.\n"
@@ -1320,28 +1323,9 @@ msgid ""
 "\n"
 "    On the **Bank Account** tab, enter the **Account Number**.\n"
 "\n"
-"- *Configuration > Bank Accounts*\n"
-"\n"
-"    Account will show up in list as the journal name.\n"
-"\n"
-"    Editing will show the **Account Number**.  This is important as it is used by\n"
-"    the ABA process.\n"
-"\n"
-"    **Bank** is optional.\n"
-"\n"
-"- *Sales > Configuration > Bank Accounts > Bank Accounts*\n"
-"\n"
-"    Account will show up in list as the account number.\n"
-"\n"
-"    **ABA Payments** - Set to *“Account for Making ABA Payments”*.\n"
+"    On the same tab, ensure the ABA transfer information is set up.\n"
 "\n"
 "    **BSB** - Required, 6 digits, and will be auto formatted.\n"
-"\n"
-"    **Account Holder** - Optional.\n"
-"\n"
-"    **Account / Payee Name** - Required.  Generally not validated by the banks\n"
-"    on ABA file transfers, and may show up on the payee bank statement against\n"
-"    the payment.\n"
 "\n"
 "    **Financial Institution Code** - Required (provided by bank or can be found\n"
 "    on Google).  It is three uppercase 3 characters.\n"
@@ -1350,30 +1334,42 @@ msgid ""
 "    may reject the ABA file if the Supplying User Name is not as expected.  It\n"
 "    cannot be longer than 26 characters.\n"
 "\n"
-"    **Identification Number (APCA)** - User Identification number is bank\n"
+"    **APCA Identification Number** - User Identification number is bank\n"
 "    allocated.  It is 6 digits.\n"
 "\n"
 "    **Include Self Balancing Transaction** - Some institutions require that the\n"
 "    last be a self balancing transaction which is used as a verification.\n"
 "\n"
+"- *Accounting > Configuration > Payments > Bank Accounts*\n"
+"\n"
+"    Account will show up in list as the journal name.\n"
+"\n"
+"    Editing will show the **Account Number**.  This is important as it is used by\n"
+"    the ABA process.\n"
+"\n"
+"    **Bank** is optional.\n"
+"\n"
+"- *Contacts > Configuration > Bank Accounts > Bank Accounts*\n"
+"\n"
+"    Paying account will show up in list as the account number.\n"
+"\n"
+"    **Account Holder Name** - Can be entered here, if Required.  Generally not\n"
+"    validated by the banks on ABA file transfers, but may show up on the payee\n"
+"    bank statement against the payment.\n"
+"\n"
 "- Vendor bank accounts can be set up in the same place, however, it is\n"
 "  generally easier to set them up from the partner from for the Vendor.\n"
 "\n"
-"- *Accounting > Purchases > Vendors*\n"
+"- *Accounting > Vendors > Vendors*\n"
 "\n"
-"    On **Sales & Purchases** tab, click on *\"Bank account(s)\"* from where a\n"
+"    On **Accounting** tab, click on *\"View accounts detail\"* from where a\n"
 "    vendor bank account can be created or edited.\n"
 "\n"
-"    **Account Number** - Required.\n"
-"\n"
-"    **ABA Payments** - Set to *“Allow ABA Payments to this Account”*.\n"
+"    **Account Number** - Required, must be less than 9 digits.\n"
 "\n"
 "    **BSB** - Required, 6 digits, and will be auto formatted.\n"
 "\n"
-"    **Account Holder** - Optional.\n"
-"\n"
-"    **Account / Payee Name** - Required.  Generally not validated by the\n"
-"    banks.\n"
+"    **Account Holder Name** - Optional.\n"
 "\n"
 "Use\n"
 "---\n"
@@ -1387,101 +1383,23 @@ msgid ""
 "    Select **ABA Credit Transfer** radio button.\n"
 "\n"
 "    If the vendor has multiple bank account, you may need to select the\n"
-"    correct **Recipient Bank Account**.\n"
+"    correct **Recipient Bank Account**.  Or if paying a vendor bill, it may\n"
+"    need the correct bank account associated with it.\n"
 "\n"
 "    Enter payment amount, etc.\n"
 "\n"
-"- *Purchases > Payments*\n"
+"- *Vendors > Payments*\n"
 "\n"
 "    After payment(s) are confirmed, they will show up in the payments list.\n"
 "\n"
 "    Using filters, or sorting, select the payments to be included.  Under\n"
-"    *Actions* choose *Download ABA Payment*.  A pop up appears with the ABA\n"
-"    file from which you can click on the file to download locally.  This\n"
-"    file can then be uploaded to the bank.\n"
+"    *Actions* choose *Create batch payment*.\n"
+"\n"
+"- *Vendors > Batch Payments*\n"
+"\n"
+"    When validating a batch payment, the ABA file will be generated.  It can\n"
+"    be regenerated.  This file can then be uploaded to the bank.\n"
 msgstr ""
-"\n"
-"ABA העברת אשראי\n"
-"===================\n"
-"\n"
-"מודול זה מאפשר יצירת קבוצות תשלום כמו ABA (Australian\n"
-"Bankers Association) בקבצי טקסט. ניתן להעלות את הקובץ 'aba' שנוצר\n"
-"בבנקים אוסטרליים רבים.\n"
-"\n"
-"התקנה\n"
-"-----\n"
-"\n"
-"- * תצורה> יומן*\n"
-"במידת הצורך, צור יומן חדש או בחר יומן קיים עם ** סוג **\n"
-" הגדר ל - * \"בנק\" *.\n"
-"\n"
-"ב- ** הגדרות מתקדמות **, ודא ש- ABA העברת אשראי מסומנת.\n"
-"בכרטיסייה ** חשבון בנק **, הזן את  ** מספר החשבון **.\n"
-"\n"
-"- * תצורה> חשבונות בנק *\n"
-"\n"
-"החשבון יופיע ברשימה בתור שם היומן.\n"
-"\n"
-"  העריכה תציג את ** מספר החשבון **. זה חשוב כפי שהוא משמש\n"
-" את תהליך ה ABA.\n"
-"** בנק ** הוא אופציונלי.\n"
-"- * מכירות> תצורה> חשבונות בנק> חשבונות בנק *\n"
-"החשבון יופיע ברשימה כמספר החשבון.\n"
-"** תשלומי ABA ** - מוגדר ל * \"חשבון עבור ביצוע תשלומי ABA\" *.\n"
-"** BSB ** - חובה, 6 ספרות, ויפורמט אוטומטי.\n"
-"** מחזיק החשבון ** - אופציונלי.\n"
-"    ** חשבון / מקבל תשלום ** - חובה. בדרך כלל לא בתוקף על ידי הבנקים\n"
-"בהעברות קבצי ABA, ועשויים להופיע בחשבון הבנק של מקבל התשלום\n"
-"עבור התשלום.\n"
-"** קוד מוסד פיננסי ** - נדרש (מסופק על ידי הבנק או שניתן למצוא\n"
-"    ב- Google).  הקוד מורכב מ-3 תווי אותיות.\n"
-"   ** מתן שם משתמש ** - בנקים מסוימים מאפשרים להיות ללא שם משתמש, בנקים\n"
-"    מסוימים עשויים לדחות את קובץ ABA אם שם המשתמש המסופק אינו כצפוי. השם\n"
-"לא יכול להכיל יותר מ 26 תווים.\n"
-"** מספר זיהוי (APCA) ** - מספר זיהוי משתמש הוא מוקצה\n"
-"לבנק. מורכב מ-6 ספרות.\n"
-"\n"
-"** כולל עסקת איזון עצמי ** - מוסדות מסוימים דורשים כי\n"
-"האחרון יהיה עסקת איזון עצמי אשר משמש לאימות.\n"
-"- חשבונות בנק ספק ניתן להגדיר באותו מקום, עם זאת,\n"
-"בדרך כלל קל יותר להגדיר אותם מן השותף מ עבור הספק.\n"
-"- * חשבונאות> רכישות> ספקים *\n"
-"\n"
-" בתג ** מכירות ורכש **, לחץ על * \"חשבון הבנק (ים)\" * שממנו \n"
-" ניתן ליצור או לערוך חשבון בנק של ספק.\n"
-"** מספר חשבון ** - חובה.\n"
-" ** תשלומים ABA ** - מוגדר ל * \"אפשר תשלומי ABA לחשבון זה\" *.\n"
-"\n"
-"   ** BSB ** - חובה, 6 ספרות, ויפורמט אוטומטי.\n"
-"\n"
-" ** מחזיק חשבון ** - אופציונלי.\n"
-"** שם חשבון / מקבל תשלום ** - חובה. בדרך כלל לא בתוקף על ידי\n"
-"    בנקים.\n"
-"\n"
-"השתמש\n"
-"---\n"
-"\n"
-"- יצירת תשלום הספק בדרך הרגילה.\n"
-"\n"
-"ודא ש **הספק ** הוא בעל חשבון תשלום ABA תקין.\n"
-"\n"
-"בחר את ** תשלום היומן** הנכון אשר מוגדר עבור תשלומי ABA.\n"
-"\n"
-" בחר לחצן  ** העברת אשראי ABA **.\n"
-"\n"
-" אם לספק יש חשבונות בנק רבים, ייתכן שיהיה עליך לבחור את\n"
-" ** חשבון בנק מקבל ** הנכון.\n"
-"\n"
-"  הזן סכום לתשלום וכו '.\n"
-"\n"
-"- * רכישות> תשלומים *\n"
-"\n"
-"לאחר אישור התשלומים, הם יופיעו ברשימת התשלומים.\n"
-"\n"
-"באמצעות מסננים או מיון, בחר את התשלומים שיש לכלול. תחת\n"
-" * פעולות * בחר * הורד תשלום ABA *. יופיע פופ-אפ עם\n"
-"קובץ ABA שממנו ניתן ללחוץ על הקובץ כדי להוריד אותו באופן מקומי.\n"
-"לאחר מכן ניתן להעלות קובץ זה לבנק.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_auto_transfer
@@ -6228,7 +6146,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__accesses_count
 msgid "# Access Rights"
-msgstr ""
+msgstr "# הרשאות גישה"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__groups_count
@@ -6411,11 +6329,27 @@ msgid ", required"
 msgstr ", נדרש"
 
 #. module: base
+#: code:addons/models.py:0
+#, python-format
+msgid ""
+"- %(record)r belongs to company %(company)r and %(field)r (%(fname)s: "
+"%(values)s) belongs to another company."
+msgstr ""
+
+#. module: base
 #: code:addons/model.py:0
 #, python-format
 msgid ""
 "- Create/update: a mandatory field is not set.\n"
 "- Delete: another model requires the record being deleted. If possible, archive it instead."
+msgstr ""
+
+#. module: base
+#: code:addons/models.py:0
+#, python-format
+msgid ""
+"- Record is company %(company)r and %(field)r (%(fname)s: %(values)s) "
+"belongs to another company."
 msgstr ""
 
 #. module: base
@@ -7309,12 +7243,12 @@ msgstr "Access Token"
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_hr
 msgid "Access documents from the employee profile"
-msgstr ""
+msgstr "גישה למסמכים מחשבון העובד"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_profile
 msgid "Access the website profile of the users"
-msgstr ""
+msgstr "גישה לפרופיל האתר של המשתמשים"
 
 #. module: base
 #: model:res.groups,name:base.group_private_addresses
@@ -7965,7 +7899,7 @@ msgstr "אחרי הסכום"
 #. module: base
 #: model:ir.module.category,description:base.module_category_operations_helpdesk
 msgid "After-sales services"
-msgstr ""
+msgstr "אחרי-מכירות"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_A
@@ -8098,6 +8032,8 @@ msgid ""
 "Allows to access the website profile of the users and see their statistics "
 "(karma, badges, etc..)"
 msgstr ""
+"מאפשר לגשת לפרופיל האתר של המשתמשים בכדי לראות את הסטטיסטיקה שלהם (קארמה, "
+"תגים וכו')"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_slides_forum
@@ -9427,6 +9363,12 @@ msgstr ""
 #. module: base
 #: code:addons/base/models/res_lang.py:0
 #, python-format
+msgid "Cannot deactivate a language that is currently used by contacts."
+msgstr "לא ניתן לבטל שפה שנמצאת כעת בשימוש על ידי אנשי קשר."
+
+#. module: base
+#: code:addons/base/models/res_lang.py:0
+#, python-format
 msgid "Cannot deactivate a language that is currently used by users."
 msgstr "אין אפשרות לבטל שפה נמצאת כעת בשימוש על-ידי משתמשים"
 
@@ -9714,7 +9656,7 @@ msgstr "עיר"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_address_city
 msgid "City Addresses"
-msgstr ""
+msgstr "כתובות עיר"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_logging__type__client
@@ -11417,7 +11359,7 @@ msgstr "מוצרים דיגיטליים"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Digital formatting"
-msgstr "עיצוב ספרות"
+msgstr "עיצוב דיגיטאלי"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_decimal_precision__digits
@@ -14581,7 +14523,7 @@ msgstr "ביישומים"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iap
 msgid "In-App Purchases"
-msgstr ""
+msgstr "רכישות In-App"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_search
@@ -14992,6 +14934,12 @@ msgid "Invalid model name %r in action definition."
 msgstr ""
 
 #. module: base
+#: code:addons/base/models/ir_actions.py:611
+#, python-format
+msgid "many2many fields cannot be evaluated by reference"
+msgstr ""
+
+#. module: base
 #: code:addons/template_inheritance.py:0
 #, python-format
 msgid "Invalid position attribute: '%s'"
@@ -15171,7 +15119,7 @@ msgstr "ישראל"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_il
 msgid "Israel - Accounting"
-msgstr ""
+msgstr "ישראל - הנהלת חשבונות"
 
 #. module: base
 #: model:res.country,name:base.it
@@ -15743,7 +15691,7 @@ msgstr "יצירת לידים"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_iap_lead_website
 msgid "Lead Generation From Website Visits"
-msgstr ""
+msgstr "יצירת לידים מביקורים באתר"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_crm_livechat
@@ -17580,7 +17528,7 @@ msgstr "אין מספיק הרשאות במזהה החיצוני:"
 #: code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid "Note: this might be a multi-company issue."
-msgstr ""
+msgstr "הערה: שגיאה זו עשויה להיות קשורה לבין-חברתי"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__comment
@@ -17609,7 +17557,7 @@ msgstr "כמות חברות"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__accesses_count
 msgid "Number of access rights that apply to the current user"
-msgstr ""
+msgstr "מספר הרשאות הגישה החלות על המשתמש הנוכחי"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__groups_count
@@ -18784,6 +18732,16 @@ msgid "Odoo helps you easily track all activities related to a vendor."
 msgstr "Odoo מסייע לך לעקוב בקלות אחר כל הפעילויות הקשורות לספק.."
 
 #. module: base
+#: code:addons/base/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"Odoo is unable to merge the PDFs attached to the following records:\n"
+"%s\n"
+"\n"
+"Please exclude them from the selection to continue. It's possible to still retrieve those PDFs by selecting each of the affected records individually, which will avoid merging."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_odoo_referral
 msgid "Odoo referral program"
 msgstr ""
@@ -18850,6 +18808,12 @@ msgid ""
 "One of the documents you are trying to access has been deleted, please try "
 "again after refreshing."
 msgstr "אחד המסמכים שאליהם אתה מנסה לגשת נמחק, נסה שוב לאחר הרענון."
+
+#. module: base
+#: code:addons/base/models/ir_actions_report.py:0
+#, python-format
+msgid "One of the documents, you try to merge is encrypted"
+msgstr ""
 
 #. module: base
 #: code:addons/models.py:0
@@ -19532,7 +19496,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_res_partner_category
 msgid "Partner Tags"
-msgstr ""
+msgstr "תגיות שותפים"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner_title
@@ -20985,7 +20949,7 @@ msgstr "נדרש"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_crm_partner_assign
 msgid "Resellers"
-msgstr ""
+msgstr "מפיצים"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_partner_commission
@@ -21550,12 +21514,12 @@ msgstr "חפש שותף"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_category_view_search
 msgid "Search Partner Category"
-msgstr ""
+msgstr "חיפוש קטגוריית איש קשר"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_industry_view_search
 msgid "Search Partner Industry"
-msgstr ""
+msgstr "חיפוש סוג תעשיה של אנשי קשר "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__search_view
@@ -22148,7 +22112,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_social_media
 msgid "Social media connectors for company settings."
-msgstr ""
+msgstr "קשרי המדיה החברתית להגדרות החברה."
 
 #. module: base
 #: model:res.country,name:base.sb
@@ -22159,17 +22123,6 @@ msgstr "איי שלמה"
 #: model:res.country,name:base.so
 msgid "Somalia"
 msgstr "סומליה"
-
-#. module: base
-#: code:addons/models.py:0
-#, python-format
-msgid ""
-"Some records are incompatible with the company of the %(document_descr)s.\n"
-"\n"
-"Incompatibilities:\n"
-"Fields: %(fields)s\n"
-"Record ids: %(records)s\n"
-msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_bank__bic
@@ -22195,7 +22148,7 @@ msgstr ""
 #: code:addons/base/models/ir_attachment.py:0
 #, python-format
 msgid "Sorry, you are not allowed to access these fields on attachments."
-msgstr ""
+msgstr "מצטערים, אינך רשאי לשדה זה במסמך המצורף."
 
 #. module: base
 #: code:addons/base/models/ir_attachment.py:0
@@ -22864,7 +22817,7 @@ msgstr "שם תבנית"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_new_api
 msgid "Test API"
-msgstr ""
+msgstr "בדיקת API"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_action_bindings
@@ -23026,7 +22979,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_lang_url_code_uniq
 msgid "The URL code of the language must be unique !"
-msgstr ""
+msgstr "קוד כתובת האתר של השפה חייב להיות ייחודי!"
 
 #. module: base
 #: code:addons/base/models/ir_module.py:0
@@ -23111,7 +23064,7 @@ msgstr "אובייקט מסד הנתונים המצורף אליו יצורף."
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__company_id
 msgid "The default company for this user."
-msgstr ""
+msgstr "חברת ברירת המחדל עבור משתמש זה."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
@@ -23192,6 +23145,12 @@ msgstr "שם המדינה המלא."
 #: model:ir.model.fields,help:base.field_res_users__user_id
 msgid "The internal user in charge of this contact."
 msgstr "המשתמש הפנימי הממונה על איש קשר זה."
+
+#. module: base
+#: code:addons/base/models/res_country.py:106
+#, python-format
+msgid "The layout contains an invalid format key"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model__inherited_model_ids
@@ -23349,6 +23308,10 @@ msgid ""
 "%(multi_company_warning)s\n"
 "(Records: %(example_records)s, User: %(user_id)s)"
 msgstr ""
+"התהליך המבוקש (\"%(operation)s\" על \"%(document_kind)s\" (%(document_model)s)) נחסם בעקבות החוקים הבאים:\n"
+"%(rules_list)s\n"
+"%(multi_company_warning)s\n"
+"(רשומות: %(example_records)s, משתמש: %(user_id)s)"
 
 #. module: base
 #: code:addons/models.py:0
@@ -23522,7 +23485,7 @@ msgstr "עמודה זו מכילה נתוני מודול ולא ניתן להס�
 #: model:ir.model.fields,help:base.field_res_company__favicon
 msgid ""
 "This field holds the image used to display a favicon for a given company."
-msgstr ""
+msgstr "שדה זה מכיל את התמונה המשמשת להצגת סמל עבור חברה נתונה."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch_base
@@ -25547,8 +25510,8 @@ msgstr "לא ניתן להפעיל את משתמש-העל."
 #. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
-msgid "You cannot archive a contact linked to an internal user."
-msgstr "לא ניתן לשלוח לארכיון איש קשר המקושר למשתמש פנימי."
+msgid "You cannot archive a contact linked to a portal or internal user."
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0
@@ -25604,6 +25567,9 @@ msgid ""
 "\n"
 "(Operation: %(operation)s)"
 msgstr ""
+"אין לך מספיק זכויות לגשת לשדות \"%(fields)s\" ב-%(document_kind)s (%(document_model)s). אנא פנה למנהל המערכת שלך.\n"
+"\n"
+"(פעולה: %(operation)s)"
 
 #. module: base
 #: code:addons/base/models/ir_actions.py:0
@@ -25747,7 +25713,7 @@ msgstr ""
 #: code:addons/models.py:0
 #, python-format
 msgid "allowed for groups %s"
-msgstr ""
+msgstr "מאושר לקבוצות %s"
 
 #. module: base
 #: code:addons/base/models/res_currency.py:0
@@ -26096,7 +26062,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_access_rights
 msgid "test of access rights and rules"
-msgstr ""
+msgstr "בדיקה של זכויות גישה וכללים"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_read_group
