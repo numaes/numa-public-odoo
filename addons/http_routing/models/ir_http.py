@@ -169,7 +169,7 @@ def url_lang(path_or_uri, lang_code=None):
             # Insert the context language or the provided language
             elif lang_url_code != default_lg.url_code or force_lang:
                 ps.insert(1, lang_url_code)
-            location = u'/'.join(ps)
+            location = u'/'.join([p or '' for p in ps])
     return location
 
 
