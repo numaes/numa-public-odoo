@@ -462,7 +462,7 @@ class IrHttp(models.AbstractModel):
 
             cls._add_dispatch_parameters(func)
 
-            path = request.httprequest.path.split('/')
+            path = [p for p in request.httprequest.path.split('/') if p or p == '']
             default_lg_id = cls._get_default_lang()
             if request.routing_iteration == 1:
                 is_a_bot = cls.is_a_bot()
@@ -483,7 +483,7 @@ class IrHttp(models.AbstractModel):
                         path.pop(1)
                     if request.lang != default_lg_id:
                         path.insert(1, request.lang.url_code)
-                    path = '/'.join(path) or '/'
+                    path = '/'.join([p for p in path if p is not False]) or '/'
                     routing_error = None
                     redirect = request.redirect(path + '?' + request.httprequest.query_string.decode('utf-8'))
                     redirect.set_cookie('frontend_lang', request.lang.code)
@@ -492,7 +492,7 @@ class IrHttp(models.AbstractModel):
                     request.uid = None
                     path.pop(1)
                     routing_error = None
-                    return cls.reroute('/'.join(path) or '/')
+                    return cls.reroute('/'.join([p for p in path if p is not False]) or '/')
                 elif missing_url_lg and is_a_bot:
                     # Ensure that if the URL without lang is not redirected, the
                     # current lang is indeed the default lang, because it is the
