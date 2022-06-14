@@ -6173,7 +6173,7 @@ Fields:
                             if not line.id:
                                 # new line: send diff from scratch
                                 line_diff = line_snapshot.diff({})
-                                commands.append((0, line.id.ref or 0, line_diff))
+                                commands.append((0, 0, line_diff))
                             else:
                                 # existing line: check diff from database
                                 # (requires a clean record cache!)
