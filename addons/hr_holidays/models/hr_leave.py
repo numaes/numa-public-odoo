@@ -894,7 +894,9 @@ class HolidaysRequest(models.Model):
                 meetings += self.env['calendar.event'].with_user(user_id or self.env.uid).with_context(
                                 allowed_company_ids=[],
                                 no_mail_to_attendees=True,
-                                active_model=self._name
+                                active_model=self._name,
+                                default_res_model=self._name,
+                                default_res_id=self.id
                             ).create(meeting_values)
         Holiday = self.env['hr.leave']
         for meeting in meetings:
