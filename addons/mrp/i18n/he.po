@@ -24,6 +24,7 @@
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
 # MichaelHadar, 2022
 # Netta Waizer, 2022
+# Roy Sayag, 2022
 # NoaFarkash, 2022
 # 
 msgid ""
@@ -2724,7 +2725,7 @@ msgstr "אין דירוג עדיין"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "No manufacturing order found. Let's create one."
-msgstr ""
+msgstr "לא נמצאה הזמנת ייצור. בואו ניצור אחת."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.product_template_action
@@ -5230,7 +5231,7 @@ msgstr "אתה צריך לספק מספר אצווה עבור מוצר מוגמ�
 #: code:addons/mrp/wizard/mrp_immediate_production.py:0
 #, python-format
 msgid "You need to supply Lot/Serial Number for products:"
-msgstr ""
+msgstr "יש צורך לספק מספר סידורי/אצוות למוצרים:"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder
