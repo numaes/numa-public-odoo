@@ -22,9 +22,9 @@
 # uriel ehrman <uriel@laylinetech.com>, 2021
 # david danilov, 2021
 # Netta Waizer, 2022
-# NoaFarkash, 2022
 # Roy Sayag, 2022
 # Sagi Ahiel, 2022
+# NoaFarkash, 2022
 # 
 msgid ""
 msgstr ""
@@ -32,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Sagi Ahiel, 2022\n"
+"Last-Translator: NoaFarkash, 2022\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1003,6 +1003,7 @@ msgid ""
 "Delivery date promised by vendor. This date is used to determine expected "
 "arrival of products."
 msgstr ""
+"מועד אספקה ​​מובטח על ידי הספק. תאריך זה משמש לקביעת הגעת המוצרים הצפויה."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_report__date_order
@@ -1488,7 +1489,7 @@ msgstr "חסרים ערכים בשדות חובה עבור שורת הזמנת �
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "My Draft RFQs"
-msgstr ""
+msgstr "טיוטת הצעות המחיר שלי"
 
 #. module: purchase
 #. openerp-web
@@ -1568,7 +1569,7 @@ msgstr "אין בקשות להצעת מחיר להצגה"
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_normal_action_puchased
 msgid "No product found. Let's create one!"
-msgstr ""
+msgstr "לא נמצאו מוצרים. בואו ניצור אחד!"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_form_action
@@ -2232,7 +2233,7 @@ msgstr "כמויות שהתקבלו"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__mail_reception_confirmed
 msgid "Reception Confirmed"
-msgstr ""
+msgstr "הקבלה אושרה"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
@@ -2279,7 +2280,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__mail_reminder_confirmed
 msgid "Reminder Confirmed"
-msgstr ""
+msgstr "התזכורת אושרה"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.purchase_report
@@ -2563,6 +2564,8 @@ msgid ""
 "There is no invoiceable line. If a product has a control policy based on "
 "received quantity, please make sure that a quantity has been received."
 msgstr ""
+"לא ניתן לייצר חשבונית. אם למוצר יש מדיניות בקרה המבוססת על כמות שהתקבלה, נא "
+"לוודא שתועד שהכמות התקבלה."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_product__property_account_creditor_price_difference

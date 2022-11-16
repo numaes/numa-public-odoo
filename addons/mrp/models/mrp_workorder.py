@@ -407,6 +407,12 @@ class MrpWorkorder(models.Model):
     def _onchange_expected_duration(self):
         self.duration_expected = self._get_duration_expected()
 
+    @api.onchange('finished_lot_id')
+    def _onchange_finished_lot_id(self):
+        res = self.production_id._can_produce_serial_number(sn=self.finished_lot_id)
+        if res is not True:
+            return res
+
     def write(self, values):
         if 'production_id' in values:
             raise UserError(_('You cannot link this work order to another manufacturing order.'))
@@ -418,19 +424,16 @@ class MrpWorkorder(models.Model):
                     workorder.leave_id.resource_id = self.env['mrp.workcenter'].browse(values['workcenter_id']).resource_id
         if 'date_planned_start' in values or 'date_planned_finished' in values:
             for workorder in self:
-                start_date = fields.Datetime.to_datetime(values.get('date_planned_start')) or workorder.date_planned_start
-                end_date = fields.Datetime.to_datetime(values.get('date_planned_finished')) or workorder.date_planned_finished
+                start_date = fields.Datetime.to_datetime(values.get('date_planned_start', workorder.date_planned_start))
+                end_date = fields.Datetime.to_datetime(values.get('date_planned_finished', workorder.date_planned_finished))
                 if start_date and end_date and start_date > end_date:
                     raise UserError(_('The planned end date of the work order cannot be prior to the planned start date, please correct this to save the work order.'))
                 if 'duration_expected' not in values and not self.env.context.get('bypass_duration_calculation'):
                     if values.get('date_planned_start') and values.get('date_planned_finished'):
                         computed_finished_time = workorder._calculate_date_planned_finished(start_date)
                         values['date_planned_finished'] = computed_finished_time
-                    elif values.get('date_planned_start'):
-                        computed_duration = workorder._calculate_duration_expected(date_planned_start=start_date)
-                        values['duration_expected'] = computed_duration
-                    elif values.get('date_planned_finished'):
-                        computed_duration = workorder._calculate_duration_expected(date_planned_finished=end_date)
+                    elif start_date and end_date:
+                        computed_duration = workorder._calculate_duration_expected(date_planned_start=start_date, date_planned_finished=end_date)
                         values['duration_expected'] = computed_duration
                 # Update MO dates if the start date of the first WO or the
                 # finished date of the last WO is update.
@@ -596,6 +599,8 @@ class MrpWorkorder(models.Model):
         else:
             if self.date_planned_start > start_date:
                 vals['date_planned_start'] = start_date
+                if self.duration_expected:
+                    vals['date_planned_finished'] = self._calculate_date_planned_finished(start_date)
             if self.date_planned_finished and self.date_planned_finished < start_date:
                 vals['date_planned_finished'] = start_date
             return self.with_context(bypass_duration_calculation=True).write(vals)
@@ -848,16 +853,8 @@ class MrpWorkorder(models.Model):
             )
 
     def _check_sn_uniqueness(self):
-        """ Alert the user if the serial number as already been produced """
-        if self.product_tracking == 'serial' and self.finished_lot_id:
-            sml = self.env['stock.move.line'].search_count([
-                ('lot_id', '=', self.finished_lot_id.id),
-                ('location_id.usage', '=', 'production'),
-                ('qty_done', '=', 1),
-                ('state', '=', 'done')
-            ])
-            if sml:
-                raise UserError(_('This serial number for product %s has already been produced', self.product_id.name))
+        # todo master: remove
+        pass
 
     def _update_qty_producing(self, quantity):
         self.ensure_one()
