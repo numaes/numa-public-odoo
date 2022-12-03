@@ -251,6 +251,7 @@ class AccountMove(models.Model):
              "This is needed when cancelling the source: it will post the inverse journal entry to cancel that part too.")
     tax_cash_basis_move_id = fields.Many2one(
         comodel_name='account.move',
+        index=True,
         string="Origin Tax Cash Basis Entry",
         help="The journal entry from which this tax cash basis journal entry has been created.")
 
@@ -1485,7 +1486,15 @@ class AccountMove(models.Model):
             if new_pmt_state == 'paid' and move.move_type in ('in_invoice', 'out_invoice', 'entry'):
                 reverse_type = move.move_type == 'in_invoice' and 'in_refund' or move.move_type == 'out_invoice' and 'out_refund' or 'entry'
                 reverse_moves = self.env['account.move'].search([('reversed_entry_id', '=', move.id), ('state', '=', 'posted'), ('move_type', '=', reverse_type)])
-                caba_moves = self.env['account.move'].search([('tax_cash_basis_move_id', 'in', move.ids + reverse_moves.ids), ('state', '=', 'posted')])
+                if self.env.company.tax_exigibility:
+                    domain = [
+                        ('tax_cash_basis_move_id', 'in', move.ids + reverse_moves.ids),
+                        ('state', '=', 'posted'),
+                        ('move_type', '=', 'entry')
+                    ]
+                    caba_moves = self.env['account.move'].search(domain)
+                else:
+                    caba_moves = self.env['account.move']
 
                 # We only set 'reversed' state in cas of 1 to 1 full reconciliation with a reverse entry; otherwise, we use the regular 'paid' state
                 # We ignore potentials cash basis moves reconciled because the transition account of the tax is reconcilable
@@ -2008,6 +2017,10 @@ class AccountMove(models.Model):
         if move.is_invoice(include_receipts=True):
             # Make sure to recompute payment terms. This could be necessary if the date is different for example.
             # Also, this is necessary when creating a credit note because the current invoice is copied.
+
+            if move.currency_id != self.company_id.currency_id:
+                move.with_context(check_move_validity=False)._onchange_currency()
+                move._check_balanced()
             move._recompute_payment_terms_lines()
 
         return move
@@ -2671,6 +2684,9 @@ class AccountMove(models.Model):
 
             if move.is_invoice(include_receipts=True) and float_compare(move.amount_total, 0.0, precision_rounding=move.currency_id.rounding) < 0:
                 raise UserError(_("You cannot validate an invoice with a negative total amount. You should create a credit note instead. Use the action menu to transform it into a credit note or refund."))
+
+            if move.line_ids.account_id.filtered(lambda account: account.deprecated):
+                raise UserError(_("A line of this move is using a deprecated account, you cannot post it."))
 
             # Handle case when the invoice_date is not set. In that case, the invoice_date is set at today and then,
             # lines are recomputed accordingly.
