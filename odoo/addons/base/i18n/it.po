@@ -27,6 +27,7 @@
 # francesco.foresti <francesco.foresti@ooops404.com>, 2022
 # Stefano Consolaro <stefano.consolaro@mymage.it>, 2022
 # Friederike Fasterling-Nesselbosch, 2022
+# Luca Carlo, 2023
 # Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
@@ -4255,15 +4256,16 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Homepage dell'IoT Box\n"
-"================\n"
+"Pagina iniziale del box IoT\n"
+"======================\n"
 "\n"
-"Questo modulo sovrascrive l'interfaccia web di Odoo per visualizzare una semplice\n"
-"Homepage che spiega cos'è la IoT box e mostra lo stato,\n"
-"e dove trovare la documentazione.\n"
+"Il modulo sovrascrive l'interfaccia web di Odoo per\n"
+"visualizzare una pagina iniziale semplice che spiega cos'è il\n"
+"box IoT, mostrandone lo stato, e dove trovare la documentazione.\n"
 "\n"
-"Se attivato, non sarai in grado di accedere all'interfaccia \n"
-"regolare di Odoo.\n"
+"Se il modulo viene attivato non sarà più possibile accedere alla\n"
+"normale interfaccia web di Odoo.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_landed_costs
@@ -7431,6 +7433,8 @@ msgid ""
 "\n"
 "This module provides the link between quality steps and IoT devices. \n"
 msgstr ""
+"\n"
+"Modulo che fornisce il collegamento tra fasi della qualità e dispositivi IoT. \n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_note_pad
@@ -9142,7 +9146,7 @@ msgstr "Bonifico ABA"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_users_keys_description
 msgid "API Key: description input wizard"
-msgstr "API Key: procedura guidata di inserimento della descrizione"
+msgstr "Chiave API: procedura inserimento descrizione"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__api_key_ids
@@ -11704,7 +11708,7 @@ msgstr "Ciad"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_users_my
 msgid "Change My Preferences"
-msgstr "Modifica preferenze personali"
+msgstr "Cambia preferenze personali"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.change_password_wizard_action
@@ -11898,9 +11902,8 @@ msgid ""
 "Choose a subview of partners that includes only address fields, to change "
 "the way users can input addresses."
 msgstr ""
-"Scegliere una sottovisualizzazione dei partner che include solo i campi "
-"indirizzo, per cambiare il modo in cui gli utenti possono inserire gli "
-"indirizzi."
+"Scegliere una sottovista dei partner che includa solo i campi indirizzo, per"
+" cambiare il modo in cui gli utenti possono inserire gli indirizzi."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server__smtp_encryption
@@ -11910,6 +11913,10 @@ msgid ""
 "- TLS (STARTTLS): TLS encryption is requested at start of SMTP session (Recommended)\n"
 "- SSL/TLS: SMTP sessions are encrypted with SSL/TLS through a dedicated port (default: 465)"
 msgstr ""
+"Scegli lo schema di crittografia della connessione:\n"
+"- Nessuna: le sessioni SMTP vengono effettuate in chiaro.\n"
+"- TILS (STARTTLS): viene richiesta la crittografia TLS all'inizio della sessione SMTP (consigliata)\n"
+"- SSL/TLS: le sessioni SMTP vengono crittografate con SSL/TLS tramite una porta dedicata (predefinita: 465)"
 
 #. module: base
 #: model:res.country,name:base.cx
@@ -14436,7 +14443,7 @@ msgstr "Fatturazione elettronica per la Colombia con Carvajal"
 #: code:addons/template_inheritance.py:0 code:addons/template_inheritance.py:0
 #, python-format
 msgid "Element '%s' cannot be located in parent view"
-msgstr "Impossibile localizzare l'elemento \"%s\" nella vista primaria"
+msgstr "Impossibile localizzare l'elemento \"%s\" nella vista originaria"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -15281,7 +15288,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_sale_report
 msgid "Field Service Reports - Sale"
-msgstr ""
+msgstr "Rendiconti assistenza sul campo - Vendita"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_stock
@@ -15569,12 +15576,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__image_url
 msgid "Flag"
-msgstr "Segnala"
+msgstr "Bandiera"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__flag_image_url
 msgid "Flag Image Url"
-msgstr ""
+msgstr "URL immagine bandiera"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_fleet
@@ -16399,7 +16406,7 @@ msgstr "Has Diff"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__has_iap
 msgid "Has Iap"
-msgstr "Has Iap"
+msgstr "Contiene IAP"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__header_spacing
@@ -17063,9 +17070,10 @@ msgid ""
 "* if False, the view currently does not extend its parent but can be enabled\n"
 "         "
 msgstr ""
-"Se questa è una vista ereditata,\n"
-"* se True, la vista estende sempre la vista genitore\n"
-"* se False, la vista attualmente non estende la vista genitore ma si può abilitare"
+"Se la vista è ereditata:\n"
+"* se True, la vista estende sempre quella originaria\n"
+"* se False, la vista non estende di base quella originaria ma può essere abilitata\n"
+"         "
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -17482,7 +17490,7 @@ msgstr "Modifica in linea"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__address_view_id
 msgid "Input View"
-msgstr "Vista Input"
+msgstr "Vista inserimento"
 
 #. module: base
 #: code:addons/base/models/ir_module.py:0
@@ -22301,14 +22309,14 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
-"Viene impiegato solo se la vista eredita da un'altra vista (inherit_id non è falso/nullo).\n"
+"Viene impiegato solo se la vista eredita da un'altra (inherit_id non è falso/nullo).\n"
 "\n"
-"* Se estensione (predefinito), ed è richiesta la vista, viene cercata la\n"
-"primaria più vicina (via inherit_id). Quindi vengono applicate, con il\n"
+"* Se Estensione (predefinito), ed è richiesta la vista, viene cercata la\n"
+"vista primaria più vicina (via inherit_id). Quindi vengono applicate, con il\n"
 "suo modello, tutte quelle che ereditano dalla vista stessa\n"
-"* Se primario, viene pienamente risolta la vista primaria più vicina (anche\n"
+"* Se Primaria, la vista primaria più vicina viene completamente risolta (anche\n"
 "se usa un modello diverso), quindi vengono applicate le specifiche\n"
-"di ereditarietà della vista stessa (<xpath/>) usando il risultato come fosse\n"
+"di ereditarietà di questa vista (<xpath/>) usando il risultato come fosse\n"
 "l'attuale architettura.\n"
 
 #. module: base
@@ -22932,7 +22940,7 @@ msgstr "Applicazione madre"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category__parent_id
 msgid "Parent Category"
-msgstr "Categoria principale"
+msgstr "Categoria primaria"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__group_by_parent_id
@@ -24449,12 +24457,12 @@ msgstr "Tipo report"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_search_view
 msgid "Report Xml"
-msgstr "XML del report"
+msgstr "XML resoconto"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view_tree
 msgid "Report xml"
-msgstr "XML del report"
+msgstr "XML resoconto"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_reporting
@@ -25962,7 +25970,7 @@ msgstr "Nome stato/provincia"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__state_required
 msgid "State Required"
-msgstr ""
+msgstr "Provincia richiesta"
 
 #. module: base
 #: model:res.country,name:base.ps
@@ -26879,7 +26887,7 @@ msgstr "Il nome completo della nazione."
 #: model:ir.model.fields,help:base.field_res_partner__user_id
 #: model:ir.model.fields,help:base.field_res_users__user_id
 msgid "The internal user in charge of this contact."
-msgstr "L'utente interno responsabile di questo contatto. "
+msgstr "L'utente interno responsabile del contatto."
 
 #. module: base
 #: code:addons/base/models/res_country.py:106
@@ -27573,7 +27581,7 @@ msgstr "Ferie"
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_holidays
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry_holidays
 msgid "Time Off in Payslips"
-msgstr "Ferie nelle buste paga"
+msgstr "Ferie in busta paga"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_gantt
@@ -28433,7 +28441,7 @@ msgstr "URL"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__image_url
 msgid "Url of static flag image"
-msgstr "Url of static flag image"
+msgstr "URL di un'immagine bandiera statica"
 
 #. module: base
 #: model:res.country,name:base.uy
@@ -28554,11 +28562,10 @@ msgid ""
 "display addresses (in reports for example), while this field is used to "
 "modify the input form for addresses."
 msgstr ""
-"Usa questo campo per sostituire il metodo consueto di codifica di un "
-"indirizzo completo. Si noti che il campo adress_format consente di "
-"modificare il modo di visualizzazione degli indirizzi (ad esempio nei "
-"report), mentre questo campo consente di modificare il modo di input per gli"
-" indirizzi."
+"Utilizzare questo campo per sostituire il metodo consueto di codifica di un "
+"indirizzo completo. Nota: il campo address_format è usato per modificare la "
+"modalità di visualizzazione degli indirizzi (ad esempio nei report), mentre "
+"questo viene utilizzato per modificarne la forma nell'inserimento."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__relation_table
