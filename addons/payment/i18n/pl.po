@@ -30,6 +30,7 @@
 # Maksym <ms@myodoo.pl>, 2022
 # Jacek Michalski <michalski.jck@gmail.com>, 2022
 # Anita Kosobucka, 2023
+# danielkowalczyk007, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # 
 msgid ""
@@ -191,7 +192,7 @@ msgstr ""
 #: code:addons/payment/models/account_payment.py:0
 #, python-format
 msgid "A token is required to create a new payment transaction."
-msgstr ""
+msgstr "Do utworzenia nowej transakcji płatniczej wymagany jest token."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -566,7 +567,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_res_partner__payment_token_count
 #: model:ir.model.fields,field_description:payment.field_res_users__payment_token_count
 msgid "Count Payment Token"
-msgstr "Ilość tokenów płatności"
+msgstr "Liczba tokenów płatności"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__country_ids
@@ -1004,7 +1005,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "Invoice(s)"
-msgstr ""
+msgstr "Faktury"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -1634,7 +1635,7 @@ msgstr "Zapisano dane do płatności"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment__payment_token_id
 msgid "Saved payment token"
-msgstr ""
+msgstr "Zapisany token płatności"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__token_implemented
@@ -1957,7 +1958,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.account_invoice_view_form_inherit_payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "Void Transaction"
-msgstr ""
+msgstr "Pusta transakcja"
 
 #. module: payment
 #. openerp-web
@@ -2120,7 +2121,7 @@ msgstr "Twoja płatność została autoryzowana."
 #: model_terms:payment.acquirer,cancel_msg:payment.payment_acquirer_transfer
 #, python-format
 msgid "Your payment has been cancelled."
-msgstr ""
+msgstr "Twoja płatność została anulowana"
 
 #. module: payment
 #. openerp-web
@@ -2147,6 +2148,7 @@ msgstr ""
 msgid ""
 "Your payment has been successfully processed but is waiting for approval."
 msgstr ""
+"Twoja płatność została pomyślnie przetworzona, ale czeka na zatwierdzenie."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -2165,7 +2167,7 @@ msgstr ""
 #: model_terms:payment.acquirer,done_msg:payment.payment_acquirer_transfer
 #, python-format
 msgid "Your payment has been successfully processed. Thank you!"
-msgstr ""
+msgstr "Twoja płatność została pomyślnie zrealizowana. Dziękujemy!"
 
 #. module: payment
 #. openerp-web

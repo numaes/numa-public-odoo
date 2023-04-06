@@ -5169,6 +5169,13 @@ msgid "Mobile"
 msgstr "모바일"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "Mobile Alignment"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__mobile
 msgid "Mobile Phone"
 msgstr "휴대전화"
@@ -7764,7 +7771,7 @@ msgstr "다음에 대한 URL"
 #: code:addons/website/static/src/xml/website.seo.xml:0
 #, python-format
 msgid "Unalterable unique identifier"
-msgstr ""
+msgstr "변경이 불가능한 고유 식별자"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options

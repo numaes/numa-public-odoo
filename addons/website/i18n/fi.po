@@ -5263,6 +5263,13 @@ msgid "Mobile"
 msgstr "Matkapuhelin"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "Mobile Alignment"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__mobile
 msgid "Mobile Phone"
 msgstr "Matkapuhelin"
@@ -7746,7 +7753,7 @@ msgstr "Esitys"
 #: code:addons/website/static/src/xml/track_page.xml:0
 #, python-format
 msgid "Track Visitor"
-msgstr ""
+msgstr "Esityksen vierailijat"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -7768,7 +7775,7 @@ msgstr "Seuranta ID"
 #: code:addons/website/static/src/js/editor/rte.summernote.js:0
 #, python-format
 msgid "Transform the picture (click twice to reset transformation)"
-msgstr ""
+msgstr "Muunna kuva (nollaa muunnos napsauttamalla kahdesti)"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options

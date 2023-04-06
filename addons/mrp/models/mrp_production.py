@@ -578,7 +578,9 @@ class MrpProduction(models.Model):
         if not self.product_id:
             self.bom_id = False
         elif not self.bom_id or self.bom_id.product_tmpl_id != self.product_tmpl_id or (self.bom_id.product_id and self.bom_id.product_id != self.product_id):
-            bom = self.env['mrp.bom']._bom_find(product=self.product_id, picking_type=self.picking_type_id, company_id=self.company_id.id, bom_type='normal')
+            picking_type_id = self._context.get('default_picking_type_id')
+            picking_type = picking_type_id and self.env['stock.picking.type'].browse(picking_type_id)
+            bom = self.env['mrp.bom']._bom_find(product=self.product_id, picking_type=picking_type, company_id=self.company_id.id, bom_type='normal')
             if bom:
                 self.bom_id = bom.id
                 self.product_qty = self.bom_id.product_qty
@@ -606,7 +608,9 @@ class MrpProduction(models.Model):
         self.product_uom_id = self.bom_id and self.bom_id.product_uom_id.id or self.product_id.uom_id.id
         self.move_raw_ids = [(2, move.id) for move in self.move_raw_ids.filtered(lambda m: m.bom_line_id)]
         self.move_finished_ids = [(2, move.id) for move in self.move_finished_ids]
-        self.picking_type_id = self.bom_id.picking_type_id or self.picking_type_id
+        picking_type_id = self._context.get('default_picking_type_id')
+        picking_type = picking_type_id and self.env['stock.picking.type'].browse(picking_type_id)
+        self.picking_type_id = picking_type or self.bom_id.picking_type_id or self.picking_type_id
 
     @api.onchange('date_planned_start', 'product_id')
     def _onchange_date_planned_start(self):
@@ -959,6 +963,11 @@ class MrpProduction(models.Model):
 
     def _get_move_raw_values(self, product_id, product_uom_qty, product_uom, operation_id=False, bom_line=False):
         source_location = self.location_src_id
+        origin = self.name
+        if self.orderpoint_id:
+            origin = self.origin.replace(
+                '%s - ' % (self.orderpoint_id.display_name), '')
+            origin = '%s,%s' % (origin, self.name)
         data = {
             'sequence': bom_line.sequence if bom_line else 10,
             'name': self.name,
@@ -976,7 +985,7 @@ class MrpProduction(models.Model):
             'operation_id': operation_id,
             'price_unit': product_id.standard_price,
             'procure_method': 'make_to_stock',
-            'origin': self.name,
+            'origin': origin,
             'state': 'draft',
             'warehouse_id': source_location.get_warehouse().id,
             'group_id': self.procurement_group_id.id,
@@ -1167,6 +1176,8 @@ class MrpProduction(models.Model):
 
         # run scheduler for moves forecasted to not have enough in stock
         self.move_raw_ids._trigger_scheduler()
+        self.picking_ids.filtered(
+            lambda p: p.state not in ['cancel', 'done']).action_confirm()
         return True
 
     def action_assign(self):

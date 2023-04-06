@@ -614,7 +614,7 @@ exports.PosModel = Backbone.Model.extend({
                     reject();
                 };
                 self.company_logo.crossOrigin = "anonymous";
-                self.company_logo.src = '/web/binary/company_logo' + '?dbname=' + self.session.db + '&company=' + self.company.id + '&_' + Math.random();
+                self.company_logo.src = `/web/image?model=res.company&id=${self.company.id}&field=logo`;
             });
         },
     }, {
@@ -2290,7 +2290,7 @@ exports.Orderline = Backbone.Model.extend({
         }
     },
     get_taxed_lst_unit_price: function(){
-        var lst_price = this.get_lst_price();
+        var lst_price = this.compute_fixed_price(this.get_lst_price());
         if (this.pos.config.iface_tax_included === 'total') {
             var product =  this.get_product();
             var taxes_ids = product.taxes_id;
@@ -2423,7 +2423,7 @@ exports.Orderline = Backbone.Model.extend({
         return this.compute_fixed_price(this.get_lst_price());
     },
     get_lst_price: function(){
-        return this.product.lst_price;
+        return this.product.get_price(this.pos.default_pricelist, 1, 0)
     },
     set_lst_price: function(price){
       this.order.assert_editable();

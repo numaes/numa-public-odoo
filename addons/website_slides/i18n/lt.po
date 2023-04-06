@@ -21,7 +21,7 @@
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2021
 # Linas Versada <linaskrisiukenas@gmail.com>, 2021
 # grupoda2 <dmitrijus.ivanovas@gmail.com>, 2021
-# Jonas Zinkevicius <jozi@odoo.com>, 2022
+# Jonas Zinkevicius <jozi@odoo.com>, 2023
 # Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2023
 # 
 msgid ""
@@ -1315,7 +1315,7 @@ msgstr "Sertifikavimas"
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__module_website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 msgid "Certifications"
-msgstr ""
+msgstr "Sertifikatas"
 
 #. module: website_slides
 #: model:gamification.badge,name:website_slides.badge_data_certification
@@ -4294,7 +4294,7 @@ msgstr ""
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_slide_demo_0_4
 msgid "Show your newly mastered knowledge !"
-msgstr ""
+msgstr "Pademonstruokite Jūsų naujai įgytas žinias!"
 
 #. module: website_slides
 #. openerp-web
@@ -4557,13 +4557,13 @@ msgstr ""
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_0_4
 msgid "Test your knowledge"
-msgstr ""
+msgstr "Patikrinkite savo žinias"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_slide_demo_5_3
 #: model:slide.slide,name:website_slides.slide_slide_demo_5_3
 msgid "Test your knowledge !"
-msgstr ""
+msgstr "Patikrinkite savo žinias!"
 
 #. module: website_slides
 #. openerp-web
