@@ -2,6 +2,7 @@
     font-size: 9pt;
 
     &.header {
+        margin-left: 10px;
         table {
             width: 100%;
             img, h3, td, tr {
@@ -21,6 +22,8 @@
     }
 
     &.invoice_note {
+        padding-top: 10px;
+        margin-left: 10px;
         tr {
             td {
                 vertical-align: bottom;
@@ -83,7 +86,7 @@
         }
     }
     &.footer {
-        padding-left: 5mm;
+        margin-left: 10px;
         padding-right: 10mm;
         .page_number {
             margin-top: 4.23mm;
