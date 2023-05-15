@@ -49,7 +49,7 @@
                     </table>
                 </div>
 
-                <div t-attf-class="din_page invoice_note article o_company_#{company.id}_layout #{'din_page_pdf' if report_type == 'pdf' else ''}" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
+                <div t-attf-class="din_page invoice_note article o_company_#{company.id}_layout" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
                     <table>
                         <tr>
                             <td>
@@ -116,7 +116,7 @@
                     <t t-raw="0"/>
                 </div>
 
-                <div t-attf-class="din_page footer o_company_#{company.id}_layout #{'din_page_pdf' if report_type == 'pdf' else ''}">
+                <div t-attf-class="din_page footer o_company_#{company.id}_layout">
                     <div class="text-right page_number">
                         <div class="text-muted">
                             Page: <span class="page"/> of <span class="topage"/>
@@ -126,7 +126,7 @@
                         <table>
                             <tr>
                                 <td>
-                                    <ul class="list-inline text-nowrap">
+                                    <ul class="list-inline">
                                         <li t-if="company.name"><span t-field="company.name"/></li>
                                         <li t-if="company.street"><span t-field="company.street"/></li>
                                         <li t-if="company.street2"><span t-field="company.street2"/></li>
