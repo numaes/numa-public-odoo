@@ -9158,7 +9158,7 @@ msgstr "3. %y, %Y         ==&gt; 08, 2008"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_appraisal_survey
 msgid "360 Feedback"
-msgstr "360 ملاحظة "
+msgstr "ملاحظات شاملة "
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -20438,7 +20438,7 @@ msgstr "مستخدمي Microsoft "
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__mimetype
 msgid "Mime Type"
-msgstr "نوع التنسيق الملف"
+msgstr "نوع تنسيق الملف"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_line__min_id
@@ -25446,7 +25446,7 @@ msgstr "أداة تهيئة الرواتب - كشوف المرتبات "
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_hr_contract_salary
 msgid "Salary Package Configurator"
-msgstr "مُعد حزم الرواتب"
+msgstr "أداة تهيئة باقة الراتب "
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_sale
@@ -29451,7 +29451,7 @@ msgstr "المورد"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_3way_match
 msgid "Vendor Bill: Release to Pay"
-msgstr "فاتورة المورد: الموافقة على السداد"
+msgstr "فاتورة المورد: الموافقة على الدفع "
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_supplier_form

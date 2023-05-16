@@ -1501,7 +1501,7 @@ msgstr "Cantidades contadas"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__product_qty
 msgid "Counted Quantity"
-msgstr "Cantidade contada"
+msgstr "Cantidad contada"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -7085,6 +7085,14 @@ msgid ""
 msgstr ""
 "La compañía de este producto no puede ser cambiada mientras haya cantidades "
 "del mismo pertenecientes a otra compañía."
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are stock moves of"
+" it belonging to another company."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity

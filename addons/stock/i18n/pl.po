@@ -2344,7 +2344,7 @@ msgstr "Oczekiwany"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 msgid "Expected Delivery"
-msgstr ""
+msgstr "Oczekiwana dostawa"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
@@ -2545,7 +2545,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:stock.selection__report_stock_quantity__state__forecast
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_view_search
 msgid "Forecasted Stock"
-msgstr ""
+msgstr "Prognozowane zapasy"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
@@ -6363,7 +6363,7 @@ msgstr ""
 #: model:ir.model,name:stock.model_report_stock_report_product_product_replenishment
 #: model:ir.model,name:stock.model_report_stock_report_product_template_replenishment
 msgid "Stock Replenishment Report"
-msgstr ""
+msgstr "Raport uzupełnienia zapasów"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_rule
@@ -6937,6 +6937,14 @@ msgstr ""
 msgid ""
 "This product's company cannot be changed as long as there are quantities of "
 "it belonging to another company."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are stock moves of"
+" it belonging to another company."
 msgstr ""
 
 #. module: stock

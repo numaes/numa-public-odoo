@@ -44,6 +44,7 @@
 # Éder Brito <britoederr@gmail.com>, 2021
 # douglas custodio <douglascstd@yahoo.com>, 2022
 # Kevilyn Rosa, 2023
+# Layna Nascimento, 2023
 # 
 msgid ""
 msgstr ""
@@ -51,7 +52,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Kevilyn Rosa, 2023\n"
+"Last-Translator: Layna Nascimento, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2100,7 +2101,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Relatórios Contábeis\n"
+"Exercícios contábeis\n"
 "==================\n"
 "    "
 
@@ -10434,7 +10435,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_account_accountant
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Accounting"
-msgstr "Contabilidade"
+msgstr "Financeiro"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_account
@@ -10450,7 +10451,7 @@ msgstr "Testes de consistência de contabilidade"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_reports
 msgid "Accounting Reports"
-msgstr "Relatórios Contábeis"
+msgstr "Relatórios financeiros"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl
@@ -11721,7 +11722,7 @@ msgstr "Lista de Anexos e Indexação de Documentos"
 #: model:ir.module.category,name:base.module_category_human_resources_attendances
 #: model:ir.module.module,shortdesc:base.module_hr_attendance
 msgid "Attendances"
-msgstr "Presenças"
+msgstr "Frequência"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_attendance_mobile
@@ -17648,7 +17649,7 @@ msgstr "Help with Python expressions"
 #: model:ir.module.category,name:base.module_category_services_helpdesk
 #: model:ir.module.module,shortdesc:base.module_helpdesk
 msgid "Helpdesk"
-msgstr "Suporte Técnico"
+msgstr "Central de Ajuda"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_account
@@ -19944,7 +19945,7 @@ msgstr "Campo de Vínculo"
 #: model:ir.module.module,shortdesc:base.module_link_tracker
 #: model:ir.module.module,shortdesc:base.module_website_links
 msgid "Link Tracker"
-msgstr "Rastrear Link"
+msgstr "Monitoramento de URL"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_voip_crm
@@ -28126,7 +28127,7 @@ msgstr "Envie, valide e fature novamente as despesas do funcionário"
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_subscription
 msgid "Subscription"
-msgstr "Inscrição"
+msgstr "Assinaturas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_sepa_direct_debit
@@ -31984,7 +31985,7 @@ msgstr "conector Ebay"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale
 msgid "eCommerce"
-msgstr "Comércio Eletrônico"
+msgstr "e-Commerce"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_delivery
