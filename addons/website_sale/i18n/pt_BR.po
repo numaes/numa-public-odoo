@@ -566,7 +566,7 @@ msgid ""
 "<strong>No suitable payment option could be found.</strong><br/>\n"
 "                                    If you believe that it is an error, please contact the website administrator."
 msgstr ""
-"<strong>Nenhuma opção de pagamento adequada foi encontrada.</strong><br/>\n"
+"<strong>Não foi possível encontrar uma opção de pagamento adequada.</strong><br/>\n"
 "                                    Se você acredita que isso é um erro, entre em contato com o administrador do site."
 
 #. module: website_sale
@@ -1644,6 +1644,15 @@ msgstr "Instala o aplicativo \"Informações de entrega do site\""
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
+msgid ""
+"If you are ordering for an external person, please place your order via the "
+"backend. If you wish to change your name or email address, please do so in "
+"the account settings or contact your administrator."
+msgstr ""
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr "E-mail inválido! Por favor insira um endereço de e-mail válido."
 
@@ -2008,7 +2017,7 @@ msgstr "Assim que você clicar em <b>Salvar</b>, seu produto será atualizado."
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_report_sales
 msgid "Online Sales"
-msgstr "Vendas Online"
+msgstr "Vendas online"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.sale_report_action_dashboard
@@ -2209,7 +2218,7 @@ msgstr "Método de Pagamento"
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_transactions
 msgid "Payment Transactions"
-msgstr "Transações de Pagamento"
+msgstr "Transações de pagamento"
 
 #. module: website_sale
 #. openerp-web
@@ -2589,7 +2598,7 @@ msgstr "Rever Pedido"
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_ribbon_id
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Ribbon"
-msgstr "Fita"
+msgstr "Faixa"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__bg_color
@@ -3535,7 +3544,7 @@ msgstr "e-Commerce"
 #: model:ir.actions.act_window,name:website_sale.product_public_category_action
 #: model:ir.ui.menu,name:website_sale.menu_catalog_categories
 msgid "eCommerce Categories"
-msgstr "Categorias de Comércio Eletrônico"
+msgstr "Categorias do e-Commerce"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total

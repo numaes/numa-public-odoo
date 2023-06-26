@@ -16655,7 +16655,7 @@ msgid ""
 "more."
 msgstr ""
 "Aiuta ad ottenere il massimo dai punti vendita con una codifica veloce delle"
-" vendite, una semplificata dei metodi di pagamento, una generazione "
+" vendite, una semplificata delle modalità di pagamento, una generazione "
 "automatica di liste dei prelievi e altro."
 
 #. module: base
@@ -17859,6 +17859,12 @@ msgstr ""
 #, python-format
 msgid "Invalid 'group by' parameter"
 msgstr "Parametro \"raggruppa per\" non valido"
+
+#. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
 
 #. module: base
 #: code:addons/models.py:0

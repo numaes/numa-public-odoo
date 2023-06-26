@@ -1221,7 +1221,7 @@ msgstr "제어"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Control panel buttons"
-msgstr ""
+msgstr "제어판 버튼 "
 
 #. module: web
 #. openerp-web
@@ -3682,7 +3682,7 @@ msgstr "보기 선택"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Select all"
-msgstr ""
+msgstr "전체 선택"
 
 #. module: web
 #. openerp-web
