@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, _
-from odoo.addons.base.models.decimal_precision import DecimalPrecision
 from odoo.exceptions import RedirectWarning, UserError, ValidationError, AccessError
 from odoo.tools import float_compare, date_utils, email_split, email_re, float_is_zero
 from odoo.tools.misc import formatLang, format_date, get_lang
@@ -9,11 +8,9 @@ from odoo.osv import expression
 
 from datetime import date, timedelta
 from collections import defaultdict
-from contextlib import contextmanager
 from itertools import zip_longest
 from hashlib import sha256
 from json import dumps
-from unittest.mock import patch
 
 import ast
 import json
@@ -1105,7 +1102,6 @@ class AccountMove(models.Model):
             expected_tax_rep_lines = set()
             current_tax_rep_lines = set()
             inv_recompute_all_taxes = recompute_all_taxes
-            has_taxes = False
             for line in invoice.line_ids:
                 if line.recompute_tax_line:
                     inv_recompute_all_taxes = True
@@ -1113,7 +1109,6 @@ class AccountMove(models.Model):
                 if line.tax_repartition_line_id:
                     current_tax_rep_lines.add(line.tax_repartition_line_id._origin)
                 elif line.tax_ids:
-                    has_taxes = True
                     if invoice.is_invoice(include_receipts=True):
                         is_refund = invoice.move_type in ('out_refund', 'in_refund')
                     else:
@@ -1134,13 +1129,12 @@ class AccountMove(models.Model):
             delta_tax_rep_lines = expected_tax_rep_lines - current_tax_rep_lines
 
             # Compute taxes.
-            if has_taxes or current_tax_rep_lines:
-                if inv_recompute_all_taxes:
-                    invoice._recompute_tax_lines()
-                elif recompute_tax_base_amount:
-                    invoice._recompute_tax_lines(recompute_tax_base_amount=True)
-                elif delta_tax_rep_lines and not self._context.get('move_reverse_cancel'):
-                    invoice._recompute_tax_lines(tax_rep_lines_to_recompute=delta_tax_rep_lines)
+            if inv_recompute_all_taxes:
+                invoice._recompute_tax_lines()
+            elif recompute_tax_base_amount:
+                invoice._recompute_tax_lines(recompute_tax_base_amount=True)
+            elif delta_tax_rep_lines and not self._context.get('move_reverse_cancel'):
+                invoice._recompute_tax_lines(tax_rep_lines_to_recompute=delta_tax_rep_lines)
 
             if invoice.is_invoice(include_receipts=True):
 
@@ -3195,21 +3189,6 @@ class AccountMove(models.Model):
 
         return rslt
 
-    @contextmanager
-    def _disable_discount_precision(self):
-        """Disable the user defined precision for discounts.
-        This is useful for importing documents coming from other softwares and providers.
-        The reasonning is that if the document that we are importing has a discount, it
-        shouldn't be rounded to the local settings.
-        """
-        original_precision_get = DecimalPrecision.precision_get
-        def precision_get(self, application):
-            if application == 'Discount':
-                return 100
-            return original_precision_get(self, application)
-        with patch('odoo.addons.base.models.decimal_precision.DecimalPrecision.precision_get', new=precision_get):
-            yield
-
     def _message_post_after_hook(self, new_message, message_values):
         # OVERRIDE
         # When posting a message, check the attachment to see if it's an invoice and update with the imported data.
@@ -3238,10 +3217,9 @@ class AccountMove(models.Model):
             # start with message_main_attachment_id, that way if OCR is installed, only that one will be parsed.
             # this is based on the fact that the ocr will be the last decoder.
             for attachment in attachments.sorted(lambda x: x != self.message_main_attachment_id):
-                with self._disable_discount_precision():
-                    invoice = decoder[1](attachment, self)
-                    if invoice:
-                        return res
+                invoice = decoder[1](attachment, self)
+                if invoice:
+                    return res
 
         return res
 
