@@ -2781,7 +2781,7 @@ msgstr "Nej"
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "No Taxes"
-msgstr ""
+msgstr "Inga skatter"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -2851,7 +2851,7 @@ msgstr "Anteckningar"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/CashBoxOpening.xml:0
 #, python-format
 msgid "Notes:"
-msgstr ""
+msgstr "Anteckningar:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_needaction_counter
@@ -3682,7 +3682,7 @@ msgstr "Kassa Produkt Kategorier"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_picking__pos_session_id
 msgid "Pos Session"
-msgstr ""
+msgstr "Kassasession"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_duration
@@ -5238,7 +5238,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "This session is already closed."
-msgstr ""
+msgstr "Denna session är redan avslutad."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form

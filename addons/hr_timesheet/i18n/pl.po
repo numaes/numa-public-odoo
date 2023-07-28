@@ -25,6 +25,7 @@
 # Krzysztof Przygoda, 2022
 # Łukasz Grzenkowicz <lukasz.grzenkowicz@gmail.com>, 2022
 # Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2023
+# Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # 
 msgid ""
@@ -56,7 +57,7 @@ msgstr "(%s pozostałe dni)"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "(Total:"
-msgstr ""
+msgstr "(Łącznie:"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -223,7 +224,7 @@ msgstr "Magazyn aplikacji Apple"
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_hr_timesheet_approver
 msgid "Approver"
-msgstr ""
+msgstr "Zatwierdzający"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__timesheet_ids

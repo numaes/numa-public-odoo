@@ -855,8 +855,8 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Personalizzazione e creazione di schede web personali.\n"
-"        Questo modulo aggiunge un nuovo componente nel creatore di siti web, per costruire da zero nuove schede in qualsiasi pagina del sito.\n"
+"        Personalizzazione e creazione di moduli di contatto web personali.\n"
+"        Questo modulo aggiunge un nuovo componente nel creatore di siti web, per costruire da zero nuovi moduli di contatto in qualsiasi pagina del sito.\n"
 "    "
 
 #. module: base
@@ -1226,7 +1226,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Questo modulo implementa reCaptchaV3 per impedire lo spam da bot nei moduli pubblici.\n"
+"        Questo modulo implementa reCAPTCHA v3 per impedire lo spam da bot nei moduli pubblici.\n"
 "    "
 
 #. module: base
@@ -3486,7 +3486,7 @@ msgstr ""
 "Driver hardware ESC/POS\n"
 "=======================\n"
 "\n"
-"Questo modulo consente a Odoo di stampare su stampanti compatibili ESC/POS e di aprire casse contanti controllate ESC/POS, nel punto vendita e in altri\n"
+"Questo modulo consente a Odoo di stampare su stampanti compatibili ESC/POS e di aprire cassetti contanti controllati da ESC/POS, nel punto vendita e in altri\n"
 "moduli che necessitano di tale funzionalità.\n"
 "\n"
 
@@ -3960,8 +3960,8 @@ msgid ""
 "This module includes contact phone and mobile numbers validation."
 msgstr ""
 "\n"
-"Generazione di contatti e opportunità nell'applicazione CRM a partire da un scheda di contatto pubblicata nella pagina Contattaci del sito web.\n"
-"La scheda può essere personalizzata grazie a \"Creatore schede\" (disponibile in Odoo Enterprise).\n"
+"Generazione di contatti e opportunità nell'applicazione CRM a partire da un modulo di contatto pubblicato nella pagina Contattaci del sito web.\n"
+"Può essere personalizzato grazie a \"Creatore moduli di contatto\" (disponibile in Odoo Enterprise).\n"
 "\n"
 "Questo modulo include la convalida dei numeri di telefono fisso e mobile dei contatti."
 
@@ -3986,7 +3986,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Generazione di attività nell'applicazione progetti a partire da una scheda pubblicata nel sito web. Per la creazione della scheda, il modulo richiede l'utilizzo di *Creatore schede* (disponibile in Odoo Enterprise).\n"
+"Generazione di attività nell'applicazione progetti a partire da un modulo di contatto pubblicato nel sito web. Per la creazione del  modulo, richiede l'utilizzo di *Creatore moduli di contatto* (disponibile in Odoo Enterprise).\n"
 "    "
 
 #. module: base
@@ -3997,7 +3997,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Generazione di segnalazioni nell'applicazione assistenza clienti a partire da una scheda pubblicata nel sito web. La scheda può essere personalizzata grazie a *Creatore schede* (disponibile in Odoo Enterprise).\n"
+"Generazione di segnalazioni nell'applicazione assistenza clienti a partire da un modulo di contatto pubblicato nel sito web. Può essere personalizzato grazie a *Creatore moduli di contatto* (disponibile in Odoo Enterprise).\n"
 "    "
 
 #. module: base
@@ -4102,7 +4102,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Nasconde il pulsante di presenza quando un dipendente è in ferie.\n"
+"Nasconde il pulsante di presenza quando un dipendente è in permesso.\n"
 "    "
 
 #. module: base
@@ -6946,8 +6946,8 @@ msgid ""
 msgstr ""
 "\n"
 "Questo modulo aggiunge il supporto per la lettura di codici a barre al sistema di gestione degli eventi.\n"
-"Per ogni partecipante viene generato un codice a barre che viene stampato sul badge. Una volta acquisito,\n"
-"la registrazione è confermata.\n"
+"Per ogni partecipante viene generato un codice a barre che viene stampato sul tesserino. Una volta acquisito,\n"
+"la registrazione viene confermata.\n"
 "    "
 
 #. module: base
@@ -7833,7 +7833,7 @@ msgid ""
 "--------------------------------------------------------------\n"
 msgstr ""
 "\n"
-"Utilizzo dei bilanci di previsione per confrontare i costi e i ricavi attesi con quelli effettivi\n"
+"Utilizzo dei bilanci previsionali per confrontare i costi e i ricavi effettivi con quelli attesi\n"
 "--------------------------------------------------------------\n"
 
 #. module: base
@@ -11547,7 +11547,7 @@ msgstr "Sistema di pagamento Buckaroo"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_budget
 msgid "Budget Management"
-msgstr "Gestione bilanci di previsione"
+msgstr "Gestione bilanci previsionali"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_marketing_automation
@@ -13734,7 +13734,7 @@ msgstr "Indirizzo di consegna"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_barcode
 msgid "Delivery Barcode Scanning"
-msgstr "Scansione del codice a barre di consegna"
+msgstr "Lettura codice a barre per consegne"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery
@@ -17404,7 +17404,7 @@ msgstr "Importa / Esporta"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_amazon
 msgid "Import Amazon orders and sync deliveries"
-msgstr "Importazione ordini Amazon e sincronizzazione consegne"
+msgstr "Importazione ordini Amazon e sincronizzazione delle consegne"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import_camt
@@ -26874,6 +26874,10 @@ msgid ""
 " 1,06,500; [1,2,-1] will represent it to be 106,50,0;[3] will represent it "
 "as 106,500. Provided ',' as the thousand separator in each case."
 msgstr ""
+"Il formato separatore dovrebbe essere [,n] dove 0 < n :partendo dalla cifra "
+"unitaria. -1 terminerà la separazione. Ad es. [3,2,-1] farà che 106500 sia "
+"1,06,500; [1,2,-1] rappresenterà 106,50,0;[3] codificherà 106,500. Le ',' "
+"rappresentano i separatori per le centinaia in ogni caso."
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0
@@ -26884,6 +26888,9 @@ msgid ""
 " 1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as"
 " 106,500. Provided as the thousand separator in each case."
 msgstr ""
+"Il formato separatore dovrebbe essere [,n] dove 0 < n :partendo dalla cifra "
+"unitaria. -1 terminerà la separazione. Ad es. [3,2,-1] farà che 106500 sia "
+"1,06,500; [1,2,-1] rappresenterà 106,50,0;[3] codificherà 106,500."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__vat
@@ -27551,7 +27558,7 @@ msgid ""
 "modified by hr."
 msgstr ""
 "Modulo che aggiunge lo stato e le notifiche di OdooBot nella scheda utente "
-"modificata da RU. ."
+"modificata da RU."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_hr_recruitment
@@ -29885,6 +29892,12 @@ msgid "You cannot deactivate the user you're currently logged in as."
 msgstr "Impossibile disattivare l'utente usato per effettuare l'accesso."
 
 #. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot delete the %s record."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid ""
@@ -29905,6 +29918,12 @@ msgstr "Impossibile eliminare la lingua impostata come preferita dall'utente."
 #, python-format
 msgid "You cannot merge a contact with one of his parent."
 msgstr "Impossibile unire un contatto con uno da cui deriva."
+
+#. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot rename config parameters with keys %s"
+msgstr ""
 
 #. module: base
 #: code:addons/models.py:0

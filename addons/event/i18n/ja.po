@@ -18,6 +18,7 @@
 # Noma Yuki, 2020
 # 江口和志 <sandwhale1010@gmail.com>, 2022
 # Andy Yiu, 2023
+# Junko Augias, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # 
 msgid ""
@@ -1718,12 +1719,12 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__legend_done
 msgid "Green Kanban Label"
-msgstr ""
+msgstr "グリーンかんばんラベル"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__legend_normal
 msgid "Grey Kanban Label"
-msgstr ""
+msgstr "グレーかんばんラベル"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -1864,7 +1865,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__sale_available
 msgid "Is Available"
-msgstr ""
+msgstr "利用可能か"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__is_expired
@@ -1997,7 +1998,7 @@ msgstr "遅れた活動"
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Let's create your first <b>event</b>."
-msgstr ""
+msgstr "最初の<b>イベント</b>を登録しましょう。"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -2091,7 +2092,7 @@ msgstr "トラックでスケジュール管理・公開する"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Mark as Attending"
-msgstr ""
+msgstr "出席としてマーク"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
@@ -2327,7 +2328,7 @@ msgstr ""
 #. module: event
 #: model:event.event,name:event.event_7
 msgid "OpenWood Collection Online Reveal"
-msgstr ""
+msgstr "OpenWoodコレクションオンライン公開"
 
 #. module: event
 #: model:res.partner,website_short_description:event.res_partner_event_2
@@ -2346,7 +2347,7 @@ msgstr "オーガナイザ"
 msgid ""
 "Our newest collection will be revealed online! Interact with us on our live "
 "streams!"
-msgstr ""
+msgstr "最新コレクションをオンラインで公開します！ライブストリームで私たちと交流して下さい！"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__legend_blocked
@@ -2443,7 +2444,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__legend_blocked
 msgid "Red Kanban Label"
-msgstr ""
+msgstr "レッドかんばんビュー"
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
@@ -2687,7 +2688,7 @@ msgstr "ステージ"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 msgid "Stage Description and Tooltips"
-msgstr "ステージ説明およびステータス定義"
+msgstr "ステージ説明およびツールチップ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__name
@@ -2762,12 +2763,12 @@ msgstr "タグ"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 msgid "Task in progress. Click to block or set as done."
-msgstr ""
+msgstr "タスク進行中。ブロックまたは完了済にするにはクリックして下さい。"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 msgid "Task is blocked. Click to unblock or set as done."
-msgstr ""
+msgstr "タスクはブロックされています。ブロック解除または完了済にするにはクリックして下さい。"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_type_id
@@ -2904,7 +2905,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 msgid "This step is done. Click to block or set in progress."
-msgstr ""
+msgstr "このステップは完了です。ブロックまたは進行中に設定するにはクリックして下さい。"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_form_from_event
@@ -3067,7 +3068,7 @@ msgstr "標準のタイムゾーンを使用する"
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Use the <b>breadcrumbs</b> to go back to your kanban overview."
-msgstr ""
+msgstr "<b>パンくずリスト</b> を使ってカンバンの概要に戻ります。"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_used

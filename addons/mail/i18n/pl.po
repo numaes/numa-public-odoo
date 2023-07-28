@@ -137,7 +137,7 @@ msgstr "%sod %s"
 #: code:addons/mail/static/src/components/notification_request/notification_request.js:0
 #, python-format
 msgid "%s has a request"
-msgstr ""
+msgstr "%s ma wniosek"
 
 #. module: mail
 #. openerp-web
@@ -6679,6 +6679,16 @@ msgstr ""
 "Korzystanie z własnego serwera e-mail jest wymagane do wysyłania / "
 "odbierania wiadomości e-mail w wersjach Community i Enterprise. Użytkownicy "
 "online korzystają z gotowego do użycia serwera e-mail (@mycompany.odoo.com)."
+
+#. module: mail
+#: code:addons/mail/models/ir_config_parameter.py:0
+#, python-format
+msgid ""
+"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
+"It should be a comma separated list of domains e.g. example.com,example.org."
+msgstr ""
+"Wartość dla `mail.catchall.domain.allowed` nie może zostać zweryfikowana.\n"
+"Powinna to być oddzielona przecinkami lista domen, np. example.com,example.org."
 
 #. module: mail
 #. openerp-web

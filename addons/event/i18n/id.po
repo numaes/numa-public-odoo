@@ -766,7 +766,7 @@ msgstr ""
 #. module: event
 #: model:res.groups,name:event.group_event_manager
 msgid "Administrator"
-msgstr ""
+msgstr "Administrator"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_exhibitor
@@ -991,7 +991,7 @@ msgstr ""
 #. module: event
 #: model:event.stage,name:event.event_stage_booked
 msgid "Booked"
-msgstr ""
+msgstr "Dibooking"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__partner_id
@@ -1887,7 +1887,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__sale_available
 msgid "Is Available"
-msgstr ""
+msgstr "Tersedia"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__is_expired

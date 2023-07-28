@@ -2307,7 +2307,7 @@ msgstr "Solo dipendenti"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model_fields__tracking
 msgid "Enable Ordered Tracking"
-msgstr ""
+msgstr "Abilitare monitoraggio ordinato"
 
 #. module: mail
 #. openerp-web
@@ -5475,7 +5475,7 @@ msgstr "Programma attività"
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #, python-format
 msgid "Schedule activities to help you get things done."
-msgstr "Programma delle attività per aiutarti a concludere gli affari."
+msgstr "Programma le attività per aiutare a portare a termine gli incarichi."
 
 #. module: mail
 #. openerp-web
@@ -6693,6 +6693,16 @@ msgstr ""
 "già di un server di posta pronto all'uso (@mycompany.odoo.com)."
 
 #. module: mail
+#: code:addons/mail/models/ir_config_parameter.py:0
+#, python-format
+msgid ""
+"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
+"It should be a comma separated list of domains e.g. example.com,example.org."
+msgstr ""
+"Impossibile convalidare il valore per `mail.catchall.domain.allowed`.\n"
+"Dovrebbe essere un elenco di domini separati da virgola es. example.com,example.org."
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #: code:addons/mail/static/src/xml/thread.xml:0
@@ -6904,8 +6914,7 @@ msgstr "Sei nel canale <b>#%s</b>."
 #, python-format
 msgid ""
 "You are the administrator of this channel. Are you sure you want to leave?"
-msgstr ""
-"Tu sei l'amministratore di questo canale. Sei sicuro di volertene andare?"
+msgstr "Si è amministratori di questo canale. Uscire veramente?"
 
 #. module: mail
 #. openerp-web
@@ -6960,7 +6969,7 @@ msgid ""
 " To create new user please go to configuration panel."
 msgstr ""
 "Impossibile creare un nuovo utente da qui.\n"
-" Per effettuare l'operazione andare al pannello di configurazione."
+" Per effettuare l'operazione andare nel pannello di configurazione."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0

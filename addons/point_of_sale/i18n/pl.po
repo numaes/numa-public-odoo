@@ -31,6 +31,7 @@
 # Dawid Prus, 2021
 # Martin Trigaux, 2022
 # Jacek Michalski <michalski.jck@gmail.com>, 2022
+# Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # 
 msgid ""
@@ -842,7 +843,7 @@ msgstr "Anulowano"
 #: code:addons/point_of_sale/static/src/js/ChromeWidgets/OrderManagementButton.js:0
 #, python-format
 msgid "Cannot access order management screen if offline."
-msgstr ""
+msgstr "Brak dostępu do ekranu zarządzania zamówieniami w trybie offline."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1802,21 +1803,21 @@ msgstr "Pobierz niezapłacone zamówienia"
 #: code:addons/point_of_sale/static/src/xml/Popups/ErrorTracebackPopup.xml:0
 #, python-format
 msgid "Download error traceback"
-msgstr ""
+msgstr "Śledzenie błędu pobierania"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/OrderManagementScreen/OrderManagementControlPanel.xml:0
 #, python-format
 msgid "E.g. customer: Steward, date: 2020-05-09"
-msgstr ""
+msgstr "Np. klient: Steward, data: 2020-05-09"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/ClientListScreen/ClientLine.xml:0
 #, python-format
 msgid "EDIT"
-msgstr ""
+msgstr "EDYTUJ"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3342,7 +3343,7 @@ msgstr "Płatność zakończona sukcesem"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Payment Terminals"
-msgstr ""
+msgstr "Terminale płatnicze"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__transaction_id
@@ -4639,7 +4640,7 @@ msgstr "Pomiń ekran podglądu"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/CategoryBreadcrumb.xml:0
 #, python-format
 msgid "Slash"
-msgstr ""
+msgstr "Slash"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.small_shelf
@@ -5584,7 +5585,7 @@ msgstr "Nie można pobrać faktury."
 #: code:addons/point_of_sale/static/src/js/Screens/OrderManagementScreen/OrderFetcher.js:0
 #, python-format
 msgid "Unable to fetch orders if offline."
-msgstr ""
+msgstr "Nie można pobrać zamówień w trybie offline."
 
 #. module: point_of_sale
 #. openerp-web

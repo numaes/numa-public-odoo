@@ -501,7 +501,7 @@ msgstr "Kategori Produk"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr ""
+msgstr "Pergerakan Produk (Baris Pergerakan Stok)"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -637,7 +637,7 @@ msgstr "Riwayat Kuantitas Stok"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_report_stock_report_product_product_replenishment
 msgid "Stock Replenishment Report"
-msgstr ""
+msgstr "Laporan Replenishment Stok"
 
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.stock_valuation_layer_action

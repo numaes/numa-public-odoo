@@ -1531,11 +1531,11 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"ロック日を元に戻せないようにします：\n"
+"ロック日を不可逆にします：\n"
 "\n"
-"*ユーザーよりもアドバイザーに厳しい制限を設定することはできません。したがって、すべてのユーザーのロック日は、請求書/請求書のロック日より前（または同じ）である必要があります。\n"
-"※まだ終了していない期間はロックできません。したがって、すべてのユーザーのロック日は、前月の最終日より前（または同じ）である必要があります。\n"
-"* 新しいすべてのユーザーのロック日は、前の日付より後(または同じ)である必要があります"
+"　*アドバイザには、ユーザよりも厳しい制限を設定することはできません。したがって、全ユーザロック日は請求書ロック日よりも前（または同じ）でなければなりません。\n"
+"　*まだ終了していない期間はロックできません。したがって、すべてのユーザーのロック日は、前月の最終日より前（または同じ）である必要があります。\n"
+"　* 新しい全てのユーザーのロック日は、前の日付より後（または同じ）である必要があります。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon_taxcloud
@@ -8614,7 +8614,7 @@ msgid ""
 msgstr ""
 "\n"
 "このモジュールを使用すると、ユーザーは銀行の仕訳を自分のオンライン銀行口座(サポートされている銀行機関用)にリンク、および銀行取引明細書を定期的かつ自動同期できるようになります。\n"
-"このモジュールは2020年末に追加され、最新のプロバイダーと連動するため作られました。以前のaccount_online_syncモジュール上で使用する必要があります。"
+"このモジュールは2020年末に追加され、最新のプロバイダと連動するため作られました。以前のaccount_online_syncモジュール上で使用する必要があります。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_sips
@@ -9737,7 +9737,7 @@ msgstr "アクセス"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__model_access
 msgid "Access Controls"
-msgstr "アクセスコントロール"
+msgstr "アクセス管理"
 
 #. module: base
 #: model:ir.model,name:base.model_res_groups
@@ -19279,7 +19279,7 @@ msgstr "IoTによる品質管理のためのMRP機能"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_purchase_stock
 msgid "MTO Sale <-> Purchase"
-msgstr "MTOセール&lt;-&gt;購入"
+msgstr "MTO販売 <-> 購買"
 
 #. module: base
 #: model:res.country,name:base.mo
@@ -23684,7 +23684,7 @@ msgstr "プロダクトEメールテンプレート"
 #: model:ir.module.category,name:base.module_category_manufacturing_product_lifecycle_management_(plm)
 #: model:ir.module.module,shortdesc:base.module_mrp_plm
 msgid "Product Lifecycle Management (PLM)"
-msgstr "プロダクトライフサイクル管理(PLM)"
+msgstr "プロダクトライフサイクルマネジメント (PLM)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_matrix
@@ -24936,7 +24936,7 @@ msgstr "SMTPサーバ"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_purchase_stock
 msgid "SO/PO relation in case of MTO"
-msgstr "MTOの場合のSO /PO関係"
+msgstr "MTOの場合の販売オーダ/購買オーダの関係"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model__order
@@ -29700,14 +29700,20 @@ msgid "You cannot deactivate the user you're currently logged in as."
 msgstr "現在ログインしているユーザを無効にすることはできません。"
 
 #. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot delete the %s record."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid ""
 "You cannot delete the language which is Active!\n"
 "Please de-activate the language first."
 msgstr ""
-"あなたは、アクティブである言語を削除することはできません！\n"
-"まず、その言語を非アクティブにしてください。"
+"有効な言語を削除することはできません！\n"
+"先にその言語を無効にして下さい。"
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0
@@ -29720,6 +29726,12 @@ msgstr "ユーザーの優先言語である言語を削除することはでき
 #, python-format
 msgid "You cannot merge a contact with one of his parent."
 msgstr "連絡先を親の1つにマージすることはできません。"
+
+#. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot rename config parameters with keys %s"
+msgstr ""
 
 #. module: base
 #: code:addons/models.py:0

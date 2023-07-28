@@ -49,32 +49,32 @@ msgstr ""
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_4
 msgid "$100"
-msgstr ""
+msgstr "100 USD"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_1
 msgid "$20"
-msgstr ""
+msgstr "20 USD"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_5
 msgid "$200"
-msgstr ""
+msgstr "200 USD"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_6
 msgid "$300"
-msgstr ""
+msgstr "300 USD"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_2
 msgid "$50"
-msgstr ""
+msgstr "50 USD"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_3
 msgid "$80"
-msgstr ""
+msgstr "80 USD"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_progression
@@ -906,7 +906,7 @@ msgstr "Dozwolone komenowanie"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p3_q2_sug2
 msgid "Amenhotep"
-msgstr ""
+msgstr "Amenhotep"
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_user_input_unique_token
@@ -996,7 +996,7 @@ msgstr "Sztuka i kultura"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p4_q1_sug1
 msgid "Arthur B. McDonald"
-msgstr ""
+msgstr "Arthur B. McDonald"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q4_sug2
@@ -1416,7 +1416,7 @@ msgstr "Skopiowano !"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q1_sug3
 msgid "Cornaceae"
-msgstr ""
+msgstr "Rogowate"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_2_choice_1
@@ -1703,7 +1703,7 @@ msgstr "Dereń należy do jakiej rodziny drzew?"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q5_sug1
 msgid "Douglas Fir"
-msgstr ""
+msgstr "Jodła Douglas"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__state__draft
@@ -1947,7 +1947,7 @@ msgstr "Wysokość"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p3_q2_sug3
 msgid "Hemiunu"
-msgstr ""
+msgstr "Hemiunu"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q1_sug1
@@ -2368,7 +2368,7 @@ msgstr "Łatwo jest znaleźć produkt, który chcę"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p5_q1_sug3
 msgid "Iznogoud"
-msgstr ""
+msgstr "Iznogoud"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p5_q3_sug1
@@ -3734,7 +3734,7 @@ msgstr "Ankiety"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p4_q1_sug3
 msgid "Takaaki Kajita"
-msgstr ""
+msgstr "Takaaki Kajita"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form

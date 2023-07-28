@@ -556,7 +556,7 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Se evaluará un diccionario de Python con el fin de proporcionar valores "
+"Un diccionario de Python que se evaluará con el fin de proporcionar valores "
 "predefinidos cuando se creen nuevos registros para este seudónimo."
 
 #. module: project
@@ -1584,7 +1584,7 @@ msgstr "Filtros avanzados"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Extra Info"
-msgstr "Información extra"
+msgstr "Información adicional"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__february
@@ -1817,8 +1817,8 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
-"ID del registro padre que contiene el seudónimo (por ejemplo: el proyecto "
-"que contiene el seudónimo de creación de la tarea.)"
+"ID del registro principal que tiene el seudónimo (ejemplo: el proyecto que "
+"contiene el seudónimo para la creación de tareas)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_exception_icon
@@ -1854,8 +1854,7 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_task__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
-"Si se encuentra seleccionado, algunos mensajes presentan un error de "
-"entrega."
+"Si se encuentra seleccionado, algunos mensajes presentan un error de envío."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__mail_template_id
@@ -1883,8 +1882,8 @@ msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
 msgstr ""
-"Si se selecciona, se enviará automáticamente este contenido a los usuarios "
-"no autorizados en lugar del mensaje predeterminado."
+"Si se establece, este contenido se enviará de forma automática a usuarios no"
+" autorizados en lugar del mensaje predeterminado."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__active
@@ -1892,7 +1891,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the project "
 "without removing it."
 msgstr ""
-"Si el campo activo es falso, te permitirá ocultar el proyecto sin "
+"Si el campo activo es falso, le permitirá ocultar el proyecto sin "
 "eliminarlo."
 
 #. module: project
@@ -2138,14 +2137,14 @@ msgstr "Última calificación: Satisfecho"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>project</b>."
-msgstr "Vamos a crear su primer <b>proyecto</b>."
+msgstr "Creemos su primer <b>proyecto</b>."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>task</b>."
-msgstr "Vamos a crear su primer <b>tarea</b>."
+msgstr "Creemos su primer <b>tarea</b>."
 
 #. module: project
 #. openerp-web
@@ -2428,12 +2427,12 @@ msgstr "Todavía no hay calificaciones de los clientes"
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_config
 msgid "No projects found. Let's create one!"
-msgstr "No se encontraron proyectos. ¡Vamos a crear uno!"
+msgstr "No se encontraron proyectos. ¡Creemos uno!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
 msgid "No tags found. Let's create one!"
-msgstr "No se encontraron etiquetas. ¡Vamos a crear una!"
+msgstr "No se encontraron etiquetas. ¡Creemos una!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -2441,7 +2440,7 @@ msgstr "No se encontraron etiquetas. ¡Vamos a crear una!"
 #: model_terms:ir.actions.act_window,help:project.action_view_task
 #: model_terms:ir.actions.act_window,help:project.project_task_action_sub_task
 msgid "No tasks found. Let's create one!"
-msgstr "No se encontraron tareas. ¡Vamos a crear una!"
+msgstr "No se encontraron tareas. ¡Creemos una!"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -2620,19 +2619,19 @@ msgstr "Ideas para páginas"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_parent_model_id
 msgid "Parent Model"
-msgstr "Modelo padre"
+msgstr "Modelo principal"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "ID del hilo del registro padre"
+msgstr "ID del hilo del registro principal"
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__parent_id
 #, python-format
 msgid "Parent Task"
-msgstr "Tarea padre"
+msgstr "Tarea principal"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_parent_model_id
@@ -2641,9 +2640,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"Modelo padre que posee el seudónimo. El modelo que contiene la referencia "
-"del seudónimo no es necesariamente el modelo dado por alias_model_id "
-"(example: project (parent_model) and task (model))"
+"Modelo principal que posee el seudónimo. El modelo que contiene la "
+"referencia del seudónimo no es necesariamente el modelo dado por "
+"alias_model_id (por ejemplo: proyecto (parent_model) y tarea (model))"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
@@ -2972,7 +2971,7 @@ msgstr "Valor de calificación (/ 5)"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_count
 msgid "Rating count"
-msgstr "Número de calificación"
+msgstr "Número de calificaciones"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__stage
@@ -3033,7 +3032,7 @@ msgstr "Recepción de ${object.name}"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_force_thread_id
 msgid "Record Thread ID"
-msgstr "ID del hilo del registro hijo"
+msgstr "ID del hilo de registro"
 
 #. module: project
 #. openerp-web
@@ -3375,7 +3374,7 @@ msgstr "Divida sus tareas para organizar su trabajo en subobjetivos"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Sprint Backlog"
-msgstr "Sprint Backlog"
+msgstr "Lista de tareas pendientes del sprint"
 
 #. module: project
 #. openerp-web
@@ -3406,7 +3405,7 @@ msgstr "Etapa"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
-msgstr "Etapa cambiada"
+msgstr "Se cambió la etapa"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -3421,7 +3420,7 @@ msgstr "Nombre de la etapa"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
 msgid "Stage changed"
-msgstr "Etapa cambiada"
+msgstr "Se cambió la etapa"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
@@ -4128,17 +4127,17 @@ msgstr "Si se debe mostrar este proyecto en su tablero."
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__resource_calendar_id
 msgid "Working Time"
-msgstr "Tiempo de trabajo"
+msgstr "Horas laborables"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Assign"
-msgstr "Tiempo de trabajo que asignar"
+msgstr "Horas laborables a asignar"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Close"
-msgstr "Tiempo de trabajo para terminar"
+msgstr "Horas laborables para terminar"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_open
@@ -4185,8 +4184,8 @@ msgid ""
 "You can also add a description to help your coworkers understand the meaning"
 " and purpose of the stage."
 msgstr ""
-"Incluso puede añadir una descripción para ayudar a sus compañeros de trabajo"
-" a entender el significado y el propósito de esta etapa."
+"Incluso puede agregar una descripción para ayudar a sus compañeros de "
+"trabajo a entender el significado y el propósito de esta etapa."
 
 #. module: project
 #: code:addons/project/models/project.py:0

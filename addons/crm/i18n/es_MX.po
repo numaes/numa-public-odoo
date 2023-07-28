@@ -356,8 +356,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Un diccionario Python que será evaluado para proporcionar valores "
-"predeterminados al crear nuevos registros para este seudónimo."
+"Un diccionario de Python que se evaluará con el fin de proporcionar valores "
+"predefinidos cuando se creen nuevos registros para este seudónimo."
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_3
@@ -1142,7 +1142,7 @@ msgstr "Nombre en pantalla"
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
-"No tiene acceso, saltar esta información para el correo electrónico de "
+"No tiene acceso, omita esta información para el correo electrónico de "
 "resumen del usuario"
 
 #. module: crm
@@ -1520,8 +1520,8 @@ msgid ""
 "If set, this Sales Team will be used for sales and assignments related to "
 "this partner"
 msgstr ""
-"Si está configurado, este equipo de ventas será usado para las ventas y "
-"asignaciones relacionadas a este partner."
+"Si se establece, este equipo de ventas se utilizará para las ventas y "
+"asignaciones relacionadas con este contacto."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_bounced_content
@@ -1585,9 +1585,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"Indica si el número de teléfono de la lista negra es un número celular. "
-"Sirve para distinguir qué número está en la lista negra             cuando "
-"hay un campo de celular y otro de teléfono fijo en un modelo."
+"Indica si el número de teléfono depurado de la lista negra es un número "
+"celular. Sirve para distinguir qué número está en la lista negra cuando hay "
+"un campo de celular y otro de teléfono fijo en un modelo."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__phone_blacklisted
@@ -1714,7 +1714,7 @@ msgstr "Última actualización el"
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_my_activities_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Late Activities"
-msgstr "Actividades tardías"
+msgstr "Actividades atrasadas"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_activity_report__lead_type__lead
@@ -1899,7 +1899,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__email_cc
 msgid "List of cc from incoming emails."
-msgstr "Listado de cc en correos electrónicos entrantes."
+msgstr "Lista de cc en correos electrónicos entrantes."
 
 #. module: crm
 #. openerp-web
@@ -2883,7 +2883,7 @@ msgstr "Etapa"
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_stage
 msgid "Stage Changed"
-msgstr "Etapa cambiada"
+msgstr "Se cambió la etapa"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__name
@@ -2898,7 +2898,7 @@ msgstr "Búsqueda de etapa"
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_stage
 msgid "Stage changed"
-msgstr "Etapa cambiada"
+msgstr "Se cambió la etapa"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_stage_action
@@ -3028,9 +3028,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"El nombre de este seudónimo de correo electrónico. Por ejemplo, "
-"\"trabajos\",  si lo que quiere es obtener los correos para "
-"<jobs@example.odoo.com>"
+"Use el seudónimo del correo electrónico, por ejemplo, \"jobs\" si desea "
+"recibir correos electrónicos en <jobs@example.odoo.com>"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__partner_name
@@ -3268,7 +3267,7 @@ msgstr "Tipo de actividad de excepción registrada."
 #. module: crm
 #: model:ir.model,name:crm.model_utm_campaign
 msgid "UTM Campaign"
-msgstr "Campaña de UTM"
+msgstr "Campaña UTM"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter

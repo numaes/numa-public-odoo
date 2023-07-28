@@ -3456,7 +3456,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_activity_type_id
 #: model:ir.model.fields,field_description:mail.field_mail_message__mail_activity_type_id
 msgid "Mail Activity Type"
-msgstr ""
+msgstr "Typ av e-postaktivitet"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_blacklist
@@ -4259,7 +4259,7 @@ msgstr "Inga"
 #: model:ir.model.fields,field_description:mail.field_res_partner__email_normalized
 #: model:ir.model.fields,field_description:mail.field_res_users__email_normalized
 msgid "Normalized Email"
-msgstr ""
+msgstr "Normaliserad e-post"
 
 #. module: mail
 #. openerp-web
@@ -4314,7 +4314,7 @@ msgstr "Meddela följare"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__notify
 msgid "Notify followers of the document (mass post only)"
-msgstr ""
+msgstr "Meddela följare om dokumentet (endast massutskick)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_needaction_counter
@@ -5242,6 +5242,8 @@ msgid ""
 "Reply email address. Setting the reply_to bypasses the automatic thread "
 "creation."
 msgstr ""
+"E-postadress för svar. Om du anger reply_to går du förbi det automatiska "
+"skapandet av tråden."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to
@@ -6077,6 +6079,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
 msgid "This email is blacklisted for mass mailings. Click to unblacklist."
 msgstr ""
+"Detta e-postmeddelande är svartlistat för massutskick. Klicka för att ta "
+"bort svartlistningen."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__email
@@ -6091,6 +6095,8 @@ msgid ""
 "This field is used to search on email address as the primary email field can"
 " contain more than strictly an email address."
 msgstr ""
+"Detta fält används för att söka på e-postadress eftersom det primära "
+"e-postfältet kan innehålla mer än bara en e-postadress."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel__public
@@ -6572,6 +6578,14 @@ msgid ""
 "Using your own email server is required to send/receive emails in Community "
 "and Enterprise versions. Online users already benefit from a ready-to-use "
 "email server (@mycompany.odoo.com)."
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/ir_config_parameter.py:0
+#, python-format
+msgid ""
+"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
+"It should be a comma separated list of domains e.g. example.com,example.org."
 msgstr ""
 
 #. module: mail
