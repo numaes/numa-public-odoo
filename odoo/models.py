@@ -4745,14 +4745,12 @@ Fields:
         query = 'SELECT "%s" FROM "%s" WHERE id = %%s' % (parent, self._table)
         for id in self.ids:
             current_id = id
-            seen_ids = {current_id}
             while current_id:
                 cr.execute(query, (current_id,))
                 result = cr.fetchone()
                 current_id = result[0] if result else None
-                if current_id in seen_ids:
+                if current_id == id:
                     return False
-                seen_ids.add(current_id)
         return True
 
     def _check_m2m_recursion(self, field_name):
