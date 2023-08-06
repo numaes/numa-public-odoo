@@ -6,6 +6,7 @@
 # Martin Trigaux, 2020
 # JH CHOI <hwangtog@gmail.com>, 2020
 # Linkup <link-up@naver.com>, 2021
+# Daye Jeong, 2023
 # Sarah Park, 2023
 # Daye Jeong, 2023
 # 
