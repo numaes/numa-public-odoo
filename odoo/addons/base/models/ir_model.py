@@ -1067,7 +1067,7 @@ class IrModelFields(models.Model):
             existing[row[:2]] = row[:-1]
 
         # create or update rows
-        rows = [row for row in expected if existing.get(row[:2]) != row]
+        rows = [row for row in expected if existing.get(row[:2]) != row[2:]]
         if rows:
             ids = upsert(cr, self._table, cols, rows, ['model', 'name'])
             for row, id_ in zip(rows, ids):
