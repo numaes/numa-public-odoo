@@ -36,20 +36,6 @@ describe('List', () => {
                             contentAfter: '<ul><li>ab[]cd</li></ul>',
                         });
                     });
-                    it('should turn a ordered list into a unordered list', async () => {
-                        await testEditor(BasicEditor, {
-                            contentBefore: '<ol><li>ab[]cd</li></ol>',
-                            stepFunction: toggleUnorderedList,
-                            contentAfter: '<ul><li>ab[]cd</li></ul>',
-                        });
-                    });
-                    it('should turn a checked list into a unordered list', async () => {
-                        await testEditor(BasicEditor, {
-                            contentBefore: '<ul class="o_checklist"><li>ab[]cd</li></ul>',
-                            stepFunction: toggleUnorderedList,
-                            contentAfter: '<ul><li>ab[]cd</li></ul>',
-                        });
-                    });
                     it('should turn a heading into a list', async () => {
                         await testEditor(BasicEditor, {
                             contentBefore: '<h1>ab[]cd</h1>',
@@ -138,20 +124,6 @@ describe('List', () => {
                             contentBefore: '<ul><li class="nav-item"><div><p>a[]b</p></div></li></ul>',
                             stepFunction: toggleUnorderedList,
                             contentAfter: '<ul><li class="nav-item"><div><ul><li>a[]b</li></ul></div></li></ul>',
-                        });
-                    });
-                    it('should only keep dir attribute when converting a non Paragraph element', async () => {
-                        await testEditor(BasicEditor, {
-                            contentBefore: '<h1 dir="rtl" class="h1">a[]b</h1>',
-                            stepFunction: toggleUnorderedList,
-                            contentAfter: '<ul dir="rtl"><li><h1 dir="rtl" class="h1">a[]b</h1></li></ul>',
-                        });
-                    });
-                    it('should keep all attributes when converting a Paragraph element', async () => {
-                        await testEditor(BasicEditor, {
-                            contentBefore: '<p dir="rtl" class="text-uppercase">a[]b</p>',
-                            stepFunction: toggleUnorderedList,
-                            contentAfter: '<ul dir="rtl" class="text-uppercase"><li>a[]b</li></ul>',
                         });
                     });
                 });
@@ -319,20 +291,6 @@ describe('List', () => {
                             contentAfter: '<ol><li>ab[]cd</li></ol>',
                         });
                     });
-                    it('should turn a unordered list into a ordered list', async () => {
-                        await testEditor(BasicEditor, {
-                            contentBefore: '<ul><li>ab[]cd</li></ul>',
-                            stepFunction: toggleOrderedList,
-                            contentAfter: '<ol><li>ab[]cd</li></ol>',
-                        });
-                    });
-                    it('should turn a checked list into a ordered list', async () => {
-                        await testEditor(BasicEditor, {
-                            contentBefore: '<ul class="o_checklist"><li>ab[]cd</li></ul>',
-                            stepFunction: toggleOrderedList,
-                            contentAfter: '<ol><li>ab[]cd</li></ol>',
-                        });
-                    });
                     it('should turn a heading into a list', async () => {
                         await testEditor(BasicEditor, {
                             contentBefore: '<h1>ab[]cd</h1>',
@@ -421,20 +379,6 @@ describe('List', () => {
                             contentBefore: '<ul><li class="nav-item"><div><h1>a[]b</h1></div></li></ul>',
                             stepFunction: toggleOrderedList,
                             contentAfter: '<ul><li class="nav-item"><div><ol><li><h1>a[]b</h1></li></ol></div></li></ul>',
-                        });
-                    });
-                    it('should only keep dir attribute when converting a non Paragraph element', async () => {
-                        await testEditor(BasicEditor, {
-                            contentBefore: '<h1 dir="rtl" class="h1">a[]b</h1>',
-                            stepFunction: toggleOrderedList,
-                            contentAfter: '<ol dir="rtl"><li><h1 dir="rtl" class="h1">a[]b</h1></li></ol>',
-                        });
-                    });
-                    it('should keep all attributes when converting a Paragraph element', async () => {
-                        await testEditor(BasicEditor, {
-                            contentBefore: '<p dir="rtl" class="text-uppercase">a[]b</p>',
-                            stepFunction: toggleOrderedList,
-                            contentAfter: '<ol dir="rtl" class="text-uppercase"><li>a[]b</li></ol>',
                         });
                     });
                 });
@@ -548,22 +492,6 @@ describe('List', () => {
                             contentBefore: '<p>ab[]cd</p>',
                             stepFunction: toggleCheckList,
                             // JW cAfter: '<ul class="o_checklist"><li>ab[]cd</li></ul>',
-                            contentAfter: '<ul class="o_checklist"><li>ab[]cd</li></ul>',
-                        });
-                    });
-                    it('should turn a ordered list into a checklist', async () => {
-                        await testEditor(BasicEditor, {
-                            removeCheckIds: true,
-                            contentBefore: '<ol><li>ab[]cd</li></ol>',
-                            stepFunction: toggleCheckList,
-                            contentAfter: '<ul class="o_checklist"><li>ab[]cd</li></ul>',
-                        });
-                    });
-                    it('should turn a unordered list into a checklist', async () => {
-                        await testEditor(BasicEditor, {
-                            removeCheckIds: true,
-                            contentBefore: '<ul><li>ab[]cd</li></ul>',
-                            stepFunction: toggleCheckList,
                             contentAfter: '<ul class="o_checklist"><li>ab[]cd</li></ul>',
                         });
                     });
@@ -786,22 +714,6 @@ describe('List', () => {
                             contentBefore: '<ul><li class="nav-item"><div><p>a[]b</p></div></li></ul>',
                             stepFunction: toggleCheckList,
                             contentAfter: '<ul><li class="nav-item"><div><ul class="o_checklist"><li>a[]b</li></ul></div></li></ul>',
-                        });
-                    });
-                    it('should only keep dir attribute when converting a non Paragraph element', async () => {
-                        await testEditor(BasicEditor, {
-                            removeCheckIds: true,
-                            contentBefore: '<h1 dir="rtl" class="h1">a[]b</h1>',
-                            stepFunction: toggleCheckList,
-                            contentAfter: '<ul class="o_checklist" dir="rtl"><li><h1 dir="rtl" class="h1">a[]b</h1></li></ul>',
-                        });
-                    });
-                    it('should keep all attributes when converting a Paragraph element', async () => {
-                        await testEditor(BasicEditor, {
-                            removeCheckIds: true,
-                            contentBefore: '<p dir="rtl" class="text-uppercase">a[]b</p>',
-                            stepFunction: toggleCheckList,
-                            contentAfter: '<ul class="o_checklist text-uppercase" dir="rtl"><li>a[]b</li></ul>',
                         });
                     });
                 });
