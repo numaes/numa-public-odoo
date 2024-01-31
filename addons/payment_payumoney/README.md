@@ -15,6 +15,8 @@ submission provided by the `payment` module.
 
 - `16.0`
   - The module is deprecated and can no longer be installed from the web client. odoo/odoo#99025
+- `15.2`
+  - The signature of synchronous notifications (redirect payloads) is verified. odoo/odoo#81607
 
 ## Testing instructions
 

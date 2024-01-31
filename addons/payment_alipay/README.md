@@ -21,6 +21,7 @@ submission provided by the `payment` module.
 - `15.2`
   - Webhook notifications that cannot be processed are discarded to prevent automatic disabling of
     the webhook. odoo/odoo#81607
+  - The signature of synchronous notifications (redirect payloads) is verified. odoo/odoo#81607
 
 ## Testing instructions
 
