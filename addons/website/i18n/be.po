@@ -10997,6 +10997,15 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/snippets/s_embed_code/000.js:0
+#, python-format
+msgid ""
+"Your Embed Code snippet doesn't have anything to display. Click on Edit to "
+"modify it."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/js/form_editor_registry.js:0
 #, python-format
 msgid "Your Name"
