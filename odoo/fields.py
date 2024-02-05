@@ -3081,7 +3081,7 @@ class _RelationalMulti(_Relational):
 
     def _check_sudo_commands(self, comodel):
         # if the model doesn't accept sudo commands
-        if not comodel._allow_sudo_commands:
+        if hasattr(comodel, '_allow_sudo_commands') and not comodel._allow_sudo_commands:
             # Then, disable sudo and reset the transaction origin user
             return comodel.sudo(False).with_user(comodel.env.uid_origin)
         return comodel
