@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Mads Søndergaard, 2022
-# lhmflexerp <lhm@flexerp.dk>, 2024
-# Martin Trigaux, 2024
+# Martin Trigaux, 2022
+# lhmflexerp <lhm@flexerp.dk>, 2023
 # Sanne Kristensen <sanne@vkdata.dk>, 2024
 # 
 msgid ""
@@ -310,7 +310,7 @@ msgstr "Bank"
 #. module: payment
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
 msgid "Bank Account"
-msgstr "Bankkonto"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__journal_name
@@ -435,7 +435,7 @@ msgstr "Farve"
 #. module: payment
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
 msgid "Communication"
-msgstr "Kommunikation"
+msgstr ""
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_company
@@ -757,7 +757,7 @@ msgstr "Generer betalings link"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
-msgstr "Generer salg betalingslink"
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -1340,12 +1340,12 @@ msgstr "Vær venlig at angive mængden som værende mindre end %s."
 #. module: payment
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
 msgid "Please use the following transfer details"
-msgstr "Anvend venligst de følgende overførselsoplysninger"
+msgstr ""
 
 #. module: payment
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
 msgid "Please use the order name as communication reference."
-msgstr "Anvend venligst ordrenavnet som  kommunikationsreference."
+msgstr ""
 
 #. module: payment
 #. odoo-javascript
@@ -1704,8 +1704,6 @@ msgstr ""
 msgid ""
 "The payment should either be direct, with redirection, or made by a token."
 msgstr ""
-"Betalingen skal enten være direkte, med omdirigering eller foretaget med et "
-"token."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__provider_ref
@@ -1801,7 +1799,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "There is nothing to pay."
-msgstr "Der er ikke noget at betale."
+msgstr ""
 
 #. module: payment
 #. odoo-python

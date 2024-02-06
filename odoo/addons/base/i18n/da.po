@@ -7,9 +7,9 @@
 # peso <peer.sommerlund@gmail.com>, 2022
 # jonas jensen <j.jensen@tcomp.dk>, 2022
 # Lucas Holm, 2023
+# lhmflexerp <lhm@flexerp.dk>, 2023
 # Mads Søndergaard, 2024
 # Preben Lisby <preben.lisby@gmail.com>, 2024
-# lhmflexerp <lhm@flexerp.dk>, 2024
 # Sanne Kristensen <sanne@vkdata.dk>, 2024
 # Mads Søndergaard, 2024
 # Martin Trigaux, 2024
@@ -42,14 +42,6 @@ msgid ""
 "\n"
 "    "
 msgstr ""
-"\n"
-"\n"
-"Regnskabs rapporter for Østrig.\n"
-"================================\n"
-"\n"
-"       * Definere de følgende rapporter:\n"
-"             * Indtægt/tab (§ 231 UGB Gesamtkostenverfahren)\n"
-"             * Balance (§ 224 UGB)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at
@@ -550,9 +542,6 @@ msgid ""
 "        Accounting reports for Belgium\n"
 "    "
 msgstr ""
-"\n"
-"        Regnskabsrapporter for Belgien\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cl_reports
@@ -674,9 +663,6 @@ msgid ""
 "        Accounting reports for Switzerland\n"
 "    "
 msgstr ""
-"\n"
-"        Regnskabsrapporter for Schweiz\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tr_reports
@@ -741,8 +727,6 @@ msgid ""
 "        Allow clients to Schedule Appointments through the Portal\n"
 "    "
 msgstr ""
-"\n"
-"       Tillad at klienter planlægger aftaker via portalen"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_us_1099
@@ -751,8 +735,6 @@ msgid ""
 "        Allows users to easily export accounting data that can be imported to a 3rd party that does 1099 e-filing.\n"
 "    "
 msgstr ""
-"\n"
-"      G'r det nemt for brugere at eksportere regnskabsdata, der kan importeres til en tredjepart, der udføre 1099 e-arkivering."
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents
@@ -875,9 +857,6 @@ msgid ""
 "        Bridge module between point_of_sale and account_reports,\n"
 "        for tax reporting."
 msgstr ""
-"\n"
-"        Bromodul mellem point_of_sale og account_reports,\n"
-"        til momsregistrering."
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_intrastat
@@ -1283,9 +1262,6 @@ msgid ""
 "        Import Data From Winbooks\n"
 "    "
 msgstr ""
-"\n"
-"        Importér data fra Winbooks\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_voip
@@ -1293,8 +1269,6 @@ msgid ""
 "\n"
 "        Make calls using a VOIP system"
 msgstr ""
-"\n"
-"        Lav opkald via et VOIP-system"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_group
@@ -1478,8 +1452,6 @@ msgid ""
 "        RFQ from an approval purchase request.\n"
 "    "
 msgstr ""
-"\n"
-"          Dette modul tilføjer muligheden for at generere RFQ fra en indkøbs godkendelses anmodning, til godkendelses workflowet."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_delivery_mondialrelay
@@ -1660,8 +1632,6 @@ msgid ""
 "\n"
 "        This module is used for Online bank synchronization."
 msgstr ""
-"\n"
-"        Dette modul anvendes til Online banksynkronisering."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_appraisal_skills
@@ -1670,9 +1640,6 @@ msgid ""
 "        This module makes it possible to manage employee skills during an appraisal process.\n"
 "    "
 msgstr ""
-"\n"
-"       Dette modul gør det muligt, at administrere medarbejder færdigheder, under en vurderingsprocess.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_mobile
@@ -1681,9 +1648,6 @@ msgid ""
 "        This module provides the core of the Odoo Mobile App.\n"
 "        "
 msgstr ""
-"\n"
-"        Dette modul leverer kernen i Odoo mobil app'en.\n"
-"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pl_reports_pos_jpk
@@ -1868,8 +1832,6 @@ msgid ""
 "\n"
 "    Adds Quality Control to workorders with IoT.\n"
 msgstr ""
-"\n"
-"    Tilføjer kvalitetskontrol på arbejdsordre vedrørende Internet of Things.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp_workorder
@@ -1942,8 +1904,6 @@ msgid ""
 "\n"
 "    Create customizable worksheet for Quality Control.\n"
 msgstr ""
-"\n"
-"      Opret tilpasset arbejdsseddel til Kvalitetskontrol.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hr_euro
@@ -2566,9 +2526,6 @@ msgid ""
 "Account Consolidation Demo Data\n"
 "==================================\n"
 msgstr ""
-"\n"
-"Konto konsolidering demonstrations data\n"
-"==================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_accountant
@@ -2786,10 +2743,6 @@ msgid ""
 "================================\n"
 "    "
 msgstr ""
-"\n"
-"Regnskabsrapporter for Indien\n"
-"================================\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_it_reports
@@ -2900,9 +2853,6 @@ msgid ""
 "Add a dynamic report about contracts and employees.\n"
 "    "
 msgstr ""
-"\n"
-"Tilføj en dynamisk rapport vedrørende kontrakter og ansatte.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment_reports
@@ -3137,8 +3087,6 @@ msgid ""
 "\n"
 "Adds fleet data to documents\n"
 msgstr ""
-"\n"
-"Tilføjer flåde data til dokumenter\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_product
@@ -3395,9 +3343,6 @@ msgid ""
 "Allows use of stock application to manage rentals inventory\n"
 "        "
 msgstr ""
-"\n"
-"Tillader brugen af lager applikation til at håndtere udlejnings inventar\n"
-"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_snailmail
@@ -4010,8 +3955,6 @@ msgid ""
 "Bridge module for project_enterprise and hr\n"
 "    "
 msgstr ""
-"\n"
-"Bromodul for project_enterprise og hr"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_enterprise_hr_contract
@@ -4020,8 +3963,6 @@ msgid ""
 "Bridge module for project_enterprise and hr_contract\n"
 "    "
 msgstr ""
-"\n"
-"Bromodul for project_enterprise og hr_contract"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_timesheet_holidays
@@ -4295,8 +4236,6 @@ msgid ""
 "Contains the enterprise views for Stock management\n"
 "    "
 msgstr ""
-"\n"
-"Indeholder virksomhedsvisninger for Lagerstyring"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_presence
@@ -4687,17 +4626,6 @@ msgid ""
 "\n"
 "    "
 msgstr ""
-"\n"
-"EDI Chilensk Lokalisering\n"
-"=========================\n"
-"Denne køode gør det muligt at genere DTE dokumentet for Chilensk fakturering.\n"
-"- DTE (Elektronisk Skattepligtig Dokument) format i XML\n"
-"- Direkte Kommunikation med SII (Servicio de Impuestos Internos) for at sende faktura og andre dokumenter relateret til salg.\n"
-"- Kommunikation med Kunder til at sende salgs DTE'er.\n"
-"- Kommunikation med Leverandører (sælgere) for at acceptere DTE'er fra dem.\n"
-"- Direkte Kommunikation med SII til informering omkring accept eller afvisning af leverandørregninger eller andre DTE'er.\n"
-"\n"
-"For at se stregkoden på fakturaen, skal du have pdf417gen biblioteket."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec_edi
@@ -4872,8 +4800,6 @@ msgid ""
 "\n"
 "Employee 281.10 and 281.45 forms will be automatically integrated to the Document app.\n"
 msgstr ""
-"\n"
-"Medarbejder 281.10 og 281.45 formularer vil blive integreret i Dokument applikationen automatisk.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_hr_contract
@@ -5035,9 +4961,6 @@ msgid ""
 "Full Traceability Report Demo Data\n"
 "==================================\n"
 msgstr ""
-"\n"
-"Ful sporbarhedsrapport demonstrations data\n"
-"==================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_edi
@@ -5378,10 +5301,6 @@ msgid ""
 "Adds the possibility to specify the origin country of goods and the partner VAT in the Intrastat XML report.\n"
 "    "
 msgstr ""
-"\n"
-"Generere Instrastat XML rapporter til deklarations\n"
-"baserede fakturaer.\n"
-"Tilføjer muligheden for at specificere varernes oprindelsesland samt partnerens moms i Intrastat XML rapporten."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl_intrastat
@@ -5390,8 +5309,6 @@ msgid ""
 "Generates Netherlands Intrastat report for declaration based on invoices.\n"
 "    "
 msgstr ""
-"\n"
-"Generere Hollandsk Intrastat rapport til deklarations baserede faktura."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_payroll_account
@@ -5429,8 +5346,6 @@ msgid ""
 "\n"
 "Germany TSS Regulation for restaurant\n"
 msgstr ""
-"\n"
-"Tysk TSS Regulering for restaurant\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_drivers
@@ -5981,15 +5896,6 @@ msgid ""
 " * Customize your live view with help of various options.\n"
 " * Auto Storify view after event is over.\n"
 msgstr ""
-"\n"
-"Gør alle en del af din arrangement\n"
-"===================================\n"
-"\n"
-"Omdan din arrangement til en interaktiv oplevelse, ved at lade alle skrive en besked på din Twitter væg, forbinde med publikum, og bygge et personligt forhold med dine deltagere.\n"
-" * Opret live twitter vægs arrangementer\n"
-" * Intet behov for kompleks moderation.\n"
-" * Tilpas din live visning ved hjælp af diverse valgmuligheder.\n"
-" * Gem automatisk visningen efter arrangementen er overstået.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_3way_match
@@ -6229,8 +6135,6 @@ msgid ""
 "Manage the after sale of the products from helpdesk tickets.\n"
 "    "
 msgstr ""
-"\n"
-"Administrer eftersalget af produkter fra helpdesk sager"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_stock
@@ -6606,17 +6510,6 @@ msgid ""
 "Because of the CSV format limitation, we cannot ensure the same transactions aren't imported several times or handle multicurrency.\n"
 "Whenever possible, you should use a more appropriate file format like OFX.\n"
 msgstr ""
-"\n"
-"Modul til import af CSV kontoudtog.\n"
-"======================================\n"
-"\n"
-"Dette modul gør det muligt for dig at importere CSV filer i Odoo: De er parsede og gemt i menneske-læselig format under \n"
-"Regnskab \\ Bank og kontant \\ Kontoudtog.\n"
-"\n"
-"Vigtigt:\n"
-"---------------------------------------------\n"
-"På grund af begrænsningerne af CSV formatet, kan vi ikke forsikre at de samme transaktioner ikke er importeret flere gange, eller håndtere multivaluta.\n"
-"Hvor end muligt, bør du bruge de korrekte filformater, så som OFX.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_ofx
@@ -7020,22 +6913,6 @@ msgid ""
 "* Every Appraisal Form filled by employees, colleague, collaborator, can be viewed in a PDF form.\n"
 "* Meeting Requests are created manually according to employees appraisals.\n"
 msgstr ""
-"\n"
-"Periodisk vurdering af ansatte\n"
-"==============================\n"
-"\n"
-"Ved at bruge denne applikation kan du vedligeholde motiverende processer gennem periodiske vurderinger af dine ansattes præstation. Den normale vurdering af menneskelige ressourcer kan gavne såvel dine folk som din organisation.\n"
-"\n"
-"En vurderingsplan kan tilskrives hver ansat. Disse planer definere frekvensen samt måden du administrerer din periodiske personlige vurdering.\n"
-"\n"
-"Nøglefunktioner\n"
-"------------\n"
-"* Evnen til at oprette ansatte evaluering(er).\n"
-"* En evaluering kan laves af en ansats leder, eller automatisk, baseret på et skema defineret i ansatte formen.\n"
-"* Vurderingen udføres i overensstemmelse med en plan hvori diverse spørgeskemaer kan oprettes. Hvert spørgerskema kan besvares af et hvis niveau i den ansattes hierarki. Den endelige anmeldelse og vurdering udføres af lederen.\n"
-"* Leder, kollega, medarbejde, og ansatte selv, modtager en email om at udføre en periodisk evaluering.\n"
-"* Samtlige evaluerings formularer udfyldt af ansatte, kolleger, samt medarbejdere, kan ses i PDF format.\n"
-"* Mødeanmodninger kan oprettes manuelt i forhold til en ansats evalueringer.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_phone_validation
@@ -7135,8 +7012,6 @@ msgid ""
 "Project and task integration with holidays\n"
 "    "
 msgstr ""
-"\n"
-"Projekt og opgave integration med helligdage"
 
 #. module: base
 #: model:ir.module.module,description:base.module_http_routing
@@ -7283,13 +7158,6 @@ msgid ""
 "* Possibility to add a measure to the quality check with a min/max tolerance\n"
 "* Define your stages for the quality alerts\n"
 msgstr ""
-"\n"
-"Kvalitetskontrol\n"
-"===============\n"
-"* Definér kvalitetspoint, som vil blive brugt til at oprette kvalitets check på plukninger, produktionsordre, og arbejdsordre (quality_mrp)\n"
-"* Kvalitets advarsler kan oprettes uafhængigt eller relateret til kvalitets check\n"
-"* Mulighed for at inkludere et mål for kvalitetschecket, med en minimum og maximum tolerance\n"
-"* Definér stadierne for dine kvalitets advarsler\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_payroll_expense
@@ -7417,8 +7285,6 @@ msgid ""
 "Search planning slots by skill\n"
 "    "
 msgstr ""
-"\n"
-"Søg planlægnings åbning ud fra evne"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_digital
@@ -7622,17 +7488,6 @@ msgid ""
 "\n"
 "Note: Only the admin user is allowed to make those customizations.\n"
 msgstr ""
-"\n"
-"Studio - Tilpas Odoo\n"
-"=======================\n"
-"\n"
-"Denne addon gør det muligt for brugeren at tilpasse de fleste elementer af bruger-interfacet, på en\n"
-"simpel og grafisk måde. Den har to primære funktioner:\n"
-"\n"
-"* lav en ny applikation (tilføj modul, top-level menu genstand, og standard handling)\n"
-"* tilpas en eksisterende applikation (rediger menuer, handlinger, visninger, oversættelser, ...)\n"
-"\n"
-"Bemærk: Kun administratoren har rettigheder til at lave de ændringer.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_studio
@@ -8628,8 +8483,6 @@ msgid ""
 "This module adds an integration with Survey to ask feedbacks to any employee, based on a survey to fill.\n"
 "    "
 msgstr ""
-"\n"
-"Dette modul tilføjer en integration med Undersøgelse for at bede om tilbagemeldinger fra ansatte, baseret på en undersøgelse til udfyldning."
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_sale_product_configurator
@@ -8795,8 +8648,6 @@ msgid ""
 "This module allows to configure commissions for resellers.\n"
 "    "
 msgstr ""
-"\n"
-"Dette modul gør det muligt at konfigurere provisioner for forhandlere."
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_automation
@@ -9000,13 +8851,6 @@ msgid ""
 "    - Modify subscriptions with sales orders\n"
 "    - Generate invoice automatically at fixed intervals\n"
 msgstr ""
-"\n"
-"Det modul gør det muligt for dig at administrere abonnementer.\n"
-"\n"
-"Funktioner:\n"
-"    - Opret og redigér abonnementer\n"
-"    - Modificer abonnementer med salgsordre\n"
-"    - Generere faktura automatisk ved faste intervaller\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_requisition
@@ -9349,8 +9193,6 @@ msgid ""
 "This module overrides community website features and introduces enterprise look and feel.\n"
 "    "
 msgstr ""
-"\n"
-"Dette modul overskriver community hjemmeside funktioner, og introducerer enterprise udseende og følelse."
 
 #. module: base
 #: model:ir.module.module,description:base.module_timesheet_grid_holidays
@@ -9662,8 +9504,6 @@ msgid ""
 "\n"
 "Use devices connected to an IoT Box to control the quality of your products.\n"
 msgstr ""
-"\n"
-"Brug enheder forbundet til en IoT Boks, til at kontrollere kvaliteten på dine produkter.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant_iot
@@ -9756,9 +9596,6 @@ msgid ""
 "Validate stock moves for Field Service\n"
 "======================================\n"
 msgstr ""
-"\n"
-"Validér lagerbevægelse for felttjeneste\n"
-"======================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_fleet
@@ -9975,7 +9812,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_approvals_purchase_stock
 msgid " Technical module to link Approvals, Purchase and Inventory together. "
-msgstr "Teknisk modul til at forbinde Godkendelser, Indkøb, og Lager."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hk
@@ -10562,7 +10399,7 @@ msgstr "1. %b, %B         ==&gt; Dec, December"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us_1099
 msgid "1099 Reporting"
-msgstr "1099 Rapportering"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -11497,7 +11334,7 @@ msgstr "A9  13  37 x 52 mm"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_au_aba
 msgid "ABA Credit Transfer"
-msgstr "ABA kreditoverførsel"
+msgstr ""
 
 #. module: base
 #: model:res.country,vat_label:base.au
@@ -11679,7 +11516,7 @@ msgstr "Kontoplan"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_us_consolidation_demo
 msgid "Account Consolidation Demo Data"
-msgstr "Konsolidering af konti demonstrationsdata"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_us_consolidation_demo
@@ -11721,7 +11558,7 @@ msgstr "Konto sikkerhed"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_taxcloud
 msgid "Account TaxCloud"
-msgstr "Konto TaxCloud"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_account_taxcloud
@@ -11731,7 +11568,7 @@ msgstr "Konto TaxCloud - eHandle"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_account_taxcloud
 msgid "Account TaxCloud - Sale"
-msgstr "Konto TaxCloud - Salg"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_loyalty_taxcloud
@@ -11788,7 +11625,7 @@ msgstr "Konsekvenstest for regnskab"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_base_import
 msgid "Accounting Import"
-msgstr "Regnskab Import"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_reports
@@ -12046,7 +11883,6 @@ msgstr "Tilføj sprog"
 #: model:ir.module.module,summary:base.module_data_merge_helpdesk
 msgid "Add Merge action in contextual menu of helpdesk ticket model."
 msgstr ""
-"Tilføj Sammenføj handling i den kontekstuelle menu i helpdesk sag modellen."
 
 #. module: base
 #: model:ir.module.module,description:base.module_data_merge_project
@@ -12490,7 +12326,7 @@ msgstr "Avancerede adresse formatering"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track_gantt
 msgid "Advanced Event Track Management"
-msgstr "Avanceret Begivenheds Sporing Administration"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track
@@ -12752,7 +12588,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_amazon
 msgid "Amazon Connector"
-msgstr "Amazon forbinder"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_amazon_taxcloud
@@ -12878,7 +12714,7 @@ msgstr "Analytisk regnskab"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic_enterprise
 msgid "Analytic Accounting Enterprise"
-msgstr "Analytisk regnskab enterprise"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_account
@@ -13041,17 +12877,17 @@ msgstr "Evalueringer"
 #: model:ir.module.category,name:base.module_category_human_resources_approvals
 #: model:ir.module.module,shortdesc:base.module_approvals
 msgid "Approvals"
-msgstr "Godkendelser"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_approvals_purchase
 msgid "Approvals - Purchase"
-msgstr "Godkendelser - Indkøb"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_approvals_purchase_stock
 msgid "Approvals - Purchase - Stock"
-msgstr "Godkendelser - Indkøb - Lager"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.open_module_tree
@@ -13757,7 +13593,7 @@ msgstr "Stregkode i mobil"
 #. module: base
 #: model:ir.module.module,summary:base.module_barcodes_mobile
 msgid "Barcode scan in Mobile"
-msgstr "Stregkode scanning i mobil"
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -13848,7 +13684,7 @@ msgstr "Base: Auto-rens intern data"
 #. module: base
 #: model:ir.module.module,summary:base.module_web_grid
 msgid "Basic 2D Grid view for odoo"
-msgstr "Fundamental 2D gitter visning til odoo"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_cohort
@@ -13858,7 +13694,7 @@ msgstr "Fundamental kohort visning for odoo"
 #. module: base
 #: model:ir.module.module,summary:base.module_quality
 msgid "Basic Feature for Quality"
-msgstr "fundamental funktion for kvalitet"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_iap
@@ -13869,12 +13705,11 @@ msgstr "Fundamentale modeller og hjælpere til support i In-app køb."
 #: model:ir.module.module,summary:base.module_iot
 msgid "Basic models and helpers to support Internet of Things."
 msgstr ""
-"Fundamentale modeller og hjælpere til at understøtte Internet-of-Things."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_batch_payment
 msgid "Batch Payment"
-msgstr "Parti betaling"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_stock_picking_batch
@@ -14209,8 +14044,6 @@ msgid ""
 "Bridge created to add the number of contracts linked to an AA to a project "
 "form"
 msgstr ""
-"Bro oprettet til at tilføje antallet af kontrakter forbundet til en AA, på "
-"en projekt formular"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_hr_expense
@@ -14236,8 +14069,6 @@ msgid ""
 "Bridge created to compute the planned amount of the budget items linked to "
 "the AA of a project"
 msgstr ""
-"Bro oprettet til at udregne den planlagte mængde af budget aktiver forbundet"
-" til et regnskabs aktiv for et projekt"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_helpdesk
@@ -14304,7 +14135,7 @@ msgstr "Bromodul for helpdesk moduler der bruger hjemmesiden."
 #. module: base
 #: model:ir.module.module,summary:base.module_project_enterprise
 msgid "Bridge module for project and enterprise"
-msgstr "Bromodul for projekt og finans"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_enterprise_hr
@@ -14811,7 +14642,7 @@ msgstr "Chat, mail gateway, og private kanaler"
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_check
 msgid "Check"
-msgstr "Tjek"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_check_printing
@@ -15431,7 +15262,7 @@ msgstr "Konfiguration af guider"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_twitter_wall
 msgid "Configure a Twitter Wall on your Event"
-msgstr "Konfigurer en Twitter Væg for din Begivenhed"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_partner_commission
@@ -15466,7 +15297,7 @@ msgstr "Congo"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_restaurant_iot
 msgid "Connect kitchen printers to your PoS"
-msgstr "Forbind køkken printere til dit PoS"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_drivers
@@ -15623,7 +15454,7 @@ msgstr "Kontakter & adresser"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_contacts_enterprise
 msgid "Contacts Enterprise"
-msgstr "Kontakter Virksomhed"
+msgstr ""
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_partner_check_name
@@ -15866,7 +15697,7 @@ msgstr "Opret menu guide"
 #: model:ir.module.module,summary:base.module_industry_fsm_report
 #: model:ir.module.module,summary:base.module_industry_fsm_sale_report
 msgid "Create Reports for Field service workers"
-msgstr "Opret rapporter for arbejdere indenfor felt-tjenester"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_res_bank_form
@@ -16518,7 +16349,7 @@ msgstr "Data Rensning"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_data_merge
 msgid "Data Cleaning (merge)"
-msgstr "Data Rensning (forén)"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_data_recycle
@@ -17296,7 +17127,7 @@ msgstr "Dokumenttype:"
 #: model:ir.module.category,name:base.module_category_productivity_documents
 #: model:ir.module.module,shortdesc:base.module_documents
 msgid "Documents"
-msgstr "Dokumenter"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_account
@@ -17306,7 +17137,7 @@ msgstr "Dokumenter - regnskab"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_l10n_be_hr_payroll
 msgid "Documents - Belgian Payroll"
-msgstr "Dokumenter - Belgiske Lønninger"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_hr_contract
@@ -17336,7 +17167,7 @@ msgstr "Dokumenter - lønninger"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_product
 msgid "Documents - Product"
-msgstr "Dokumenter - produkt"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_project_sale
@@ -17361,7 +17192,7 @@ msgstr "Dokumenter - signaturer"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_hr_holidays
 msgid "Documents - Time Off"
-msgstr "Dokumenter - fri tid"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_project_sign
@@ -17787,7 +17618,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_pe_edi
 msgid "Electronic Invoicing for Peru (OSE method) and UBL 2.1"
-msgstr "Elektronisk Fakturering for Peru (OSE metode) og UBL 2.1"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_co_edi
@@ -17874,7 +17705,7 @@ msgstr "Ansatte tilstedeværelseskontrol"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_referral
 msgid "Employee Referral"
-msgstr "Henvisning af ansatte"
+msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_employees
@@ -18009,7 +17840,7 @@ msgstr "Enterprise Begivenhed Sporer"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_enterprise_partner_assign
 msgid "Enterprise Resellers"
-msgstr "Enterprise Forhandlere"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_enterprise_partner_assign
@@ -18031,10 +17862,6 @@ msgid ""
 "* Traceability report\n"
 "* Cost Structure report (mrp_account)"
 msgstr ""
-"Enterprise udvidelse til MRP\n"
-"* Arbejdsordre planlægning. Check planlægning via Gantt visninger grupperet som produktionsordre / arbejdscenter\n"
-"* Sporbarhedsrapport\n"
-"* Omkostningsstrukturrapport (mrp_account)"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_contacts_enterprise
@@ -18493,7 +18320,7 @@ msgstr "Vis udvidelse"
 #. module: base
 #: model:ir.module.module,summary:base.module_snailmail_account_followup
 msgid "Extension to send follow-up documents by post"
-msgstr "Udvidelse til at sende opfølgningsdokumenter gennem posten"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__xml_id
@@ -18576,7 +18403,7 @@ msgstr "Udtræk data fra udgifts scanninger for at udfylde dem automatisk"
 #. module: base
 #: model:ir.module.module,summary:base.module_account_invoice_extract
 msgid "Extract data from invoice scans to fill them automatically"
-msgstr "Udtag data fra faktura scanninger til at udfylde dem automatisk"
+msgstr ""
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_U
@@ -18661,7 +18488,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_fedex
 msgid "Fedex Shipping"
-msgstr "Fedex Fragt"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_fr_fec
@@ -19105,7 +18932,7 @@ msgstr "Finans/forsikring"
 #: model:ir.module.module,summary:base.module_data_merge_crm
 #: model:ir.module.module,summary:base.module_data_merge_utm
 msgid "Find duplicate records and merge them"
-msgstr "Find duplikerede datasæt og forén dem"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_unsplash
@@ -19349,7 +19176,7 @@ msgstr "Frankrig - FEC Eksport"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_fec_import
 msgid "France - FEC Import"
-msgstr "Frankrig - FEC Import"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_facturx_chorus_pro
@@ -19538,7 +19365,7 @@ msgstr "Gantt"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_holidays_gantt
 msgid "Gantt view for Time Off Dashboard"
-msgstr "Gantt visning for fri tid instrumentbræt"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_kanban_gauge
@@ -19594,7 +19421,7 @@ msgstr "Opret kundeemner fra en kontakt formular"
 #. module: base
 #: model:ir.module.module,summary:base.module_appointment_crm
 msgid "Generate leads when prospects schedule appointments"
-msgstr "Generer kundeemner, når mulige kundeemner planlægger aftaler "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription
@@ -19666,7 +19493,7 @@ msgstr "Tyskland - regnskab"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_reports
 msgid "Germany - Accounting Reports"
-msgstr "Tyskland - regnskabsrapporter"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_pos_cert
@@ -20439,7 +20266,7 @@ msgstr "Hvordan et udregnet felt defineres"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_expense_extract
 msgid "Hr Expense Extract"
-msgstr "HR Udgift Udtræk"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_expense_predict_product
@@ -20978,7 +20805,7 @@ msgstr "Import / Eksport"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_fr_fec_import
 msgid "Import Accounting Data from FEC files"
-msgstr "Importer Regnskabsdata fra FEC filer"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_amazon
@@ -20988,7 +20815,7 @@ msgstr "Importér Amazon ordre og synkronisér leveringer"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import_camt
 msgid "Import CAMT Bank Statement"
-msgstr "Importér CAMT kontoudtog"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import_csv
@@ -21477,7 +21304,7 @@ msgstr "Interne noter..."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iot
 msgid "Internet of Things"
-msgstr "Internet af Ting"
+msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_internet_of_things_(iot)
@@ -21782,7 +21609,7 @@ msgstr "IoT funktioner til arbejdsordre"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_iot
 msgid "IoT for Delivery"
-msgstr "IoT for Levering"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_iot
@@ -21832,7 +21659,7 @@ msgstr "Er virksomhed"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__is_company_details_empty
 msgid "Is Company Details Empty"
-msgstr "Er virksomhed oplysninger tomme"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__is_current_company_currency
@@ -22599,7 +22426,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_hr_referral
 #: model:ir.module.module,summary:base.module_hr_referral
 msgid "Let your employees share job positions and refer their friends"
-msgstr "Lad dine ansatte dele job stillinger og referere deres venner"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_step
@@ -22787,7 +22614,7 @@ msgstr "Live Chat"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_currency_rate_live
 msgid "Live Currency Exchange Rate"
-msgstr "Live valutakurs"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_live
@@ -22957,7 +22784,7 @@ msgstr "MRP funktioner for kvalitetskontrol"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality_mrp_workorder_iot
 msgid "MRP features for Quality Control with IoT"
-msgstr "MRP funktioner for kvalitetskontrol med IoT"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_purchase_stock
@@ -23180,7 +23007,7 @@ msgstr "Administrer Fri Tid i Lønsedler"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_work_entry_holidays_enterprise
 msgid "Manage Time Off in Payslips Enterprise"
-msgstr "Administrere Fri Tid i Lønsedler Enterprise"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_forum
@@ -23226,7 +23053,7 @@ msgstr "Administrer ikke tilladte udgifter"
 #. module: base
 #: model:ir.module.module,summary:base.module_account_disallowed_expenses_fleet
 msgid "Manage disallowed expenses with fleets"
-msgstr "Administrer ikke tilladte udgifter med flåde"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_loyalty_taxcloud_delivery
@@ -23324,7 +23151,7 @@ msgstr "Administrer dine Facebook sider og planlæg oplæg"
 #. module: base
 #: model:ir.module.module,summary:base.module_social_instagram
 msgid "Manage your Instagram Business accounts and schedule posts"
-msgstr "Administrer dine Instagram Finans konti og planlæg opslag"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_social_instagram
@@ -23335,13 +23162,13 @@ msgstr "Administrer dine Instragram Finanskonti og planlæg indlæg."
 #: model:ir.module.module,description:base.module_social_linkedin
 #: model:ir.module.module,summary:base.module_social_linkedin
 msgid "Manage your LinkedIn accounts and schedule posts"
-msgstr "Administrer din LinkedIn konti og planlæg oplæg"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_social_twitter
 #: model:ir.module.module,summary:base.module_social_twitter
 msgid "Manage your Twitter accounts and schedule tweets"
-msgstr "Administrer dine Twitter konti og planlæg tweets"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_social_youtube
@@ -23511,7 +23338,7 @@ msgstr "Masse email til salgsordre"
 #: model:ir.module.module,description:base.module_mass_mailing_sale_subscription
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_sale_subscription
 msgid "Mass mailing on sale subscriptions"
-msgstr "Masse mailing ved salgsabonnementer"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_event_track
@@ -23641,7 +23468,7 @@ msgstr "Besked"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_edi
 msgid "Mexican Localization for EDI documents"
-msgstr "Mexicansk lokalisering for EDI dokumenter"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.mx
@@ -24420,7 +24247,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_intrastat
 msgid "Netherlands Intrastat Declaration"
-msgstr "Hollands Intrastat deklaration"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
@@ -24726,7 +24553,7 @@ msgstr "Norge - Regnskab"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_no_reports
 msgid "Norway - Accounting Reports"
-msgstr "Norge - Regnskabsrapporter"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_no_saft
@@ -25349,7 +25176,7 @@ msgstr "Odoo Mexico lokalisering for lager/landing"
 #. module: base
 #: model:ir.module.module,summary:base.module_web_mobile
 msgid "Odoo Mobile Core module"
-msgstr "Odoo mobil kerne modul"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_note
@@ -26029,7 +25856,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing_online_appointment
 msgid "Online Appointment"
-msgstr "Online aftale"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_online_synchronization
@@ -27300,7 +27127,7 @@ msgstr "Planlægning - Evner"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_planning_contract
 msgid "Planning Contract"
-msgstr "Planlægning Kontrakt"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_planning_hr_skills
@@ -27807,7 +27634,7 @@ msgstr "Projekt Enterprise HR"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_enterprise_hr_contract
 msgid "Project Enterprise HR contract"
-msgstr "Projekt Enterprise HR kontrakt"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_hr_expense
@@ -27921,7 +27748,7 @@ msgstr "Projekt Indkøb"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_sale_subscription
 msgid "Project Sales Subscription"
-msgstr "Projekt Salg Abonnement"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_holidays
@@ -27931,12 +27758,12 @@ msgstr "Projekt Fri Tid"
 #. module: base
 #: model:ir.module.module,summary:base.module_project_account_budget
 msgid "Project account budget"
-msgstr "Projekt konto budget"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_account_asset
 msgid "Project accounting assets"
-msgstr "Projekt regnskab aktiver"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_holidays
@@ -27966,7 +27793,7 @@ msgstr "Projekt lønninger regnskab"
 #. module: base
 #: model:ir.module.module,summary:base.module_project_sale_subscription
 msgid "Project sales subscriptions"
-msgstr "Projekt salg abonnementer"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_fsm_sale
@@ -27976,12 +27803,12 @@ msgstr "Projekt, Helpdesk, FSM, Timesedler og Salgsordre"
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_sale_timesheet
 msgid "Project, Helpdesk, Timesheet and Sale Orders"
-msgstr "Projekt, helpdesk, timeseddel, og salgsordre"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_account
 msgid "Project, Tasks, Account"
-msgstr "Projekt, opgaver, konto"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_sale
@@ -28083,7 +27910,7 @@ msgstr "Offentliggør arrangementer, sælg billetter"
 #. module: base
 #: model:ir.module.module,summary:base.module_event_social
 msgid "Publish on social account from Event"
-msgstr "Udgiv på social medie konto fra Arrangement"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_event_social
@@ -28189,7 +28016,7 @@ msgstr "Købsordre, bug og aftaler"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_social
 msgid "Push notification to track listeners"
-msgstr "Push notifikation til sporing af lyttere"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__code
@@ -28238,12 +28065,12 @@ msgstr "Kvalitet"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality_control_picking_batch
 msgid "Quality - Batch Transfer"
-msgstr "Kvalitet - Parti Overførsel"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality
 msgid "Quality Base"
-msgstr "Kvalitet basis"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_quality_mrp
@@ -28591,7 +28418,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_reports
 msgid "Recruitment Reporting"
-msgstr "Ansættelse Rapportering"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_hr_recruitment
@@ -28745,7 +28572,7 @@ msgstr "Fjern den kontekstuelle handling relateret til denne rapport"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_renting
 msgid "Rental"
-msgstr "Leje"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_rental_product_configurators
@@ -28855,7 +28682,7 @@ msgstr "Rapportering"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ar_reports
 msgid "Reporting for Argentinean Localization"
-msgstr "Rapportering for Argentinsk Lokalisering"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_action_report
@@ -29274,7 +29101,7 @@ msgstr "Løn Konfigurator"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_contract_salary
 msgid "Salary Configurator (Belgium)"
-msgstr "Løn Konfigurator (Belgien)"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_contract_salary_holidays
@@ -29339,7 +29166,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_planning
 msgid "Sale Planning"
-msgstr "Salg Planlægning"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_product_configurator
@@ -29851,7 +29678,7 @@ msgstr "Send dokumenter til signering online og håndter udfyldte kopier"
 #: model:ir.module.module,description:base.module_social_push_notifications
 #: model:ir.module.module,summary:base.module_social_push_notifications
 msgid "Send live notifications to your web visitors"
-msgstr "Send live notifikationer til din hjemmesides besøgende"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track_social
@@ -29859,8 +29686,6 @@ msgid ""
 "Send reminder push notifications to event attendees based on favorites "
 "tracks."
 msgstr ""
-"Send påmindelses push-notifikationer til arrangementdetalgere, baseret ud "
-"fra favorit spor."
 
 #. module: base
 #: model:ir.module.module,description:base.module_calendar_sms
@@ -29919,7 +29744,7 @@ msgstr "Send dine leveringer via UPS og spor dem online"
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_usps
 msgid "Send your shippings through USPS and track them online"
-msgstr "Send dine leveringer via USPS og spor dem online"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_survey
@@ -30248,7 +30073,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_sign
 msgid "Signature templates from Documents"
-msgstr "Signaturskabeloner fra Dokumenter"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_signup
@@ -30385,7 +30210,7 @@ msgstr "Social Facebook"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_instagram
 msgid "Social Instagram"
-msgstr "Social Instagram"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_linkedin
@@ -30406,7 +30231,7 @@ msgstr "Sociale medier"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_push_notifications
 msgid "Social Push Notifications"
-msgstr "Social Push notifikationer"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_test_full
@@ -30421,7 +30246,7 @@ msgstr "Social Test: test specifik for social med alle under-moduler"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_twitter
 msgid "Social Twitter"
-msgstr "Social Twitter"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_youtube
@@ -30542,7 +30367,7 @@ msgstr "Spanien - Regnskab (PGCE 2008)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_reports
 msgid "Spain - Accounting (PGCE 2008) Reports"
-msgstr "Spanien - Regnskab (PGCE 2008) Rapporter"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_real_estates
@@ -30660,7 +30485,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_spreadsheet_account
 msgid "Spreadsheet Accounting Templates"
-msgstr "Regneark Regnskab Skabeloner"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_spreadsheet_account
@@ -30683,7 +30508,7 @@ msgstr "Regneark CRM Skabeloner"
 #: model:ir.module.module,description:base.module_documents_spreadsheet_crm
 #: model:ir.module.module,summary:base.module_documents_spreadsheet_crm
 msgid "Spreadsheet CRM templates"
-msgstr "Regneark CRM skabeloner"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_spreadsheet_dashboard_edition
@@ -30922,12 +30747,12 @@ msgstr "Lager Instrastat"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_account_enterprise
 msgid "Stock account enterprise"
-msgstr "Lager konto virksomhed"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_enterprise
 msgid "Stock enterprise"
-msgstr "Lager virksomhed"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_l10n_be_hr_payroll
@@ -31008,7 +30833,7 @@ msgstr "Underleverance produktioner"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_mrp_subcontracting
 msgid "Subcontract with Barcode"
-msgstr "Underleverandør med Stregkode"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_subcontracting_account
@@ -31415,7 +31240,7 @@ msgstr "Test handlingsbindinger"
 #: model:ir.module.module,shortdesc:base.module_test_l10n_be_hr_payroll_account
 #: model:ir.module.module,summary:base.module_test_l10n_be_hr_payroll_account
 msgid "Test Belgian Payroll"
-msgstr "Test Belgisk lønninger"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
@@ -31480,7 +31305,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_test_marketing_automation
 msgid "Test Suite for Automated Marketing Campaigns"
-msgstr "Test samling for Automatiseret Marketing Kampagner"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_test_data_cleaning
@@ -32901,7 +32726,7 @@ msgstr "Timer"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_timer
 msgid "Timer Tests"
-msgstr "Timer Tests"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_test_timer
@@ -33410,7 +33235,7 @@ msgstr "USt"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_data_merge_utm
 msgid "UTM Deduplication"
-msgstr "UTM Afduplikation"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_utm
@@ -33804,7 +33629,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_iot
 msgid "Use IoT Devices in the PoS"
-msgstr "Brug IoT Enheder i PoS'en"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_iot
@@ -33824,7 +33649,7 @@ msgstr "Brug en stregkode til at identificere denne kontakt."
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode
 msgid "Use barcode scanners to process logistics operations"
-msgstr "Brug stregkode scannere til at gennemgå logistiske operationer"
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -34542,12 +34367,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_web_grid
 msgid "Web Grid Tests"
-msgstr "Hjemmeside Gitter Tests"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_test_web_grid
 msgid "Web Grid Tests: performances and tests specific to the grid view"
-msgstr "Hjemmeside Gitter Tests: Ydeevne og tests specifik for gitter visning"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__web_icon
@@ -34701,7 +34526,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_slides
 msgid "Website Slides Helpdesk"
-msgstr "Hjemmeside dias helpdesk"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_studio
@@ -34921,7 +34746,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder
 msgid "Work Orders, Planning, Stock Reports."
-msgstr "Arbejdsordre, planlægning, lager rapporter."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_worksheet
@@ -35491,12 +35316,12 @@ msgstr "boolsk"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_bpost
 msgid "bpost Shipping"
-msgstr "bpost Fragt"
+msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_account_budget
 msgid "budget"
-msgstr "budget"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__char
@@ -35910,7 +35735,7 @@ msgstr "lønning"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_account_reports
 msgid "pos_account_reports"
-msgstr "pos_account_reports"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_cache
