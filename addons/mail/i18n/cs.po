@@ -17,8 +17,6 @@
 # Tomáš Píšek, 2024
 # Aleš Fiala <f.ales1@seznam.cz>, 2024
 # Jakub Smolka, 2024
-# Vojtech Smolka, 2024
-# Katerina Horylova, 2024
 # 
 msgid ""
 msgstr ""
@@ -26,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Katerina Horylova, 2024\n"
+"Last-Translator: Jakub Smolka, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -910,7 +908,6 @@ msgstr ""
 #, python-format
 msgid "A next activity can only be planned on models that use activities."
 msgstr ""
-"Další aktivity lze plánovat pouze na modelech, které využívají aktivity."
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_shortcode_action
@@ -1096,7 +1093,7 @@ msgstr "Aktivity"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_activity_check_res_id_is_set
 msgid "Activities have to be linked to records with a not null res_id."
-msgstr "Aktivity musí být propojeny se záznamy s nenulovým res_id."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -2494,7 +2491,7 @@ msgstr "Potvrzeno"
 #: code:addons/mail/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "Congratulations, you're done with your activities."
-msgstr "Blahopřejeme, aktivity jste úspěšně dokončili."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -2622,7 +2619,7 @@ msgstr "Vytvořit datum"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__state__next_activity
 msgid "Create Next Activity"
-msgstr "Vytvořit další aktivitu"
+msgstr "Vytvořtit další aktivitu"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__create_uid
@@ -3364,7 +3361,7 @@ msgstr "Upravit odebírání"
 #: code:addons/mail/static/src/views/fields/many2many_tags_email/many2many_tags_email.js:0
 #, python-format
 msgid "Edit: %s"
-msgstr "Editovat\\: %s"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__email
@@ -4875,7 +4872,7 @@ msgstr "Je sledující"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__is_member
 msgid "Is Member"
-msgstr "Je člen"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__is_read
@@ -5499,7 +5496,7 @@ msgstr "Načíst další"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Load template"
-msgstr "Nahrát šablonu"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -15903,7 +15900,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "danger"
-msgstr "riziko"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -16082,14 +16079,14 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "delivery"
-msgstr "doručení"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "delivery truck"
-msgstr "dodávkový vůz"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -34357,7 +34354,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "warning"
-msgstr "upozornění"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript

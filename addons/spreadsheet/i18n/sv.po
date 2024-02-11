@@ -40,50 +40,48 @@ msgid ""
 " A string, possible empty, or a reference to a valid string. If empty, the "
 "text will be simply concatenated."
 msgstr ""
-" En sträng, eventuellt tom, eller en referens till en giltig sträng. Om den "
-"är tom kommer texten helt enkelt att konkateneras."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "%s %s and %s"
-msgstr "%s %s och %s"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "%s Columns left"
-msgstr "%s Kolumner vänster"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "%s Columns right"
-msgstr "%s Kolumner höger"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "%s Rows above"
-msgstr "%s Rader ovanför"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "%s Rows below"
-msgstr "%s Rader nedan"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/assets_backend/spreadsheet_action_loader.js:0
 #, python-format
 msgid "%s couldn't be loaded"
-msgstr "%s kunde inte laddas"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -93,8 +91,6 @@ msgid ""
 "(0) Exact match. (-1) Return next smaller item if no match. (1) Return next "
 "greater item if no match."
 msgstr ""
-"(0) Exakt matchning. (-1) Returnerar nästa mindre objekt om ingen matchning."
-" (1) Returnerar nästa större artikel om ingen matchning."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -107,46 +103,41 @@ msgid ""
 "    (-2) Perform a binary search that relies on lookup_array being sorted in descending order. If not sorted, invalid results will be returned.\n"
 "    "
 msgstr ""
-"(1) Sökningen startar vid första objektet.\n"
-"    (-1) Sökningen börjar med det sista objektet.\n"
-"    (2) Utför en binär sökning som är beroende av att lookup_array är sorterad i stigande ordning. Om den inte är sorterad returneras ogiltiga resultat.\n"
-"    (-2) Utför en binär sökning som bygger på att lookup_array sorteras i fallande ordning. Om den inte sorteras kommer ogiltiga resultat att returneras.\n"
-"    "
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "(Blanks)"
-msgstr "(Blanks)"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "+ Add another rule"
-msgstr "+ Lägg till en annan regel"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "- [optional]"
-msgstr "- [valfritt]"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "1 column"
-msgstr "1 kolumn"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "1 row"
-msgstr "1 rad"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -160,7 +151,7 @@ msgstr "2 kolumner"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "2 rows"
-msgstr "2 rader"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -170,106 +161,104 @@ msgid ""
 "A boolean; if TRUE, empty cells selected in the text arguments won't be "
 "included in the result."
 msgstr ""
-"En boolean; om TRUE, kommer tomma celler som markerats i textargumenten inte"
-" att inkluderas i resultatet."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "A conditional count across a range."
-msgstr "En villkorlig räkning över ett intervall."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "A conditional sum across a range."
-msgstr "En villkorad summa över ett intervall."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "A filter can only be created on a continuous selection."
-msgstr "Ett filter kan endast skapas för ett kontinuerligt urval."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "A maximum range limit value is needed"
-msgstr "Ett gränsvärde för maximalt intervall behövs"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "A minimum range limit value is needed"
-msgstr "Ett gränsvärde för minsta intervall behövs"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "A number raised to a power."
-msgstr "Ett tal som höjs till en effekt."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "A random number between 0 inclusive and 1 exclusive."
-msgstr "Ett slumpmässigt tal mellan 0 inkluderande och 1 exkluderande."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "A range needs to be defined"
-msgstr "Ett intervall behöver definieras"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "A sheet with the name %s already exists. Please select another name."
-msgstr "Ett ark med namnet %s finns redan. Vänligen välj ett annat namn."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "ABOUT"
-msgstr "OM"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Absolute value"
-msgstr "Absolut värde"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Absolute value of a number."
-msgstr "Absolut värde för ett tal."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Accrued interest of security paying at maturity."
-msgstr "Upplupen ränta på värdepapper som betalas på förfallodagen."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_ui_plugin.js:0
 #, python-format
 msgid "Active Filters"
-msgstr "Aktiva filter"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -283,21 +272,21 @@ msgstr "Lägg till"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Add Filter"
-msgstr "Lägg till filter"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Add range"
-msgstr "Lägg till intervall"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Additional text item(s)."
-msgstr "Ytterligare textobjekt."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -307,43 +296,41 @@ msgid ""
 "All the dates should be greater or equal to the first date in cashflow_dates"
 " (%s)."
 msgstr ""
-"Alla datum ska vara större eller lika med det första datumet i "
-"cashflow_dates (%s)."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Amount received at maturity for a security."
-msgstr "Belopp som erhålls vid förfall för ett värdepapper."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Angle from the X axis to a point (x,y), in radians."
-msgstr "Vinkel från X-axeln till en punkt (x,y), i radianer."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Annual effective interest rate."
-msgstr "Årlig effektiv räntesats."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Annual nominal interest rate."
-msgstr "Årlig nominell ränta."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Annual yield of a discount security."
-msgstr "Årlig avkastning på ett diskonterat värdepapper."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -351,14 +338,13 @@ msgstr "Årlig avkastning på ett diskonterat värdepapper."
 #, python-format
 msgid "Annual yield of a security paying interest at maturity."
 msgstr ""
-"Årlig avkastning på ett värdepapper som betalar ränta på förfallodagen."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Annual yield of a security paying periodic interest."
-msgstr "Årlig avkastning på ett värdepapper som betalar periodisk ränta."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -374,8 +360,6 @@ msgstr "Anonym"
 msgid ""
 "Any text item. This could be a string, or an array of strings in a range."
 msgstr ""
-"Vilket textobjekt som helst. Detta kan vara en sträng eller en matris av "
-"strängar i ett intervall."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -389,14 +373,14 @@ msgstr "Verkställ"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Apply a large number format"
-msgstr "Tillämpa ett stort antal format"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Apply to range"
-msgstr "Ansök till sortiment"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -411,14 +395,14 @@ msgstr "april"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Are you sure you want to delete this sheet ?"
-msgstr "Är du säker på att du vill ta bort detta ark?"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Argument must be a reference to a cell or range."
-msgstr "Argumentet måste vara en referens till en cell eller ett intervall."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -426,7 +410,7 @@ msgstr "Argumentet måste vara en referens till en cell eller ett intervall."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Ascending (A ⟶ Z)"
-msgstr "Stigande (A ⟶ Z)"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -448,7 +432,7 @@ msgstr "Automatisk"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Average magnitude of deviations from mean."
-msgstr "Genomsnittlig storlek på avvikelser från medelvärdet."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -456,28 +440,27 @@ msgstr "Genomsnittlig storlek på avvikelser från medelvärdet."
 #, python-format
 msgid "Average of a set of values from a table-like range."
 msgstr ""
-"Genomsnitt av en uppsättning värden från ett tabellliknande intervall."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Average of values depending on criteria."
-msgstr "Genomsnitt av värden beroende på kriterier."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Average of values depending on multiple criteria."
-msgstr "Genomsnitt av värden beroende på flera kriterier."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Avg"
-msgstr "Avg"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -505,7 +488,7 @@ msgstr "Bakgrundsfärg"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Bad zone format"
-msgstr "Felaktigt zonformat"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -520,35 +503,35 @@ msgstr "Fält"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Baseline color"
-msgstr "Färg vid baslinjen"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Baseline configuration"
-msgstr "Grundläggande konfiguration"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Baseline description"
-msgstr "Beskrivning av utgångsläget"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Baseline format"
-msgstr "Baslinjeformat"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Baseline value"
-msgstr "Baslinjevärde"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -564,7 +547,7 @@ msgstr "Fet"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Borders"
-msgstr "Gränser"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -580,7 +563,7 @@ msgstr "Undre"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Calculates effective interest rate."
-msgstr "Beräknar den effektiva räntan."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -590,8 +573,6 @@ msgid ""
 "Calculates the price of a security paying interest at maturity, based on "
 "expected yield."
 msgstr ""
-"Beräknar priset på ett värdepapper som betalar ränta på förfallodagen, "
-"baserat på förväntad avkastning."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -607,28 +588,28 @@ msgstr "Avbryt"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Cannot do a special paste of a figure."
-msgstr "Det går inte att göra en specialpasta av en figur."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Cannot find workbook relations file"
-msgstr "Kan inte hitta relationsfil för arbetsbok"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Cannot open the chart side panel while no chart are selected"
-msgstr "Kan inte öppna sidopanelen för diagram när inget diagram är valt"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Cannot paste merged cells over a frozen pane."
-msgstr "Det går inte att klistra in sammanslagna celler över en frusen ruta."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -638,8 +619,6 @@ msgid ""
 "Cannot sort. To sort, select only cells or only merges that have the same "
 "size."
 msgstr ""
-"Kan inte sortera. För att sortera, välj endast celler eller endast "
-"sammanslagningar som har samma storlek."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -648,14 +627,14 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Categories / Labels"
-msgstr "Kategorier / Etiketter"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Cell values"
-msgstr "Cellvärden"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -670,21 +649,21 @@ msgstr "Diagram"
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
 #, python-format
 msgid "Chart - %s"
-msgstr "Diagram - %s"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Chart type"
-msgstr "Typ av diagram"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Circular reference"
-msgstr "Cirkulär referens"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -699,63 +678,63 @@ msgstr "Töm"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Clear Format"
-msgstr "Klart format"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Clear column %s"
-msgstr "Rensa kolumn %s"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Clear columns"
-msgstr "Rensa kolumner"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Clear columns %s - %s"
-msgstr "Rensa kolumnerna %s - %s"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Clear formatting"
-msgstr "Tydlig formatering"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Clear row %s"
-msgstr "Rensa rad %s"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Clear rows"
-msgstr "Rensa rader"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Clear rows %s - %s"
-msgstr "Rensa raderna %s - %s"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Clip"
-msgstr "Klämma"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -769,21 +748,21 @@ msgstr "Kod"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Color Up"
-msgstr "Färg upp"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Color on value decrease"
-msgstr "Färg på värdeminskning"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Color on value increase"
-msgstr "Färg på värdeökning"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -791,35 +770,35 @@ msgstr "Färg på värdeökning"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Color scale"
-msgstr "Färgskala"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Column left"
-msgstr "Kolumn vänster"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Column number of a specified cell."
-msgstr "Kolumnnummer för en angiven cell."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Column right"
-msgstr "Kolumn höger"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Compare two numeric values, returning 1 if they're equal."
-msgstr "Jämför två numeriska värden och returnerar 1 om de är lika."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -828,8 +807,6 @@ msgstr "Jämför två numeriska värden och returnerar 1 om de är lika."
 msgid ""
 "Computes the number of periods needed for an investment to reach a value."
 msgstr ""
-"Beräknar det antal perioder som krävs för att en investering ska nå ett "
-"värde."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -839,8 +816,6 @@ msgid ""
 "Computes the rate needed for an investment to reach a specific value within "
 "a specific number of periods."
 msgstr ""
-"Beräknar den ränta som krävs för att en investering ska nå ett visst värde "
-"inom ett visst antal perioder."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -850,7 +825,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Conditional formatting"
-msgstr "Villkorlig formatering"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -880,56 +855,56 @@ msgstr "Innehåller"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Convert a decimal fraction to decimal value."
-msgstr "Konvertera ett decimalfraktion till decimalvärde."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Convert a decimal value to decimal fraction."
-msgstr "Konvertera ett decimalvärde till decimalbråk."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Converts a date string to a date value."
-msgstr "Konverterar en datumsträng till ett datumvärde."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Converts a time string into its serial number representation."
-msgstr "Konverterar en tidssträng till dess serienummerrepresentation."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Converts an angle value in radians to degrees."
-msgstr "Konverterar ett vinkelvärde i radianer till grader."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Converts from another base to decimal."
-msgstr "Konverterar från en annan bas till decimal."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Converts hour/minute/second into a time."
-msgstr "Omvandlar timme/minut/sekund till en tid."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Converts year/month/day into a date."
-msgstr "Konverterar år/månad/dag till ett datum."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -947,28 +922,28 @@ msgstr "Kopiera"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Copy of %s"
-msgstr "Kopia av %s"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Cosecant of an angle provided in radians."
-msgstr "Cosecant av en vinkel angiven i radianer."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Cosine of an angle provided in radians."
-msgstr "Cosinus för en vinkel angiven i radianer."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Cotangent of an angle provided in radians."
-msgstr "Cotangens för en vinkel angiven i radianer."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -983,14 +958,14 @@ msgstr "Antal"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Count Numbers"
-msgstr "Räkna siffror"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Count values depending on multiple criteria."
-msgstr "Räkna värden beroende på flera kriterier."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -999,57 +974,55 @@ msgstr "Räkna värden beroende på flera kriterier."
 msgid ""
 "Counts number of unique values in a range, filtered by a set of criteria."
 msgstr ""
-"Räknar antalet unika värden i ett intervall, filtrerat efter en uppsättning "
-"kriterier."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Counts number of unique values in a range."
-msgstr "Räknar antalet unika värden i ett intervall."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Counts values and text from a table-like range."
-msgstr "Räknar värden och text från ett tabellliknande område."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Counts values from a table-like range."
-msgstr "Räknar värden från ett tabellliknande intervall."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Create filter"
-msgstr "Skapa filter"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Cumulative data"
-msgstr "Kumulativa data"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Cumulative interest paid over a set of periods."
-msgstr "Ackumulerad ränta som betalats under en viss period."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Cumulative principal paid over a set of periods."
-msgstr "Ackumulerat kapital som betalas över en viss period."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1070,35 +1043,35 @@ msgstr "Valutakurs"
 #: code:addons/spreadsheet/static/src/currency/currency_data_source.js:0
 #, python-format
 msgid "Currency not available for this company."
-msgstr "Valuta ej tillgänglig för detta företag."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/currency/currency_data_source.js:0
 #, python-format
 msgid "Currency rate unavailable."
-msgstr "Valutakurs ej tillgänglig."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Currency rounded"
-msgstr "Valuta avrundad"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Current date and time as a date value."
-msgstr "Aktuellt datum och tid som ett datumvärde."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Current date as a date value."
-msgstr "Aktuellt datum som ett datumvärde."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1113,14 +1086,14 @@ msgstr "Anpassad"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Custom currency"
-msgstr "Anpassad valuta"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Custom currency format"
-msgstr "Anpassat valutaformat"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1131,7 +1104,7 @@ msgstr "Anpassat valutaformat"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Cut"
-msgstr "Skär"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1147,7 +1120,7 @@ msgstr "Data"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Data Series"
-msgstr "Dataserier"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1155,21 +1128,21 @@ msgstr "Dataserier"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/errors.js:0
 #, python-format
 msgid "Data is loading"
-msgstr "Data håller på att laddas"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Data not available"
-msgstr "Data ej tillgängliga"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Data range"
-msgstr "Dataområde"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1178,7 +1151,7 @@ msgstr "Dataområde"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Data series include title"
-msgstr "Dataserier inkluderar titel"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1192,42 +1165,42 @@ msgstr "Datum"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Date a number of months before/after another date."
-msgstr "Datum ett antal månader före/efter ett annat datum."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Date after a number of workdays (specifying weekends)."
-msgstr "Datum efter ett antal arbetsdagar (med angivande av veckoslut)."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Date after a number of workdays."
-msgstr "Datum efter ett antal arbetsdagar."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Date time"
-msgstr "Datum och tid"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Day of the month that a specific date falls on."
-msgstr "Dag i månaden som ett visst datum infaller på."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Day of the week of the date provided (as number)."
-msgstr "Veckodag för det datum som anges (som nummer)."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1235,14 +1208,14 @@ msgstr "Veckodag för det datum som anges (som nummer)."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Days from settlement until next coupon."
-msgstr "Dagar från avräkning till nästa kupong."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Days in coupon period containing settlement date."
-msgstr "Dagar i kupongperiod som innehåller likviddag."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1257,7 +1230,7 @@ msgstr "december"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Decrease decimal places"
-msgstr "Minska decimaler"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1272,105 +1245,105 @@ msgstr "Ta bort"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Delete cell and shift left"
-msgstr "Radera cell och flytta åt vänster"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Delete cell and shift up"
-msgstr "Radera cell och skift upp"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Delete cells"
-msgstr "Radera celler"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Delete column %s"
-msgstr "Ta bort kolumn %s"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Delete columns"
-msgstr "Ta bort kolumner"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Delete columns %s - %s"
-msgstr "Ta bort kolumnerna %s - %s"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Delete row %s"
-msgstr "Radera rad %s"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Delete rows"
-msgstr "Radera rader"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Delete rows %s - %s"
-msgstr "Radera raderna %s - %s"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Delete values"
-msgstr "Radera värden"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Depreciation for an accounting period."
-msgstr "Avskrivningar för en räkenskapsperiod."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Depreciation of an asset using the straight-line method."
-msgstr "Avskrivning av en tillgång enligt den linjära metoden."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Depreciation via declining balance method."
-msgstr "Avskrivning enligt degressiv metod."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Depreciation via double-declining balance method."
-msgstr "Avskrivning enligt metoden med dubbel degressiv avskrivning."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Depreciation via sum of years digit method."
-msgstr "Avskrivning enligt metoden summa årssiffror."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1378,7 +1351,7 @@ msgstr "Avskrivning enligt metoden summa årssiffror."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Descending (Z ⟶ A)"
-msgstr "Nedåtgående (Z ⟶ A)"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1395,14 +1368,14 @@ msgstr "Konstruktion"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Did not find value '%s' in [[FUNCTION_NAME]] evaluation."
-msgstr "Hittade inte värdet '%s' i [[FUNCTION_NAME]]-utvärderingen."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Discount rate of a security based on price."
-msgstr "Diskonteringsränta för ett värdepapper baserat på pris."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1439,7 +1412,7 @@ msgstr "Redigera"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Edit link"
-msgstr "Redigera länk"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1454,21 +1427,21 @@ msgstr "Eller"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Ends with"
-msgstr "Slutar med"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Equivalent rate of return for a US Treasury bill."
-msgstr "Motsvarande avkastning för en amerikansk statsskuldväxel."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Euler's number, e (~2.718) raised to a power."
-msgstr "Eulers tal, e (~2,718) upphöjt till en potens."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1488,15 +1461,13 @@ msgstr "Eulers tal, e (~2,718) upphöjt till en potens."
 msgid ""
 "Evaluation of function [[FUNCTION_NAME]] caused a divide by zero error."
 msgstr ""
-"Utvärderingen av funktionen [[FUNCTION_NAME]] orsakade ett dividera med "
-"noll-fel."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Exact number of years between two dates."
-msgstr "Exakt antal år mellan två datum."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1511,21 +1482,21 @@ msgstr "februari"
 #: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 #, python-format
 msgid "Field %s does not exist"
-msgstr "Fältet %s existerar inte"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 #, python-format
 msgid "Field %s is not supported because of its type (%s)"
-msgstr "Fältet %s stöds inte på grund av dess typ (%s)"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/list/list_data_source.js:0
 #, python-format
 msgid "Fields of type \"%s\" are not supported"
-msgstr "Fält av typen \"%s\" stöds inte"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1549,56 +1520,56 @@ msgstr "Fyllningsfärg"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "FillColor"
-msgstr "Fyllningsfärg"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_ui_plugin.js:0
 #, python-format
 msgid "Filter \"%s\" not found"
-msgstr "Filter \"%s\" hittades inte"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Find and Replace"
-msgstr "Sök och ersätt"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Find and replace"
-msgstr "Hitta och ersätt"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "First day of the month preceding a date."
-msgstr "Första dagen i den månad som föregår ett datum."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "First day of the quarter of the year a specific date falls in."
-msgstr "Första dagen i det kvartal av året som ett visst datum infaller i."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "First day of the year a specific date falls in."
-msgstr "Första dagen på året som ett visst datum infaller på."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "FixedNumber"
-msgstr "Fast antal"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1627,28 +1598,28 @@ msgstr "Format"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Format as percent"
-msgstr "Formatera som procent"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Format cells if..."
-msgstr "Formatera celler om..."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Format rules"
-msgstr "Regler för format"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Formatting style"
-msgstr "Formateringsstil"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1664,7 +1635,7 @@ msgstr "Formel"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Freeze"
-msgstr "Frys"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1681,8 +1652,6 @@ msgid ""
 "Function ${name} has an argument that has been declared with more than one "
 "type whose type 'META'. The 'META' type can only be declared alone."
 msgstr ""
-"Funktionen ${name} har ett argument som har deklarerats med mer än en typ "
-"vars typ 'META'. Typen 'META' kan endast deklareras ensam."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1692,9 +1661,6 @@ msgid ""
 "Function ${name} has at mandatory arguments declared after optional ones. "
 "All optional arguments must be after all mandatory arguments."
 msgstr ""
-"Funktionen ${name} har vid obligatoriska argument deklarerat efter valfria "
-"argument. Alla valfria argument måste vara efter alla obligatoriska "
-"argument."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1704,8 +1670,6 @@ msgid ""
 "Function ${name} has no-repeatable arguments declared after repeatable ones."
 " All repeatable arguments must be declared last."
 msgstr ""
-"Funktionen ${name} har argument som inte kan upprepas deklarerade efter de "
-"som kan upprepas. Alla upprepningsbara argument måste deklareras sist."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1715,8 +1679,6 @@ msgid ""
 "Function %s expects its parameters to be single values or single cell "
 "references, not ranges."
 msgstr ""
-"Funktionen %s förväntar sig att dess parametrar är enskilda värden eller "
-"enskilda cellreferenser, inte intervall."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1726,8 +1688,6 @@ msgid ""
 "Function %s expects the parameter %s to be a single value or a single cell "
 "reference, not a range."
 msgstr ""
-"Funktionen %s förväntar sig att parametern %s är ett enskilt värde eller en "
-"enskild cellreferens, inte ett intervall."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1737,22 +1697,20 @@ msgid ""
 "Function %s expects the parameter %s to be reference to a cell or range, not"
 " a %s."
 msgstr ""
-"Funktionen %s förväntar sig att parametern %s är en referens till en cell "
-"eller ett intervall, inte en %s."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 #, python-format
 msgid "Function PIVOT takes an even number of arguments."
-msgstr "Funktionen PIVOT tar ett jämnt antal argument."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Function [[FUNCTION_NAME]] caused a divide by zero error."
-msgstr "Funktionen [[FUNCTION_NAME]] orsakade ett dividera med noll-fel."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1760,7 +1718,7 @@ msgstr "Funktionen [[FUNCTION_NAME]] orsakade ett dividera med noll-fel."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Function [[FUNCTION_NAME]] didn't find any result."
-msgstr "Funktionen [[FUNCTION_NAME]] gav inget resultat."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1770,8 +1728,6 @@ msgid ""
 "Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in "
 "pairs."
 msgstr ""
-"Funktionen [[FUNCTION_NAME]] förväntar sig att criteria_range och criterion "
-"ska vara i par."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1780,8 +1736,6 @@ msgstr ""
 msgid ""
 "Function [[FUNCTION_NAME]] expects criteria_range to have the same dimension"
 msgstr ""
-"Funktionen [[FUNCTION_NAME]] förväntar sig att criteria_range har samma "
-"dimension"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1790,8 +1744,6 @@ msgstr ""
 #, python-format
 msgid "Function [[FUNCTION_NAME]] parameter 2 value (%s) is out of range."
 msgstr ""
-"Värdet för parameter 2 (%s) för funktion [[FUNCTION_NAME]] ligger utanför "
-"intervallet."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1800,204 +1752,202 @@ msgstr ""
 #, python-format
 msgid "Function [[FUNCTION_NAME]] parameter 2 value is out of range."
 msgstr ""
-"Värdet för parameter 2 för funktion [[FUNCTION_NAME]] ligger utanför "
-"intervallet."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Future value of an annuity investment."
-msgstr "Framtida värde av en annuitetsinvestering."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Future value of principal from series of rates."
-msgstr "Framtida värde av kapitalbelopp från serie av räntor."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Gauge"
-msgstr "Mätare"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 #, python-format
 msgid "Get the absolute ID of an element in the pivot"
-msgstr "Hämta det absoluta ID:t för ett element i pivoten"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/list/list_functions.js:0
 #, python-format
 msgid "Get the header of a list."
-msgstr "Hämta rubriken i en lista."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 #, python-format
 msgid "Get the header of a pivot."
-msgstr "Ta fram huvudet på en pivot."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/translation.js:0
 #, python-format
 msgid "Get the translated value of the given string"
-msgstr "Hämta det översatta värdet av den angivna strängen"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/list/list_functions.js:0
 #, python-format
 msgid "Get the value from a list."
-msgstr "Hämta värdet från en lista."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 #, python-format
 msgid "Get the value from a pivot."
-msgstr "Få ut värdet av en pivot."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Hide column %s"
-msgstr "Dölj kolumn %s"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Hide columns"
-msgstr "Dölj kolumner"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Hide columns %s - %s"
-msgstr "Dölj kolumnerna %s - %s"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Hide formulas"
-msgstr "Dölj formler"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Hide gridlines"
-msgstr "Dölj rutnätslinjer"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Hide row %s"
-msgstr "Dölj rad %s"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Hide rows"
-msgstr "Dölj rader"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Hide rows %s - %s"
-msgstr "Dölj raderna %s - %s"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Hide sheet"
-msgstr "Dölj ark"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Horizontal align"
-msgstr "Horisontell justering"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Horizontal lookup"
-msgstr "Horisontell uppslagning"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Hour component of a specific time."
-msgstr "Timkomponent för en specifik tid."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Hyperbolic cosecant of any real number."
-msgstr "Hyperbolisk kosekant av ett reellt tal."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Hyperbolic cosine of any real number."
-msgstr "Hyperbolisk cosinus för valfritt reellt tal."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Hyperbolic cotangent of any real number."
-msgstr "Hyperbolisk cotangens för alla reella tal."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Hyperbolic secant of any real number."
-msgstr "Hyperbolisk sekant av ett reellt tal."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Hyperbolic sine of any real number."
-msgstr "Hyperbolisk sinus för valfritt reellt tal."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Hyperbolic tangent of any real number."
-msgstr "Hyperbolisk tangent till ett reellt tal."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "ISO week number of the year."
-msgstr "ISO veckonummer för året."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2005,210 +1955,210 @@ msgstr "ISO veckonummer för året."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Icon set"
-msgstr "Ikonuppsättning"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Icons"
-msgstr "Ikoner"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "If a valid match is not found, return this value."
-msgstr "Om ingen giltig matchning hittas returneras detta värde."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Increase decimal places"
-msgstr "Öka antalet decimaler"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Index out of range."
-msgstr "Index utanför räckvidd."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Insert"
-msgstr "Infoga"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Insert %s columns"
-msgstr "Infoga %s kolumner"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Insert %s columns left"
-msgstr "Infoga %s kolumner till vänster"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Insert %s columns right"
-msgstr "Infoga %s kolumner till höger"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Insert %s rows"
-msgstr "Infoga %s rader"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Insert %s rows above"
-msgstr "Infoga %s rader ovanför"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Insert %s rows below"
-msgstr "Infoga %s rader nedan"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Insert cells"
-msgstr "Infoga celler"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Insert cells and shift down"
-msgstr "Infoga celler och skifta nedåt"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Insert cells and shift right"
-msgstr "Infoga celler och flytta åt höger"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Insert column"
-msgstr "Infoga kolumn"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Insert column left"
-msgstr "Infoga kolumn vänster"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Insert column right"
-msgstr "Infoga kolumn till höger"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Insert link"
-msgstr "Infoga länk"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Insert row"
-msgstr "Infoga rad"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Insert row above"
-msgstr "Infoga raden ovan"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Insert row below"
-msgstr "Infoga raden nedan"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Interest rate of an annuity investment."
-msgstr "Räntesats för en annuitetsinvestering."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Internal rate of return given non-periodic cash flows."
-msgstr "Internränta givet icke-periodiska kassaflöden."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Internal rate of return given periodic cashflows."
-msgstr "Internränta givet periodiska kassaflöden."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Invalid Maxpoint formula"
-msgstr "Ogiltig formel för maxpunkt"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Invalid Midpoint formula"
-msgstr "Ogiltig formel för mittpunkt"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Invalid Minpoint formula"
-msgstr "Ogiltig formel för minpunkt"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Invalid expression"
-msgstr "Ogiltigt uttryck"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Invalid lower inflection point formula"
-msgstr "Ogiltig formel för nedre böjpunkt"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2218,8 +2168,6 @@ msgid ""
 "Invalid number of arguments for the %s function. Expected %s maximum, but "
 "got %s instead."
 msgstr ""
-"Ogiltigt antal argument för %s-funktionen. Förväntade %s maximalt, men fick "
-"%s istället."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2229,8 +2177,6 @@ msgid ""
 "Invalid number of arguments for the %s function. Expected %s minimum, but "
 "got %s instead."
 msgstr ""
-"Ogiltigt antal argument för %s-funktionen. Förväntade %s minimum, men fick "
-"%s istället."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2240,113 +2186,111 @@ msgid ""
 "Invalid number of arguments for the %s function. Expected all arguments "
 "after position %s to be supplied by groups of %s arguments"
 msgstr ""
-"Ogiltigt antal argument för %s-funktionen. Förväntade mig att alla argument "
-"efter position %s skulle tillhandahållas av grupper med %s argument"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Invalid reference"
-msgstr "Ogiltig referens"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Invalid sheet"
-msgstr "Ogiltigt ark"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Invalid sheet name"
-msgstr "Ogiltigt arknamn"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Invalid sheet name: %s"
-msgstr "Ogiltigt arknamn: %s"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Invalid upper inflection point formula"
-msgstr "Ogiltig formel för övre inflexionspunkt"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Inverse cosine of a value, in radians."
-msgstr "Inverterad cosinus för ett värde, i radianer."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Inverse cotangent of a value."
-msgstr "Inverterad cotangens av ett värde."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Inverse hyperbolic cosine of a number."
-msgstr "Inverterad hyperbolisk cosinus för ett tal."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Inverse hyperbolic cotangent of a value."
-msgstr "Inverterad hyperbolisk cotangens av ett värde."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Inverse hyperbolic sine of a number."
-msgstr "Inverterad hyperbolisk sinus av ett tal."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Inverse hyperbolic tangent of a number."
-msgstr "Inverterad hyperbolisk tangent till ett tal."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Inverse sine of a value, in radians."
-msgstr "Invers sinus för ett värde, i radianer."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Inverse tangent of a value, in radians."
-msgstr "Inverterad tangent för ett värde, i radianer."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Is between"
-msgstr "Är mellan"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Is empty"
-msgstr "Är tom"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2388,14 +2332,14 @@ msgstr "Är mindre än eller lika med"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Is not between"
-msgstr "Är inte mellan"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Is not empty"
-msgstr "Är inte tom"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2442,28 +2386,28 @@ msgstr "juni"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Key value"
-msgstr "Nyckelvärde"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Labels are invalid"
-msgstr "Etiketter är ogiltiga"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/helpers/constants.js:0
 #, python-format
 msgid "Last 180 Days"
-msgstr "Senaste 180 dagarna"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/helpers/constants.js:0
 #, python-format
 msgid "Last 3 Years"
-msgstr "De senaste 3 åren"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2477,7 +2421,7 @@ msgstr "Senaste 30 dagarna"
 #: code:addons/spreadsheet/static/src/helpers/constants.js:0
 #, python-format
 msgid "Last 365 Days"
-msgstr "De senaste 365 dagarna"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2491,42 +2435,42 @@ msgstr "Senaste 7 dagarna"
 #: code:addons/spreadsheet/static/src/helpers/constants.js:0
 #, python-format
 msgid "Last 90 Days"
-msgstr "Senaste 90 dagarna"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Last coupon date prior to or on the settlement date."
-msgstr "Sista kupongdag före eller på likviddagen."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Last day of a month before or after a date."
-msgstr "Sista dagen i en månad före eller efter ett datum."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Last day of the month following a date."
-msgstr "Sista dagen i månaden efter ett datum."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Last day of the quarter of the year a specific date falls in."
-msgstr "Sista dagen i det kvartal av året som ett visst datum infaller i."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Last day of the year a specific date falls in."
-msgstr "Sista dagen på året som ett visst datum infaller på."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2546,7 +2490,7 @@ msgstr "Vänster"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Legend position"
-msgstr "Legend position"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2569,14 +2513,14 @@ msgstr "Länk"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Link sheet"
-msgstr "Länkblad"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/list/plugins/list_core_plugin.js:0
 #, python-format
 msgid "List #%s"
-msgstr "Lista #%s"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2590,35 +2534,35 @@ msgstr "Laddar..."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Logical `and` operator."
-msgstr "Logisk `och`-operator."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Logical `or` operator."
-msgstr "Logisk operator `eller`."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Logical `xor` operator."
-msgstr "Logisk operator `xor`."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Look up a value."
-msgstr "Slå upp ett värde."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Lower inflection point must be smaller than upper inflection point"
-msgstr "Nedre vändpunkt måste vara mindre än övre vändpunkt"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2633,49 +2577,49 @@ msgstr "mars"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Match case"
-msgstr "Match fall"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Match entire cell content"
-msgstr "Matcha hela cellinnehållet"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Max"
-msgstr "Max"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "MaxPoint"
-msgstr "MaxPoint"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Maximum numeric value in a dataset."
-msgstr "Högsta numeriska värde i ett dataset."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Maximum of values from a table-like range."
-msgstr "Maximalt värde från ett tabellliknande intervall."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Maximum value in a numeric dataset."
-msgstr "Högsta värde i ett numeriskt dataset."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2690,14 +2634,14 @@ msgstr "maj"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Median value in a numeric dataset."
-msgstr "Medianvärde i en numerisk datauppsättning."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Merge Cells"
-msgstr "Slå samman celler"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2707,8 +2651,6 @@ msgid ""
 "Merged cells are preventing this operation. Unmerge those cells and try "
 "again."
 msgstr ""
-"Sammanfogade celler förhindrar denna operation. Ta bort dessa celler och "
-"försök igen."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2717,78 +2659,76 @@ msgstr ""
 msgid ""
 "Merging these cells will only preserve the top-leftmost value. Merge anyway?"
 msgstr ""
-"Om dessa celler slås samman bevaras endast värdet längst upp till vänster. "
-"Sammanfoga ändå?"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "MidPoint"
-msgstr "Mittpunkt"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Midpoint must be smaller then Maximum"
-msgstr "Mittpunkten måste vara mindre än Maximum"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Min"
-msgstr "Min"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Minimum must be smaller then Maximum"
-msgstr "Minimum måste vara mindre än Maximum"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Minimum must be smaller then Midpoint"
-msgstr "Minimum måste vara mindre än Midpoint"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Minimum numeric value in a dataset."
-msgstr "Minsta numeriska värde i ett dataset."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Minimum of values from a table-like range."
-msgstr "Minimum av värden från ett tabellliknande intervall."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Minimum range limit must be smaller than maximum range limit"
-msgstr "Minsta intervallgräns måste vara mindre än högsta intervallgräns"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Minimum value in a numeric dataset."
-msgstr "Minsta värde i ett numeriskt dataset."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Minpoint"
-msgstr "Minpunkt"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2796,28 +2736,28 @@ msgstr "Minpunkt"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Minute component of a specific time."
-msgstr "Minutkomponent av en specifik tid."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Modified Macaulay duration."
-msgstr "Ändrad Macaulay-varaktighet."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Modified internal rate of return."
-msgstr "Modifierad internränta."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Modulo (remainder) operator."
-msgstr "Modulo (rest)-operator."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2831,35 +2771,35 @@ msgstr "måndag"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Month of the year a specific date falls in"
-msgstr "Månad i det år som ett visst datum infaller i"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "More formats"
-msgstr "Fler format"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "More strings to append in sequence."
-msgstr "Fler strängar att lägga till i sekvens."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "More than one match found in DGET evaluation."
-msgstr "Fler än en matchning hittades i DGET-utvärderingen."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "More values to be appended using delimiter."
-msgstr "Fler värden som ska läggas till med hjälp av avgränsare."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2880,21 +2820,21 @@ msgstr "Flytta till höger"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Net present value given to non-periodic cash flows.."
-msgstr "Nettonuvärdet av icke-periodiska kassaflöden..."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Net working days between two dates (specifying weekends)."
-msgstr "Nettoarbetsdagar mellan två datum (med angivande av veckoslut)."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Net working days between two provided days."
-msgstr "Nettoarbetsdagar mellan två angivna dagar."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2905,14 +2845,14 @@ msgstr "Nettoarbetsdagar mellan två angivna dagar."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "New Chart"
-msgstr "Nytt diagram"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "New sheet"
-msgstr "Nytt ark"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2926,21 +2866,21 @@ msgstr "Nästa"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Next coupon date after the settlement date."
-msgstr "Nästa kupongdag efter avräkningsdagen."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "No columns"
-msgstr "Inga kolumner"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "No match."
-msgstr "Ingen matchning."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2954,7 +2894,7 @@ msgstr "Inga resultat"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "No rows"
-msgstr "Inga rader"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2973,7 +2913,7 @@ msgstr "Inga"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Not implemented operator %s for kind of conditional formatting:  %s"
-msgstr "Ej implementerad operatör %s för typ av villkorlig formatering: %s"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2988,14 +2928,14 @@ msgstr "november"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Nth largest element from a data set."
-msgstr "Nionde största elementet från en datauppsättning."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Nth smallest element in a data set."
-msgstr "Nionde minsta elementet i en datauppsättning."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3012,14 +2952,14 @@ msgstr "Nummer"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Number of columns in a specified array or range."
-msgstr "Antal kolumner i en angiven array eller ett angivet intervall."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Number of coupons between settlement and maturity."
-msgstr "Antal kuponger mellan avveckling och förfall."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3028,42 +2968,41 @@ msgstr "Antal kuponger mellan avveckling och förfall."
 msgid ""
 "Number of days between two dates on a 360-day year (months of 30 days)."
 msgstr ""
-"Antal dagar mellan två datum på ett år med 360 dagar (månader med 30 dagar)."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Number of days between two dates."
-msgstr "Antal dagar mellan två datum."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Number of empty values."
-msgstr "Antal tomma värden."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Number of payment periods for an investment."
-msgstr "Antal betalningsperioder för en investering."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Number of periods for an investment to reach a value."
-msgstr "Antal perioder för en investering att nå ett värde."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Number of rows in a specified array or range."
-msgstr "Antal rader i en angiven array eller ett angivet intervall."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3077,14 +3016,14 @@ msgstr "Nummer"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Numerical average value in a dataset, ignoring text."
-msgstr "Numeriskt medelvärde i en datamängd, text ignoreras."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Numerical average value in a dataset."
-msgstr "Numeriskt medelvärde i en dataset."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3099,14 +3038,14 @@ msgstr "oktober"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Overflow"
-msgstr "Överflöde"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Paint Format"
-msgstr "Färgformat"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3116,7 +3055,7 @@ msgstr "Färgformat"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Paste"
-msgstr "Klistra in"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3126,7 +3065,7 @@ msgstr "Klistra in"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Paste format only"
-msgstr "Endast klistra in format"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3136,7 +3075,7 @@ msgstr "Endast klistra in format"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Paste special"
-msgstr "Särskilda pastor"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3145,14 +3084,14 @@ msgstr "Särskilda pastor"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Paste value only"
-msgstr "Klistra endast in värde"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Paste values only"
-msgstr "Klistra endast in värden"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3160,7 +3099,7 @@ msgstr "Klistra endast in värden"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Payment on the principal of an investment."
-msgstr "Betalning av kapitalbeloppet för en investering."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3184,7 +3123,7 @@ msgstr "Procentandel"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Percentage change from key value"
-msgstr "Procentuell förändring från nyckelvärde"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3193,14 +3132,14 @@ msgstr "Procentuell förändring från nyckelvärde"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Percentile"
-msgstr "Percentil"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Periodic payment for an annuity investment."
-msgstr "Periodisk betalning för en annuitetsinvestering."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3215,28 +3154,28 @@ msgstr "Cirkel"
 #: code:addons/spreadsheet/static/src/pivot/plugins/pivot_core_plugin.js:0
 #, python-format
 msgid "Pivot #%s"
-msgstr "Pivot #%s"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Position of item in range that matches value."
-msgstr "Position för objekt i intervallet som matchar värdet."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Positive square root of a positive number."
-msgstr "Positiv kvadratrot av ett positivt tal."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Present value of an annuity investment."
-msgstr "Nuvärdet av en annuitetsinvestering."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3251,7 +3190,7 @@ msgstr "Förhandsgranskning"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Preview text"
-msgstr "Förhandsgranska text"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3265,42 +3204,42 @@ msgstr "Föregående"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Price of a US Treasury bill."
-msgstr "Priset på en amerikansk statsskuldväxel."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Price of a discount security."
-msgstr "Pris för ett rabatterat värdepapper."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Price of a security paying periodic interest."
-msgstr "Priset på ett värdepapper som betalar periodisk ränta."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Product of values from a table-like range."
-msgstr "Produkt av värden från ett tabellliknande intervall."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Quarter of the year a specific date falls in"
-msgstr "Kvartal av året som ett visst datum infaller i"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Random integer between two values, inclusive."
-msgstr "Slumpmässigt heltal mellan två värden, inklusive."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3314,7 +3253,7 @@ msgstr "Tidspann"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Readonly Access"
-msgstr "Skrivskyddad åtkomst"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3329,7 +3268,7 @@ msgstr "Gör om"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Remove Filter"
-msgstr "Ta bort filter"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3350,28 +3289,28 @@ msgstr "Ta bort regel"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Remove selected filters"
-msgstr "Ta bort valda filter"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Rename"
-msgstr "Byt namn"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Rename Sheet"
-msgstr "Byt namn på ark"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Reorder rules"
-msgstr "Regler för omordning"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3386,7 +3325,7 @@ msgstr "Ersätt"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Replace all"
-msgstr "Byt ut alla"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3400,28 +3339,28 @@ msgstr "Återställ"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Result of multiplying a series of numbers together."
-msgstr "Resultatet av att multiplicera en serie tal med varandra."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 #, python-format
 msgid "Return the current value of a spreadsheet filter."
-msgstr "Returnerar det aktuella värdet för ett kalkylbladsfilter."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Returns a value depending on multiple logical expressions."
-msgstr "Returnerar ett värde beroende på flera logiska uttryck."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Returns opposite of provided logical value."
-msgstr "Returnerar motsatsen till det angivna logiska värdet."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3429,14 +3368,13 @@ msgstr "Returnerar motsatsen till det angivna logiska värdet."
 #, python-format
 msgid "Returns the content of a cell, specified by row and column offset."
 msgstr ""
-"Returnerar innehållet i en cell som angetts med rad- och kolumnförskjutning."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Returns the error value #N/A."
-msgstr "Returnerar felvärdet #N/A."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3444,7 +3382,6 @@ msgstr "Returnerar felvärdet #N/A."
 #, python-format
 msgid "Returns the interest paid at a particular period of an investment."
 msgstr ""
-"Avkastar den ränta som betalats under en viss period av en investering."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3454,8 +3391,6 @@ msgid ""
 "Returns the maximum value in a range of cells, filtered by a set of "
 "criteria."
 msgstr ""
-"Returnerar det högsta värdet i ett cellintervall, filtrerat efter en "
-"uppsättning kriterier."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3465,22 +3400,20 @@ msgid ""
 "Returns the minimum value in a range of cells, filtered by a set of "
 "criteria."
 msgstr ""
-"Returnerar det lägsta värdet i ett cellintervall, filtrerat efter en "
-"uppsättning kriterier."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Returns value depending on logical expression."
-msgstr "Returnerar värde beroende på logiskt uttryck."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Reverse icons"
-msgstr "Omvända ikoner"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3498,21 +3431,21 @@ msgstr "Höger"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Rounds a number according to standard rules."
-msgstr "Avrundar ett tal enligt standardregler."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Rounds a number up to the nearest odd integer."
-msgstr "Avrundar ett tal uppåt till närmaste udda heltal."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Rounds down a number."
-msgstr "Rundor nedåt ett nummer."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3521,7 +3454,7 @@ msgstr "Rundor nedåt ett nummer."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Rounds number down to nearest multiple of factor."
-msgstr "Avrundar talet nedåt till närmaste multipel av faktorn."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3531,35 +3464,35 @@ msgstr "Avrundar talet nedåt till närmaste multipel av faktorn."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Rounds number up to nearest multiple of factor."
-msgstr "Avrundar talet upp till närmaste multipel av faktorn."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Rounds up a number."
-msgstr "Rundar upp ett nummer."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Row above"
-msgstr "Rad ovanför"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Row below"
-msgstr "Rad nedan"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Row number of a specified cell."
-msgstr "Radnummer för en angiven cell."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3581,7 +3514,7 @@ msgstr "Spara"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Scorecard"
-msgstr "Resultattavla"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3598,15 +3531,13 @@ msgid ""
 "Search a range for a match and return the corresponding item from a second "
 "range."
 msgstr ""
-"Sök efter en matchning i ett intervall och returnera motsvarande objekt från"
-" ett annat intervall."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Search in formulas"
-msgstr "Sök i formler"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3620,21 +3551,21 @@ msgstr "Sök..."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Secant of an angle provided in radians."
-msgstr "Sekant av en vinkel angiven i radianer."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/list/index.js:0
 #, python-format
 msgid "See record"
-msgstr "Se rekord"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/pivot/index.js:0
 #, python-format
 msgid "See records"
-msgstr "Se register"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3645,7 +3576,7 @@ msgstr "Se register"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Select a color..."
-msgstr "Välj en färg..."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3660,7 +3591,7 @@ msgstr "Välj alla"
 #: code:addons/spreadsheet/static/src/global_filters/components/filter_value/filter_value.xml:0
 #, python-format
 msgid "Select period..."
-msgstr "Välj period..."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3675,7 +3606,7 @@ msgstr "September"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Series"
-msgstr "Serie"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3690,63 +3621,63 @@ msgstr "Rapport"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Shift down"
-msgstr "Växla ned"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Shift left"
-msgstr "Skifta vänster"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Shift right"
-msgstr "Skifta höger"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Shift up"
-msgstr "Växla upp"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Show formulas"
-msgstr "Visa formler"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Show gridlines"
-msgstr "Visa rutnät"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Sine of an angle provided in radians."
-msgstr "Sinus av en vinkel angiven i radianer."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Single color"
-msgstr "Enfärgad"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Single value from a table-like range."
-msgstr "Enstaka värde från ett tabellliknande intervall."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3756,57 +3687,55 @@ msgid ""
 "Some used characters are not allowed in a sheet name (Forbidden characters "
 "are %s)."
 msgstr ""
-"Vissa använda tecken är inte tillåtna i ett arknamn (Förbjudna tecken är "
-"%s)."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Sort ascending (A ⟶ Z)"
-msgstr "Sortera stigande (A ⟶ Z)"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Sort column"
-msgstr "Sortera kolumn"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Sort columns"
-msgstr "Sortera kolumner"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Sort descending (Z ⟶ A)"
-msgstr "Sortera fallande (Z ⟶ A)"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Sort range"
-msgstr "Svart intervall"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Stacked barchart"
-msgstr "Staplad barchart"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Stacked linechart"
-msgstr "Staplat linjediagram"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3820,14 +3749,14 @@ msgstr "Standard"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Standard deviation of entire population (text as 0)."
-msgstr "Standardavvikelse för hela populationen (text som 0)."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Standard deviation of entire population from table."
-msgstr "Standardavvikelse för hela populationen från tabellen."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3835,21 +3764,21 @@ msgstr "Standardavvikelse för hela populationen från tabellen."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Standard deviation of entire population."
-msgstr "Standardavvikelse för hela populationen."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Standard deviation of population sample from table."
-msgstr "Standardavvikelse för populationsurval från tabell."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Standard deviation of sample (text as 0)."
-msgstr "Standardavvikelse för urvalet (text som 0)."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3857,21 +3786,21 @@ msgstr "Standardavvikelse för urvalet (text som 0)."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Standard deviation."
-msgstr "Standardavvikelse."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Starts with"
-msgstr "Börjar med"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Stop reordering rules"
-msgstr "Sluta omformulera regler"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3880,7 +3809,7 @@ msgstr "Sluta omformulera regler"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Strikethrough"
-msgstr "Genomstruken"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3894,21 +3823,21 @@ msgstr "Summa"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Sum of a series of numbers and/or cells."
-msgstr "Summan av en serie tal och/eller celler."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Sum of values from a table-like range."
-msgstr "Summan av värden från ett tabellliknande intervall."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Sums a range depending on multiple criteria."
-msgstr "Summerar ett intervall beroende på flera kriterier."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3929,7 +3858,7 @@ msgstr "Symbol"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Tangent of an angle provided in radians."
-msgstr "Tangens för en vinkel angiven i radianer."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3950,42 +3879,42 @@ msgstr "Textfärg"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "TextColor"
-msgstr "Textfärg"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The anchor must be part of the provided zone"
-msgstr "Ankaret måste vara en del av den angivna zonen"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 #, python-format
 msgid "The argument %s is not a valid measure. Here are the measures: %s"
-msgstr "Argumentet %s är inte ett giltigt mått. Här är måtten: %s"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The argument is missing. Please provide a value"
-msgstr "Argumentet saknas. Vänligen ange ett värde"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The base (%s) must be between 2 and 36 inclusive."
-msgstr "Basen (%s) måste vara mellan 2 och 36 inklusive."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The baseline value is invalid"
-msgstr "Baslinjevärdet är ogiltigt"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3995,21 +3924,20 @@ msgid ""
 "The cashflow_amounts and cashflow_dates ranges must have the same "
 "dimensions."
 msgstr ""
-"Intervallen cashflow_amounts och cashflow_dates måste ha samma dimensioner."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The cashflow_amounts must include negative and positive values."
-msgstr "Cashflow_amounts måste innehålla negativa och positiva värden."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The cell you are trying to edit has been deleted."
-msgstr "Den cell du försöker redigera har tagits bort."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4017,8 +3945,6 @@ msgstr "Den cell du försöker redigera har tagits bort."
 #, python-format
 msgid "The character or string to place between each concatenated value."
 msgstr ""
-"Det tecken eller den sträng som ska placeras mellan varje konkatenerat "
-"värde."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4026,28 +3952,28 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The character within text_to_search at which to start the search."
-msgstr "Det tecken i text_to_search där sökningen ska påbörjas."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The chart definition is invalid for an unknown reason"
-msgstr "Diagrammets definition är ogiltig av okänd anledning"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The cost (%s) must be positive or null."
-msgstr "Kostnaden (%s) måste vara positiv eller noll."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The cost (%s) must be strictly positive."
-msgstr "Kostnaden (%s) måste vara strikt positiv."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4055,14 +3981,14 @@ msgstr "Kostnaden (%s) måste vara strikt positiv."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The covariance of a dataset."
-msgstr "Kovariansen för en datauppsättning."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The criteria range contains %s row, it must be at least 2 rows."
-msgstr "Kriterieintervallet innehåller %s rad, det måste vara minst 2 rader."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4072,30 +3998,27 @@ msgid ""
 "The current window is too small to display this sheet properly. Consider "
 "resizing your browser window or adjusting frozen rows and columns."
 msgstr ""
-"Det aktuella fönstret är för litet för att visa detta ark korrekt. Överväg "
-"att ändra storlek på webbläsarfönstret eller justera frusna rader och "
-"kolumner."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The data range is invalid"
-msgstr "Dataområdet är ogiltigt"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The dataset is invalid"
-msgstr "Datauppsättningen är ogiltig"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The date_string (%s) cannot be parsed to date/time."
-msgstr "Date_string (%s) kan inte analyseras till datum/tid."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4103,84 +4026,84 @@ msgstr "Date_string (%s) kan inte analyseras till datum/tid."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The day_count_convention (%s) must be between 0 and 4 inclusive."
-msgstr "Day_count_convention (%s) måste vara mellan 0 och 4 inklusive."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The depreciation factor (%s) must be strictly positive."
-msgstr "Avskrivningsfaktorn (%s) måste vara strikt positiv."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The discount (%s) must be different from -1."
-msgstr "Rabatten (%s) måste vara skild från -1."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The discount (%s) must be smaller than 1."
-msgstr "Rabatten (%s) måste vara mindre än 1."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The discount (%s) must be strictly positive."
-msgstr "Rabatten (%s) måste vara strikt positiv."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The divisor must be different from 0."
-msgstr "Divisorn måste vara skild från 0."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The effective rate (%s) must must strictly greater than 0."
-msgstr "Den effektiva räntan (%s) måste vara strikt större än 0."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The end_date (%s) must be positive or null."
-msgstr "End_date (%s) måste vara positivt eller null."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The end_period (%s) must be greater or equal than 0."
-msgstr "End_period (%s) måste vara större eller lika med 0."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The end_period (%s) must be smaller or equal to the life (%s)."
-msgstr "End_period (%s) måste vara mindre eller lika med life (%s)."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The exponent (%s) must be an integer when the base is negative."
-msgstr "Exponenten (%s) måste vara ett heltal när basen är negativ."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The exponent to raise base to."
-msgstr "Exponent att höja basen till."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4188,7 +4111,7 @@ msgstr "Exponent att höja basen till."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The factor (%s) must be positive when the value (%s) is positive."
-msgstr "Faktorn (%s) måste vara positiv när värdet (%s) är positivt."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4196,7 +4119,6 @@ msgstr "Faktorn (%s) måste vara positiv när värdet (%s) är positivt."
 #, python-format
 msgid "The field %s does not exist or you do not have access to that field"
 msgstr ""
-"Fältet %s existerar inte eller så har du inte tillgång till det fältet"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4206,50 +4128,48 @@ msgid ""
 "The field (%s) must be one of %s or must be a number between 1 and %s "
 "inclusive."
 msgstr ""
-"Fältet (%s) måste vara ett av %s eller måste vara ett tal mellan 1 och %s "
-"inklusive."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The field (%s) must be one of %s."
-msgstr "Fältet (%s) måste vara ett av %s."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The field must be a number or a string"
-msgstr "Fältet måste vara ett tal eller en sträng"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The first addend."
-msgstr "Det första tillägget."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The first multiplicand."
-msgstr "Den första multiplikanden."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The first string to compare."
-msgstr "Den första strängen att jämföra."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The first value must be a number"
-msgstr "Det första värdet måste vara ett tal"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4257,7 +4177,7 @@ msgstr "Det första värdet måste vara ett tal"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The first value."
-msgstr "Det första värdet."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4266,29 +4186,27 @@ msgstr "Det första värdet."
 msgid ""
 "The first_period (%s) must be smaller or equal to the last_period (%s)."
 msgstr ""
-"Den första_perioden (%s) måste vara mindre eller lika med den sista_perioden"
-" (%s)."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The first_period (%s) must be strictly positive."
-msgstr "Den första_perioden (%s) måste vara strikt positiv."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The formatting unit should be 'k', 'm' or 'b'."
-msgstr "Formateringsenheten skall vara \"k\", \"m\" eller \"b\"."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The frequency (%s) must be one of %s"
-msgstr "Frekvensen (%s) måste vara en av %s"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4298,8 +4216,6 @@ msgid ""
 "The function [[FUNCTION_NAME]] expects a boolean value, but '%s' is a text, "
 "and cannot be coerced to a number."
 msgstr ""
-"Funktionen [[FUNCTION_NAME]] förväntar sig ett booleskt värde, men '%s' är "
-"en text och kan inte omvandlas till ett tal."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4309,15 +4225,13 @@ msgid ""
 "The function [[FUNCTION_NAME]] expects a number value, but '%s' is a string,"
 " and cannot be coerced to a number."
 msgstr ""
-"Funktionen [[FUNCTION_NAME]] förväntar sig ett talvärde, men '%s' är en "
-"sträng och kan inte omvandlas till ett tal."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The function [[FUNCTION_NAME]] result cannot be negative"
-msgstr "Funktionen [[FUNCTION_NAME]] resultat kan inte vara negativt"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4327,15 +4241,13 @@ msgid ""
 "The function [[FUNCTION_NAME]] result must be greater than or equal "
 "01/01/1900."
 msgstr ""
-"Resultatet för funktionen [[FUNCTION_NAME]] måste vara större än eller lika "
-"med 01/01/1900."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The future_value (%s) must be strictly positive."
-msgstr "Det framtida_värdet (%s) måste vara strikt positivt."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4343,8 +4255,6 @@ msgstr "Det framtida_värdet (%s) måste vara strikt positivt."
 #, python-format
 msgid "The high (%s) must be greater than or equal to the low (%s)."
 msgstr ""
-"Det högsta värdet (%s) måste vara större än eller lika med det lägsta värdet"
-" (%s)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4354,15 +4264,13 @@ msgid ""
 "The index from the left of string from which to begin extracting. The first "
 "character in string has the index 1."
 msgstr ""
-"Index från vänster i strängen från vilket extraheringen ska börja. Det "
-"första tecknet i strängen har index 1."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The initial string."
-msgstr "Den inledande strängen."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4374,24 +4282,20 @@ msgid ""
 "however, if occurrence_number is specified, only the indicated instance of "
 "search_for is replaced."
 msgstr ""
-"Den förekomst av search_for inom text_to_search som ska ersättas med "
-"replace_with. Som standard ersätts alla förekomster av search_for, men om "
-"occurrence_number anges ersätts endast den angivna förekomsten av "
-"search_for."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The investment (%s) must be strictly positive."
-msgstr "Investeringen (%s) måste vara strikt positiv."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The key value is invalid"
-msgstr "Nyckelvärdet är ogiltigt"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4400,98 +4304,97 @@ msgstr "Nyckelvärdet är ogiltigt"
 msgid ""
 "The last_period (%s) must be smaller or equal to the number_of_periods (%s)."
 msgstr ""
-"Last_period (%s) måste vara mindre eller lika med number_of_periods (%s)."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The last_period (%s) must be strictly positive."
-msgstr "Senaste_period (%s) måste vara strikt positiv."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The length of the segment to extract."
-msgstr "Längden på det segment som ska extraheras."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The life (%s) must be strictly positive."
-msgstr "Livet (%s) måste vara strikt positivt."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The logarithm of a number, base e (euler's number)."
-msgstr "Logaritmen av ett tal, bas e (eulers tal)."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The lower inflection point value must be a number"
-msgstr "Den nedre vändpunktens värde måste vara ett tal"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The maturity (%s) must be strictly greater than the settlement (%s)."
-msgstr "Löptiden (%s) måste vara strikt större än avräkningen (%s)."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The maximum range limit value must be a number"
-msgstr "Det maximala gränsvärdet måste vara ett tal"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The maxpoint must be a number"
-msgstr "Maxpunkten måste vara ett tal"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The midpoint must be a number"
-msgstr "Mittpunkten måste vara ett tal"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The minimum range limit value must be a number"
-msgstr "Det lägsta gränsvärdet måste vara ett tal"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The minpoint must be a number"
-msgstr "Minpunkten måste vara ett tal"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The minuend, or number to be subtracted from."
-msgstr "Minuend, eller talet som ska subtraheras från."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The month (%s) must be between 1 and 12 inclusive."
-msgstr "Månaden (%s) måste vara mellan 1 och 12 inklusive."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4501,43 +4404,41 @@ msgid ""
 "The net present value of an investment based on a series of periodic cash "
 "flows and a discount rate."
 msgstr ""
-"Nettonuvärdet av en investering baserat på en serie periodiska kassaflöden "
-"och en diskonteringsränta."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The nominal rate (%s) must be strictly greater than 0."
-msgstr "Det nominella värdet (%s) måste vara strikt större än 0."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number of characters in the text to be replaced."
-msgstr "Antal tecken i texten som ska ersättas."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number of characters to return from the left side of string."
-msgstr "Antal tecken som ska returneras från vänster sida av strängen."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number of characters to return from the right side of string."
-msgstr "Antal tecken som ska returneras från höger sida av strängen."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number of numeric values in dataset."
-msgstr "Antalet numeriska värden i datasetet."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4545,14 +4446,14 @@ msgstr "Antalet numeriska värden i datasetet."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number of periods by year (%s) must strictly greater than 0."
-msgstr "Antalet perioder per år (%s) måste vara strikt större än 0."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number of periods must be different than 0."
-msgstr "Antalet perioder måste vara skilt från 0."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4562,36 +4463,34 @@ msgid ""
 "The number of the character to look up from the current Unicode table in "
 "decimal format."
 msgstr ""
-"Numret på det tecken som ska sökas upp från den aktuella Unicode-tabellen i "
-"decimalformat."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number of values in a dataset."
-msgstr "Antalet värden i en dataset."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number pi."
-msgstr "Siffran pi."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number to be divided."
-msgstr "Det antal som skall delas."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number to divide by."
-msgstr "Det tal som ska divideras med."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4601,36 +4500,34 @@ msgid ""
 "The number to have its sign reversed. Equivalently, the number to multiply "
 "by -1."
 msgstr ""
-"Det tal vars tecken ska vändas. Motsvarande är det tal som ska multipliceras"
-" med -1."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number to raise to the exponent power."
-msgstr "Det tal som ska höjas till exponentens potens."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number to return."
-msgstr "Det nummer som ska returneras."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number, date or time to format."
-msgstr "Det nummer, datum eller klockslag som ska formateras."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number_of_periods (%s) must be greater than 0."
-msgstr "Antalet_of_periods (%s) måste vara större än 0."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4638,84 +4535,84 @@ msgstr "Antalet_of_periods (%s) måste vara större än 0."
 #, python-format
 msgid ""
 "The pattern by which to format the number, enclosed in quotation marks."
-msgstr "Det mönster enligt vilket numret ska formateras, inom citattecken."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The period (%s) must be less than or equal life (%."
-msgstr "Perioden (%s) måste vara mindre än eller lika med life (%."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The period (%s) must be less than or equal to %s."
-msgstr "Perioden (%s) måste vara mindre än eller lika med %s."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The period (%s) must be positive or null."
-msgstr "Perioden (%s) måste vara positiv eller noll."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The period (%s) must be strictly positive."
-msgstr "Perioden (%s) måste vara helt positiv."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The period must be between 1 and number_of_periods"
-msgstr "Perioden måste vara mellan 1 och number_of_periods"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The position where the replacement will begin (starting from 1)."
-msgstr "Den position där utbytet kommer att påbörjas (med början från 1)."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The present value (%s) must be strictly positive."
-msgstr "Nuvärdet (%s) måste vara strikt positivt."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The present_value (%s) must be strictly positive."
-msgstr "Det aktuella_värdet (%s) måste vara strikt positivt."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The price (%s) must be strictly positive."
-msgstr "Priset (%s) måste vara strikt positivt."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The provided anchor is invalid. The cell must be part of the zone."
-msgstr "Det angivna ankaret är ogiltigt. Cellen måste vara en del av zonen."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The purchase_date (%s) must be before the first_period_end (%s)."
-msgstr "Inköpsdatum (%s) måste vara före första_periodslut (%s)."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4725,22 +4622,20 @@ msgid ""
 "The range containing the return value. Should have the same dimensions as "
 "lookup_range."
 msgstr ""
-"Det intervall som innehåller returvärdet. Bör ha samma dimensioner som "
-"lookup_range."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The range is invalid"
-msgstr "Området är ogiltigt"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The range must be a single row or a single column."
-msgstr "Intervallet måste vara en enda rad eller en enda kolumn."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4750,8 +4645,6 @@ msgid ""
 "The range to consider for the search. Should be a single column or a single "
 "row."
 msgstr ""
-"Det intervall som ska beaktas för sökningen. Bör vara en enda kolumn eller "
-"en enda rad."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4762,98 +4655,98 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The rate (%s) must be positive or null."
-msgstr "Procentsatsen (%s) måste vara positiv eller noll."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The rate (%s) must be strictly positive."
-msgstr "Procentsatsen (%s) måste vara helt positiv."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The rate_guess (%s) must be strictly greater than -1."
-msgstr "Rate_guess (%s) måste vara strikt större än -1."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The redemption (%s) must be strictly positive."
-msgstr "Återbetalningen (%s) måste vara strikt positiv."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The result_range must be a single row or a single column."
-msgstr "Result_range måste vara en enda rad eller en enda kolumn."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The rule is invalid for an unknown reason"
-msgstr "Regeln är ogiltig av okänd anledning"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The salvage (%s) must be positive or null."
-msgstr "Räddningsvärdet (%s) måste vara positivt eller noll."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The salvage (%s) must be smaller or equal than the cost (%s)."
-msgstr "Återvinningen (%s) måste vara mindre eller lika med kostnaden (%s)."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The sample covariance of a dataset."
-msgstr "Sampelkovariansen för en datauppsättning."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The second addend."
-msgstr "Det andra tillägget."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The second argument is missing. Please provide a value"
-msgstr "Det andra argumentet saknas. Vänligen ange ett värde"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The second multiplicand."
-msgstr "Den andra multiplikanden."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The second string to compare."
-msgstr "Den andra strängen att jämföra."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The second value must be a number"
-msgstr "Det andra värdet måste vara ett tal"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4863,14 +4756,14 @@ msgstr "Det andra värdet måste vara ett tal"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The second value."
-msgstr "Det andra värdet."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The settlement (%s) must be greater than or equal to the issue (%s)."
-msgstr "Förlikningen (%s) måste vara större än eller lika med problemet (%s)."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4878,7 +4771,7 @@ msgstr "Förlikningen (%s) måste vara större än eller lika med problemet (%s)
 #, python-format
 msgid ""
 "The settlement date (%s) must at most one year after the maturity date (%s)."
-msgstr "Likviddagen (%s) får infalla högst ett år efter förfallodagen (%s)."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4887,77 +4780,76 @@ msgstr "Likviddagen (%s) får infalla högst ett år efter förfallodagen (%s)."
 msgid ""
 "The settlement date (%s) must be strictly greater than the issue date (%s)."
 msgstr ""
-"Avvecklingsdatumet (%s) måste vara strikt större än emissionsdatumet (%s)."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The sheet name cannot be empty."
-msgstr "Arkets namn får inte vara tomt."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The start_date (%s) must be positive or null."
-msgstr "Start_date (%s) måste vara positivt eller null."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The start_period (%s) must be greater or equal than 0."
-msgstr "Start_period (%s) måste vara större eller lika med 0."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The start_period (%s) must be smaller or equal to the end_period (%s)."
-msgstr "Start_period (%s) måste vara mindre eller lika med slut_period (%s)."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The string from which the left portion will be returned."
-msgstr "Den sträng från vilken den vänstra delen kommer att returneras."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The string from which the right portion will be returned."
-msgstr "Den sträng från vilken den högra delen kommer att returneras."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The string that will replace search_for."
-msgstr "Den sträng som ska ersätta search_for."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The string to convert to lowercase."
-msgstr "Strängen som ska konverteras till små bokstäver."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The string to convert to uppercase."
-msgstr "Strängen som ska konverteras till versaler."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The string to extract a segment from."
-msgstr "Strängen att extrahera ett segment från."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4965,35 +4857,35 @@ msgstr "Strängen att extrahera ett segment från."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The string to look for within text_to_search."
-msgstr "Strängen som ska sökas efter i text_to_search."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The string to search for within text_to_search."
-msgstr "Strängen som ska sökas efter inom text_to_search."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The string whose length will be returned."
-msgstr "Strängen vars längd kommer att returneras."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The subtrahend, or number to subtract from value1."
-msgstr "Subtrahend, eller talet som ska subtraheras från värde1."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The text or reference to a cell containing text to be trimmed."
-msgstr "Text eller referens till en cell som innehåller text som ska trimmas."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5001,14 +4893,14 @@ msgstr "Text eller referens till en cell som innehåller text som ska trimmas."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The text to search for the first occurrence of search_for."
-msgstr "Den text som ska sökas efter den första förekomsten av search_for."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The text which will be inserted into the original text."
-msgstr "Den text som ska infogas i originaltexten."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5018,50 +4910,48 @@ msgid ""
 "The text which will be returned with the first letter of each word in "
 "uppercase and all other letters in lowercase."
 msgstr ""
-"Den text som kommer att returneras med första bokstaven i varje ord i "
-"versaler och alla andra bokstäver i gemener."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The text whose non-printable characters are to be removed."
-msgstr "Den text vars icke tryckbara tecken ska tas bort."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The text within which to search and replace."
-msgstr "Texten inom vilken sökning och ersättning ska ske."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The text, a part of which will be replaced."
-msgstr "Texten, varav en del kommer att ersättas."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The time_string (%s) cannot be parsed to date/time."
-msgstr "Time_string (%s) kan inte analyseras till datum/tid."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The type (%s) is out of range."
-msgstr "Typen (%s) är utanför intervallet."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The type (%s) must be 1, 2 or 3."
-msgstr "Typen (%s) måste vara 1, 2 eller 3."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5069,21 +4959,21 @@ msgstr "Typen (%s) måste vara 1, 2 eller 3."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The unit (%s) must be strictly positive."
-msgstr "Enheten (%s) måste vara strikt positiv."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The upper inflection point value must be a number"
-msgstr "Den övre vändpunktens värde måste vara ett tal"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value (%s) cannot be between -1 and 1 inclusive."
-msgstr "Värdet (%s) kan inte vara mellan -1 och 1 inklusive."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5091,14 +4981,14 @@ msgstr "Värdet (%s) kan inte vara mellan -1 och 1 inklusive."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value (%s) must be a valid base %s representation."
-msgstr "Värdet (%s) måste vara en giltig bas %s representation."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value (%s) must be between -1 and 1 exclusive."
-msgstr "Värdet (%s) måste vara mellan -1 och 1 exklusivt."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5106,105 +4996,105 @@ msgstr "Värdet (%s) måste vara mellan -1 och 1 exklusivt."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value (%s) must be between -1 and 1 inclusive."
-msgstr "Värdet (%s) måste vara mellan -1 och 1 inklusive."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value (%s) must be greater than or equal to 1."
-msgstr "Värdet (%s) måste vara större än eller lika med 1."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value (%s) must be positive or null."
-msgstr "Värdet (%s) måste vara positivt eller null."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value (%s) must be strictly positive."
-msgstr "Värdet (%s) måste vara strikt positivt."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value or values to be appended using delimiter."
-msgstr "Värdet eller värdena som ska läggas till med hjälp av avgränsare."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value to append to value1."
-msgstr "Det värde som ska läggas till värde1."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value to interpret as a percentage."
-msgstr "Värdet som ska tolkas som en procentandel."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value to search for."
-msgstr "Det värde som ska sökas efter."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value to test against value1 for equality."
-msgstr "Det värde som ska testas mot värde1 för jämlikhet."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value to test against value1 for inequality."
-msgstr "Värdet att testa mot värde1 för ojämlikhet."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value to test as being greater than or equal to value2."
-msgstr "Det värde som ska testas som större än eller lika med värde2."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value to test as being greater than value2."
-msgstr "Det värde som ska testas som större än värde2."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value to test as being less than or equal to value2."
-msgstr "Det värde som ska testas som mindre än eller lika med värde2."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value to test as being less than value2."
-msgstr "Det värde som ska testas som mindre än värde2."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value to which value2 will be appended."
-msgstr "Det värde som värde2 ska läggas till."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5213,29 +5103,27 @@ msgstr "Det värde som värde2 ska läggas till."
 msgid ""
 "The weekend (%s) must be a string or a number in the range 1-7 or 11-17."
 msgstr ""
-"Helgen (%s) måste vara en sträng eller ett tal i intervallet 1-7 eller "
-"11-17."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The weekend (%s) must be different from '1111111'."
-msgstr "Helgen (%s) måste vara annorlunda än '1111111'."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The weekend must be a number or a string."
-msgstr "Helgen måste vara ett tal eller en sträng."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The year (%s) must be between 0 and 9999 inclusive."
-msgstr "Årtalet (%s) måste vara mellan 0 och 9999 inklusive."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5244,28 +5132,28 @@ msgstr "Årtalet (%s) måste vara mellan 0 och 9999 inklusive."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The yield (%s) must be positive or null."
-msgstr "Avkastningen (%s) måste vara positiv eller noll."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The yield of a US Treasury bill based on price."
-msgstr "Avkastningen på en amerikansk statsskuldväxel baserat på priset."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/list/list_functions.js:0
 #, python-format
 msgid "There is no list with id \"%s\""
-msgstr "Det finns ingen lista med id \"%s\""
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 #, python-format
 msgid "There is no pivot with id \"%s\""
-msgstr "Det finns ingen pivot med id \"%s\""
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5275,8 +5163,6 @@ msgid ""
 "There must be both positive and negative values in [payment_amount, "
 "present_value, future_value]."
 msgstr ""
-"Det måste finnas både positiva och negativa värden i [payment_amount, "
-"present_value, future_value]."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5285,7 +5171,6 @@ msgstr ""
 #, python-format
 msgid "There must be both positive and negative values in cashflow_amounts."
 msgstr ""
-"Det måste finnas både positiva och negativa värden i cashflow_amounts."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5295,14 +5180,13 @@ msgid ""
 "There must be the same number of values in cashflow_amounts and "
 "cashflow_dates."
 msgstr ""
-"Det måste finnas samma antal värden i cashflow_amounts och cashflow_dates."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "This formula depends on invalid values"
-msgstr "Denna formel beror på ogiltiga värden"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5312,8 +5196,6 @@ msgid ""
 "This formula has over 100 parts. It can't be processed properly, consider "
 "splitting it into multiple cells"
 msgstr ""
-"Denna formel har över 100 delar. Den kan inte bearbetas ordentligt, överväg "
-"att dela upp den i flera celler"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5323,8 +5205,6 @@ msgid ""
 "This function can only return a single cell value, not an array. Provide "
 "valid row and column indices."
 msgstr ""
-"Denna funktion kan endast returnera ett enskilt cellvärde, inte en matris. "
-"Ange giltiga rad- och kolumnindex."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5334,8 +5214,6 @@ msgid ""
 "This function takes in two currency codes as arguments, and returns the "
 "exchange rate from the first currency to the second as float."
 msgstr ""
-"Denna funktion tar in två valutakoder som argument och returnerar "
-"växelkursen från den första valutan till den andra som float."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5343,7 +5221,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "This operation is not allowed with multiple selections."
-msgstr "Denna åtgärd är inte tillåten med flera val."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5353,15 +5231,13 @@ msgid ""
 "This operation is not possible due to a merge. Please remove the merges "
 "first than try again."
 msgstr ""
-"Denna operation är inte möjlig på grund av en sammanslagning. Ta bort "
-"sammanslagningarna först och försök sedan igen."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Thresholds"
-msgstr "Tröskelvärden"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5409,14 +5285,14 @@ msgstr "Totalt"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Treat labels as text"
-msgstr "Behandla etiketter som text"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Truncates a number."
-msgstr "Trunkerar ett nummer."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5438,7 +5314,7 @@ msgstr "Typ"
 #: code:addons/spreadsheet/static/src/data_sources/metadata_repository.js:0
 #, python-format
 msgid "Unable to fetch the label of %s of model %s"
-msgstr "Det gick inte att hämta etiketten %s för modellen %s"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5461,63 +5337,63 @@ msgstr "Ångra"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Unfreeze"
-msgstr "Frys upp"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Unhide all columns"
-msgstr "Dölj alla kolumner"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Unhide all rows"
-msgstr "Visa alla rader"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Unhide columns"
-msgstr "Dölj kolumner"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Unhide rows"
-msgstr "Ta fram rader"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Unknown function: \"%s\""
-msgstr "Okänd funktion: \"%s\""
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/helpers/constants.js:0
 #, python-format
 msgid "Untitled spreadsheet"
-msgstr "Kalkylblad utan titel"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Up to current column"
-msgstr "Upp till aktuell kolumn"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Up to current row"
-msgstr "Upp till aktuell rad"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5534,7 +5410,6 @@ msgstr "Värde"
 #, python-format
 msgid "Value at a given percentile of a dataset exclusive of 0 and 1."
 msgstr ""
-"Värde vid en given percentil i en datamängd som inte innehåller 0 och 1."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5542,28 +5417,28 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Value at a given percentile of a dataset."
-msgstr "Värde vid en given percentil i en datamängd."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Value change from key value"
-msgstr "Värdeförändring från nyckelvärde"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Value if it is not an #N/A error, otherwise 2nd argument."
-msgstr "Värde om det inte är ett #N/A-fel, annars 2:a argumentet."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Value if it is not an error, otherwise 2nd argument."
-msgstr "Värde om det inte är ett fel, annars 2:a argumentet."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5571,7 +5446,7 @@ msgstr "Värde om det inte är ett fel, annars 2:a argumentet."
 #, python-format
 msgid ""
 "Value nearest to a specific quartile of a dataset exclusive of 0 and 4."
-msgstr "Värde närmast en specifik kvartil i ett dataset exklusive 0 och 4."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5579,28 +5454,28 @@ msgstr "Värde närmast en specifik kvartil i ett dataset exklusive 0 och 4."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Value nearest to a specific quartile of a dataset."
-msgstr "Värde närmast en viss kvartil i ett dataset."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Variable declining balance. WARNING : does not handle decimal periods."
-msgstr "Variabelt minskande saldo. VARNING : hanterar inte decimalperioder."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Variance of a population from a table-like range."
-msgstr "En populations avvikelse från ett tabellliknande intervall."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Variance of entire population (text as 0)."
-msgstr "Varians för hela populationen (text som 0)."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5608,21 +5483,21 @@ msgstr "Varians för hela populationen (text som 0)."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Variance of entire population."
-msgstr "Varians för hela populationen."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Variance of population sample from table-like range."
-msgstr "Varians i populationsurval från tabellliknande intervall."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Variance of sample (text as 0)."
-msgstr "Varians för stickprov (text som 0)."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5630,7 +5505,7 @@ msgstr "Varians för stickprov (text som 0)."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Variance."
-msgstr "Varians."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5638,14 +5513,14 @@ msgstr "Varians."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Vertical axis position"
-msgstr "Vertikal axelposition"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Vertical lookup."
-msgstr "Vertikal uppsikt."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5662,8 +5537,6 @@ msgid ""
 "We found data next to your selection. Since this data was not selected, it "
 "will not be sorted. Do you want to extend your selection?"
 msgstr ""
-"Vi hittade data bredvid ditt val. Eftersom dessa data inte valdes kommer de "
-"inte att sorteras. Vill du utöka ditt urval?"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5677,84 +5550,84 @@ msgstr "Onsdag"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Week number of the year."
-msgstr "Veckonummer för året."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Weighted average."
-msgstr "Vägt genomsnitt."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "When value is"
-msgstr "När värdet är"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "When value is below"
-msgstr "När värdet är lägre än"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "When weekend is a string (%s) it must be composed of \"0\" or \"1\"."
-msgstr "När weekend är en sträng (%s) måste den bestå av \"0\" eller \"1\"."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Whether a value is `true` or `false`."
-msgstr "Om ett värde är `true` eller `false`."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Whether a value is a number."
-msgstr "Om ett värde är ett tal."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Whether a value is an error other than #N/A."
-msgstr "Huruvida ett värde är ett annat fel än #N/A."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Whether a value is an error."
-msgstr "Om ett värde är ett fel."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Whether a value is non-textual."
-msgstr "Om ett värde är icke-textuellt."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Whether a value is text."
-msgstr "Om ett värde är text."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Whether a value is the error #N/A."
-msgstr "Om ett värde är felet #N/A."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5762,49 +5635,49 @@ msgstr "Om ett värde är felet #N/A."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Whether the provided value is even."
-msgstr "Om det angivna värdet är jämnt."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Whether the referenced cell is empty"
-msgstr "Om den refererade cellen är tom"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Wrap"
-msgstr "Omslag"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Wrapping"
-msgstr "Förpackning"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Wrong number of Argument[]. Expected an even number of Argument[]."
-msgstr "Fel antal Argument[]. Förväntade ett jämnt antal Argument[]."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Wrong number of arguments. Expected an even number of arguments."
-msgstr "Fel antal argument. Förväntade ett jämnt antal argument."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Year specified by a given date."
-msgstr "År som anges av ett givet datum."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5812,29 +5685,27 @@ msgstr "År som anges av ett givet datum."
 #, python-format
 msgid "You can't create a filter over a range that contains a merge."
 msgstr ""
-"Du kan inte skapa ett filter över ett intervall som innehåller en "
-"sammanslagning."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "You can't merge cells inside of an existing filter."
-msgstr "Du kan inte slå samman celler inuti ett befintligt filter."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "You cannot create overlapping filters."
-msgstr "Du kan inte skapa överlappande filter."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 #, python-format
 msgid "[[FUNCTION_NAME]] cannot be called from the spreadsheet."
-msgstr "[[FUNCTION_NAME]] kan inte anropas från kalkylbladet."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5842,7 +5713,7 @@ msgstr "[[FUNCTION_NAME]] kan inte anropas från kalkylbladet."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "[[FUNCTION_NAME]] evaluates to an out of bounds range."
-msgstr "[[FUNCTION_NAME]] utvärderas till ett intervall utanför gränserna."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5850,7 +5721,6 @@ msgstr "[[FUNCTION_NAME]] utvärderas till ett intervall utanför gränserna."
 #, python-format
 msgid "[[FUNCTION_NAME]] evaluates to an out of range column value %s."
 msgstr ""
-"[[FUNCTION_NAME]] utvärderas till ett kolumnvärde %s utanför intervallet."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5858,14 +5728,13 @@ msgstr ""
 #, python-format
 msgid "[[FUNCTION_NAME]] evaluates to an out of range row value %s."
 msgstr ""
-"[[FUNCTION_NAME]] utvärderas till ett radvärde %s utanför intervallet."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "[[FUNCTION_NAME]] expects number values."
-msgstr "[[FUNCTION_NAME]] förväntar sig talvärden."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5873,21 +5742,20 @@ msgstr "[[FUNCTION_NAME]] förväntar sig talvärden."
 #, python-format
 msgid "[[FUNCTION_NAME]] expects the weight to be positive or equal to 0."
 msgstr ""
-"[[FUNCTION_NAME]] förväntar sig att vikten är positiv eller lika med 0."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "[[FUNCTION_NAME]] has mismatched argument count %s vs %s."
-msgstr "[[FUNCTION_NAME]] har felaktigt antal argument %s vs %s."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "[[FUNCTION_NAME]] has mismatched range sizes."
-msgstr "[[FUNCTION_NAME]] har felaktiga intervallstorlekar."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5899,7 +5767,7 @@ msgstr "[[FUNCTION_NAME]] har felaktiga intervallstorlekar."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "[[FUNCTION_NAME]] has no valid input data."
-msgstr "[[FUNCTION_NAME]] har inga giltiga indata."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5913,18 +5781,18 @@ msgstr "och"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "and value"
-msgstr "och värde"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "by default"
-msgstr "som standard"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "repeatable"
-msgstr "repeterbar"
+msgstr ""

@@ -12,10 +12,9 @@
 # Pablo Calvo, 2023
 # Martin Trigaux, 2023
 # Ana Sanjuán, 2023
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
+# Larissa Manderfeld, 2023
 # Wil Odoo, 2024
-# Larissa Manderfeld, 2024
-# Alber1998, 2024
-# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -23,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -132,7 +131,7 @@ msgstr "Cupones de 10 % de descuento"
 #: model:loyalty.reward,description:loyalty.10_percent_coupon_reward
 #: model:loyalty.reward,description:loyalty.10_percent_with_code_reward
 msgid "10% on your order"
-msgstr "10% en su pedido"
+msgstr "10 % en su orden"
 
 #. module: loyalty
 #. odoo-python
@@ -255,8 +254,6 @@ msgid ""
 "<span attrs=\"{'invisible': [('clear_wallet', '!=', True)]}\"> (or "
 "more)</span>"
 msgstr ""
-"<span attrs=\"{'invisible': [('clear_wallet', '!=', True)]}\"> (o "
-"más)</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
@@ -268,12 +265,6 @@ msgid ""
 "                            Generate \n"
 "                        </span>"
 msgstr ""
-"<span attrs=\"{'invisible': [('will_send_mail', '=', False)]}\">\n"
-"                           Generar y enviar \n"
-"                        </span>\n"
-"                        <span attrs=\"{'invisible': [('will_send_mail', '=', True)]}\">\n"
-"                            Generar \n"
-"                        </span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
@@ -323,12 +314,6 @@ msgid ""
 "                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', '!=', 'gift_card')]}\">Gift Cards</span>\n"
 "                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', '!=', 'ewallet')]}\">eWallets</span>"
 msgstr ""
-"<span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', 'not in', ('coupons', 'next_order_coupons'))]}\">Cupones</span>\n"
-"                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', '!=', 'loyalty')]}\">Tarjetas de fidelidad</span>\n"
-"                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', 'not in', ('promotion', 'buy_x_get_y'))]}\">Promociones</span>\n"
-"                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', '!=', 'promo_code')]}\">Descuento</span>\n"
-"                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', '!=', 'gift_card')]}\">Tarjetas regalo</span>\n"
-"                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', '!=', 'ewallet')]}\">Monederos electrónicos</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -671,7 +656,7 @@ msgstr "Código"
 #. module: loyalty
 #: model:loyalty.program,name:loyalty.10_percent_with_code
 msgid "Code for 10% on orders"
-msgstr "Código para 10% en pedidos"
+msgstr "Código para 10% en órdenes"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__communication_plan_ids
@@ -860,8 +845,6 @@ msgstr ""
 #, python-format
 msgid "Define promotions to apply automatically on your customers' orders."
 msgstr ""
-"Defina promociones para que apliquen de manera automática en los pedidos de "
-"sus clientes. "
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__description
@@ -871,7 +854,7 @@ msgstr "Descripción"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "Description on order"
-msgstr "Descripción en el pedido "
+msgstr "Descripción en la orden"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount
@@ -1028,7 +1011,7 @@ msgstr "Tarjetas de lealtad"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Fill in your eWallet, and use it to pay future orders."
-msgstr "Llene su monedero electrónico y úselo para pagar futuros pedidos."
+msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_follower_ids
@@ -1099,7 +1082,7 @@ msgid ""
 "constraints on its usage through conditional rule."
 msgstr ""
 "Genere y comparta cupones manualmente. Se puede usar en comercio "
-"electrónico, punto de venta o pedidos regulares para obtener la recompensa. "
+"electrónico, punto de venta u órdenes regulares para obtener la recompensa. "
 "Puede definir limitaciones sobre el uso con una regla condicional."
 
 #. module: loyalty
@@ -1174,9 +1157,9 @@ msgid ""
 "                                    <br/>\n"
 "                                    Then, Gift Cards can be used to pay orders."
 msgstr ""
-"Las tarjetas de regalo se crean manualmente o se envían automáticamente por correo cuando el cliente pide un producto de tarjeta de regalo.\n"
+"Las tarjetas de regalo se crean manualmente o se envían automáticamente por correo cuando el cliente ordena un producto de tarjeta de regalo.\n"
 "                                    <br/>\n"
-"                                    Después, las tarjetas de regalo se pueden usar para pagar pedidos."
+"                                    Después, las tarjetas de regalo se pueden usar para pagar órdenes."
 
 #. module: loyalty
 #: model:ir.actions.act_window,name:loyalty.loyalty_program_gift_ewallet_action
@@ -1430,7 +1413,7 @@ msgstr "Productos múltiples"
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__next_order_coupons
 #, python-format
 msgid "Next Order Coupons"
-msgstr "Cupones del próximo pedido"
+msgstr "Cupones de la próxima orden"
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_card_action
@@ -1689,8 +1672,6 @@ msgid ""
 "Reward your customers for a purchase with a coupon to use on their next "
 "order."
 msgstr ""
-"Recompense a sus clientes por una compra con un cupón para que lo usen en su"
-" siguiente orden. "
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__reward_ids
@@ -1852,7 +1833,7 @@ msgstr "Recargar billetera electrónica"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__total_order_count
 msgid "Total Order Count"
-msgstr "Nª total de pedidos"
+msgstr "Número total de órdenes"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__trigger
@@ -1911,8 +1892,8 @@ msgid ""
 "When customers make an order, they accumulate points they can exchange for "
 "rewards on the current order or on a future one."
 msgstr ""
-"Cuando los clientes hacen un pedido, acumulan puntos que pueden canjear por "
-"recompensas en su pedido actual o uno futuro."
+"Cuando los clientes hacen una orden, acumulan puntos que pueden canjear por "
+"recompensas en su orden actual o una futura."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -2039,9 +2020,9 @@ msgid ""
 "                                    <br/>\n"
 "                                    Then, eWallets are proposed during the checkout, to pay orders."
 msgstr ""
-"Los monederos electrónicos se crean de forma manual o automática cuando el cliente pide un producto de billetera electrónica.\n"
+"Las billeteras electrónicas se crean de forma manual o automática cuando el cliente ordena un producto de billetera electrónica.\n"
 "                                    <br/>\n"
-"                                    Después, se propondrá la billetera electrónica como método de pago de los pedidos."
+"                                    Después, proponemos las billeteras electrónicas durante el pago de la orden."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
@@ -2060,7 +2041,7 @@ msgstr ""
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "on your next order"
-msgstr "en su próximo pedido"
+msgstr "en tu próxima orden"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -2068,7 +2049,7 @@ msgid ""
 "on your order\n"
 "                                        <br/>"
 msgstr ""
-"en su pedido\n"
+"en su orden\n"
 "                                        <br/>"
 
 #. module: loyalty
@@ -2083,7 +2064,7 @@ msgstr "por %s gastados"
 #: code:addons/loyalty/models/loyalty_rule.py:0
 #, python-format
 msgid "per order"
-msgstr "por pedido"
+msgstr "por orden"
 
 #. module: loyalty
 #. odoo-python
@@ -2126,4 +2107,4 @@ msgstr "usos"
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "your order"
-msgstr "su pedido"
+msgstr "su orden"
