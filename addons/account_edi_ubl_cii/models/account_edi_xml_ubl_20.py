@@ -5,6 +5,7 @@ from collections import defaultdict
 
 from odoo import models, _
 from odoo.tools import html2plaintext, cleanup_xml_node
+from odoo.tools.float_utils import float_round
 
 
 class AccountEdiXmlUBL20(models.AbstractModel):
@@ -68,10 +69,11 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         }]
 
     def _get_partner_contact_vals(self, partner):
+        phone = partner.phone or partner.mobile
         return {
             'id': partner.id,
             'name': partner.name,
-            'telephone': partner.phone or partner.mobile,
+            'telephone': phone and phone.strip(),
             'electronic_mail': partner.email,
         }
 
@@ -342,7 +344,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'currency_dp': line.currency_id.decimal_places,
 
             # The price of an item, exclusive of VAT, after subtracting item price discount.
-            'price_amount': round(gross_price_unit, 10),
+            'price_amount': float_round(gross_price_unit, 10),
             'product_price_dp': self.env['decimal.precision'].precision_get('Product Price'),
 
             # The number of item units to which the price applies.
