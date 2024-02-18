@@ -154,11 +154,6 @@ msgstr ""
 
 #. module: pos_daily_sales_reports
 #: model_terms:ir.ui.view,arch_db:pos_daily_sales_reports.pos_daily_report
-msgid "Multiple Report"
-msgstr ""
-
-#. module: pos_daily_sales_reports
-#: model_terms:ir.ui.view,arch_db:pos_daily_sales_reports.pos_daily_report
 msgid "Name"
 msgstr "Назва"
 
