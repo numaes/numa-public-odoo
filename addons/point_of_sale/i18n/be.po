@@ -2059,13 +2059,6 @@ msgid "Do not close"
 msgstr ""
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/models.js:0
-#, python-format
-msgid "Do not close"
-msgstr ""
-
-#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/digest.py:0
 #, python-format

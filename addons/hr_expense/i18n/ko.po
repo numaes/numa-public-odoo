@@ -694,7 +694,6 @@ msgid ""
 msgstr "이름을 입력하고 카테고리를 선택한 다음 경비 금액을 설정합니다."
 
 #. module: hr_expense
-#: model:account.journal,name:hr_expense.hr_expense_account_journal
 #: model:ir.model,name:hr_expense.model_hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_move_line__expense_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__expense_manager_id
@@ -1305,12 +1304,6 @@ msgstr "새로운 지출결의서, 담당자 %(paid_by)s"
 #, python-format
 msgid "New Expense Reports"
 msgstr "신규 비용 보고서"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_calendar_event_id
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "다음 활동 캘린더 행사"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_date_deadline
