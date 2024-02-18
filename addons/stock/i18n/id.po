@@ -8,7 +8,6 @@
 # Mathieu Walravens, 2023
 # Wil Odoo, 2024
 # Abe Manyo, 2024
-# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Abe Manyo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4031,20 +4030,10 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to reserve more products of %s than you have in stock.\n"
-"\n"
-"You can fix the discrepancies by clicking on the button below.\n"
-"The correction will remove the reservation of the impacted operations on all companies.\n"
-"If the error persists, or you see this message appear often, please submit a Support Ticket at https://www.odoo.com/help"
+"It is not possible to unreserve more products of %s than you have in stock."
 msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_quant.py:0
-#, python-format
-msgid ""
-"It is not possible to unreserve more products of %s than you have in stock.\n"
-"Please contact your system administrator to rectify this issue."
-msgstr ""
+"Tidak dapat menghapus reservasi lebih banyak produk %s dari yang Anda miliki"
+" di stok."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type

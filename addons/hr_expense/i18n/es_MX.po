@@ -5,10 +5,9 @@
 # Translators:
 # Martin Trigaux, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
-# Iran Villalobos López, 2023
 # Lucia Pacheco, 2023
+# Iran Villalobos López, 2023
 # Wil Odoo, 2024
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Fernanda Alvarez, 2024
 # 
 msgid ""
@@ -227,7 +226,7 @@ msgstr "Importe adeudado"
 #: code:addons/hr_expense/static/src/mixins/document_upload.js:0
 #, python-format
 msgid "An error occurred during the upload"
-msgstr "Ocurrió un error durante la carga"
+msgstr "Se produjo un error durante la carga."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__account_id
@@ -709,7 +708,6 @@ msgstr ""
 "gasto."
 
 #. module: hr_expense
-#: model:account.journal,name:hr_expense.hr_expense_account_journal
 #: model:ir.model,name:hr_expense.model_hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_move_line__expense_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__expense_manager_id
@@ -1325,12 +1323,6 @@ msgstr "Nuevo reporte de gastos, pagado por %(paid_by)s"
 #, python-format
 msgid "New Expense Reports"
 msgstr "Nuevos reportes de gastos"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_calendar_event_id
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Siguiente evento en el calendario de actividades"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_date_deadline
@@ -2051,13 +2043,12 @@ msgstr "No hay ningún reporte de gastos por aprobar."
 #: code:addons/hr_expense/models/product_product.py:0
 #, python-format
 msgid ""
-"There are unsubmitted expenses linked to this category. Updating the "
-"category cost will change expense amounts. Make sure it is what you want to "
-"do."
+"There are unposted expenses linked to this category. Updating the category "
+"cost will change expense amounts. Make sure it is what you want to do."
 msgstr ""
-"Hay gastos que no se han publicado y están vinculados a esta categoría. Si "
-"actualiza el costo de la categoría cambiará los importes de los gastos. "
-"Asegúrese de querer continuar."
+"Hay gastos sin publicar en esta categoría. Actualizar la categoría del costo"
+" cambiará las cantidades de los gastos. Asegúrese de que es lo que desea "
+"hacer. "
 
 #. module: hr_expense
 #. odoo-javascript
