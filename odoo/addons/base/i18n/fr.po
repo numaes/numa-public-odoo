@@ -36135,11 +36135,6 @@ msgid "Track, prioritize, and solve customer tickets"
 msgstr "Suivez, priorisez et résolvez les tickets clients"
 
 #. module: base
-#: model:ir.module.module,summary:base.module_helpdesk
-msgid "Track, prioritize, and solve customer tickets"
-msgstr "Suivez, priorisez et résolvez les tickets clients"
-
-#. module: base
 #: model:ir.module.module,summary:base.module_event
 msgid "Trainings, Conferences, Meetings, Exhibitions, Registrations"
 msgstr "Formations, conférences, réunions, expositions, inscriptions"
