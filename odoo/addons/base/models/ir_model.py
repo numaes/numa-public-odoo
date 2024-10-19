@@ -1435,7 +1435,7 @@ class IrModelSelection(models.Model):
             if not field or not field.store or not Model._auto:
                 continue
 
-            ondelete = (field.ondelete or {}).get(selection.value)
+            ondelete = ((field.ondelete if hasattr(field, 'ondelete') else None) or {}).get(selection.value)
             # special case for custom fields
             if ondelete is None and field.manual and not field.required:
                 ondelete = 'set null'
