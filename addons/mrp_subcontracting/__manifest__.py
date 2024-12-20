@@ -7,7 +7,7 @@
     'summary': "Subcontract Productions",
     'website': 'https://www.odoo.com/app/manufacturing',
     'category': 'Manufacturing/Manufacturing',
-    'depends': ['mrp'],
+    'depends': ['mrp', 'stock'],
     'data': [
         'data/mrp_subcontracting_data.xml',
         'security/mrp_subcontracting_security.xml',
