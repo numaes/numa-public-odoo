@@ -495,10 +495,32 @@ class Cursor(BaseCursor):
         self.flush()
         result = self._cnx.commit()
         self.clear()
-        self._now = None
         self.prerollback.clear()
         self.postrollback.clear()
-        self.postcommit.run()
+        self._now = None
+
+        while self.postcommit._funcs:
+            previous_callbacks = self.postcommit
+            self.postcommit = Callbacks()
+
+            try:
+                previous_callbacks.run()
+                self.flush()
+                self._cnx.commit()
+            except:
+                self.clear()
+                self.postcommit.clear()
+                self.prerollback.run()
+                self._cnx.rollback()
+                self._now = None
+                self.postrollback.run()
+                raise
+            finally:
+                self.clear()
+                self.prerollback.clear()
+                self.postrollback.clear()
+                self._now = None
+
         return result
 
     def rollback(self):

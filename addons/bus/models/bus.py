@@ -146,7 +146,7 @@ class ImBus(models.Model):
             def notify():
                 payloads = get_notify_payloads(
                     list(self.env.cr.postcommit.data.pop("bus.bus.channels"))
-                )
+                ) if "bus.bus.channels" in self.env.cr.postcommit.data else []
                 if len(payloads) > 1:
                     _logger.info(
                         "The imbus notification payload was too large, it's been split into %d payloads.",
