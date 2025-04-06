@@ -215,7 +215,8 @@ class Partner(models.Model):
             parent = self.browse(values.get('parent_id'))
             values['company_id'] = parent.company_id.id
         if 'lang' in default_fields:
-            values['lang'] = values.get('lang') or parent.lang or self.env.lang
+            # values['lang'] = values.get('lang') or parent.lang or self.env.lang
+            values['lang'] = parent.lang or self.env.lang
         # protection for `default_type` values leaking from menu action context (e.g. for crm's email)
         if 'type' in default_fields and values.get('type'):
             if values['type'] not in self._fields['type'].get_values(self.env):
