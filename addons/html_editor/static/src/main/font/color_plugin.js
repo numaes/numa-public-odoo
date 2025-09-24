@@ -17,6 +17,7 @@ import {
     isTextNode,
     isWhitespace,
     isZwnbsp,
+    PROTECTED_QWEB_SELECTOR,
 } from "@html_editor/utils/dom_info";
 import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
 import { isCSSColor } from "@web/core/utils/colors";
@@ -26,7 +27,7 @@ import { _t } from "@web/core/l10n/translation";
 import { withSequence } from "@html_editor/utils/resource";
 import { isBlock } from "@html_editor/utils/blocks";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
-import { nodeSize } from "@html_editor/utils/position";
+import { removeEmptyTextNodes } from "../../utils/dom";
 
 const HEX_OPACITY = "99";
 
@@ -197,9 +198,11 @@ export class ColorPlugin extends Plugin {
                         .getTargetedNodes()
                         .filter(
                             (n) =>
-                                isTextNode(n) ||
-                                (mode === "backgroundColor" &&
-                                    n.classList.contains("o_selected_td"))
+                                (isTextNode(n) ||
+                                    n.matches?.(`t, ${PROTECTED_QWEB_SELECTOR}`) ||
+                                    (mode === "backgroundColor" &&
+                                        n.classList.contains("o_selected_td"))) &&
+                                this.dependencies.selection.isNodeEditable(n)
                         );
                     return hasAnyNodesColor(nodes, mode);
                 };
@@ -242,8 +245,8 @@ export class ColorPlugin extends Plugin {
         if (selection.isCollapsed) {
             let zws;
             if (
-                selection.anchorNode.nodeType !== Node.TEXT_NODE &&
-                selection.anchorNode.textContent !== "\u200b"
+                selection.anchorNode.nodeType === Node.TEXT_NODE &&
+                selection.anchorNode.textContent === "\u200b"
             ) {
                 zws = selection.anchorNode;
             } else {
@@ -285,12 +288,12 @@ export class ColorPlugin extends Plugin {
         const targetedFieldNodes = new Set(
             this.dependencies.selection
                 .getTargetedNodes()
-                .map((n) => closestElement(n, "*[t-field],*[t-out],*[t-esc]"))
+                .map((node) => closestElement(node, PROTECTED_QWEB_SELECTOR))
                 .filter(Boolean)
         );
 
-        const getFonts = (selectedNodes) => {
-            return selectedNodes.flatMap((node) => {
+        const getFonts = (selectedNodes) =>
+            selectedNodes.flatMap((node) => {
                 let font =
                     closestElement(node, "font") ||
                     closestElement(
@@ -352,15 +355,15 @@ export class ColorPlugin extends Plugin {
                         );
                         const isGradientBeingUpdated = closestGradientEl && isColorGradient(color);
                         const splitnode = isGradientBeingUpdated ? closestGradientEl : font;
+                        const cursors = this.dependencies.selection.preserveSelection();
+                        this.dispatchTo("clean_handlers", splitnode);
+                        // Remove empty text nodes (replaced FEFFs) before splitting,
+                        // to prevent creating empty elements in the DOM.
+                        removeEmptyTextNodes(splitnode, cursors);
+                        cursors.restore();
                         font = this.dependencies.split.splitAroundUntil(
                             selectedChildren,
                             splitnode
-                        );
-                        cursors.setAnchorOffset(
-                            Math.min(nodeSize(cursors.anchor.node), cursors.anchor.offset)
-                        );
-                        cursors.setFocusOffset(
-                            Math.min(nodeSize(cursors.focus.node), cursors.focus.offset)
                         );
                         // After splitting we need to clear the new nodes created by
                         // `splitElement` that contains only empty text nodes.
@@ -448,7 +451,6 @@ export class ColorPlugin extends Plugin {
                 }
                 return font;
             });
-        };
 
         for (const fieldNode of targetedFieldNodes) {
             this.colorElement(fieldNode, color, mode);
