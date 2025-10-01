@@ -55,3 +55,7 @@ class TestJpUBLPint(AccountTestInvoicingCommon):
             self.get_xml_tree_from_string(actual_xml),
             self.get_xml_tree_from_string(expected_xml),
         )
+
+    def test_invoice_new(self):
+        self.env['ir.config_parameter'].set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', 'True')
+        self.test_invoice()
