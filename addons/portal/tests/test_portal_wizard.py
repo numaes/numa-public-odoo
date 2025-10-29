@@ -110,7 +110,7 @@ class TestPortalWizard(MailCommon):
 
         self.assertEqual(portal_user.user_id, self.public_user, 'Must keep the user even if it is archived')
         self.assertFalse(portal_user.user_id.active, 'Must have archived the user')
-        self.assertFalse(portal_user.is_portal)
+        self.assertTrue(portal_user.is_portal)
         self.assertFalse(portal_user.is_internal)
         self.assertNotSentEmail()
 
