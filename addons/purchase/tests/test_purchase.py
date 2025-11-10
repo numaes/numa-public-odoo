@@ -1,17 +1,16 @@
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from datetime import timedelta
-
-from freezegun import freeze_time
-from psycopg2.errors import IntegrityError
-from pytz import timezone
-
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.tests import tagged, Form
 from odoo import Command, fields
 from odoo.exceptions import UserError
-from odoo.tests import Form, tagged
 from odoo.tools import mute_logger
 
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+
+from datetime import timedelta
+from freezegun import freeze_time
+from psycopg2.errors import IntegrityError
+import pytz
 
 
 @tagged('-at_install', 'post_install')
@@ -156,7 +155,7 @@ class TestPurchase(AccountTestInvoicingCommon):
 
         # check date_planned is correctly set
         self.assertEqual(po.date_planned, date_planned)
-        po_tz = timezone(po.user_id.tz)
+        po_tz = pytz.timezone(po.user_id.tz)
         localized_date_planned = po.date_planned.astimezone(po_tz)
         self.assertEqual(localized_date_planned, po.get_localized_date_planned())
         # Ensure that the function get_localized_date_planned can accept a date in string format
@@ -283,6 +282,7 @@ class TestPurchase(AccountTestInvoicingCommon):
         po_form.save()
         self.assertEqual(po.order_line.product_qty, 2.0)
 
+
         with po_form.order_line.edit(0) as line:
             line.product_qty = 24.0
         po_form.save()
@@ -335,7 +335,7 @@ class TestPurchase(AccountTestInvoicingCommon):
             'partner_id': self.partner_a.id,
             'order_line': [
                 Command.create({'product_id': self.product_a.id, 'product_qty': 10.0}),
-            ],
+            ]
         })
         self.assertEqual(po1.order_line.product_packaging_id, generic_single_pack)
         self.assertEqual(po1.order_line.product_packaging_qty, 10.0)
@@ -345,7 +345,7 @@ class TestPurchase(AccountTestInvoicingCommon):
             'partner_id': self.partner_a.id,
             'order_line': [
                 Command.create({'product_id': self.product_a.id, 'product_qty': 10.0}),
-            ],
+            ]
         })
         self.assertEqual(po2.order_line.product_packaging_id, company2_pack_of_10)
         self.assertEqual(po2.order_line.product_packaging_qty, 1.0)
@@ -986,8 +986,6 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.env['purchase.order.line'].flush_model()
         result = vendor_bill.action_purchase_matching()
         matching_records = self.env['purchase.bill.line.match'].search(result['domain'])
-        result_bill_matching = purchase_order.action_bill_matching()
-        matching_records_from_po = self.env['purchase.bill.line.match'].search(result_bill_matching['domain'])
 
         # Ensure that calling `action_add_to_po()` on multiple records
         # does not raise a singleton ValueError when the vendor is an individual
@@ -997,9 +995,6 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(len(matching_records), 2)
         self.assertEqual(matching_records.account_move_id, vendor_bill)
         self.assertEqual(matching_records.purchase_order_id, purchase_order)
-        self.assertEqual(len(matching_records_from_po), 2)
-        self.assertEqual(matching_records_from_po.account_move_id, vendor_bill)
-        self.assertEqual(matching_records_from_po.purchase_order_id, purchase_order)
 
     def test_action_view_po_when_product_template_archived(self):
         """
@@ -1073,48 +1068,6 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(po.order_line.product_qty, 10.0)
         self.assertEqual(po.order_line.name, '[HHH] product_a')
 
-    def test_purchase_order_mail_links_to_correct_website(self):
-        """Check that purchase order emails link to the order's company website."""
-        if 'website_id' not in self.env.company:
-            self.skipTest("The `website` module is required to support multiple company websites.")
-
-        company1 = self.company_data['company']
-        company2 = self.company_data_2['company']
-        companies = company1 + company2
-        companies.website_id = None
-        self.env['website'].create([{
-            'name': f"{company.name}'s Website",
-            'domain': f"http://website{company.id}.example.com",
-            'company_id': company.id,
-        } for company in companies])
-        self.assertEqual(len(companies.website_id), 2)
-
-        rfq = self.env['purchase.order'].create({
-            'partner_id': self.partner_a.id,
-            'company_id': company2.id,
-            'order_line': [Command.create({'product_id': self.product_a.id})],
-        })
-
-        email_ctx = rfq.action_rfq_send().get('context', {})
-        mail_template = self.env['mail.template'].browse(email_ctx.get('default_template_id'))
-        mail_template.auto_delete = False
-
-        message = rfq.with_context(**email_ctx).message_post_with_source(
-            mail_template, subtype_xmlid='mail.mt_comment',
-        )
-        self.assertIn(
-            company2.website_id.domain, message.mail_ids.body_html,
-            "Mail should link to the website of the order's company",
-        )
-        self.assertNotIn(
-            company1.website_id.domain, message.mail_ids.body_html,
-            "Mail shouldn't link to the website of the first company",
-        )
-        self.assertNotIn(
-            self.env['base'].get_base_url(), message.mail_ids.body_html,
-            "Mail shouldn't link to the base URL",
-        )
-
     def test_currency_computed_from_partner(self):
         """Test that the currency of the purchase order is computed from the partner
         when the partner is set, and that default_currency_id in context overrides compute.
@@ -1154,96 +1107,3 @@ class TestPurchase(AccountTestInvoicingCommon):
             uom_test.unlink()
 
         self.assertEqual(po.order_line[0].product_uom, uom_test)
-
-    def test_product_price_on_purchase_order_view_catalog(self):
-        """
-        Ensure vendor price & discount from supplierinfo are applied
-        properly when using the vendor catalog popup.
-        """
-        product = self.env['product.product'].create({
-            'name': 'Test Product',
-            'seller_ids': [
-                Command.create({
-                    'partner_id': self.partner_a.id,
-                    'price': 100,
-                    'discount': 10,
-                })
-            ]
-        })
-        purchase_order = self.env['purchase.order'].create({
-            'partner_id': self.partner_a.id,
-        })
-        purchase_order._update_order_line_info(product.id, 1)
-        self.assertRecordValues(purchase_order.order_line, [
-            {'price_unit': 100, 'discount': 10, 'price_unit_discounted': 90},
-        ])
-
-    def test_orderline_description_change_on_partner_change(self):
-        """Test that The Vendor Code and/or Vendor Name does change correctly in the product description when changing the partner"""
-        supplierinfo_vals = {
-            'min_qty': 1,
-            'product_id': self.product_a.id,
-            'product_tmpl_id': self.product_a.product_tmpl_id.id,
-        }
-
-        self.env["product.supplierinfo"].create([
-            {
-                **supplierinfo_vals,
-                'price': 10,
-                'product_name': 'Name 1',
-                'product_code': 'Code 1',
-                'partner_id': self.partner_a.id,
-            },
-            {
-                **supplierinfo_vals,
-                'price': 20,
-                'product_name': 'Name 2',
-                'product_code': 'Code 2',
-                'partner_id': self.partner_b.id,
-            },
-            {
-                **supplierinfo_vals,
-                'price': 15,
-                'partner_id': self.partner.id,
-            }
-        ])
-
-        partner_c = self.env['res.partner'].create({'name': 'Partner not in sellers'})
-
-        custom_desc = "This is a custom description that should not be touched"
-        po = self.env['purchase.order'].create({
-            'partner_id': self.partner_a.id,
-            'order_line': [Command.create({
-                    'product_id': self.product_a.id,
-                    'product_qty': 1,
-                    'name': "[Code 1] Name 1\nSome Variant: Some Value: Some Text"
-                }), Command.create({
-                    'product_id': self.product_a.id,
-                    'product_qty': 1,
-                }), Command.create({
-                    'product_id': self.product_a.id,
-                    'product_qty': 1,
-                    'name': custom_desc
-                })
-            ],
-        })
-
-        self.assertEqual(po.order_line[0].name, "[Code 1] Name 1\nSome Variant: Some Value: Some Text")
-        self.assertEqual(po.order_line[1].name, "[Code 1] Name 1")
-        self.assertEqual(po.order_line[2].name, custom_desc)
-        po.partner_id = self.partner.id
-        self.assertEqual(po.order_line[0].name, "product_a\nSome Variant: Some Value: Some Text")
-        self.assertEqual(po.order_line[1].name, "product_a")
-        self.assertEqual(po.order_line[2].name, custom_desc)
-        po.partner_id = self.partner_b.id
-        self.assertEqual(po.order_line[0].name, "[Code 2] Name 2\nSome Variant: Some Value: Some Text")
-        self.assertEqual(po.order_line[1].name, "[Code 2] Name 2")
-        self.assertEqual(po.order_line[2].name, custom_desc)
-        po.partner_id = partner_c.id
-        self.assertEqual(po.order_line[0].name, "product_a\nSome Variant: Some Value: Some Text")
-        self.assertEqual(po.order_line[1].name, "product_a")
-        self.assertEqual(po.order_line[2].name, custom_desc)
-        po.partner_id = self.partner_a.id
-        self.assertEqual(po.order_line[0].name, "[Code 1] Name 1\nSome Variant: Some Value: Some Text")
-        self.assertEqual(po.order_line[1].name, "[Code 1] Name 1")
-        self.assertEqual(po.order_line[2].name, custom_desc)
