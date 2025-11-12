@@ -484,6 +484,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_sa.field_account_bank_statement_line__l10n_sa_qr_code_str
 #: model:ir.model.fields,field_description:l10n_sa.field_account_move__l10n_sa_qr_code_str
 msgid "Zatka QR Code"
+
+#. module: l10n_sa
+#: model:ir.model.fields,field_description:l10n_sa.field_account_bank_statement_line__l10n_sa_confirmation_datetime
+#: model:ir.model.fields,field_description:l10n_sa.field_account_move__l10n_sa_confirmation_datetime
+#: model:ir.model.fields,field_description:l10n_sa.field_account_payment__l10n_sa_confirmation_datetime
+msgid "ZATCA Issue Date"
 msgstr ""
 
 #. module: l10n_sa
