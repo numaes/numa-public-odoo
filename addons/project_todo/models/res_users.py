@@ -22,7 +22,7 @@ class Users(models.Model):
             activity_groups.remove(to_remove)
 
         # 2. creating groups for todo and task seperately
-        query = """SELECT BOOL(t.project_id) as is_task, count(*), act.res_model, act.res_id,
+        query = """SELECT (t.project_id IS NOT NULL) as is_task, count(*), act.res_model, act.res_id,
                        CASE
                            WHEN %(date)s - act.date_deadline::date = 0 THEN 'today'
                            WHEN %(date)s - act.date_deadline::date > 0 THEN 'overdue'
