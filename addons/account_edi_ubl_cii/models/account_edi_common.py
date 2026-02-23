@@ -9,6 +9,12 @@ from odoo.tools.misc import clean_context, formatLang, html_escape
 from odoo.tools.xml_utils import find_xml_value
 from datetime import datetime
 
+
+# PATCH
+def FloatFmt(value):
+    return str(value)
+
+
 # -------------------------------------------------------------------------
 # UNIT OF MEASURE
 # -------------------------------------------------------------------------
