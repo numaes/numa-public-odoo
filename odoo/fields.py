@@ -2890,6 +2890,8 @@ class Selection(Field[str | typing.Literal[False]]):
         super().setup_related(model)
         # selection must be computed on related field
         field = self.related_field
+        if not field or field is self:
+            return
         self.selection = lambda model: field._description_selection(model.env)
         self._selection = None
 

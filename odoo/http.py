@@ -2594,6 +2594,7 @@ class Application:
 
             except Exception as exc:
                 # Valid (2xx/3xx) response returned via werkzeug.exceptions.abort.
+                _logger.error(exc, exc_info=True)
                 if isinstance(exc, HTTPException) and exc.code is None:
                     response = exc.get_response()
                     HttpDispatcher(request).post_dispatch(response)
