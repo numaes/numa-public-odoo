@@ -28,7 +28,6 @@ export class TestsSharedJsPython extends Component {
 
             const kwargs = {
                 product: params.product,
-                product_uom: params.product_uom,
                 precision_rounding: params.precision_rounding,
                 rounding_method: params.rounding_method,
                 filter_tax_function: filter_tax_function,
@@ -63,8 +62,7 @@ export class TestsSharedJsPython extends Component {
                     params.price_unit,
                     params.product,
                     params.original_taxes,
-                    params.new_taxes,
-                    { product_uom: params.product_uom}
+                    params.new_taxes
                 )
             }
         }

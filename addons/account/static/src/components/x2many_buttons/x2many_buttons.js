@@ -21,9 +21,6 @@ class X2ManyButtons extends Component {
     async openTreeAndDiscard() {
         const ids = this.currentField.currentIds;
         await this.props.record.discard();
-        const context = this.currentField.resModel === "account.move"
-            ? { list_view_ref: "account.view_duplicated_moves_tree_js" }
-            : {};
         this.action.doAction({
             name: this.props.treeLabel,
             type: "ir.actions.act_window",
@@ -33,7 +30,9 @@ class X2ManyButtons extends Component {
                 [false, "form"],
             ],
             domain: [["id", "in", ids]],
-            context: context,
+            context: {
+                form_view_ref: "account.view_duplicated_moves_tree_js",
+            },
         });
     }
 

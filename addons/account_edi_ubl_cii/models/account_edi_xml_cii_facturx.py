@@ -32,8 +32,6 @@ class AccountEdiXmlCII(models.AbstractModel):
         return super()._find_value(xpath, tree, CII_NAMESPACES)
 
     def _export_invoice_filename(self, invoice):
-        if invoice.commercial_partner_id.country_code == 'DE':
-            return f"{invoice.name.replace('/', '_')}_zugferd.xml"
         return f"{invoice.name.replace('/', '_')}_factur_x.xml"
 
     def _export_invoice_ecosio_schematrons(self):
@@ -121,7 +119,6 @@ class AccountEdiXmlCII(models.AbstractModel):
             'type_code': '380' if invoice.move_type == 'out_invoice' else '381',
             'issue_date_time': invoice.invoice_date,
             'included_note': html2plaintext(invoice.narration) if invoice.narration else "",
-            'included_note_list': [],
         }
 
     def _export_invoice_vals(self, invoice):
@@ -298,8 +295,6 @@ class AccountEdiXmlCII(models.AbstractModel):
             bank_detail_node.findtext('{*}PayeePartyCreditorFinancialAccount/{*}IBANID')
             or bank_detail_node.findtext('{*}PayeePartyCreditorFinancialAccount/{*}ProprietaryID')
             for bank_detail_node in bank_detail_nodes
-            if bank_detail_node.findtext('{*}PayeePartyCreditorFinancialAccount/{*}IBANID')
-            or bank_detail_node.findtext('{*}PayeePartyCreditorFinancialAccount/{*}ProprietaryID')
         ]
         if bank_details:
             self._import_partner_bank(invoice, bank_details=bank_details)
@@ -379,7 +374,6 @@ class AccountEdiXmlCII(models.AbstractModel):
             'allowance_charge_reason_code': './{*}ReasonCode',
             'line_total_amount': './{*}SpecifiedLineTradeSettlement/{*}SpecifiedTradeSettlementLineMonetarySummation/{*}LineTotalAmount',
             'name': [
-                './ram:SpecifiedTradeProduct/ram:Description',
                 './ram:SpecifiedTradeProduct/ram:Name',
             ],
             'product': {
@@ -405,7 +399,7 @@ class AccountEdiXmlCII(models.AbstractModel):
         if move_type_code.text == '381':
             return 'refund', 1
         if move_type_code.text == '380':
-            amount_node = tree.find('.//{*}SpecifiedTradeSettlementHeaderMonetarySummation/{*}GrandTotalAmount')
+            amount_node = tree.find('.//{*}SpecifiedTradeSettlementHeaderMonetarySummation/{*}TaxBasisTotalAmount')
             if amount_node is not None and float(amount_node.text) < 0:
                 return 'refund', -1
             return 'invoice', 1

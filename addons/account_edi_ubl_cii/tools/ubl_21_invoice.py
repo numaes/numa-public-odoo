@@ -2,7 +2,6 @@
 # It can be passed as the `template` argument to `dict_to_xml` to enforce the order of nodes.
 
 import odoo.addons.account_edi_ubl_cii.tools.ubl_21_common as cac
-import odoo.addons.account_edi_ubl_cii.tools.ubl_21_extensions as ext
 
 InvoiceLine = {
     'cbc:ID': {},
@@ -27,7 +26,7 @@ InvoiceLine = {
 
 Invoice = {
     '_tag': 'Invoice',
-    'ext:UBLExtensions': ext.UBLExtensions,
+    'ext:UBLExtensions': {},
     'cbc:UBLVersionID': {},
     'cbc:CustomizationID': {},
     'cbc:ProfileID': {},
@@ -40,20 +39,15 @@ Invoice = {
     'cbc:DueDate': {},
     'cbc:InvoiceTypeCode': {},
     'cbc:Note': {},
-    'cbc:TaxPointDate': {},
     'cbc:DocumentCurrencyCode': {},
     'cbc:TaxCurrencyCode': {},
     'cbc:PricingCurrencyCode': {},
     'cbc:LineCountNumeric': {},
-    'cbc:AccountingCost': {},
     'cbc:BuyerReference': {},
     'cac:InvoicePeriod': cac.Period,
     'cac:OrderReference': cac.OrderReference,
     'cac:BillingReference': cac.BillingReference,
-    'cac:DespatchDocumentReference': cac.DespatchDocumentReference,
-    'cac:ContractDocumentReference': cac.ContractDocumentReference,
     'cac:AdditionalDocumentReference': cac.DocumentReference,
-    'cac:ProjectReference': cac.ProjectReference,
     'cac:Signature': cac.Signature,
     'cac:AccountingSupplierParty': cac.SupplierParty,
     'cac:AccountingCustomerParty': cac.CustomerParty,

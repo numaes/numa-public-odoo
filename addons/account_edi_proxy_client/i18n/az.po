@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-15 18:38+0000\n"
-"PO-Revision-Date: 2025-11-07 15:26+0000\n"
+"POT-Creation-Date: 2025-02-03 15:44+0000\n"
+"PO-Revision-Date: 2025-10-22 11:20+0000\n"
 "Last-Translator: ERPGo Odoo <erpgo.odoo@gmail.com>\n"
 "Language-Team: Azerbaijani <https://translate.odoo.com/projects/odoo-18/"
 "account_edi_proxy_client/az/>\n"
@@ -69,7 +69,7 @@ msgstr "Yaradan"
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__create_date
 msgid "Created on"
-msgstr "Yaradılma tarixi"
+msgstr "Yaradılan tarix"
 
 #. module: account_edi_proxy_client
 #: model:ir.model,name:account_edi_proxy_client.model_certificate_key
@@ -119,10 +119,9 @@ msgstr ""
 #. module: account_edi_proxy_client
 #. odoo-python
 #: code:addons/account_edi_proxy_client/models/account_edi_proxy_user.py:0
+#, python-format
 msgid ""
-"Invalid signature for request. This might be due to another connection to "
-"odoo Access Point server. It can occur if you have duplicated your "
-"database. \n"
+"Invalid signature for request. This might be due to another connection to odoo Access Point server. It can occur if you have duplicated your database. \n"
 "\n"
 "If you are not sure how to fix this, please contact our support."
 msgstr ""
@@ -198,6 +197,11 @@ msgstr ""
 #. module: account_edi_proxy_client
 #: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_active_company_proxy
 msgid "This company has an active user already created for this EDI type"
+msgstr ""
+
+#. module: account_edi_proxy_client
+#: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_active_edi_identification
+msgid "This edi identification is already assigned to an active user"
 msgstr ""
 
 #. module: account_edi_proxy_client

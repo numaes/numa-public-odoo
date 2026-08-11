@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * account
+# 	* account
 #
 # Translators:
 # Martin Trigaux, 2024
@@ -9,23 +9,19 @@
 # Wil Odoo, 2025
 # Rasareeyar Lappiam, 2025
 #
-# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
-# Nusara Boonma <nuboo@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:38+0000\n"
-"PO-Revision-Date: 2026-07-16 11:06+0000\n"
-"Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
-"Language-Team: Thai <https://translate.odoo.com/projects/odoo-18/account/th/>"
-"\n"
+"POT-Creation-Date: 2025-10-24 18:36+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Rasareeyar Lappiam, 2025\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -70,16 +66,6 @@ msgstr ""
 "        เช่น 180 / (1 - 10%) = 200 (ไม่รวมราคา)\n"
 "        เช่น 200 * (1 - 10%) = 180 (รวมราคาแล้ว)\n"
 "        "
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move_send.py:0
-msgid ""
-"\n"
-"Please contact your administrator."
-msgstr ""
-"\n"
-"กรุณาติดต่อผู้ดูแลระบบของคุณ"
 
 #. module: account
 #. odoo-python
@@ -151,8 +137,6 @@ msgid ""
 "%(attachment_name)s (detached by %(user)s on %(date)s)%"
 "(attachment_extension)s"
 msgstr ""
-"%(attachment_name)s (ถูกยกเลิกการเชื่อมโยงโดย %(user)s ใน %(date)s)%"
-"(attachment_extension)s"
 
 #. module: account
 #. odoo-python
@@ -214,6 +198,15 @@ msgstr "%(ref)s (%(currency_amount)s)"
 #: code:addons/account/models/account_account_tag.py:0
 msgid "%(tag)s (%(country_code)s)"
 msgstr "%(tag)s (%(country_code)s)"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_tax.py:0
+msgid ""
+"%(tax_account)s (%(account_name)s) should be an account of type \"%"
+"(receivable)s\" or \"%(payable)s\" with both options \"%"
+"(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -373,9 +366,19 @@ msgid "/ if not applicable"
 msgstr "/ ถ้าไม่สามารถใช้ได้"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
+msgid "1.05"
+msgstr "1.05"
+
+#. module: account
 #: model:account.payment.term,name:account.account_payment_term_30_days_end_month_the_10
 msgid "10 Days after End of Next Month"
 msgstr "10 วัน หลังจากสิ้นเดือนถัดไป"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_statement
+msgid "100.0"
+msgstr "100.0"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -383,14 +386,95 @@ msgid "100.00 USD"
 msgstr "100.00 USD"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_statement
+msgid "1000.0"
+msgstr "1000.0"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "11.05"
+msgstr "11.05"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_statement
+msgid "12345"
+msgstr "12345"
+
+#. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
 msgid "15 Days"
 msgstr "15 วัน"
 
 #. module: account
+#: model:account.tax,name:account.1_purchase_tax_template
+#: model:account.tax,name:account.1_sale_tax_template
+msgid "15%"
+msgstr "15%"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_statement
+msgid "1500.0"
+msgstr "1500.0"
+
+#. module: account
 #: model:account.payment.term,name:account.account_payment_term_30days_early_discount
 msgid "2/7 Net 30"
 msgstr "2/7 สุทธิ 30"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "20.00"
+msgstr "20.00"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "2021-09-19"
+msgstr "2021-09-19"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "2023-01-01"
+msgstr "2023-01-01"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "2023-01-05"
+msgstr "2023-01-05"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_statement
+msgid "2023-08-11"
+msgstr "2023-08-11"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_statement
+msgid "2023-08-15"
+msgstr "2023-08-15"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_statement
+msgid "2023-08-31"
+msgstr "2023-08-31"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "2023-09-12"
+msgstr "2023-09-12"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "2023-09-25"
+msgstr "2023-09-25"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "2023-10-31"
+msgstr "2023-10-31"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "2024-01-01"
+msgstr "2024-01-01"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_21days
@@ -408,6 +492,18 @@ msgid "25.00 USD"
 msgstr "25.00 USD"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
+#: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "27.00"
+msgstr "27.00"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "3.00"
+msgstr "3.00"
+
+#. module: account
 #: model:account.payment.term,name:account.account_payment_term_30days
 msgid "30 Days"
 msgstr "30 วัน"
@@ -423,6 +519,24 @@ msgid "30% Now, Balance 60 Days"
 msgstr "30% ตอนนี้, ครบใน 60 วัน"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "30.00"
+msgstr "30.00"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
+#: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "31.05"
+msgstr "31.05"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
+#: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
+msgid "4.05"
+msgstr "4.05"
+
+#. module: account
 #: model:account.payment.term,name:account.account_payment_term_45days
 msgid "45 Days"
 msgstr "45 วัน"
@@ -436,6 +550,16 @@ msgstr "50 USD"
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "50.00 EUR"
 msgstr "50.00 EUR"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_statement
+msgid "534677881234"
+msgstr "534677881234"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "9.00"
+msgstr "9.00"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_90days_on_the_10th
@@ -459,8 +583,6 @@ msgid ""
 "                        <span>Please make sure that this is a wanted "
 "behavior.</span>"
 msgstr ""
-"<br/>\n"
-"                        <span>กรุณาตรวจสอบให้แน่ใจว่านี่เป็นพฤติกรรมที่ต้องการ</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -855,10 +977,6 @@ msgid ""
 "invoices, and with which electronic format.\n"
 "                    </small>"
 msgstr ""
-"<small class=\"form-text text-muted\">\n"
-"                        คุณสามารถเลือกวิธีการที่เราจะส่งใบแจ้งหนี้ให้คุณได้ "
-"และเลือกได้ว่าจะใช้รูปแบบอิเล็กทรอนิกส์แบบใด\n"
-"                   </small>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -909,8 +1027,6 @@ msgid ""
 "<span class=\"o_form_label mx-3 oe_edit_only text-center\" style=\"width: "
 "6ch;\" invisible=\"state != 'draft' or invoice_payment_term_id\">or</span>"
 msgstr ""
-"<span class=\"o_form_label mx-3 oe_edit_only text-center\" style=\"width: "
-"6ch;\" invisible=\"state != 'draft' or invoice_payment_term_id\">หรือ</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_line_form
@@ -1187,7 +1303,7 @@ msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span>1</span>"
-msgstr "<span>1</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1202,7 +1318,7 @@ msgstr "<span><b>ทำได้ดีมาก!</b> คุณได้ผ่า
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span>=</span>"
-msgstr "<span>=</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -1257,7 +1373,7 @@ msgstr "<span>ใหม่</span>"
 msgid ""
 "<span>One or more Bank Accounts set on this partner are also used by others:"
 "</span>"
-msgstr "<span>บัญชีธนาคารตั้งแต่หนึ่งบัญชีขึ้นไปที่พาร์ทเนอร์รายนี้ใช้โดยบุคคลอื่น</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1294,7 +1410,7 @@ msgstr "<span>ภาษี</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
 msgid "<span>The Bank Account could be a duplicate of</span>"
-msgstr "<span>บัญชีธนาคารอาจเป็นบัญชีซ้ำของ</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1493,8 +1609,6 @@ msgid ""
 "A bank account with Account Number %(number)s already exists for Partner %"
 "(partner)s, but is archived. Please unarchive it instead."
 msgstr ""
-"บัญชีธนาคารที่มีหมายเลขบัญชี%(number)s มีอยู่แล้วสำหรับพันธมิตร%(partner)s "
-"แต่ถูกเก็บเข้าคลังแล้ว กรุณาเรียกคืนบัญชีดังกล่าวแทน"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -1758,14 +1872,6 @@ msgid "Account Chart Template"
 msgstr "เทมเพลตแผนภูมิบัญชี"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_code_mapping.py:0
-msgid ""
-"Account Code Mapping cannot be accessed directly. It is designed to be used "
-"only through the Chart of Accounts."
-msgstr "ไม่สามารถเข้าถึงการจับคู่รหัสบัญชีได้โดยตรง เนื่องจากออกแบบมาให้ใช้งานผ่านผังบัญชีเท่านั้น"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__account_codes_formula
 msgid "Account Codes Formula Shortcut"
 msgstr "ทางลัดสูตรรหัสบัญชี"
@@ -1899,7 +2005,7 @@ msgstr "เจ้าหนี้"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix_placeholder
 msgid "Account Prefix Placeholder"
-msgstr "ตัวยึดตำแหน่งคำนำหน้าบัญชี"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_category_property_form
@@ -2238,10 +2344,10 @@ msgstr "การย้ายรายการคงค้าง"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid ""
-"Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
-"reverse entry: %(reverse_entry)s."
+"Accrual entry created on %(date)s: %(accrual_entry)s.                    And "
+"its reverse entry: %(reverse_entry)s."
 msgstr ""
-"รายการคงค้างที่สร้างขึ้นเมื่อ %(date)s: %(accrual_entry)s.                "
+"รายการคงค้างที่สร้างขึ้นเมื่อ %(date)s: %(accrual_entry)s.                    "
 "และรายการย้อนกลับ: %(reverse_entry)s."
 
 #. module: account
@@ -3166,11 +3272,6 @@ msgid "Attachments"
 msgstr "แนบ"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_move_send_wizard__attachments_not_supported
-msgid "Attachments Not Supported"
-msgstr "ไม่รองรับไฟล์แนบนี้"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_mail_mail__account_audit_log_activated
 #: model:ir.model.fields,field_description:account.field_mail_message__account_audit_log_activated
 msgid "Audit Log Activated"
@@ -3251,7 +3352,7 @@ msgstr "ลงรายการอัตโนมัติจนถึง"
 msgid ""
 "Auto-post was disabled on this invoice because a potential duplicate was "
 "detected."
-msgstr "การโพสต์แบบอัตโนมัติถูกปิดใช้งานในใบแจ้งหนี้ฉบับนี้เนื่องจากตรวจพบความเป็นไปได้ที่จะเกิดการซ้ำกัน"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__auto_reconcile
@@ -3590,12 +3691,6 @@ msgid "Bank of odoo"
 msgstr "ธนาคารของ Odoo"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "Bank settings"
-msgstr ""
-
-#. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
 msgid "Bank setup manual config"
 msgstr "การตั้งค่าธนาคารด้วยตนเอง"
@@ -3663,7 +3758,7 @@ msgstr "ขึ้นอยู่กับลูกค้า"
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_type__invoice
 #: model:ir.model.fields.selection,name:account.selection__account_tax__tax_exigibility__on_invoice
 msgid "Based on Invoice"
-msgstr "เกิดภาระภาษีเมื่อออกใบแจ้งหนี้"
+msgstr "วิธีการจ่ายเงิน"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__tax_exigibility
@@ -3678,7 +3773,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__tax_exigibility__on_payment
 msgid "Based on Payment"
-msgstr "เกิดภาระภาษีเมื่อมีการชำระ/รับเงินจริง"
+msgstr "เงินดาวน์"
 
 #. module: account
 #: model:res.groups,name:account.group_account_basic
@@ -3891,12 +3986,6 @@ msgstr "เมื่อยกเลิกการเลือกช่องท
 msgid ""
 "By unchecking the active field, you may hide an INCOTERM you will not use."
 msgstr "เมื่อยกเลิกการเลือกช่องที่ใช้งานอยู่ คุณอาจซ่อนสถานะทางการเงินโดยไม่ต้องลบออกได้"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
-msgid "C"
-msgstr "C"
 
 #. module: account
 #. odoo-python
@@ -4341,8 +4430,6 @@ msgid "Chart of accounts set!"
 msgstr "ผังบัญชีเป็นชุด!"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move_send.py:0
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Check"
 msgstr "ตรวจสอบ"
@@ -5641,12 +5728,6 @@ msgid "Cut-off {label} {percent}%"
 msgstr "จุดตัด {label} {percent}%"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
-msgid "D"
-msgstr "D"
-
-#. module: account
 #: model:account.incoterms,name:account.incoterm_DAP
 msgid "DELIVERED AT PLACE"
 msgstr "สถานที่ของการเสนอราคา"
@@ -6199,7 +6280,7 @@ msgstr "ปิดการใช้งาน"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Disc.%"
-msgstr "ส่วนลด%"
+msgstr "ลด%"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
@@ -6299,11 +6380,6 @@ msgstr "แสดงฟิลด์นามแฝง"
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__display_amount
 msgid "Display Amount"
 msgstr "จำนวนเงินที่แสดง"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_move_send_wizard__display_attachments_widget
-msgid "Display Attachments Widget"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__display_days_next_month
@@ -7136,11 +7212,6 @@ msgid "Expired"
 msgstr "หมดอายุ"
 
 #. module: account
-#: model:ir.actions.server,name:account.action_move_export_zip
-msgid "Export ZIP"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__expression_label
 msgid "Expression Label"
 msgstr "ป้ายกำกับตัวสั่งงาน"
@@ -7393,13 +7464,13 @@ msgstr "ประเภทผู้เสียภาษี"
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_tree
 msgid "Fiscal Position"
-msgstr "เงื่อนไขภาษี"
+msgstr "ฐานะทางการเงิน"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
 msgid "Fiscal Positions"
-msgstr "เงื่อนไขภาษี"
+msgstr "ฐานะทางการเงิน"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_financial_year_opening_form
@@ -8037,11 +8108,6 @@ msgid "How total tax amount is computed in orders and invoices"
 msgstr "วิธีการคํานวณยอดเงินภาษีทั้งหมดในใบสั่งซื้อ และใบแจ้งหนี้"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid "ICE:"
-msgstr "ICE:"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__id
 #: model:ir.model.fields,field_description:account.field_account_account_tag__id
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__id
@@ -8423,7 +8489,7 @@ msgstr "ในสกุลเงิน"
 #: model:ir.model.fields.selection,name:account.selection__account_move__status_in_payment__in_payment
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "In Payment"
-msgstr "อยู่ระหว่างกระทบยอด"
+msgstr "ชำระเงิน"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment__state__in_process
@@ -9531,7 +9597,6 @@ msgstr "สมุดรายวัน:"
 #: model:ir.actions.act_window,name:account.action_account_journal_form
 #: model:ir.model.fields,field_description:account.field_account_report__filter_journals
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
-#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Journals"
 msgstr "สมุดรายวัน"
 
@@ -9559,7 +9624,7 @@ msgstr "มิถุนายน"
 #. module: account
 #: model:ir.model,name:account.model_kpi_provider
 msgid "KPI Provider"
-msgstr "ผู้ให้บริการตัวชี้วัดประสิทธิภาพหลัก (KPI)"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__kanban_dashboard
@@ -9982,7 +10047,6 @@ msgid "Looks great!"
 msgstr "ดูดีมาก!"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__loss
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Loss"
 msgstr "กำไร-ขาดทุนเบื้องต้น"
@@ -10615,12 +10679,6 @@ msgid "Need Cancel Request"
 msgstr "ต้องการยกเลิกคำขอ"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/chart_template.py:0
-msgid "Need to update"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
 #: model:ir.model.fields,field_description:account.field_account_move__needed_terms
 msgid "Needed Terms"
@@ -10953,12 +11011,6 @@ msgstr "โปรดทราบว่าวิธีที่ง่ายที
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__note
 msgid "Notes"
 msgstr "โน้ต"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "Nothing to export."
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__11
@@ -11533,7 +11585,6 @@ msgid ""
 msgstr "แทนที่ค่าเริ่มต้นของบริษัทว่าราคาที่คุณใช้กับผลิตภัณฑ์และใบแจ้งหนี้รวมภาษีนี้แล้วหรือไม่"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "P&L Accounts"
 msgstr "บัญชีกำไรขาดทุน"
@@ -11619,7 +11670,7 @@ msgstr "ชำระแล้ว"
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Paid on"
-msgstr "จ่ายเมื่อ"
+msgstr "จ่ายโดย"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_nature__both
@@ -12482,7 +12533,6 @@ msgstr "หมวดหมู่สินค้า"
 #: model:ir.model,name:account.model_product_category
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__product_categ_id
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__product_categ_id
-#: model:ir.model.fields,field_description:account.field_account_analytic_line__product_category
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_categ_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_category_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -12535,11 +12585,6 @@ msgstr "กำไร & ขาดทุน"
 #: model:ir.model.fields,field_description:account.field_account_journal__profit_account_id
 msgid "Profit Account"
 msgstr "บัญชีกําไร"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_analytic_line__analytic_profitability
-msgid "Profitability"
-msgstr "การทำกำไร"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_inbound_payment_method_line_id
@@ -13097,6 +13142,11 @@ msgid "Responsible User"
 msgstr "ผู้ใช้ที่รับผิดชอบ"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_tax__tax_scope
+msgid "Restrict the use of taxes to a type of product."
+msgstr "จำกัดการใช้ภาษีเฉพาะสินค้าประเภทหนึ่ง"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_same_currency
 msgid ""
 "Restrict to propositions having the same currency as the statement line."
@@ -13111,7 +13161,6 @@ msgstr "ถูกจำกัด"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
-#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__revenue
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__account_type__income
 msgid "Revenue"
 msgstr "รายได้"
@@ -14334,7 +14383,7 @@ msgstr "สถานะ"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__status_in_payment
 #: model:ir.model.fields,field_description:account.field_account_move__status_in_payment
 msgid "Status In Payment"
-msgstr "สถานะอยู่ระหว่างกระทบยอด"
+msgstr "สถานะการชำระเงิน"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__activity_state
@@ -14587,7 +14636,7 @@ msgstr "ไม่รวมภาษี"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__tax_exigibility
 msgid "Tax Exigibility"
-msgstr "ความต้องเสียภาษี"
+msgstr "ภาษีสรรพสามิต"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -15188,14 +15237,6 @@ msgid ""
 msgstr "บัญชีธนาคารของสมุดรายวันธนาคารต้องเป็นของบริษัทเดียวกัน (%s)"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"The bank account of your company is not trusted. Please ask an admin or "
-"someone with approval rights to check it."
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
 msgid "The bank statement used for bank reconciliation"
 msgstr "ใบแจ้งยอดจากธนาคารที่ใช้สําหรับกระทบยอดบัญชีธนาคาร"
@@ -15262,15 +15303,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"The company bank account (%(account_number)s) linked to this invoice is not "
-"trusted. Go to the Bank Settings, double-check that it is yours or correct "
-"the number, and click on Send Money to trust it."
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
 msgstr "บริษัทของสายการจำหน่ายนี้เป็นของ"
@@ -15312,7 +15344,7 @@ msgstr "ประเทศที่จะใช้รายงานภาษี
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The currency rate must be strictly positive."
-msgstr "อัตราสกุลเงินจะต้องเป็นบวกเท่านั้น"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__currency_id
@@ -15419,14 +15451,6 @@ msgstr "รายการ %(name)s (id %(id)s) จะต้องเป็น�
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
 msgstr "รายการมีความปลอดภัยด้วยแฮชที่ไม่สามารถเปลี่ยนแปลงได้"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"The entry is using accounts (%(accounts_codes_names)s) from a different "
-"company."
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -15870,14 +15894,6 @@ msgstr "ยอดคงเหลือที่ใช้อยู่ (%s) ไม
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move_send.py:0
-msgid ""
-"The scheduled action 'Send Invoices automatically' is archived. You won't be "
-"able to send invoices in batch."
-msgstr ""
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_report.py:0
 msgid "The sections defined on a report cannot have sections themselves."
 msgstr "ส่วนที่ได้กำหนดไว้ในรายงานไม่สามารถมีส่วนต่างๆได้เอง"
@@ -16190,7 +16206,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Thirty one dollar and Five cents"
-msgstr "สามสิบเอ็ดดอลลาร์ห้าเซ็นต์"
+msgstr "สามสิบเอ็ดดอลลาร์และห้าเซ็นต์"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_month
@@ -16217,6 +16233,17 @@ msgstr "สัปดาห์นี้"
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_year
 msgid "This Year"
 msgstr "ปีนี้"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+msgid ""
+"This account is configured in %(journal_names)s journal(s) (ids %"
+"(journal_ids)s) as payment debit or credit account. This means that this "
+"account's type should be reconcilable."
+msgstr ""
+"บัญชีนี้ได้รับการกำหนดค่าใน %(journal_names)s สมุดรายวัน (ids %(journal_ids)s) "
+"เป็นบัญชีเดบิตการชำระเงินหรือเครดิต ซึ่งหมายความว่าประเภทบัญชีนี้สามารถปรับยอดได้"
 
 #. module: account
 #. odoo-python
@@ -16505,8 +16532,8 @@ msgstr "การย้ายที่เกิดซ้ำนี้ จะถ�
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "This setting locks once a journal entry is created."
-msgstr ""
+msgid "This setting cannot be changed after an invoice is created."
+msgstr "ไม่สามารถเปลี่ยนแปลงการตั้งค่านี้หลังจากสร้างใบแจ้งหนี้แล้ว"
 
 #. module: account
 #. odoo-python
@@ -16897,8 +16924,6 @@ msgid ""
 "limit.                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
-"แจ้งเตือนเมื่อสร้างใบแจ้งหนี้และใบสั่งขายสำหรับพันธมิตรที่มียอดลูกหนี้รวมเกินขีดจำกัด                               "
-"ตั้งค่ามากกว่า 0.0 เพื่อเปิดใช้งานการตรวจสอบวงเงินเครดิต"
 
 #. module: account
 #. odoo-python
@@ -16965,11 +16990,6 @@ msgid ""
 msgstr ""
 "ไม่สามารถสร้างรายการเดินบัญชีได้ เนื่องจากธุรกรรมขาดหายไป "
 "คุณอาจต้องการเรียงลำดับธุรกรรมใหม่ก่อนดำเนินการต่อ"
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__uncategorized
-msgid "Uncategorized"
-msgstr "ไม่ถูกจัดหมวด"
 
 #. module: account
 #. odoo-python
@@ -17183,12 +17203,6 @@ msgstr "อัปเดตคำศัพท์"
 #: code:addons/account/models/res_config_settings.py:0
 msgid "Update Terms & Conditions"
 msgstr "อัปเดตข้อกำหนดและเงื่อนไข"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/chart_template.py:0
-msgid "Update app"
-msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -18103,13 +18117,6 @@ msgstr "คุณไม่สามารถเพิ่ม/แก้ไขร�
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_payment.py:0
-msgid ""
-"You cannot change the amount of a payment with multiple liquidity lines."
-msgstr ""
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
 "You cannot change the currency of the company since some journal items "
@@ -18361,12 +18368,6 @@ msgstr "คุณไม่สามารถผ่านรายการใน
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "You cannot post an entry with an archived analytic account: %s"
-msgstr ""
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/res_currency.py:0
 msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
@@ -18455,8 +18456,7 @@ msgstr "คุณไม่สามารถสลับบัญชี เพ�
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid ""
-"You cannot switch the type of a document with an existing sequence number."
+msgid "You cannot switch the type of a document which has been posted once."
 msgstr ""
 
 #. module: account
@@ -18566,14 +18566,6 @@ msgid ""
 msgstr ""
 "คุณต้องกำหนดค่า 'บันทึกกำไรหรือขาดทุนจากอัตราแลกเปลี่ยน' ในการตั้งค่าบริษัทของคุณ "
 "เพื่อจัดการการจองรายการบัญชีที่เกี่ยวข้องกับความแตกต่างระหว่างอัตราแลกเปลี่ยนโดยอัตโนมัติ"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_journal_dashboard.py:0
-msgid ""
-"You may only use samples in demo mode, try uploading one of your invoices "
-"instead."
-msgstr ""
 
 #. module: account
 #. odoo-python
@@ -18759,12 +18751,6 @@ msgstr "ปิด"
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "dates for"
 msgstr "วันที่สำหรับ"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "documents"
-msgstr "เอกสาร"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -19144,102 +19130,6 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} ใบเสร็จการชำระเงิน (Ref {{ object.name or 'n/"
 "a' }})"
-
-#~ msgid "Restrict the use of taxes to a type of product."
-#~ msgstr "จำกัดการใช้ภาษีเฉพาะสินค้าประเภทหนึ่ง"
-
-#~ msgid "1.05"
-#~ msgstr "1.05"
-
-#~ msgid "100.0"
-#~ msgstr "100.0"
-
-#~ msgid "1000.0"
-#~ msgstr "1000.0"
-
-#~ msgid "11.05"
-#~ msgstr "11.05"
-
-#~ msgid "12345"
-#~ msgstr "12345"
-
-#~ msgid "15%"
-#~ msgstr "15%"
-
-#~ msgid "1500.0"
-#~ msgstr "1500.0"
-
-#~ msgid "20.00"
-#~ msgstr "20.00"
-
-#~ msgid "2021-09-19"
-#~ msgstr "2021-09-19"
-
-#~ msgid "2023-01-01"
-#~ msgstr "2023-01-01"
-
-#~ msgid "2023-01-05"
-#~ msgstr "2023-01-05"
-
-#~ msgid "2023-08-11"
-#~ msgstr "2023-08-11"
-
-#~ msgid "2023-08-15"
-#~ msgstr "2023-08-15"
-
-#~ msgid "2023-08-31"
-#~ msgstr "2023-08-31"
-
-#~ msgid "2023-09-12"
-#~ msgstr "2023-09-12"
-
-#~ msgid "2023-09-25"
-#~ msgstr "2023-09-25"
-
-#~ msgid "2023-10-31"
-#~ msgstr "2023-10-31"
-
-#~ msgid "2024-01-01"
-#~ msgstr "2024-01-01"
-
-#~ msgid "27.00"
-#~ msgstr "27.00"
-
-#~ msgid "3.00"
-#~ msgstr "3.00"
-
-#~ msgid "30.00"
-#~ msgstr "30.00"
-
-#~ msgid "31.05"
-#~ msgstr "31.05"
-
-#~ msgid "4.05"
-#~ msgstr "4.05"
-
-#~ msgid "534677881234"
-#~ msgstr "534677881234"
-
-#~ msgid "9.00"
-#~ msgstr "9.00"
-
-#~ msgid ""
-#~ "This account is configured in %(journal_names)s journal(s) (ids %"
-#~ "(journal_ids)s) as payment debit or credit account. This means that this "
-#~ "account's type should be reconcilable."
-#~ msgstr ""
-#~ "บัญชีนี้ได้รับการกำหนดค่าใน %(journal_names)s สมุดรายวัน (ids %(journal_ids)s) "
-#~ "เป็นบัญชีเดบิตการชำระเงินหรือเครดิต ซึ่งหมายความว่าประเภทบัญชีนี้สามารถปรับยอดได้"
-
-#~ msgid "This setting cannot be changed after an invoice is created."
-#~ msgstr "ไม่สามารถเปลี่ยนแปลงการตั้งค่านี้หลังจากสร้างใบแจ้งหนี้แล้ว"
-
-#~ msgid ""
-#~ "Accrual entry created on %(date)s: %(accrual_entry)s.                    "
-#~ "And its reverse entry: %(reverse_entry)s."
-#~ msgstr ""
-#~ "รายการคงค้างที่สร้างขึ้นเมื่อ %(date)s: %(accrual_entry)s.                    "
-#~ "และรายการย้อนกลับ: %(reverse_entry)s."
 
 #~ msgid ""
 #~ "<small class=\"form-text text-muted\">\n"

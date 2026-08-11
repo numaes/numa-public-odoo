@@ -3,7 +3,7 @@ from odoo import api, fields, models, _, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import frozendict
 
-from datetime import timedelta
+from datetime import date
 
 
 class AccountPartialReconcile(models.Model):
@@ -216,8 +216,6 @@ class AccountPartialReconcile(models.Model):
                         * partial:          The account.partial.reconcile record.
                         * percentage:       The reconciled percentage represented by the partial.
                         * payment_rate:     The applied rate of this partial.
-                        * settlement_date:  The date at which the reconciled amount has been paid. Used as
-                                            accounting date of the cash basis entry.
         '''
         tax_cash_basis_values_per_move = {}
 
@@ -225,8 +223,7 @@ class AccountPartialReconcile(models.Model):
             return {}
 
         for partial in self:
-            for field, counterpart_field in (('debit', 'credit'), ('credit', 'debit')):
-                move, counterpart_move = partial[f'{field}_move_id'].move_id, partial[f'{counterpart_field}_move_id'].move_id
+            for move in {partial.debit_move_id.move_id, partial.credit_move_id.move_id}:
 
                 # Collect data about cash basis.
                 if move.id in tax_cash_basis_values_per_move:
@@ -274,10 +271,8 @@ class AccountPartialReconcile(models.Model):
                     rate_amount = source_line.balance
                     rate_amount_currency = source_line.amount_currency
                     payment_date = move.date
-                    settlement_date = partial.max_date
                 else:
                     payment_date = counterpart_line.date
-                    settlement_date = payment_date
 
                 if move_values['currency'] == move.company_id.currency_id:
                     # Ignore the exchange difference.
@@ -317,8 +312,6 @@ class AccountPartialReconcile(models.Model):
                     'partial': partial,
                     'percentage': percentage,
                     'payment_rate': payment_rate,
-                    'settlement_date': settlement_date,
-                    'counterpart_move': counterpart_move,
                 }
 
                 # Add partials.
@@ -504,6 +497,7 @@ class AccountPartialReconcile(models.Model):
         :return: The newly created journal entries.
         '''
         tax_cash_basis_values_per_move = self._collect_tax_cash_basis_values()
+        today = fields.Date.context_today(self)
 
         moves_to_create = []
         to_reconcile_after = []
@@ -517,7 +511,7 @@ class AccountPartialReconcile(models.Model):
                 # Init the journal entry.
                 journal = partial.company_id.tax_cash_basis_journal_id
                 lock_date = move.company_id._get_user_fiscal_lock_date(journal)
-                move_date = max(partial_values['settlement_date'], lock_date + timedelta(days=1))
+                move_date = partial.max_date if partial.max_date > lock_date else today
                 move_vals = {
                     'move_type': 'entry',
                     'date': move_date,
@@ -565,8 +559,6 @@ class AccountPartialReconcile(models.Model):
                         # Base line.
 
                         cb_line_vals = self._prepare_cash_basis_base_line_vals(line, balance, amount_currency)
-                        cb_line_vals['name'] = ' - '.join(filter(None, (line.move_id.name, partial_values['counterpart_move'].name)))
-
                         grouping_key = self._get_cash_basis_base_line_grouping_key_from_vals(cb_line_vals)
 
                     if grouping_key in partial_lines_to_create:

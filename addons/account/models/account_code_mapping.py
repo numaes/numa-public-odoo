@@ -1,5 +1,4 @@
-from odoo import fields, models, api, _
-from odoo.exceptions import UserError
+from odoo import fields, models, api
 from odoo.tools import Query
 
 COMPANY_OFFSET = 10000
@@ -53,10 +52,7 @@ class AccountCodeMapping(models.Model):
                     for account_id in account_ids
                     for company in self.env.user.with_context(active_test=True).company_ids.sorted(lambda c: (c.sequence, c.name))
                 ]).filtered_domain(remaining_domain)._as_query()
-        raise UserError(_(
-            "Account Code Mapping cannot be accessed directly. "
-            "It is designed to be used only through the Chart of Accounts."
-        ))
+        raise NotImplementedError
 
     def _compute_account_id(self):
         for record in self:
