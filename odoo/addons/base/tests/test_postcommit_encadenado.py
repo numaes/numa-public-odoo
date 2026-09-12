@@ -40,22 +40,36 @@ class TestPostcommitEncadenado(common.TransactionCase):
         finally:
             cr.close()
 
-    def test_si_un_nivel_falla_se_revierte_y_no_corren_los_siguientes(self):
+    def test_si_un_postcommit_falla_los_demas_corren_y_se_deshace_solo_lo_suyo(self):
         orden = []
         cr = self.registry.cursor()
         try:
-            def anidado():
-                orden.append('anidado')
+            cr.execute("CREATE TEMP TABLE numa_prueba_postcommit (valor text)")
+            cr.commit()
 
             def falla():
-                cr.postcommit.add(anidado)
+                cr.execute("INSERT INTO numa_prueba_postcommit VALUES ('de la que falla')")
+                cr.postcommit.add(lambda: orden.append('anidado de la que falla'))
                 raise ValueError('postcommit que falla')
 
+            def anda():
+                cr.execute("INSERT INTO numa_prueba_postcommit VALUES ('de la que anda')")
+                cr.postcommit.add(lambda: orden.append('anidado de la que anda'))
+
             cr.postcommit.add(falla)
-            with self.assertRaises(ValueError):
-                cr.commit()
-            self.assertEqual(orden, [], 'lo registrado por el nivel que falló no corre')
+            cr.postcommit.add(anda)
+            with self.assertLogs('odoo.sql_db', level='ERROR') as registro:
+                cr.commit()  # no relanza: la transacción ya estaba confirmada
+            self.assertIn('postcommit que falla', '\n'.join(registro.output))
+            self.assertEqual(orden, ['anidado de la que anda'],
+                             'lo que registró el postcommit que falló no corre; lo del otro sí')
+            cr.execute("SELECT valor FROM numa_prueba_postcommit")
+            self.assertEqual([fila[0] for fila in cr.fetchall()], ['de la que anda'],
+                             'se deshizo sólo lo del postcommit que falló')
             self.assertFalse(cr.postcommit)
             self.assertEqual(cr.postcommit.data, {})
         finally:
+            cr.rollback()
+            cr.execute("DROP TABLE IF EXISTS numa_prueba_postcommit")
+            cr.commit()
             cr.close()

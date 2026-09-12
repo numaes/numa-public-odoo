@@ -490,6 +490,26 @@ class Cursor(BaseCursor):
             keep_in_pool = self.dbname not in ('template0', 'template1', 'postgres', chosen_template)
             self.__pool.give_back(self._cnx, keep_in_pool=keep_in_pool)
 
+    def _correr_postcommit(self, func):
+        """Corre un postcommit aislado de los demás del nivel.
+
+        Va en un savepoint: si falla, se deshace sólo lo suyo —sus cambios en la base y los postcommits
+        que haya registrado— y el error queda en el log; los demás postcommits corren igual y lo que
+        hicieron se commitea. Los postcommits son efectos de una transacción ya confirmada: que uno
+        falle no es motivo para perder los otros (el aviso del bus, el envío de un mail...).
+
+        Supone que el postcommit no commitea este mismo cursor (usa uno propio si necesita
+        commitear por su cuenta): un commit adentro cerraría el savepoint.
+        """
+        pendientes = len(self.postcommit._funcs)
+        try:
+            with self.savepoint():
+                func()
+        except Exception:
+            while len(self.postcommit._funcs) > pendientes:
+                self.postcommit._funcs.pop()
+            _logger.exception("Postcommit %r falló: se deshizo lo suyo y los demás siguen.", func)
+
     def commit(self):
         """ Perform an SQL `COMMIT` """
         self.flush()
@@ -513,7 +533,7 @@ class Cursor(BaseCursor):
 
             try:
                 for func in nivel:
-                    func()
+                    self._correr_postcommit(func)
                 self.flush()
                 self._cnx.commit()
             except:
