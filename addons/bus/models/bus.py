@@ -125,18 +125,23 @@ class ImBus(models.Model):
                 ),
             }
         )
-        self.env.cr.postcommit.data["bus.bus.channels"].add(channel)
+        self.env.cr.precommit.data["bus.bus.channels"].add(channel)
 
     def _ensure_hooks(self):
         if "bus.bus.values" not in self.env.cr.precommit.data:
             self.env.cr.precommit.data["bus.bus.values"] = []
+            # Los canales van con el ciclo de precommit que crea sus filas, y cada ciclo agenda su
+            # propio NOTIFY. Con los postcommits encadenados (odoo/sql_db.py, Cursor.commit), un
+            # postcommit que notifica sobre este mismo cursor abre un ciclo nuevo: sus filas se crean
+            # al commitear ese nivel y su NOTIFY corre en el nivel siguiente, después de ese commit.
+            # Guardados en `postcommit.data` se sumaban al NOTIFY del nivel en curso, que podía salir
+            # antes de que existieran las filas, y el navegador los recibía tarde.
+            canales = self.env.cr.precommit.data["bus.bus.channels"] = OrderedSet()
 
             @self.env.cr.precommit.add
             def create_bus():
                 self.sudo().create(self.env.cr.precommit.data.pop("bus.bus.values"))
-
-        if "bus.bus.channels" not in self.env.cr.postcommit.data:
-            self.env.cr.postcommit.data["bus.bus.channels"] = OrderedSet()
+                self.env.cr.precommit.data.pop("bus.bus.channels", None)
 
             # We have to wait until the notifications are commited in database.
             # When calling `NOTIFY imbus`, notifications will be fetched in the
@@ -144,9 +149,7 @@ class ImBus(models.Model):
             # nothing to fetch, and the websocket will return no notification.
             @self.env.cr.postcommit.add
             def notify():
-                payloads = get_notify_payloads(
-                    list(self.env.cr.postcommit.data.pop("bus.bus.channels"))
-                ) if "bus.bus.channels" in self.env.cr.postcommit.data else []
+                payloads = get_notify_payloads(list(canales))
                 if len(payloads) > 1:
                     _logger.info(
                         "The imbus notification payload was too large, it's been split into %d payloads.",

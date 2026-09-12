@@ -499,12 +499,21 @@ class Cursor(BaseCursor):
         self.postrollback.clear()
         self._now = None
 
+        # Postcommits encadenados, por niveles: se corren las funciones pendientes, se commitea lo que
+        # hicieron, y recién entonces las que ellas registraron (el nivel siguiente).
+        #
+        # Siempre sobre el MISMO objeto `postcommit`. Antes se lo reemplazaba por uno nuevo antes de
+        # correr el nivel, y un callback que lee `cr.postcommit.data` al ejecutarse encontraba el nuevo,
+        # vacío: el `notify()` del bus no mandaba el NOTIFY imbus y ninguna notificación commiteada
+        # llegaba en tiempo real (el navegador la recibía con el próximo aviso de otra cosa). El
+        # contrato de `Callbacks` es que `data` acompaña a sus funciones hasta que corren.
         while self.postcommit._funcs:
-            previous_callbacks = self.postcommit
-            self.postcommit = Callbacks()
+            nivel = list(self.postcommit._funcs)
+            self.postcommit._funcs.clear()
 
             try:
-                previous_callbacks.run()
+                for func in nivel:
+                    func()
                 self.flush()
                 self._cnx.commit()
             except:
@@ -521,6 +530,8 @@ class Cursor(BaseCursor):
                 self.postrollback.clear()
                 self._now = None
 
+        # Como `Callbacks.run()`: terminadas las funciones, se limpia lo que acumularon.
+        self.postcommit.data.clear()
         return result
 
     def rollback(self):
