@@ -575,6 +575,78 @@ class TestCursorHooks(common.TransactionCase):
         cr.close()
         self.assertEqual(self.log, ['preR', 'postR'])
 
+    def test_postcommit_execution_and_isolation(self):
+        """ Test that all postcommit callbacks run, exceptions are caught and logged,
+        each callback runs in its own transaction (committed on success, rolled back on error),
+        and the cursor is left in a clean state.
+        """
+        cr = self.registry.cursor()
+        cr.execute("CREATE TEMPORARY TABLE test_postcommit_tab (val text)")
+        cr.commit()
+
+        executed = []
+
+        def callback_1():
+            executed.append('cb1')
+            cr.execute("INSERT INTO test_postcommit_tab VALUES ('val1')")
+
+        def callback_error():
+            executed.append('cb_err')
+            cr.execute("INSERT INTO test_postcommit_tab VALUES ('val_err')")
+            raise ValueError("Intentional error in postcommit callback")
+
+        def callback_3():
+            executed.append('cb3')
+            cr.execute("INSERT INTO test_postcommit_tab VALUES ('val3')")
+
+        cr.postcommit.add(callback_1)
+        cr.postcommit.add(callback_error)
+        cr.postcommit.add(callback_3)
+
+        with self.assertLogs('odoo.sql_db', level='ERROR') as cm:
+            cr.commit()
+
+        # All callbacks should have been executed
+        self.assertEqual(executed, ['cb1', 'cb_err', 'cb3'])
+        # An exception was logged for callback_error
+        self.assertTrue(any("Intentional error in postcommit callback" in msg for msg in cm.output))
+
+        # Check in the table: callback 1 and 3 should be persisted, callback_error rolled back
+        cr.execute("SELECT val FROM test_postcommit_tab ORDER BY val")
+        self.assertEqual(cr.fetchall(), [('val1',), ('val3',)])
+
+        # Verify cursor is clean: can execute and commit further operations without issue
+        cr.execute("INSERT INTO test_postcommit_tab VALUES ('val_after')")
+        cr.commit()
+        cr.execute("SELECT val FROM test_postcommit_tab ORDER BY val")
+        self.assertEqual(cr.fetchall(), [('val1',), ('val3',), ('val_after',)])
+
+        cr.close()
+
+    def test_postcommit_dynamic_add_and_data(self):
+        """ Test that postcommit callbacks can dynamically register further callbacks
+        and access shared aggregated data, which is cleared afterwards.
+        """
+        cr = self.registry.cursor()
+        log = []
+
+        cr.postcommit.data['test_key'] = [10, 20]
+
+        def cb_sub():
+            log.append(f'sub_{cr.postcommit.data.get("test_key")}')
+
+        def cb_main():
+            log.append(f'main_{cr.postcommit.data.get("test_key")}')
+            cr.postcommit.add(cb_sub)
+
+        cr.postcommit.add(cb_main)
+        cr.commit()
+
+        self.assertEqual(log, ['main_[10, 20]', 'sub_[10, 20]'])
+        self.assertFalse(cr.postcommit.data)
+        self.assertFalse(cr.postcommit._funcs)
+        cr.close()
+
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCursorHooksTransactionCaseCleanup(common.TransactionCase):

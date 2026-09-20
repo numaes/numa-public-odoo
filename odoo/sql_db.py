@@ -185,6 +185,47 @@ class _FlushingSavepoint(Savepoint):
                 cr.transaction.merge_state()
 
 
+class PostcommitCallbacks(Callbacks):
+    """ Post-commit callbacks runner. Executes each registered callback in its
+    own transaction, catching and logging any exceptions so that all callbacks
+    are executed and leaving the cursor clean for subsequent transactions.
+    """
+    __slots__ = ('_cr',)
+
+    def __init__(self, cr: Cursor):
+        super().__init__()
+        self._cr = cr
+
+    def run(self) -> None:
+        """ Call all the postcommit functions (in addition order), each in its own
+        transaction, catching and logging exceptions so that all callbacks are executed,
+        then clear associated data.
+        """
+        while self._funcs:
+            func = self._funcs.popleft()
+            try:
+                func()
+                if not self._cr.closed:
+                    self._cr.flush()
+                    if self._cr.transaction is not None and self._cr.transaction._state_stack__:
+                        continue
+                    committing = self._cr.transaction.committing() if self._cr.transaction is not None else nullcontext()
+                    with committing:
+                        self._cr._cnx.commit()
+                        self._cr._now = None
+            except Exception:
+                _logger.exception("Error during postcommit callback %r", func)
+                if not self._cr.closed:
+                    self._cr.precommit.clear()
+                    if self._cr.transaction is not None and self._cr.transaction._state_stack__:
+                        continue
+                    rollbacking = self._cr.transaction.rollbacking() if self._cr.transaction is not None else nullcontext()
+                    with rollbacking:
+                        self._cr._cnx.rollback()
+                        self._cr._now = None
+        self.clear()
+
+
 # _CursorProtocol declares the available methods and type information,
 # at runtime, it is just an `object`
 class Cursor(_CursorProtocol):
@@ -256,7 +297,7 @@ class Cursor(_CursorProtocol):
     def __init__(self, cnx: PsycoConnection, dbname: str):
         super().__init__()
         self.precommit = Callbacks()
-        self.postcommit = Callbacks()
+        self.postcommit = PostcommitCallbacks(self)
         self.prerollback = Callbacks()
         self.postrollback = Callbacks()
         self._now: datetime | None = None
