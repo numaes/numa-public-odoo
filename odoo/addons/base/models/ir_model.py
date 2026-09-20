@@ -1465,7 +1465,8 @@ class ModelInherit(models.Model):
                 ]
 
                 for item in items:
-                    module_mapping[item].add(cls._module)
+                    if item[0] and item[1]:
+                        module_mapping[item].add(cls._module)
 
         if not module_mapping:
             return
