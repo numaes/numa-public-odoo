@@ -490,15 +490,68 @@ class Cursor(BaseCursor):
             keep_in_pool = self.dbname not in ('template0', 'template1', 'postgres', chosen_template)
             self.__pool.give_back(self._cnx, keep_in_pool=keep_in_pool)
 
+    def _correr_postcommit(self, func):
+        """Corre un postcommit aislado de los demás del nivel.
+
+        Va en un savepoint: si falla, se deshace sólo lo suyo —sus cambios en la base y los postcommits
+        que haya registrado— y el error queda en el log; los demás postcommits corren igual y lo que
+        hicieron se commitea. Los postcommits son efectos de una transacción ya confirmada: que uno
+        falle no es motivo para perder los otros (el aviso del bus, el envío de un mail...).
+
+        Supone que el postcommit no commitea este mismo cursor (usa uno propio si necesita
+        commitear por su cuenta): un commit adentro cerraría el savepoint.
+        """
+        pendientes = len(self.postcommit._funcs)
+        try:
+            with self.savepoint():
+                func()
+        except Exception:
+            while len(self.postcommit._funcs) > pendientes:
+                self.postcommit._funcs.pop()
+            _logger.exception("Postcommit %r falló: se deshizo lo suyo y los demás siguen.", func)
+
     def commit(self):
         """ Perform an SQL `COMMIT` """
         self.flush()
         result = self._cnx.commit()
         self.clear()
-        self._now = None
         self.prerollback.clear()
         self.postrollback.clear()
-        self.postcommit.run()
+        self._now = None
+
+        # Postcommits encadenados, por niveles: se corren las funciones pendientes, se commitea lo que
+        # hicieron, y recién entonces las que ellas registraron (el nivel siguiente).
+        #
+        # Siempre sobre el MISMO objeto `postcommit`. Antes se lo reemplazaba por uno nuevo antes de
+        # correr el nivel, y un callback que lee `cr.postcommit.data` al ejecutarse encontraba el nuevo,
+        # vacío: el `notify()` del bus no mandaba el NOTIFY imbus y ninguna notificación commiteada
+        # llegaba en tiempo real (el navegador la recibía con el próximo aviso de otra cosa). El
+        # contrato de `Callbacks` es que `data` acompaña a sus funciones hasta que corren.
+        while self.postcommit._funcs:
+            nivel = list(self.postcommit._funcs)
+            self.postcommit._funcs.clear()
+
+            try:
+                for func in nivel:
+                    self._correr_postcommit(func)
+                self.flush()
+                self._cnx.commit()
+            except:
+                self.clear()
+                self.postcommit.clear()
+                self.prerollback.run()
+                self._cnx.rollback()
+                self._now = None
+                self.postrollback.run()
+                raise
+            finally:
+                self.clear()
+                self.prerollback.clear()
+                self.postrollback.clear()
+                self._now = None
+
+        # Como `Callbacks.run()`: terminadas las funciones, se limpia lo que acumularon.
+        self.postcommit.data.clear()
         return result
 
     def rollback(self):
