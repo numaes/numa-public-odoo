@@ -26,6 +26,7 @@ from . import test_base_document_layout
 from . import test_account_lock_exception
 from . import test_audit_trail
 from . import test_chart_template
+from . import test_chart_template_code_size
 from . import test_company_branch
 from . import test_digest
 from . import test_download_docs

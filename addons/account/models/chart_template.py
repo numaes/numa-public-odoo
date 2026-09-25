@@ -292,7 +292,9 @@ class AccountChartTemplate(models.AbstractModel):
             else:
                 journal = None
                 lang = self._get_untranslatable_fields_target_language(company.chart_template, company)
-                translated_code = self._get_field_translation(journal_data, 'code', lang)
+                translated_code = self._fitting_translation(
+                    'account.journal', 'code', journal_data,
+                    self._get_field_translation(journal_data, 'code', lang))
                 if 'code' in journal_data:
                     journal_code = translated_code or journal_data['code']
                     journal = self.env['account.journal'].with_context(active_test=False).search([
@@ -569,7 +571,9 @@ class AccountChartTemplate(models.AbstractModel):
                 for field in untranslatable_fields:
                     if field not in record:
                         continue
-                    translation = self._get_field_translation(record, field, untranslatable_target_lang)
+                    translation = self._fitting_translation(
+                        model_name, field, record,
+                        self._get_field_translation(record, field, untranslatable_target_lang))
                     if translation:
                         record[field] = translation
 
@@ -1489,6 +1493,22 @@ class AccountChartTemplate(models.AbstractModel):
 
         self.env.cr.execute(query)
         return self.env.cr.fetchall()
+
+    def _fitting_translation(self, model_name, fname, record, translation):
+        """Return ``translation`` if it fits the field, else None (the value stays untranslated).
+
+        An untranslatable field translated anyway can come out longer than its column:
+        a journal code is 7 characters, and es_419 made MISC 'MISCELÁNEO'. Stored, it
+        failed the chart and with it the creation of any company in that language.
+        """
+        size = getattr(self.env[model_name]._fields.get(fname), 'size', None)
+        if translation and size and len(translation) > size:
+            _logger.warning(
+                "Chart template: the translation %r of %s.%s %r is longer than the field "
+                "(%s characters); the untranslated value is kept.",
+                translation, model_name, fname, record.get(fname), size)
+            return None
+        return translation
 
     def _get_field_translation(self, record, fname, lang):
         """Return the value for language lang for field with fname from record (or None if none exists).
